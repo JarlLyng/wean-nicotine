@@ -1,50 +1,165 @@
-# Welcome to your Expo app 👋
+# Taper
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+**Taper** is a mobile app that helps people gradually reduce and eventually stop using snus (nicotine pouches) through a calm, supportive, and non‑judgmental approach.
 
-## Get started
+Instead of quitting cold turkey, Taper focuses on **tapering** — reducing usage step by step, at your own pace.
 
-1. Install dependencies
+---
 
-   ```bash
-   npm install
-   ```
+## ✨ Core idea
 
-2. Start the app
+Quitting snus doesn’t have to be all or nothing.
 
-   ```bash
-   npx expo start
-   ```
+Taper helps users:
+- set a realistic baseline
+- follow a gradual reduction plan
+- track progress without shame
+- recover quickly from slip‑ups
+- stay motivated through time, money, and habit insights
 
-In the output, you'll find options to open the app in a
+---
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## 🎯 Target audience
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- Daily snus / nicotine pouch users
+- People who want to **reduce first**, not quit abruptly
+- Users who prefer a calm, minimalist, and private experience
 
-## Get a fresh project
+---
 
-When you're ready, run:
+## 🧠 Product principles
 
-```bash
-npm run reset-project
+- **Taper, don’t punish**  
+- **Progress over perfection**  
+- **No shame, no streak anxiety**  
+- **Offline‑first & private by default**  
+- **Simple enough to use in 2 seconds**
+
+---
+
+## 📱 MVP feature set
+
+### Onboarding
+- Choose goal: *Gradual reduction* (default)
+- Set baseline usage (pouches per day)
+- Optional price per can (for savings tracking)
+- Select common triggers (stress, coffee, after meals, etc.)
+
+### Daily tracking
+- One‑tap log: *Used a pouch*
+- One‑tap log: *Craving resisted*
+- Daily allowance based on taper plan
+- Friendly nudges when limits are exceeded
+
+### Taper plan
+- Automatic reduction over time (weekly % reduction)
+- Adjustable pace
+- Smart suggestions if the plan is too aggressive
+
+### Progress & motivation
+- Pouches avoided vs baseline
+- Money saved
+- Time since last pouch (when applicable)
+- Small, supportive milestones (not aggressive streaks)
+
+### Support tools
+- Short breathing exercises
+- Urge‑surfing guidance
+- Simple reflection prompts
+
+### Notifications (optional)
+- Daily check‑in
+- Trigger‑based reminders
+- Gentle encouragement — never guilt
+
+---
+
+## 🏗️ Tech stack
+
+- **Expo** (React Native)
+- **Expo Router** (file‑based navigation)
+- **Local‑first storage** (SQLite / MMKV)
+- **Expo Notifications**
+- No backend in MVP
+
+---
+
+## 📂 Project structure
+
+```
+app/
+  (onboarding)/
+  (home)/
+  (progress)/
+  (tools)/
+  (settings)/
+components/
+lib/
+store/
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+(Structure will evolve as the app matures.)
 
-## Learn more
+---
 
-To learn more about developing your project with Expo, look at the following resources:
+## 🚫 Out of scope (MVP)
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+- Accounts / login
+- Cloud sync
+- Community features
+- Medical advice
+- AI personalization
 
-## Join the community
+---
 
-Join our community of developers creating universal apps.
+## 🌍 Internationalization
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- App language: English (initially)
+- Neutral, inclusive tone
+- Designed for international App Store distribution
+
+---
+
+## 🚀 Getting started (dev)
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start the app:
+
+```bash
+npx expo start
+```
+
+### Testing Notifications
+
+Notifications require a development build and do not work in Expo Go. To test notifications:
+
+**iOS:**
+```bash
+npx expo run:ios
+```
+
+**Android:**
+```bash
+npx expo run:android
+```
+
+---
+
+## 🗺️ Roadmap
+
+See `ROADMAP.md` for planned milestones and future ideas.
+
+---
+
+## 📄 License
+
+TBD
+
+---
+
+Built with care under the **IAMJARL** project.
