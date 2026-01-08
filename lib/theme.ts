@@ -6,6 +6,17 @@
  * - Calm and supportive (not clinical)
  * - Clear visual hierarchy
  * - Accessible contrast ratios
+ * 
+ * Gradient usage:
+ * - Use gradients sparingly in header areas only (not entire screens)
+ * - Primary gradient: accentStart → accentMid → accentEnd (vertical)
+ * - Subtle gradient: low-contrast fade for gentle backgrounds
+ * - Keep content areas on flat surfaces (white/neutral) for readability
+ * 
+ * Surface usage:
+ * - Use flat white surfaces for cards and content areas
+ * - Deep calm background (#0F172A) only for gradient headers
+ * - Maintain high contrast between text and backgrounds
  */
 
 export const spacing = {
@@ -18,6 +29,25 @@ export const spacing = {
 } as const;
 
 export const typography = {
+  title: {
+    fontSize: 28,
+    lineHeight: 36,
+    fontWeight: '700',
+    allowFontScaling: true,
+  },
+  body: {
+    fontSize: 16,
+    lineHeight: 24,
+    fontWeight: '400',
+    allowFontScaling: true,
+  },
+  caption: {
+    fontSize: 14,
+    lineHeight: 20,
+    fontWeight: '400',
+    allowFontScaling: true,
+  },
+  // Keep existing scale for backward compatibility
   xs: {
     fontSize: 12,
     lineHeight: 16,
@@ -68,7 +98,18 @@ export const fontWeights = {
 } as const;
 
 export const colors = {
-  // Neutral grays
+  // Core color tokens for gradient-based design
+  background: '#0F172A', // Deep calm background
+  surface: '#FFFFFF', // White surface for content
+  textPrimary: '#0F172A', // Primary text color
+  textSecondary: '#475569', // Secondary text color
+  
+  // Gradient accent colors (teal → green → mint)
+  accentStart: '#0EA5A4', // Teal
+  accentMid: '#34D399', // Green
+  accentEnd: '#6EE7B7', // Mint
+  
+  // Legacy support (keep for backward compatibility)
   neutral: {
     50: '#fafafa',
     100: '#f5f5f5',
@@ -82,45 +123,36 @@ export const colors = {
     900: '#171717',
     950: '#0a0a0a',
   },
-  // Primary accent (calm teal/blue)
   accent: {
-    primary: '#0a7ea4',
-    primaryDark: '#085d7a',
-    primaryLight: '#0d9fd4',
+    primary: '#0EA5A4',
+    primaryDark: '#0F172A',
+    primaryLight: '#6EE7B7',
   },
-  // Semantic colors (calm, supportive tones)
   semantic: {
     success: {
-      main: '#10b981', // Calm green
+      main: '#10b981',
       light: '#d1fae5',
       dark: '#059669',
     },
     warning: {
-      main: '#f59e0b', // Warm amber (not aggressive red)
+      main: '#f59e0b',
       light: '#fef3c7',
       dark: '#d97706',
     },
     info: {
-      main: '#3b82f6', // Soft blue
+      main: '#3b82f6',
       light: '#dbeafe',
       dark: '#2563eb',
     },
     error: {
-      main: '#ef4444', // Soft red (not harsh)
+      main: '#ef4444',
       light: '#fee2e2',
       dark: '#dc2626',
     },
   },
-  // Background colors
-  background: {
-    default: '#ffffff',
-    secondary: '#f9fafb',
-    tertiary: '#f3f4f6',
-  },
-  // Text colors
   text: {
-    primary: '#111827',
-    secondary: '#6b7280',
+    primary: '#0F172A',
+    secondary: '#475569',
     tertiary: '#9ca3af',
     inverse: '#ffffff',
   },

@@ -18,7 +18,7 @@ export default function BreathingExercise() {
   const [currentCycle, setCurrentCycle] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState(BREATHING_CYCLES[0].duration);
   const scaleAnim = useRef(new Animated.Value(1)).current;
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     if (isRunning) {
@@ -55,8 +55,8 @@ export default function BreathingExercise() {
         useNativeDriver: true,
       }).start();
     } else {
-      // Hold or Pause - maintain current scale
-      scaleAnim.setValue(scaleAnim._value);
+      // Hold or Pause - maintain current scale (no animation needed)
+      // Scale stays at current value
     }
 
     // Haptic feedback

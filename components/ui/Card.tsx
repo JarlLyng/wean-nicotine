@@ -16,7 +16,7 @@ export function Card({ children, variant = 'flat', style, padding = 'md' }: Card
     const baseStyle: ViewStyle = {
       borderRadius: borderRadius.lg,
       padding: spacing[padding],
-      backgroundColor: colors.background.default,
+      backgroundColor: colors.surface,
     };
 
     switch (variant) {
@@ -28,7 +28,7 @@ export function Card({ children, variant = 'flat', style, padding = 'md' }: Card
       case 'flat':
         return {
           ...baseStyle,
-          backgroundColor: colors.background.secondary,
+          backgroundColor: colors.neutral[50], // Light gray for flat variant
         };
       case 'outlined':
         return {

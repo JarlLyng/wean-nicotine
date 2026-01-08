@@ -62,7 +62,7 @@ export default function TriggersScreen() {
       });
 
       // Navigate to home
-      router.replace('/(home)');
+      router.replace('/(tabs)/home');
     } catch (error) {
       console.error('Error completing onboarding:', error);
       alert('Something went wrong. Please try again.');

@@ -9,7 +9,7 @@ export default function OnboardingIndex() {
     // Check if user has already completed onboarding
     hasTaperSettings().then((hasSettings) => {
       if (hasSettings) {
-        router.replace('/(home)');
+        router.replace('/(tabs)/home');
       } else {
         router.replace('/(onboarding)/welcome');
       }
