@@ -1,8 +1,10 @@
 import { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TextInput, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Screen } from '@/components/Screen';
-import { spacing, colors } from '@/lib/theme';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { spacing, colors, typography, borderRadius } from '@/lib/theme';
 
 export default function BaselineScreen() {
   const router = useRouter();
@@ -25,43 +27,48 @@ export default function BaselineScreen() {
   };
 
   return (
-    <Screen>
+    <Screen variant="gradient" title="Set Your Baseline">
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.content}>
-          <Text style={styles.title}>Set Your Baseline</Text>
-          <Text style={styles.description}>
-            How many pouches do you typically use per day?
-          </Text>
-          <Text style={styles.hint}>
-            Be honest — this helps us create a realistic plan for you.
-          </Text>
+          <Card variant="flat" style={styles.card} padding="lg">
+            <Text style={styles.description}>
+              How many pouches do you typically use per day?
+            </Text>
+            <Text style={styles.hint}>
+              Be honest — this helps us create a realistic plan for you.
+            </Text>
 
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.input}
-              value={baseline}
-              onChangeText={(text) => {
-                setBaseline(text);
-                setError('');
-              }}
-              placeholder="e.g., 10"
-              keyboardType="number-pad"
-              autoFocus
-            />
-            <Text style={styles.inputLabel}>pouches per day</Text>
-          </View>
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.input}
+                value={baseline}
+                onChangeText={(text) => {
+                  setBaseline(text);
+                  setError('');
+                }}
+                placeholder="e.g., 10"
+                placeholderTextColor={colors.text.secondary}
+                keyboardType="number-pad"
+                autoFocus
+              />
+              <Text style={styles.inputLabel}>pouches per day</Text>
+            </View>
 
-          {error ? <Text style={styles.error}>{error}</Text> : null}
+            {error ? <Text style={styles.error}>{error}</Text> : null}
+          </Card>
 
-          <TouchableOpacity style={styles.button} onPress={handleNext}>
-            <Text style={styles.buttonText}>Continue</Text>
-          </TouchableOpacity>
+          <Button
+            title="Continue"
+            onPress={handleNext}
+            style={styles.button}
+          />
 
-          <TouchableOpacity
+          <Button
+            title="Skip for now"
+            onPress={() => router.push('/(onboarding)/price')}
+            variant="ghost"
             style={styles.skipButton}
-            onPress={() => router.push('/(onboarding)/price')}>
-            <Text style={styles.skipButtonText}>Skip for now</Text>
-          </TouchableOpacity>
+          />
         </View>
       </ScrollView>
     </Screen>
@@ -76,63 +83,52 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: spacing.md,
   },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: spacing.sm,
+  card: {
+    marginBottom: spacing.lg,
   },
   description: {
-    fontSize: 18,
-    color: '#333',
-    marginBottom: spacing.xs,
+    ...typography.xl,
+    fontWeight: '600',
+    color: colors.text.primary,
+    marginBottom: spacing.sm,
+    textAlign: 'center',
   },
   hint: {
-    fontSize: 14,
-    color: '#666',
+    ...typography.caption,
+    color: colors.text.secondary,
     marginBottom: spacing.xl,
+    textAlign: 'center',
   },
   inputContainer: {
     marginBottom: spacing.md,
   },
   input: {
     borderWidth: 2,
-    borderColor: '#ddd',
-    borderRadius: 8,
+    borderColor: colors.neutral[200],
+    borderRadius: borderRadius.lg,
     padding: spacing.md,
-    fontSize: 24,
+    ...typography['2xl'],
+    fontWeight: '600',
+    color: colors.text.primary,
     textAlign: 'center',
     marginBottom: spacing.xs,
+    backgroundColor: colors.surface,
   },
   inputLabel: {
-    fontSize: 14,
-    color: '#666',
+    ...typography.caption,
+    color: colors.text.secondary,
     textAlign: 'center',
   },
   error: {
-    color: '#d32f2f',
-    fontSize: 14,
+    ...typography.caption,
+    color: colors.semantic.error.main,
     marginBottom: spacing.sm,
     textAlign: 'center',
   },
   button: {
-    backgroundColor: colors.accentStart,
-    padding: spacing.md,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: spacing.lg,
-  },
-  buttonText: {
-    color: colors.text.inverse,
-    fontSize: 18,
-    fontWeight: '600',
+    marginTop: spacing.md,
   },
   skipButton: {
-    padding: spacing.md,
-    alignItems: 'center',
     marginTop: spacing.sm,
-  },
-  skipButtonText: {
-    color: '#666',
-    fontSize: 16,
   },
 });

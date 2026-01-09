@@ -94,11 +94,14 @@ export default function ResetTaperScreen() {
           onPress: async () => {
             setIsStartingOver(true);
             try {
-              // Delete all settings and plans
+              // Delete all settings, plans, and log entries
               console.log('Starting over: Deleting taper settings...');
               await deleteTaperSettings();
               console.log('Starting over: Deleting user plan...');
               await deleteUserPlan();
+              console.log('Starting over: Deleting all log entries...');
+              const { deleteAllLogEntries } = await import('@/lib/db-log-entries');
+              await deleteAllLogEntries();
               
               // Verify deletion
               const { getTaperSettings } = await import('@/lib/db-settings');

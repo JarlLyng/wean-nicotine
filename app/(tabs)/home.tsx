@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { useFocusEffect } from 'expo-router';
 import { useCallback } from 'react';
@@ -19,9 +19,23 @@ export default function HomeScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const [pouchesUsedToday, setPouchesUsedToday] = useState(0);
   const [isLogging, setIsLogging] = useState(false);
-  const [settingsId, setSettingsId] = useState<number | null>(null); // Track settings ID to force re-render
+  const [settingsId, setSettingsId] = useState<number | null>(null); // Track settings ID for debugging
+  const isLoadingRef = useRef(false); // Prevent multiple simultaneous loads
+  const loadTimeoutRef = useRef<NodeJS.Timeout | null>(null); // Debounce timer
 
   const loadData = useCallback(async () => {
+    // Clear any pending loads
+    if (loadTimeoutRef.current) {
+      clearTimeout(loadTimeoutRef.current);
+      loadTimeoutRef.current = null;
+    }
+    
+    // Prevent multiple simultaneous loads
+    if (isLoadingRef.current) {
+      console.log('Home screen: Load already in progress, skipping...');
+      return;
+    }
+    isLoadingRef.current = true;
     try {
       console.log('Home screen: Loading data...');
       setIsLoading(true);
@@ -56,52 +70,92 @@ export default function HomeScreen() {
 
       // Recalculate allowance based on current settings and date
       // This ensures we always show the correct allowance, especially after reset/onboarding
-      const allowance = calculateDailyAllowance(settings, today);
-      console.log('Home screen: Calculated allowance:', allowance, 'from settings:', {
+      const calculatedAllowance = calculateDailyAllowance(settings, today);
+      console.log('Home screen: Calculated allowance:', calculatedAllowance, 'from settings:', {
         baseline: settings.baselinePouchesPerDay,
         startDate: new Date(settings.startDate).toISOString(),
         reductionPercent: settings.weeklyReductionPercent,
         settingsId: settings.id,
+        userPlanAllowance: userPlan.currentDailyAllowance,
+        userPlanSettingsId: userPlan.settingsId,
       });
 
-      // Update settings ID to force re-render if settings changed
-      setSettingsId(settings.id);
-      // Force state update
-      setDailyAllowance(allowance);
-      console.log('Home screen: State updated - dailyAllowance:', allowance, 'settingsId:', settings.id);
-
-      // Load pouches used today
+      // Use calculated allowance (always fresh from settings)
+      // If userPlan has a different settingsId, it means settings were reset
+      const allowance = calculatedAllowance;
+      
+      
+      // Load pouches used today first
       const todayLogs = await getLogEntriesForDay(today);
       const usedCount = todayLogs.filter(log => log.type === 'pouch_used').length;
+
+      // Update all state atomically to ensure React re-renders
+      const roundedAllowance = Math.round(allowance);
+      console.log('Home screen: About to update state - dailyAllowance:', roundedAllowance, 'settingsId:', settings.id, 'updatedAt:', settings.updatedAt, 'usedCount:', usedCount);
+      
+      // Update state - React will handle re-rendering automatically
+      setSettingsId(settings.id);
       setPouchesUsedToday(usedCount);
+      setDailyAllowance(roundedAllowance);
+      
+      console.log('Home screen: State update called - dailyAllowance:', roundedAllowance, 'settingsId:', settings.id, 'updatedAt:', settings.updatedAt);
     } catch (error) {
       console.error('Error loading data:', error);
       setDailyAllowance(null);
       setPouchesUsedToday(0);
-    } finally {
       setIsLoading(false);
+      isLoadingRef.current = false;
+    } finally {
+      // Small delay to ensure state updates are flushed before hiding loading
+      // This ensures React has time to process all state updates
+      setTimeout(() => {
+        setIsLoading(false);
+        isLoadingRef.current = false;
+      }, 50);
     }
   }, []);
 
-  // Load data on mount and when screen comes into focus
+  // Reset all state on mount to ensure clean start
+  useEffect(() => {
+    console.log('Home screen: Component mounted - resetting all state');
+    setDailyAllowance(null);
+    setPouchesUsedToday(0);
+    setSettingsId(null);
+    setIsLoading(true);
+    isLoadingRef.current = false;
+  }, []); // Only run on mount
+
+  // Load data when screen comes into focus
   useFocusEffect(
     useCallback(() => {
       console.log('Home screen: useFocusEffect triggered');
-      // Force reload by resetting state first
-      setDailyAllowance(null);
-      setPouchesUsedToday(0);
-      setSettingsId(null);
+      // Clear any pending loads
+      if (loadTimeoutRef.current) {
+        clearTimeout(loadTimeoutRef.current);
+        loadTimeoutRef.current = null;
+      }
+      // Reset loading flag to allow new load
+      isLoadingRef.current = false;
       setIsLoading(true);
-      // Then load fresh data
-      loadData();
+      // Debounce load to prevent multiple rapid calls
+      loadTimeoutRef.current = setTimeout(() => {
+        loadData();
+        loadTimeoutRef.current = null;
+      }, 200);
+      return () => {
+        if (loadTimeoutRef.current) {
+          clearTimeout(loadTimeoutRef.current);
+          loadTimeoutRef.current = null;
+        }
+        isLoadingRef.current = false;
+      };
     }, [loadData])
   );
 
-  // Also load on mount as backup
+  // Log when dailyAllowance changes to debug rendering
   useEffect(() => {
-    console.log('Home screen: useEffect (mount) triggered');
-    loadData();
-  }, [loadData]);
+    console.log('Home screen: dailyAllowance changed to:', dailyAllowance, 'settingsId:', settingsId);
+  }, [dailyAllowance, settingsId]);
 
   const handleLogPouch = async () => {
     try {
@@ -129,8 +183,12 @@ export default function HomeScreen() {
     }
   };
 
+  // Force remount when settingsId changes (after onboarding/reset)
+  // This ensures we get a completely fresh component instance
+  const screenKey = `home-screen-${settingsId || 'no-settings'}`;
+  
   return (
-    <Screen variant="gradient" title="Today">
+    <Screen key={screenKey} variant="gradient" title="Today">
       <View style={styles.content}>
         {isLoading ? (
           <Card variant="elevated" style={styles.card} padding="lg">
@@ -139,13 +197,13 @@ export default function HomeScreen() {
         ) : dailyAllowance !== null ? (
           <>
             {/* Daily Allowance Card with Progress Ring */}
-            <Card key={`allowance-card-${settingsId}-${dailyAllowance}`} variant="elevated" style={styles.card} padding="lg">
+            <Card variant="elevated" style={styles.card} padding="lg">
               <Text style={styles.label}>Your Daily Allowance</Text>
               
               {/* Progress Ring Visualization */}
               <View style={styles.progressContainer}>
                 <ProgressRing
-                  key={`progress-${settingsId}-${dailyAllowance}`}
+                  key={`progress-${dailyAllowance}-${pouchesUsedToday}`}
                   progress={Math.min(pouchesUsedToday / dailyAllowance, 1)}
                   size={120}
                   strokeWidth={12}

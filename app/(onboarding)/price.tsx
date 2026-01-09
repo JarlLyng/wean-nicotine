@@ -1,8 +1,10 @@
 import { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TextInput, ScrollView } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Screen } from '@/components/Screen';
-import { spacing, colors } from '@/lib/theme';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { spacing, colors, typography, borderRadius } from '@/lib/theme';
 
 export default function PriceScreen() {
   const router = useRouter();
@@ -42,40 +44,47 @@ export default function PriceScreen() {
   };
 
   return (
-    <Screen>
+    <Screen variant="gradient" title="Price Per Can">
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.content}>
-          <Text style={styles.title}>Price Per Can (Optional)</Text>
-          <Text style={styles.description}>
-            If you'd like to track money saved, enter the price you pay per can.
-          </Text>
-          <Text style={styles.hint}>
-            You can skip this and add it later in settings.
-          </Text>
+          <Card variant="flat" style={styles.card} padding="lg">
+            <Text style={styles.description}>
+              If you'd like to track money saved, enter the price you pay per can.
+            </Text>
+            <Text style={styles.hint}>
+              You can skip this and add it later in settings.
+            </Text>
 
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.input}
-              value={price}
-              onChangeText={(text) => {
-                setPrice(text);
-                setError('');
-              }}
-              placeholder="e.g., 50.00"
-              keyboardType="decimal-pad"
-            />
-            <Text style={styles.inputLabel}>price per can</Text>
-          </View>
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.input}
+                value={price}
+                onChangeText={(text) => {
+                  setPrice(text);
+                  setError('');
+                }}
+                placeholder="e.g., 50.00"
+                placeholderTextColor={colors.text.secondary}
+                keyboardType="decimal-pad"
+              />
+              <Text style={styles.inputLabel}>price per can</Text>
+            </View>
 
-          {error ? <Text style={styles.error}>{error}</Text> : null}
+            {error ? <Text style={styles.error}>{error}</Text> : null}
+          </Card>
 
-          <TouchableOpacity style={styles.button} onPress={handleNext}>
-            <Text style={styles.buttonText}>Continue</Text>
-          </TouchableOpacity>
+          <Button
+            title="Continue"
+            onPress={handleNext}
+            style={styles.button}
+          />
 
-          <TouchableOpacity style={styles.skipButton} onPress={handleSkip}>
-            <Text style={styles.skipButtonText}>Skip</Text>
-          </TouchableOpacity>
+          <Button
+            title="Skip"
+            onPress={handleSkip}
+            variant="ghost"
+            style={styles.skipButton}
+          />
         </View>
       </ScrollView>
     </Screen>
@@ -90,63 +99,52 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: spacing.md,
   },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: spacing.sm,
+  card: {
+    marginBottom: spacing.lg,
   },
   description: {
-    fontSize: 18,
-    color: '#333',
-    marginBottom: spacing.xs,
+    ...typography.xl,
+    fontWeight: '600',
+    color: colors.text.primary,
+    marginBottom: spacing.sm,
+    textAlign: 'center',
   },
   hint: {
-    fontSize: 14,
-    color: '#666',
+    ...typography.caption,
+    color: colors.text.secondary,
     marginBottom: spacing.xl,
+    textAlign: 'center',
   },
   inputContainer: {
     marginBottom: spacing.md,
   },
   input: {
     borderWidth: 2,
-    borderColor: '#ddd',
-    borderRadius: 8,
+    borderColor: colors.neutral[200],
+    borderRadius: borderRadius.lg,
     padding: spacing.md,
-    fontSize: 24,
+    ...typography['2xl'],
+    fontWeight: '600',
+    color: colors.text.primary,
     textAlign: 'center',
     marginBottom: spacing.xs,
+    backgroundColor: colors.surface,
   },
   inputLabel: {
-    fontSize: 14,
-    color: '#666',
+    ...typography.caption,
+    color: colors.text.secondary,
     textAlign: 'center',
   },
   error: {
-    color: '#d32f2f',
-    fontSize: 14,
+    ...typography.caption,
+    color: colors.semantic.error.main,
     marginBottom: spacing.sm,
     textAlign: 'center',
   },
   button: {
-    backgroundColor: colors.accentStart,
-    padding: spacing.md,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: spacing.lg,
-  },
-  buttonText: {
-    color: colors.text.inverse,
-    fontSize: 18,
-    fontWeight: '600',
+    marginTop: spacing.md,
   },
   skipButton: {
-    padding: spacing.md,
-    alignItems: 'center',
     marginTop: spacing.sm,
-  },
-  skipButtonText: {
-    color: '#666',
-    fontSize: 16,
   },
 });

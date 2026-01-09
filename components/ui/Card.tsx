@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, StyleSheet, ViewStyle } from 'react-native';
-import { colors, spacing, borderRadius, shadows } from '@/lib/theme';
+import Animated, { useSharedValue, useAnimatedStyle, withTiming, FadeInDown, Easing } from 'react-native-reanimated';
+import { colors, spacing, borderRadius, shadows, animations } from '@/lib/theme';
 
 export type CardVariant = 'elevated' | 'flat' | 'outlined';
 
@@ -12,6 +13,25 @@ interface CardProps {
 }
 
 export function Card({ children, variant = 'flat', style, padding = 'md' }: CardProps) {
+  const opacity = useSharedValue(0);
+  const translateY = useSharedValue(10);
+
+  useEffect(() => {
+    opacity.value = withTiming(1, {
+      duration: animations.normal,
+      easing: Easing.bezier(0.4, 0, 0.2, 1),
+    });
+    translateY.value = withTiming(0, {
+      duration: animations.normal,
+      easing: Easing.bezier(0.4, 0, 0.2, 1),
+    });
+  }, []);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+    transform: [{ translateY: translateY.value }],
+  }));
+
   const getCardStyle = (): ViewStyle => {
     const baseStyle: ViewStyle = {
       borderRadius: borderRadius.lg,
@@ -28,7 +48,7 @@ export function Card({ children, variant = 'flat', style, padding = 'md' }: Card
       case 'flat':
         return {
           ...baseStyle,
-          backgroundColor: colors.neutral[50], // Light gray for flat variant
+          backgroundColor: colors.surface, // White surface for flat variant
         };
       case 'outlined':
         return {
@@ -41,5 +61,9 @@ export function Card({ children, variant = 'flat', style, padding = 'md' }: Card
     }
   };
 
-  return <View style={[getCardStyle(), style]}>{children}</View>;
+  return (
+    <Animated.View style={[getCardStyle(), animatedStyle, style]} entering={FadeInDown.duration(animations.normal)}>
+      {children}
+    </Animated.View>
+  );
 }

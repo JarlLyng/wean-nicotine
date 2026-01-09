@@ -1,8 +1,11 @@
 import { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import { Screen } from '@/components/Screen';
-import { spacing, colors } from '@/lib/theme';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { spacing, colors, typography, borderRadius, animations } from '@/lib/theme';
 import { saveTaperSettings, getTaperSettings } from '@/lib/db-settings';
 import { saveUserPlan, getUserPlan } from '@/lib/db-user-plan';
 import { generateDefaultTaperPlan, calculateDailyAllowance } from '@/lib/taper-plan';
@@ -42,10 +45,12 @@ export default function TriggersScreen() {
       console.log('Onboarding complete: Deleting any existing data...');
       const { deleteTaperSettings } = await import('@/lib/db-settings');
       const { deleteUserPlan } = await import('@/lib/db-user-plan');
+      const { deleteAllLogEntries } = await import('@/lib/db-log-entries');
       
       // Delete in sequence to ensure clean state
       await deleteTaperSettings();
       await deleteUserPlan();
+      await deleteAllLogEntries();
       
       // Verify deletion
       const checkSettings = await getTaperSettings();
@@ -87,21 +92,38 @@ export default function TriggersScreen() {
       const verifyPlan = await getUserPlan();
       const verifySettings = await getTaperSettings();
       
-      console.log('Onboarding complete: Verifying saved data...', { verifyPlan, verifySettings });
+      console.log('Onboarding complete: Verifying saved data...', { 
+        verifyPlan: verifyPlan ? {
+          id: verifyPlan.id,
+          settingsId: verifyPlan.settingsId,
+          currentDailyAllowance: verifyPlan.currentDailyAllowance,
+          lastCalculatedDate: new Date(verifyPlan.lastCalculatedDate).toISOString(),
+        } : null,
+        verifySettings: verifySettings ? {
+          id: verifySettings.id,
+          baseline: verifySettings.baselinePouchesPerDay,
+          startDate: new Date(verifySettings.startDate).toISOString(),
+          updatedAt: new Date(verifySettings.updatedAt).toISOString(),
+        } : null,
+      });
       
       if (!verifyPlan || !verifySettings) {
         console.error('ERROR: Failed to verify saved data!', { verifyPlan, verifySettings });
         throw new Error('Failed to verify saved data');
       }
       
+      // Calculate what the allowance should be
+      const expectedAllowance = calculateDailyAllowance(verifySettings, new Date());
+      console.log('Onboarding complete: Expected daily allowance:', expectedAllowance);
+      console.log('Onboarding complete: Saved daily allowance:', verifyPlan.currentDailyAllowance);
+      console.log('Onboarding complete: Settings updatedAt:', new Date(verifySettings.updatedAt).toISOString());
       console.log('Onboarding complete: Data verified successfully. Navigating to home...');
 
       // Small delay to ensure database writes are complete
       await new Promise(resolve => setTimeout(resolve, 200));
 
-      // Navigate to home - use replace to ensure clean navigation
-      // Use push instead of replace to ensure focus event fires
-      router.push('/(tabs)/home');
+      // Navigate directly to home - this replaces onboarding stack with tabs
+      router.replace('/(tabs)/home');
     } catch (error) {
       console.error('Error completing onboarding:', error);
       alert('Something went wrong. Please try again.');
@@ -110,45 +132,48 @@ export default function TriggersScreen() {
   };
 
   return (
-    <Screen>
+    <Screen variant="gradient" title="Common Triggers">
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.content}>
-          <Text style={styles.title}>Common Triggers (Optional)</Text>
-          <Text style={styles.description}>
-            Select situations where you typically use snus. This helps us understand your patterns.
-          </Text>
-          <Text style={styles.hint}>
-            You can skip this and add triggers later.
-          </Text>
-
-          <View style={styles.triggersContainer}>
-            {TRIGGERS.map((trigger) => (
-              <TouchableOpacity
-                key={trigger}
-                style={[
-                  styles.triggerButton,
-                  selectedTriggers.includes(trigger) && styles.triggerButtonSelected,
-                ]}
-                onPress={() => toggleTrigger(trigger)}>
-                <Text
-                  style={[
-                    styles.triggerText,
-                    selectedTriggers.includes(trigger) && styles.triggerTextSelected,
-                  ]}>
-                  {trigger}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-
-          <TouchableOpacity
-            style={[styles.button, isSaving && styles.buttonDisabled]}
-            onPress={handleComplete}
-            disabled={isSaving}>
-            <Text style={styles.buttonText}>
-              {isSaving ? 'Setting up...' : 'Complete Setup'}
+          <Card variant="flat" style={styles.card} padding="lg">
+            <Text style={styles.description}>
+              Select situations where you typically use snus. This helps us understand your patterns.
             </Text>
-          </TouchableOpacity>
+            <Text style={styles.hint}>
+              You can skip this and add triggers later.
+            </Text>
+
+            <View style={styles.triggersContainer}>
+              {TRIGGERS.map((trigger, index) => (
+                <Animated.View
+                  key={trigger}
+                  entering={FadeInDown.delay(index * 50).duration(animations.normal).springify()}>
+                  <TouchableOpacity
+                    style={[
+                      styles.triggerButton,
+                      selectedTriggers.includes(trigger) && styles.triggerButtonSelected,
+                    ]}
+                    onPress={() => toggleTrigger(trigger)}>
+                    <Text
+                      style={[
+                        styles.triggerText,
+                        selectedTriggers.includes(trigger) && styles.triggerTextSelected,
+                      ]}>
+                      {trigger}
+                    </Text>
+                  </TouchableOpacity>
+                </Animated.View>
+              ))}
+            </View>
+          </Card>
+
+          <Button
+            title={isSaving ? 'Setting up...' : 'Complete Setup'}
+            onPress={handleComplete}
+            disabled={isSaving}
+            loading={isSaving}
+            style={styles.button}
+          />
         </View>
       </ScrollView>
     </Screen>
@@ -163,60 +188,49 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: spacing.md,
   },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: spacing.sm,
+  card: {
+    marginBottom: spacing.lg,
   },
   description: {
-    fontSize: 18,
-    color: '#333',
-    marginBottom: spacing.xs,
+    ...typography.xl,
+    fontWeight: '600',
+    color: colors.text.primary,
+    marginBottom: spacing.sm,
+    textAlign: 'center',
   },
   hint: {
-    fontSize: 14,
-    color: '#666',
+    ...typography.caption,
+    color: colors.text.secondary,
     marginBottom: spacing.xl,
+    textAlign: 'center',
   },
   triggersContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: spacing.sm,
-    marginBottom: spacing.xl,
+    marginBottom: spacing.md,
   },
   triggerButton: {
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
-    borderRadius: 20,
+    borderRadius: borderRadius.full,
     borderWidth: 2,
-    borderColor: '#ddd',
-    backgroundColor: '#fff',
+    borderColor: colors.neutral[200],
+    backgroundColor: colors.surface,
   },
   triggerButtonSelected: {
-    borderColor: colors.accentStart,
-    backgroundColor: colors.accentStart,
+    borderColor: colors.accent.primary,
+    backgroundColor: colors.accent.primary,
   },
   triggerText: {
-    fontSize: 16,
-    color: '#333',
+    ...typography.body,
+    color: colors.text.primary,
   },
   triggerTextSelected: {
-    color: '#fff',
+    color: colors.text.inverse,
     fontWeight: '600',
   },
   button: {
-    backgroundColor: colors.accentStart,
-    padding: spacing.md,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: spacing.lg,
-  },
-  buttonDisabled: {
-    opacity: 0.6,
-  },
-  buttonText: {
-    color: colors.text.inverse,
-    fontSize: 18,
-    fontWeight: '600',
+    marginTop: spacing.md,
   },
 });

@@ -1,48 +1,52 @@
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Screen } from '@/components/Screen';
-import { spacing, colors } from '@/lib/theme';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { spacing, colors, typography, borderRadius } from '@/lib/theme';
 
 export default function WelcomeScreen() {
   const router = useRouter();
 
   return (
-    <Screen>
+    <Screen variant="gradient" title="Welcome">
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.content}>
-          <Text style={styles.title}>Welcome to Taper</Text>
-          
-          <View style={styles.section}>
-            <Text style={styles.heading}>What is tapering?</Text>
-            <Text style={styles.text}>
-              Tapering means gradually reducing your snus usage over time, rather than quitting all at once.
-            </Text>
-            <Text style={styles.text}>
-              This approach is gentler, more sustainable, and gives you control over your pace.
-            </Text>
-          </View>
+          <Card variant="flat" style={styles.card} padding="lg">
+            <Text style={styles.title}>Welcome to Taper</Text>
+            
+            <View style={styles.section}>
+              <Text style={styles.heading}>What is tapering?</Text>
+              <Text style={styles.text}>
+                Tapering means gradually reducing your snus usage over time, rather than quitting all at once.
+              </Text>
+              <Text style={styles.text}>
+                This approach is gentler, more sustainable, and gives you control over your pace.
+              </Text>
+            </View>
 
-          <View style={styles.section}>
-            <Text style={styles.heading}>How it works</Text>
-            <Text style={styles.text}>
-              • Set your baseline (current daily usage){'\n'}
-              • Follow a gradual reduction plan{'\n'}
-              • Track your progress without pressure{'\n'}
-              • Adjust as needed — no judgment
-            </Text>
-          </View>
+            <View style={styles.section}>
+              <Text style={styles.heading}>How it works</Text>
+              <Text style={styles.text}>
+                • Set your baseline (current daily usage){'\n'}
+                • Follow a gradual reduction plan{'\n'}
+                • Track your progress without pressure{'\n'}
+                • Adjust as needed — no judgment
+              </Text>
+            </View>
 
-          <View style={styles.section}>
-            <Text style={styles.text}>
-              Let's get started. This will only take a minute.
-            </Text>
-          </View>
+            <View style={styles.section}>
+              <Text style={styles.text}>
+                Let's get started. This will only take a minute.
+              </Text>
+            </View>
+          </Card>
 
-          <TouchableOpacity
+          <Button
+            title="Get Started"
+            onPress={() => router.push('/(onboarding)/baseline')}
             style={styles.button}
-            onPress={() => router.push('/(onboarding)/baseline')}>
-            <Text style={styles.buttonText}>Get Started</Text>
-          </TouchableOpacity>
+          />
         </View>
       </ScrollView>
     </Screen>
@@ -57,9 +61,13 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: spacing.md,
   },
+  card: {
+    marginBottom: spacing.lg,
+  },
   title: {
-    fontSize: 32,
-    fontWeight: 'bold',
+    ...typography['3xl'],
+    fontWeight: '700',
+    color: colors.text.primary,
     marginBottom: spacing.xl,
     textAlign: 'center',
   },
@@ -67,26 +75,17 @@ const styles = StyleSheet.create({
     marginBottom: spacing.lg,
   },
   heading: {
-    fontSize: 20,
+    ...typography.xl,
     fontWeight: '600',
+    color: colors.text.primary,
     marginBottom: spacing.sm,
   },
   text: {
-    fontSize: 16,
-    lineHeight: 24,
-    color: '#333',
+    ...typography.body,
+    color: colors.text.secondary,
     marginBottom: spacing.sm,
   },
   button: {
-    backgroundColor: colors.accentStart,
-    padding: spacing.md,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: spacing.lg,
-  },
-  buttonText: {
-    color: colors.text.inverse,
-    fontSize: 18,
-    fontWeight: '600',
+    marginTop: spacing.md,
   },
 });

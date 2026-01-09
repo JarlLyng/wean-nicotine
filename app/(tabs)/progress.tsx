@@ -1,19 +1,21 @@
-import { useState, useEffect, useCallback } from 'react';
-import { View, Text, StyleSheet, ScrollView, RefreshControl, TouchableOpacity } from 'react-native';
-import { useFocusEffect } from 'expo-router';
 import { Screen } from '@/components/Screen';
-import { spacing, colors } from '@/lib/theme';
+import { Card } from '@/components/ui/Card';
 import { getTaperSettings } from '@/lib/db-settings';
+import type { TaperSettings } from '@/lib/models';
 import {
-  calculateWeeklyProgress,
   calculateTotalProgress,
+  calculateWeeklyProgress,
   detectMilestones,
   getCurrentWeek,
   getPreviousWeek,
-  type WeeklyProgress,
   type Milestone,
+  type WeeklyProgress,
 } from '@/lib/progress';
-import type { TaperSettings } from '@/lib/models';
+import { animations, borderRadius, colors, spacing, typography } from '@/lib/theme';
+import { useFocusEffect } from 'expo-router';
+import { useCallback, useState } from 'react';
+import { RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import Animated, { FadeInRight } from 'react-native-reanimated';
 
 export default function ProgressScreen() {
   const [settings, setSettings] = useState<TaperSettings | null>(null);
@@ -26,6 +28,13 @@ export default function ProgressScreen() {
 
   const loadData = async () => {
     try {
+      setIsLoading(true);
+      // Reset state to ensure fresh data
+      setCurrentWeek(null);
+      setPreviousWeek(null);
+      setTotalProgress(null);
+      setMilestones([]);
+      
       const currentSettings = await getTaperSettings();
       if (!currentSettings) {
         setIsLoading(false);
@@ -36,11 +45,13 @@ export default function ProgressScreen() {
 
       // Calculate current week progress
       const { start: currentStart, end: currentEnd } = getCurrentWeek();
+      console.log('Progress screen: Calculating current week progress from', currentStart.toISOString(), 'to', currentEnd.toISOString());
       const currentWeekData = await calculateWeeklyProgress(
         currentSettings,
         currentStart,
         currentEnd
       );
+      console.log('Progress screen: Current week data:', currentWeekData);
       setCurrentWeek(currentWeekData);
 
       // Calculate previous week progress
@@ -53,7 +64,9 @@ export default function ProgressScreen() {
       setPreviousWeek(previousWeekData);
 
       // Calculate total progress
+      console.log('Progress screen: Calculating total progress from start date', new Date(currentSettings.startDate).toISOString());
       const total = await calculateTotalProgress(currentSettings);
+      console.log('Progress screen: Total progress data:', total);
       setTotalProgress(total);
 
       // Detect milestones
@@ -68,7 +81,20 @@ export default function ProgressScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      loadData();
+      // Reset state when screen comes into focus to ensure fresh data
+      setSettings(null);
+      setCurrentWeek(null);
+      setPreviousWeek(null);
+      setTotalProgress(null);
+      setMilestones([]);
+      setIsLoading(true);
+      // Small delay to ensure database is ready
+      const timer = setTimeout(() => {
+        loadData();
+      }, 100);
+      return () => {
+        clearTimeout(timer);
+      };
     }, [])
   );
 
@@ -105,14 +131,15 @@ export default function ProgressScreen() {
     );
   }
 
+  // Force remount when settings change (after onboarding/reset)
+  const screenKey = `progress-screen-${settings?.id || 'no-settings'}`;
+  
   return (
-    <Screen>
+    <Screen key={screenKey} variant="gradient" title="Progress">
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         refreshControl={<RefreshControl refreshing={isLoading} onRefresh={loadData} />}>
         <View style={styles.content}>
-          <Text style={styles.title}>Progress</Text>
-
           {/* Week Selector */}
           <View style={styles.weekSelector}>
             <TouchableOpacity
@@ -132,7 +159,7 @@ export default function ProgressScreen() {
           </View>
 
           {/* Weekly Stats Card */}
-          <View style={styles.card}>
+          <Card variant="elevated" style={styles.card} padding="lg">
             <Text style={styles.cardTitle}>{weekLabel}</Text>
             <View style={styles.statRow}>
               <View style={styles.statItem}>
@@ -150,10 +177,10 @@ export default function ProgressScreen() {
                 <Text style={styles.moneyValue}>${((weekData.moneySaved ?? 0) / 100).toFixed(2)}</Text>
               </View>
             )}
-          </View>
+          </Card>
 
           {/* Total Progress Card */}
-          <View style={styles.card}>
+          <Card variant="elevated" style={styles.card} padding="lg">
             <Text style={styles.cardTitle}>Total Progress</Text>
             <View style={styles.statRow}>
               <View style={styles.statItem}>
@@ -179,31 +206,34 @@ export default function ProgressScreen() {
                 {(totalProgress.averageDailyUsage ?? 0).toFixed(1)} pouches/day
               </Text>
             </View>
-          </View>
+          </Card>
 
           {/* Milestones Card */}
           {milestones.length > 0 && (
-            <View style={styles.card}>
+            <Card variant="elevated" style={styles.card} padding="lg">
               <Text style={styles.cardTitle}>Milestones</Text>
-              {milestones.map((milestone) => (
-                <View key={milestone.id} style={styles.milestoneItem}>
+              {milestones.map((milestone, index) => (
+                <Animated.View
+                  key={milestone.id}
+                  style={styles.milestoneItem}
+                  entering={FadeInRight.delay(index * 100).duration(animations.normal).springify()}>
                   <Text style={styles.milestoneTitle}>{milestone.title}</Text>
                   <Text style={styles.milestoneDescription}>{milestone.description}</Text>
                   <Text style={styles.milestoneDate}>
                     {new Date(milestone.achievedAt).toLocaleDateString()}
                   </Text>
-                </View>
+                </Animated.View>
               ))}
-            </View>
+            </Card>
           )}
 
           {/* Encouragement Message */}
-          <View style={styles.encouragementCard}>
+          <Card variant="flat" style={styles.encouragementCard} padding="md">
             <Text style={styles.encouragementText}>
               Every step forward counts. Progress isn't about perfection — it's about moving in the
               right direction.
             </Text>
-          </View>
+          </Card>
         </View>
       </ScrollView>
     </Screen>
@@ -230,13 +260,8 @@ const styles = StyleSheet.create({
     padding: spacing.lg,
   },
   emptyText: {
-    fontSize: 16,
-    color: '#666',
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    marginBottom: spacing.lg,
+    ...typography.body,
+    color: colors.textSecondary,
   },
   weekSelector: {
     flexDirection: 'row',
@@ -246,10 +271,10 @@ const styles = StyleSheet.create({
   weekButton: {
     flex: 1,
     padding: spacing.md,
-    borderRadius: 8,
+    borderRadius: borderRadius.lg,
     borderWidth: 2,
-    borderColor: '#ddd',
-    backgroundColor: '#fff',
+    borderColor: colors.neutral[200],
+    backgroundColor: colors.surface,
     alignItems: 'center',
   },
   weekButtonActive: {
@@ -257,24 +282,21 @@ const styles = StyleSheet.create({
     backgroundColor: colors.accentStart,
   },
   weekButtonText: {
-    fontSize: 16,
-    color: '#333',
+    ...typography.body,
     fontWeight: '600',
+    color: colors.textPrimary,
   },
   weekButtonTextActive: {
-    color: '#fff',
+    color: colors.text.inverse,
   },
   card: {
-    backgroundColor: '#f5f5f5',
-    borderRadius: 12,
-    padding: spacing.lg,
     marginBottom: spacing.md,
   },
   cardTitle: {
-    fontSize: 20,
+    ...typography.xl,
     fontWeight: '600',
     marginBottom: spacing.md,
-    color: '#333',
+    color: colors.textPrimary,
   },
   statRow: {
     flexDirection: 'row',
@@ -291,8 +313,8 @@ const styles = StyleSheet.create({
     marginBottom: spacing.xs,
   },
   statLabel: {
-    fontSize: 14,
-    color: '#666',
+    ...typography.caption,
+    color: colors.textSecondary,
   },
   moneyRow: {
     flexDirection: 'row',
@@ -301,15 +323,15 @@ const styles = StyleSheet.create({
     marginTop: spacing.sm,
     paddingTop: spacing.md,
     borderTopWidth: 1,
-    borderTopColor: '#ddd',
+    borderTopColor: colors.neutral[200],
   },
   moneyLabel: {
-    fontSize: 16,
-    color: '#333',
+    ...typography.body,
+    color: colors.textPrimary,
     fontWeight: '500',
   },
   moneyValue: {
-    fontSize: 24,
+    ...typography['2xl'],
     fontWeight: 'bold',
     color: colors.accentStart,
   },
@@ -317,48 +339,45 @@ const styles = StyleSheet.create({
     marginTop: spacing.sm,
     paddingTop: spacing.md,
     borderTopWidth: 1,
-    borderTopColor: '#ddd',
+    borderTopColor: colors.neutral[200],
   },
   averageLabel: {
-    fontSize: 14,
-    color: '#666',
+    ...typography.caption,
+    color: colors.textSecondary,
     marginBottom: spacing.xs,
   },
   averageValue: {
-    fontSize: 18,
+    ...typography.lg,
     fontWeight: '600',
-    color: '#333',
+    color: colors.textPrimary,
   },
   milestoneItem: {
     marginBottom: spacing.md,
     paddingBottom: spacing.md,
     borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+    borderBottomColor: colors.neutral[200],
   },
   milestoneTitle: {
-    fontSize: 18,
+    ...typography.lg,
     fontWeight: '600',
-    color: '#333',
+    color: colors.textPrimary,
     marginBottom: spacing.xs,
   },
   milestoneDescription: {
-    fontSize: 14,
-    color: '#666',
+    ...typography.caption,
+    color: colors.textSecondary,
     marginBottom: spacing.xs,
   },
   milestoneDate: {
-    fontSize: 12,
-    color: '#999',
+    ...typography.xs,
+    color: colors.text.tertiary,
   },
   encouragementCard: {
-    backgroundColor: '#e8f5e9',
-    borderRadius: 12,
-    padding: spacing.md,
     marginTop: spacing.md,
   },
   encouragementText: {
-    fontSize: 14,
-    color: '#2e7d32',
+    ...typography.caption,
+    color: colors.semantic.success.dark,
     lineHeight: 20,
     textAlign: 'center',
   },

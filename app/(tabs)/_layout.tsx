@@ -3,7 +3,7 @@ import React from 'react';
 import { Platform } from 'react-native';
 
 import { HapticTab } from '@/components/haptic-tab';
-import { IconSymbol } from '@/components/ui/icon-symbol';
+import { Icon } from '@/components/ui/Icon';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { colors } from '@/lib/theme';
 
@@ -36,28 +36,28 @@ export default function TabLayout() {
         name="home"
         options={{
           title: 'Today',
-          tabBarIcon: ({ color }) => <IconSymbol size={24} name="house.fill" color={color} />,
+          tabBarIcon: ({ color }) => <Icon name="house" size={24} color={color} weight="fill" />,
         }}
       />
       <Tabs.Screen
         name="progress"
         options={{
           title: 'Progress',
-          tabBarIcon: ({ color }) => <IconSymbol size={24} name="chart.bar.fill" color={color} />,
+          tabBarIcon: ({ color }) => <Icon name="chart-line-up" size={24} color={color} weight="fill" />,
         }}
       />
       <Tabs.Screen
         name="tools"
         options={{
           title: 'Tools',
-          tabBarIcon: ({ color }) => <IconSymbol size={24} name="heart.fill" color={color} />,
+          tabBarIcon: ({ color }) => <Icon name="heart" size={24} color={color} weight="fill" />,
         }}
       />
       <Tabs.Screen
         name="settings"
         options={{
           title: 'Settings',
-          tabBarIcon: ({ color }) => <IconSymbol size={24} name="gearshape.fill" color={color} />,
+          tabBarIcon: ({ color }) => <Icon name="gear" size={24} color={color} weight="fill" />,
         }}
       />
     </Tabs>

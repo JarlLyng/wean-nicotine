@@ -2,7 +2,10 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Switch, Alert } f
 import { useState, useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import { Screen } from '@/components/Screen';
-import { spacing, colors } from '@/lib/theme';
+import { Card } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
+import { Icon } from '@/components/ui/Icon';
+import { spacing, colors, typography, borderRadius } from '@/lib/theme';
 import { getTaperSettings } from '@/lib/db-settings';
 import type { TaperSettings } from '@/lib/models';
 import {
@@ -84,29 +87,40 @@ export default function SettingsScreen() {
   };
 
   return (
-    <Screen>
+    <Screen variant="gradient" title="Settings">
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.content}>
-          <Text style={styles.title}>Settings</Text>
-
           {/* Reset Taper Section */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Taper Plan</Text>
+          <Card variant="elevated" style={styles.section} padding="lg">
+            <View style={styles.sectionTitleRow}>
+              <Icon name="arrow-clockwise" size={24} color={colors.textPrimary} weight="regular" />
+              <Text style={styles.sectionTitle}>Taper Plan</Text>
+            </View>
             <Text style={styles.sectionDescription}>
               If you've had a setback or want to start fresh, you can reset your taper plan.
             </Text>
-            <TouchableOpacity
-              style={styles.resetButton}
-              onPress={() => router.push('/(tabs)/settings/reset-taper')}>
-              <Text style={styles.resetButtonText}>Reset Taper Plan</Text>
-            </TouchableOpacity>
-          </View>
+            <Button
+              title="Reset Taper Plan"
+              onPress={() => router.push('/(tabs)/settings/reset-taper')}
+              variant="secondary"
+              style={[styles.resetButton, { borderColor: colors.semantic.error.main }]}
+              textStyle={{ color: colors.semantic.error.main }}
+            />
+          </Card>
 
           {/* Notifications Section */}
-          <View style={styles.section}>
+          <Card variant="elevated" style={styles.section} padding="lg">
             <View style={styles.sectionHeader}>
               <View style={styles.sectionHeaderText}>
-                <Text style={styles.sectionTitle}>Daily Check-In Notification</Text>
+                <View style={styles.sectionTitleRow}>
+                  <Icon 
+                    name={dailyCheckInEnabled && hasPermission ? "bell" : "bell-slash"} 
+                    size={24} 
+                    color={colors.textPrimary} 
+                    weight="regular" 
+                  />
+                  <Text style={styles.sectionTitle}>Daily Check-In Notification</Text>
+                </View>
                 <Text style={styles.sectionDescription}>
                   Receive a gentle reminder each day at 8 PM to log your progress
                 </Text>
@@ -116,12 +130,14 @@ export default function SettingsScreen() {
                   value={dailyCheckInEnabled && hasPermission}
                   onValueChange={handleToggleDailyCheckIn}
                   disabled={!hasPermission}
+                  trackColor={{ false: colors.neutral[300], true: colors.accentStart }}
+                  thumbColor={colors.surface}
                 />
               )}
             </View>
             {!hasPermission && (
-              <TouchableOpacity
-                style={styles.permissionButton}
+              <Button
+                title="Enable Notifications"
                 onPress={async () => {
                   const granted = await requestNotificationPermissions();
                   setHasPermission(granted);
@@ -131,29 +147,42 @@ export default function SettingsScreen() {
                       'Please enable notifications in your device settings to use this feature.'
                     );
                   }
-                }}>
-                <Text style={styles.permissionButtonText}>Enable Notifications</Text>
-              </TouchableOpacity>
+                }}
+                variant="primary"
+                style={styles.permissionButton}
+              />
             )}
             {dailyCheckInEnabled && hasPermission && (
               <Text style={styles.notificationInfo}>Scheduled for 20:00 daily</Text>
             )}
-          </View>
+          </Card>
 
           {/* Current Settings Info */}
           {settings && (
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Current Settings</Text>
-              <Text style={styles.info}>Baseline: {settings.baselinePouchesPerDay} pouches/day</Text>
-              <Text style={styles.info}>
-                Weekly Reduction: {settings.weeklyReductionPercent}%
-              </Text>
-              {settings.pricePerCan && (
+            <Card variant="elevated" style={styles.section} padding="lg">
+              <View style={styles.sectionTitleRow}>
+                <Icon name="gear" size={24} color={colors.textPrimary} weight="regular" />
+                <Text style={styles.sectionTitle}>Current Settings</Text>
+              </View>
+              <View style={styles.infoRow}>
+                <Icon name="calendar" size={20} color={colors.textSecondary} weight="regular" />
+                <Text style={styles.info}>Baseline: {settings.baselinePouchesPerDay} pouches/day</Text>
+              </View>
+              <View style={styles.infoRow}>
+                <Icon name="chart-line-up" size={20} color={colors.textSecondary} weight="regular" />
                 <Text style={styles.info}>
-                  Price per can: ${(settings.pricePerCan / 100).toFixed(2)}
+                  Weekly Reduction: {settings.weeklyReductionPercent}%
                 </Text>
+              </View>
+              {settings.pricePerCan && (
+                <View style={styles.infoRow}>
+                  <Icon name="currency-dollar" size={20} color={colors.textSecondary} weight="regular" />
+                  <Text style={styles.info}>
+                    Price per can: ${(settings.pricePerCan / 100).toFixed(2)}
+                  </Text>
+                </View>
               )}
-            </View>
+            </Card>
           )}
         </View>
       </ScrollView>
@@ -167,86 +196,59 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    padding: spacing.md,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    marginBottom: spacing.lg,
-    color: colors.textPrimary,
+    paddingTop: spacing.lg,
+    paddingHorizontal: spacing.md,
   },
   section: {
-    marginBottom: spacing.lg,
-    padding: spacing.md,
-    backgroundColor: colors.neutral[100],
-    borderRadius: 12,
+    marginBottom: spacing.md,
   },
   sectionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
+    marginBottom: spacing.md,
   },
   sectionHeaderText: {
     flex: 1,
     marginRight: spacing.md,
   },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: '600',
+  sectionTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
     marginBottom: spacing.sm,
+  },
+  sectionTitle: {
+    ...typography.xl,
+    fontWeight: '600',
     color: colors.textPrimary,
   },
+  infoRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    marginBottom: spacing.xs,
+  },
   sectionDescription: {
-    fontSize: 14,
+    ...typography.caption,
     color: colors.textSecondary,
-    marginBottom: spacing.md,
     lineHeight: 20,
   },
   permissionButton: {
-    backgroundColor: colors.accentStart,
-    padding: spacing.md,
-    borderRadius: 8,
-    alignItems: 'center',
     marginTop: spacing.md,
   },
-  permissionButtonText: {
-    color: colors.text.inverse,
-    fontSize: 16,
-    fontWeight: '600',
-  },
   notificationInfo: {
-    fontSize: 14,
+    ...typography.caption,
     color: colors.textSecondary,
     marginTop: spacing.md,
     fontStyle: 'italic',
   },
   info: {
-    fontSize: 14,
+    ...typography.caption,
     marginBottom: spacing.xs,
     color: colors.textPrimary,
   },
   resetButton: {
-    backgroundColor: colors.semantic.error.main,
-    padding: spacing.md,
-    borderRadius: 8,
-    alignItems: 'center',
     marginTop: spacing.sm,
-  },
-  resetButtonText: {
-    color: colors.text.inverse,
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  settingsButton: {
-    backgroundColor: colors.accentStart,
-    padding: spacing.md,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: spacing.sm,
-  },
-  settingsButtonText: {
-    color: colors.text.inverse,
-    fontSize: 16,
-    fontWeight: '600',
   },
 });

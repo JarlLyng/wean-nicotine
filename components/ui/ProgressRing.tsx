@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
-import { colors, typography, spacing } from '@/lib/theme';
+import Animated, { useSharedValue, useAnimatedProps, withTiming, Easing } from 'react-native-reanimated';
+import { colors, typography, spacing, animations } from '@/lib/theme';
+
+const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
 interface ProgressRingProps {
   progress: number; // 0-1
@@ -26,9 +29,27 @@ export function ProgressRing({
 }: ProgressRingProps) {
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
-  const clampedProgress = Math.max(0, Math.min(1, progress));
-  const strokeDashoffset = circumference * (1 - clampedProgress);
   const center = size / 2;
+  
+  // Animated progress value
+  const animatedProgress = useSharedValue(0);
+
+  // Animate progress changes
+  useEffect(() => {
+    const clampedProgress = Math.max(0, Math.min(1, progress));
+    animatedProgress.value = withTiming(clampedProgress, {
+      duration: animations.normal,
+      easing: Easing.bezier(0.4, 0, 0.2, 1), // easeInOut
+    });
+  }, [progress]);
+
+  // Animated props for the progress circle
+  const animatedCircleProps = useAnimatedProps(() => {
+    const strokeDashoffset = circumference * (1 - animatedProgress.value);
+    return {
+      strokeDashoffset,
+    };
+  });
 
   const displayLabel = label !== undefined ? label : `${Math.round(progress * 100)}%`;
 
@@ -45,8 +66,8 @@ export function ProgressRing({
             strokeWidth={strokeWidth}
             fill="transparent"
           />
-          {/* Progress circle */}
-          <Circle
+          {/* Progress circle - animated */}
+          <AnimatedCircle
             cx={center}
             cy={center}
             r={radius}
@@ -54,9 +75,9 @@ export function ProgressRing({
             strokeWidth={strokeWidth}
             fill="transparent"
             strokeDasharray={circumference}
-            strokeDashoffset={strokeDashoffset}
             strokeLinecap="round"
             transform={`rotate(-90 ${center} ${center})`}
+            animatedProps={animatedCircleProps}
           />
         </Svg>
         {showLabel && (

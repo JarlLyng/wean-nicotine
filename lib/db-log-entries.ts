@@ -131,3 +131,11 @@ export async function deleteLogEntry(id: number): Promise<void> {
   const db = await getDatabase();
   await db.runAsync('DELETE FROM log_entries WHERE id = ?', [id]);
 }
+
+/**
+ * Delete all log entries (used when resetting/starting over)
+ */
+export async function deleteAllLogEntries(): Promise<void> {
+  const db = await getDatabase();
+  await db.runAsync('DELETE FROM log_entries');
+}

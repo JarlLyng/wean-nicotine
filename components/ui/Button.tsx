@@ -1,6 +1,9 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, ActivityIndicator, ViewStyle, TextStyle } from 'react-native';
-import { colors, spacing, typography, borderRadius, shadows } from '@/lib/theme';
+import { Text, StyleSheet, ActivityIndicator, ViewStyle, TextStyle, Pressable } from 'react-native';
+import Animated, { useSharedValue, useAnimatedStyle, withSpring, withTiming } from 'react-native-reanimated';
+import { colors, spacing, typography, borderRadius, shadows, animations } from '@/lib/theme';
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost';
 
@@ -90,12 +93,41 @@ export function Button({
     }
   };
 
+  const scale = useSharedValue(1);
+  const opacity = useSharedValue(1);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+    opacity: opacity.value,
+  }));
+
+  const handlePressIn = () => {
+    if (!isDisabled) {
+      scale.value = withSpring(0.96, {
+        damping: 15,
+        stiffness: 300,
+      });
+      opacity.value = withTiming(0.8, { duration: animations.fast });
+    }
+  };
+
+  const handlePressOut = () => {
+    if (!isDisabled) {
+      scale.value = withSpring(1, {
+        damping: 15,
+        stiffness: 300,
+      });
+      opacity.value = withTiming(1, { duration: animations.fast });
+    }
+  };
+
   return (
-    <TouchableOpacity
-      style={[getButtonStyle(), style]}
+    <AnimatedPressable
+      style={[getButtonStyle(), animatedStyle, style]}
       onPress={onPress}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
       disabled={isDisabled}
-      activeOpacity={0.7}
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel || title}
       accessibilityHint={accessibilityHint}
@@ -108,6 +140,6 @@ export function Button({
       ) : (
         <Text style={[getTextStyle(), textStyle]}>{title}</Text>
       )}
-    </TouchableOpacity>
+    </AnimatedPressable>
   );
 }
