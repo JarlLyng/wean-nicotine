@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import Svg, { Circle } from 'react-native-svg';
+import Svg, { Circle, Defs, LinearGradient, Stop } from 'react-native-svg';
 import Animated, { useSharedValue, useAnimatedProps, withTiming, Easing } from 'react-native-reanimated';
 import { colors, typography, spacing, animations } from '@/lib/theme';
 
@@ -15,6 +15,7 @@ interface ProgressRingProps {
   sublabel?: string;
   color?: string;
   backgroundColor?: string;
+  useGradient?: boolean;
 }
 
 export function ProgressRing({
@@ -26,6 +27,7 @@ export function ProgressRing({
   sublabel,
   color = colors.accent.primary,
   backgroundColor = colors.neutral[200],
+  useGradient = false,
 }: ProgressRingProps) {
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
@@ -52,11 +54,21 @@ export function ProgressRing({
   });
 
   const displayLabel = label !== undefined ? label : `${Math.round(progress * 100)}%`;
+  const gradientId = 'progressGradient';
 
   return (
     <View style={styles.container}>
       <View style={[styles.ringContainer, { width: size, height: size }]}>
         <Svg width={size} height={size}>
+          <Defs>
+            {useGradient && (
+              <LinearGradient id={gradientId} x1="0%" y1="0%" x2="0%" y2="100%">
+                <Stop offset="0%" stopColor={colors.accentStart} stopOpacity="1" />
+                <Stop offset="50%" stopColor={colors.accentMid} stopOpacity="1" />
+                <Stop offset="100%" stopColor={colors.accentEnd} stopOpacity="1" />
+              </LinearGradient>
+            )}
+          </Defs>
           {/* Background circle */}
           <Circle
             cx={center}
@@ -71,7 +83,7 @@ export function ProgressRing({
             cx={center}
             cy={center}
             r={radius}
-            stroke={color}
+            stroke={useGradient ? `url(#${gradientId})` : color}
             strokeWidth={strokeWidth}
             fill="transparent"
             strokeDasharray={circumference}

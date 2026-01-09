@@ -205,9 +205,10 @@ export default function HomeScreen() {
                 <ProgressRing
                   key={`progress-${dailyAllowance}-${pouchesUsedToday}`}
                   progress={Math.min(pouchesUsedToday / dailyAllowance, 1)}
-                  size={120}
-                  strokeWidth={12}
+                  size={140}
+                  strokeWidth={14}
                   color={colors.accentStart}
+                  useGradient={true}
                   showLabel={true}
                   label={`${pouchesUsedToday}/${Math.round(dailyAllowance)}`}
                   sublabel="pouches"
