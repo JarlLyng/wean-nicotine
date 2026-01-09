@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { View, Text, StyleSheet, ScrollView, RefreshControl, TouchableOpacity } from 'react-native';
 import { useFocusEffect } from 'expo-router';
 import { Screen } from '@/components/Screen';
-import { spacing } from '@/lib/theme';
+import { spacing, colors } from '@/lib/theme';
 import { getTaperSettings } from '@/lib/db-settings';
 import {
   calculateWeeklyProgress,
@@ -136,18 +136,18 @@ export default function ProgressScreen() {
             <Text style={styles.cardTitle}>{weekLabel}</Text>
             <View style={styles.statRow}>
               <View style={styles.statItem}>
-                <Text style={styles.statValue}>{weekData.pouchesAvoided}</Text>
+                <Text style={styles.statValue}>{weekData.pouchesAvoided ?? 0}</Text>
                 <Text style={styles.statLabel}>Pouches Avoided</Text>
               </View>
               <View style={styles.statItem}>
-                <Text style={styles.statValue}>{weekData.daysUnderLimit}</Text>
+                <Text style={styles.statValue}>{weekData.daysUnderLimit ?? 0}</Text>
                 <Text style={styles.statLabel}>Days Under Limit</Text>
               </View>
             </View>
             {weekData.moneySaved && weekData.moneySaved > 0 && (
               <View style={styles.moneyRow}>
                 <Text style={styles.moneyLabel}>Money Saved:</Text>
-                <Text style={styles.moneyValue}>${(weekData.moneySaved / 100).toFixed(2)}</Text>
+                <Text style={styles.moneyValue}>${((weekData.moneySaved ?? 0) / 100).toFixed(2)}</Text>
               </View>
             )}
           </View>
@@ -157,11 +157,11 @@ export default function ProgressScreen() {
             <Text style={styles.cardTitle}>Total Progress</Text>
             <View style={styles.statRow}>
               <View style={styles.statItem}>
-                <Text style={styles.statValue}>{totalProgress.totalPouchesAvoided}</Text>
+                <Text style={styles.statValue}>{totalProgress.totalPouchesAvoided ?? 0}</Text>
                 <Text style={styles.statLabel}>Total Pouches Avoided</Text>
               </View>
               <View style={styles.statItem}>
-                <Text style={styles.statValue}>{totalProgress.daysSinceStart}</Text>
+                <Text style={styles.statValue}>{totalProgress.daysSinceStart ?? 0}</Text>
                 <Text style={styles.statLabel}>Days Since Start</Text>
               </View>
             </View>
@@ -169,14 +169,14 @@ export default function ProgressScreen() {
               <View style={styles.moneyRow}>
                 <Text style={styles.moneyLabel}>Total Money Saved:</Text>
                 <Text style={styles.moneyValue}>
-                  ${(totalProgress.totalMoneySaved / 100).toFixed(2)}
+                  ${((totalProgress.totalMoneySaved ?? 0) / 100).toFixed(2)}
                 </Text>
               </View>
             )}
             <View style={styles.averageRow}>
               <Text style={styles.averageLabel}>Average Daily Usage:</Text>
               <Text style={styles.averageValue}>
-                {totalProgress.averageDailyUsage.toFixed(1)} pouches/day
+                {(totalProgress.averageDailyUsage ?? 0).toFixed(1)} pouches/day
               </Text>
             </View>
           </View>
@@ -253,8 +253,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   weekButtonActive: {
-    borderColor: '#0a7ea4',
-    backgroundColor: '#0a7ea4',
+    borderColor: colors.accentStart,
+    backgroundColor: colors.accentStart,
   },
   weekButtonText: {
     fontSize: 16,
@@ -287,7 +287,7 @@ const styles = StyleSheet.create({
   statValue: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#0a7ea4',
+    color: colors.accentStart,
     marginBottom: spacing.xs,
   },
   statLabel: {
@@ -311,7 +311,7 @@ const styles = StyleSheet.create({
   moneyValue: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#0a7ea4',
+    color: colors.accentStart,
   },
   averageRow: {
     marginTop: spacing.sm,

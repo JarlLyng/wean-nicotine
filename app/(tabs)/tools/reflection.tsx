@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Screen } from '@/components/Screen';
-import { spacing } from '@/lib/theme';
+import { spacing, colors } from '@/lib/theme';
 
 const REFLECTION_PROMPTS = [
   {
@@ -130,14 +130,14 @@ const styles = StyleSheet.create({
     lineHeight: 28,
   },
   button: {
-    backgroundColor: '#0a7ea4',
+    backgroundColor: colors.accentStart,
     padding: spacing.md,
     borderRadius: 8,
     alignItems: 'center',
     marginBottom: spacing.md,
   },
   buttonText: {
-    color: '#fff',
+    color: colors.text.inverse,
     fontSize: 18,
     fontWeight: '600',
   },
@@ -153,13 +153,13 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
   },
   nextButton: {
-    backgroundColor: '#0a7ea4',
+    backgroundColor: colors.accentStart,
     padding: spacing.md,
     borderRadius: 8,
     alignItems: 'center',
   },
   nextButtonText: {
-    color: '#fff',
+    color: colors.text.inverse,
     fontSize: 18,
     fontWeight: '600',
   },

@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { Screen } from '@/components/Screen';
-import { spacing } from '@/lib/theme';
+import { spacing, colors } from '@/lib/theme';
 
 export default function UrgeSurfingScreen() {
   return (
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
   stepNumber: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#0a7ea4',
+    color: colors.accentStart,
     width: 40,
     marginRight: spacing.md,
   },
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
   },
   stepTitle: {
     fontWeight: '600',
-    color: '#0a7ea4',
+    color: colors.accentStart,
   },
   encouragementBox: {
     backgroundColor: '#e8f5e9',

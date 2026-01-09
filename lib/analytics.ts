@@ -72,7 +72,12 @@ export async function getAnalyticsEvents(
       timestamp: number;
       data: string | null;
     }>(query, params);
-    return result.map((row) => ({
+    return result.map((row: {
+      id: number;
+      event_type: string;
+      timestamp: number;
+      data: string | null;
+    }) => ({
       id: row.id,
       eventType: row.event_type,
       timestamp: row.timestamp,

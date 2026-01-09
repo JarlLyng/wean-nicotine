@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Screen } from '@/components/Screen';
-import { spacing } from '@/lib/theme';
+import { spacing, colors } from '@/lib/theme';
 
 export default function BaselineScreen() {
   const router = useRouter();
@@ -115,14 +115,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   button: {
-    backgroundColor: '#0a7ea4',
+    backgroundColor: colors.accentStart,
     padding: spacing.md,
     borderRadius: 8,
     alignItems: 'center',
     marginTop: spacing.lg,
   },
   buttonText: {
-    color: '#fff',
+    color: colors.text.inverse,
     fontSize: 18,
     fontWeight: '600',
   },

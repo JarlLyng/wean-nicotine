@@ -29,7 +29,7 @@ Taper helps users:
 
 ## 🧠 Product principles
 
-- **Taper, don’t punish**  
+- **Taper, don't punish**  
 - **Progress over perfection**  
 - **No shame, no streak anxiety**  
 - **Offline‑first & private by default**  
@@ -78,9 +78,11 @@ Taper helps users:
 
 - **Expo** (React Native)
 - **Expo Router** (file‑based navigation)
-- **Local‑first storage** (SQLite / MMKV)
+- **Local‑first storage** (SQLite via `expo-sqlite`)
 - **Expo Notifications**
 - No backend in MVP
+
+**Note:** This app is designed for mobile (iOS/Android) only. SQLite is not available on web browsers.
 
 ---
 
@@ -88,17 +90,30 @@ Taper helps users:
 
 ```
 app/
-  (onboarding)/
-  (home)/
-  (progress)/
-  (tools)/
-  (settings)/
-components/
-lib/
-store/
+  (onboarding)/          # Onboarding flow screens
+    welcome.tsx
+    baseline.tsx
+    price.tsx
+    triggers.tsx
+  (tabs)/                # Main app screens (tab navigation)
+    home.tsx             # Today / Daily allowance screen
+    progress.tsx         # Progress tracking screen
+    tools/               # Support tools
+      breathing.tsx
+      urge-surfing.tsx
+      reflection.tsx
+    settings/            # Settings screens
+      index.tsx
+      reset-taper.tsx
+      notifications.tsx
+components/             # Reusable UI components
+lib/                    # Business logic & utilities
+  db*.ts                # Database operations
+  theme.ts              # Design tokens
+docs/                   # Documentation
 ```
 
-(Structure will evolve as the app matures.)
+See `docs/decisions/storage.md` for storage architecture details.
 
 ---
 

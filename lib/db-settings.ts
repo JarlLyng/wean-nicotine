@@ -10,18 +10,26 @@ import type { TaperSettings } from './models';
  * Since we only have one user, we'll use a single row approach
  */
 export async function saveTaperSettings(
-  settings: Omit<TaperSettings, 'id' | 'createdAt' | 'updatedAt'>
+  settings: Omit<TaperSettings, 'id' | 'createdAt' | 'updatedAt'>,
+  forceCreate: boolean = false
 ): Promise<number> {
   const db = await getDatabase();
   const now = Date.now();
 
+  // If forceCreate is true, delete existing first (for fresh start scenarios)
+  if (forceCreate) {
+    await db.runAsync('DELETE FROM taper_settings');
+  }
+
   // Check if settings already exist
   const existing = await db.getFirstAsync<{ id: number }>(
-    'SELECT id FROM taper_settings LIMIT 1'
+    'SELECT id FROM taper_settings LIMIT 1',
+    []
   );
 
-  if (existing) {
+  if (existing && !forceCreate) {
     // Update existing
+    console.log('saveTaperSettings: Updating existing settings with ID:', existing.id);
     await db.runAsync(
       `UPDATE taper_settings 
        SET baseline_pouches_per_day = ?,
@@ -42,6 +50,7 @@ export async function saveTaperSettings(
     return existing.id;
   } else {
     // Create new
+    console.log('saveTaperSettings: Creating new settings');
     const result = await db.runAsync(
       `INSERT INTO taper_settings 
        (baseline_pouches_per_day, price_per_can, weekly_reduction_percent, start_date, created_at, updated_at)
@@ -55,6 +64,7 @@ export async function saveTaperSettings(
         now,
       ]
     );
+    console.log('saveTaperSettings: Created new settings with ID:', result.lastInsertRowId);
     return result.lastInsertRowId;
   }
 }
@@ -72,7 +82,7 @@ export async function getTaperSettings(): Promise<TaperSettings | null> {
     start_date: number;
     created_at: number;
     updated_at: number;
-  }>('SELECT * FROM taper_settings LIMIT 1');
+  }>('SELECT * FROM taper_settings LIMIT 1', []);
 
   if (!result) {
     return null;
@@ -95,4 +105,12 @@ export async function getTaperSettings(): Promise<TaperSettings | null> {
 export async function hasTaperSettings(): Promise<boolean> {
   const settings = await getTaperSettings();
   return settings !== null;
+}
+
+/**
+ * Delete all taper settings (for testing/resetting onboarding)
+ */
+export async function deleteTaperSettings(): Promise<void> {
+  const db = await getDatabase();
+  await db.runAsync('DELETE FROM taper_settings');
 }

@@ -88,9 +88,10 @@ Taper's primary storage needs:
 ## Implementation Notes
 
 - Use `expo-sqlite` for React Native compatibility
-- Create tables: `log_entries`, `user_settings`
-- Index `log_entries.timestamp` for fast date queries
-- Consider a simple ORM or query builder if needed (e.g., `drizzle-orm` or raw SQL)
+- Create tables: `log_entries`, `taper_settings`, `user_plan`, `analytics`
+- Index `log_entries.timestamp` and `log_entries.type` for fast queries
+- Database operations organized by domain (`db-log-entries.ts`, `db-settings.ts`, etc.)
+- Web platform detection: SQLite is not available on web, app shows warning message
 
 ---
 

@@ -16,7 +16,7 @@ The roadmap is **phase-based**, not date-based, to allow calm, iterative develop
 - Expo project set up and running
 - Expo Router configured (file-based navigation)
 - Global app layout (safe areas, basic theming)
-- Local storage strategy decided (SQLite or MMKV)
+- Local storage strategy decided: **SQLite** (via `expo-sqlite`)
 - Initial data models:
   - UserPlan
   - TaperSettings

@@ -9,11 +9,14 @@
 
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
+import type { DailyTriggerInput } from 'expo-notifications';
 
 // Configure notification handler
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
+    shouldShowBanner: true,
+    shouldShowList: true,
     shouldPlaySound: true,
     shouldSetBadge: false,
   }),
@@ -59,10 +62,10 @@ export async function scheduleDailyCheckIn(hour: number = 20, minute: number = 0
         data: { type: 'daily_checkin' },
       },
       trigger: {
+        type: 'daily' as const,
         hour,
         minute,
-        repeats: true,
-      },
+      } as DailyTriggerInput,
     });
 
     return notificationId;
@@ -107,10 +110,10 @@ export async function scheduleTriggerReminder(
         data: { type: 'trigger_reminder', trigger },
       },
       trigger: {
+        type: 'daily' as const,
         hour,
         minute,
-        repeats: true,
-      },
+      } as DailyTriggerInput,
     });
 
     return notificationId;

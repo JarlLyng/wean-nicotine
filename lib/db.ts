@@ -1,20 +1,52 @@
 /**
  * SQLite database setup and operations for Taper
+ * 
+ * NOTE: expo-sqlite does not work on web. This app is designed for mobile (iOS/Android) only.
  */
 
-import * as SQLite from 'expo-sqlite';
+import { Platform } from 'react-native';
 
-let db: SQLite.SQLiteDatabase | null = null;
+// Type for SQLite database (avoiding direct import for web compatibility)
+type SQLiteDatabase = {
+  execAsync: (sql: string) => Promise<void>;
+  runAsync: (sql: string, params?: any[]) => Promise<{ lastInsertRowId: number }>;
+  getAllAsync: <T = any>(sql: string, params?: any[]) => Promise<T[]>;
+  getFirstAsync: <T = any>(sql: string, params?: any[]) => Promise<T | null>;
+};
+
+// Lazy load expo-sqlite only on native platforms to avoid web bundling issues
+function getSQLite(): typeof import('expo-sqlite') | null {
+  if (Platform.OS === 'web') {
+    return null;
+  }
+  try {
+    // Use require to avoid static import analysis
+    return require('expo-sqlite');
+  } catch {
+    return null;
+  }
+}
+
+let db: SQLiteDatabase | null = null;
 
 /**
  * Initialize the database and create tables if they don't exist
  */
-export async function initDatabase(): Promise<SQLite.SQLiteDatabase> {
+export async function initDatabase(): Promise<SQLiteDatabase> {
+  // Check if running on web
+  const SQLite = getSQLite();
+  if (Platform.OS === 'web' || !SQLite) {
+    throw new Error(
+      'Taper is designed for mobile devices only. SQLite is not available on web. ' +
+      'Please use the iOS or Android app, or run: npx expo start --ios or npx expo start --android'
+    );
+  }
+
   if (db) {
     return db;
   }
 
-  db = await SQLite.openDatabaseAsync('taper.db');
+  db = await SQLite.openDatabaseAsync('taper.db') as SQLiteDatabase;
 
   // Create tables (execAsync can handle multiple statements separated by semicolons)
   await db.execAsync(`
@@ -64,7 +96,7 @@ export async function initDatabase(): Promise<SQLite.SQLiteDatabase> {
 /**
  * Get the database instance (initializes if needed)
  */
-export async function getDatabase(): Promise<SQLite.SQLiteDatabase> {
+export async function getDatabase(): Promise<SQLiteDatabase> {
   if (!db) {
     return await initDatabase();
   }

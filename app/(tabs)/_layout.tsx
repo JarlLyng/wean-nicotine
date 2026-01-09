@@ -5,6 +5,7 @@ import { Platform } from 'react-native';
 import { HapticTab } from '@/components/haptic-tab';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { useColorScheme } from '@/hooks/use-color-scheme';
+import { colors } from '@/lib/theme';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -12,13 +13,13 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: '#0a7ea4',
-        tabBarInactiveTintColor: '#666',
+        tabBarActiveTintColor: colors.accentStart,
+        tabBarInactiveTintColor: colors.textSecondary,
         headerShown: false,
         tabBarButton: HapticTab,
         tabBarStyle: {
-          backgroundColor: '#fff',
-          borderTopColor: '#e5e5e5',
+          backgroundColor: colors.surface,
+          borderTopColor: colors.neutral[200],
           ...Platform.select({
             ios: {
               paddingBottom: 20,

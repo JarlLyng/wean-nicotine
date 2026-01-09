@@ -10,18 +10,26 @@ import type { UserPlan } from './models';
  * Since we only have one user, we'll use a single row approach
  */
 export async function saveUserPlan(
-  plan: Omit<UserPlan, 'id' | 'createdAt' | 'updatedAt'>
+  plan: Omit<UserPlan, 'id' | 'createdAt' | 'updatedAt'>,
+  forceCreate: boolean = false
 ): Promise<number> {
   const db = await getDatabase();
   const now = Date.now();
 
+  // If forceCreate is true, delete existing first (for fresh start scenarios)
+  if (forceCreate) {
+    await db.runAsync('DELETE FROM user_plan');
+  }
+
   // Check if plan already exists
   const existing = await db.getFirstAsync<{ id: number }>(
-    'SELECT id FROM user_plan LIMIT 1'
+    'SELECT id FROM user_plan LIMIT 1',
+    []
   );
 
-  if (existing) {
+  if (existing && !forceCreate) {
     // Update existing
+    console.log('saveUserPlan: Updating existing plan with ID:', existing.id);
     await db.runAsync(
       `UPDATE user_plan 
        SET settings_id = ?,
@@ -40,6 +48,7 @@ export async function saveUserPlan(
     return existing.id;
   } else {
     // Create new
+    console.log('saveUserPlan: Creating new plan');
     const result = await db.runAsync(
       `INSERT INTO user_plan 
        (settings_id, current_daily_allowance, last_calculated_date, created_at, updated_at)
@@ -52,6 +61,7 @@ export async function saveUserPlan(
         now,
       ]
     );
+    console.log('saveUserPlan: Created new plan with ID:', result.lastInsertRowId);
     return result.lastInsertRowId;
   }
 }
@@ -68,7 +78,7 @@ export async function getUserPlan(): Promise<UserPlan | null> {
     last_calculated_date: number;
     created_at: number;
     updated_at: number;
-  }>('SELECT * FROM user_plan LIMIT 1');
+  }>('SELECT * FROM user_plan LIMIT 1', []);
 
   if (!result) {
     return null;
@@ -82,4 +92,12 @@ export async function getUserPlan(): Promise<UserPlan | null> {
     createdAt: result.created_at,
     updatedAt: result.updated_at,
   };
+}
+
+/**
+ * Delete all user plans (for testing/resetting onboarding)
+ */
+export async function deleteUserPlan(): Promise<void> {
+  const db = await getDatabase();
+  await db.runAsync('DELETE FROM user_plan');
 }

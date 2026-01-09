@@ -1,14 +1,23 @@
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Switch, Alert } from 'react-native';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import { Screen } from '@/components/Screen';
-import { spacing } from '@/lib/theme';
+import { spacing, colors } from '@/lib/theme';
 import { getTaperSettings } from '@/lib/db-settings';
 import type { TaperSettings } from '@/lib/models';
+import {
+  requestNotificationPermissions,
+  scheduleDailyCheckIn,
+  cancelDailyCheckIn,
+  getAllScheduledNotifications,
+} from '@/lib/notifications';
 
 export default function SettingsScreen() {
   const router = useRouter();
   const [settings, setSettings] = useState<TaperSettings | null>(null);
+  const [hasPermission, setHasPermission] = useState(false);
+  const [dailyCheckInEnabled, setDailyCheckInEnabled] = useState(false);
+  const [isLoadingNotifications, setIsLoadingNotifications] = useState(true);
 
   const loadData = async () => {
     try {
@@ -19,9 +28,60 @@ export default function SettingsScreen() {
     }
   };
 
+  const loadNotificationStatus = async () => {
+    try {
+      const permission = await requestNotificationPermissions();
+      setHasPermission(permission);
+
+      const notifications = await getAllScheduledNotifications();
+      const hasDailyCheckIn = notifications.some(
+        (n) => n.content.data?.type === 'daily_checkin'
+      );
+      setDailyCheckInEnabled(hasDailyCheckIn);
+    } catch (error) {
+      console.error('Error loading notification status:', error);
+    } finally {
+      setIsLoadingNotifications(false);
+    }
+  };
+
   useEffect(() => {
     loadData();
+    loadNotificationStatus();
   }, []);
+
+  const handleToggleDailyCheckIn = async (enabled: boolean) => {
+    if (!hasPermission) {
+      const granted = await requestNotificationPermissions();
+      if (!granted) {
+        Alert.alert(
+          'Permission Required',
+          'Notifications are needed to send daily check-ins. Please enable them in your device settings.'
+        );
+        return;
+      }
+      setHasPermission(true);
+    }
+
+    try {
+      if (enabled) {
+        const id = await scheduleDailyCheckIn(20, 0); // Default to 8 PM
+        if (id) {
+          setDailyCheckInEnabled(true);
+          Alert.alert('Success', 'Daily check-in notification enabled');
+        } else {
+          Alert.alert('Error', 'Failed to enable daily check-in');
+        }
+      } else {
+        await cancelDailyCheckIn();
+        setDailyCheckInEnabled(false);
+        Alert.alert('Success', 'Daily check-in notification disabled');
+      }
+    } catch (error) {
+      console.error('Error toggling daily check-in:', error);
+      Alert.alert('Error', 'Failed to update notification settings');
+    }
+  };
 
   return (
     <Screen>
@@ -44,15 +104,40 @@ export default function SettingsScreen() {
 
           {/* Notifications Section */}
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Notifications</Text>
-            <Text style={styles.sectionDescription}>
-              Manage your notification preferences for daily check-ins and reminders.
-            </Text>
-            <TouchableOpacity
-              style={styles.settingsButton}
-              onPress={() => router.push('/(tabs)/settings/notifications')}>
-              <Text style={styles.settingsButtonText}>Notification Settings</Text>
-            </TouchableOpacity>
+            <View style={styles.sectionHeader}>
+              <View style={styles.sectionHeaderText}>
+                <Text style={styles.sectionTitle}>Daily Check-In Notification</Text>
+                <Text style={styles.sectionDescription}>
+                  Receive a gentle reminder each day at 8 PM to log your progress
+                </Text>
+              </View>
+              {!isLoadingNotifications && (
+                <Switch
+                  value={dailyCheckInEnabled && hasPermission}
+                  onValueChange={handleToggleDailyCheckIn}
+                  disabled={!hasPermission}
+                />
+              )}
+            </View>
+            {!hasPermission && (
+              <TouchableOpacity
+                style={styles.permissionButton}
+                onPress={async () => {
+                  const granted = await requestNotificationPermissions();
+                  setHasPermission(granted);
+                  if (!granted) {
+                    Alert.alert(
+                      'Permission Required',
+                      'Please enable notifications in your device settings to use this feature.'
+                    );
+                  }
+                }}>
+                <Text style={styles.permissionButtonText}>Enable Notifications</Text>
+              </TouchableOpacity>
+            )}
+            {dailyCheckInEnabled && hasPermission && (
+              <Text style={styles.notificationInfo}>Scheduled for 20:00 daily</Text>
+            )}
           </View>
 
           {/* Current Settings Info */}
@@ -88,51 +173,79 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontWeight: 'bold',
     marginBottom: spacing.lg,
+    color: colors.textPrimary,
   },
   section: {
     marginBottom: spacing.lg,
     padding: spacing.md,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: colors.neutral[100],
     borderRadius: 12,
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+  },
+  sectionHeaderText: {
+    flex: 1,
+    marginRight: spacing.md,
   },
   sectionTitle: {
     fontSize: 20,
     fontWeight: '600',
     marginBottom: spacing.sm,
-    color: '#333',
+    color: colors.textPrimary,
   },
   sectionDescription: {
     fontSize: 14,
-    color: '#666',
+    color: colors.textSecondary,
     marginBottom: spacing.md,
     lineHeight: 20,
+  },
+  permissionButton: {
+    backgroundColor: colors.accentStart,
+    padding: spacing.md,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: spacing.md,
+  },
+  permissionButtonText: {
+    color: colors.text.inverse,
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  notificationInfo: {
+    fontSize: 14,
+    color: colors.textSecondary,
+    marginTop: spacing.md,
+    fontStyle: 'italic',
   },
   info: {
     fontSize: 14,
     marginBottom: spacing.xs,
-    color: '#333',
+    color: colors.textPrimary,
   },
   resetButton: {
-    backgroundColor: '#d32f2f',
+    backgroundColor: colors.semantic.error.main,
     padding: spacing.md,
     borderRadius: 8,
     alignItems: 'center',
     marginTop: spacing.sm,
   },
   resetButtonText: {
-    color: '#fff',
+    color: colors.text.inverse,
     fontSize: 16,
     fontWeight: '600',
   },
   settingsButton: {
-    backgroundColor: '#0a7ea4',
+    backgroundColor: colors.accentStart,
     padding: spacing.md,
     borderRadius: 8,
     alignItems: 'center',
     marginTop: spacing.sm,
   },
   settingsButtonText: {
-    color: '#fff',
+    color: colors.text.inverse,
     fontSize: 16,
     fontWeight: '600',
   },

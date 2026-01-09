@@ -1,31 +1,35 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
+import { Platform, View, Text, StyleSheet } from 'react-native';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/use-color-scheme';
-import { initDatabase } from '@/lib/db';
-import { initAnalytics, logEvent } from '@/lib/analytics';
+import { useAppInitialize } from '@/hooks/useAppInitialize';
+import { spacing, colors, typography } from '@/lib/theme';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
+  
+  // Initialize app (database, analytics)
+  useAppInitialize();
 
-  useEffect(() => {
-    // Initialize database on app start
-    initDatabase()
-      .then(() => {
-        // Initialize analytics after database is ready
-        return initAnalytics();
-      })
-      .then(() => {
-        // Log app launch
-        logEvent('app_launched');
-      })
-      .catch((error) => {
-        console.error('Failed to initialize:', error);
-      });
-  }, []);
+  // Show web warning message
+  if (Platform.OS === 'web') {
+    return (
+      <View style={styles.webWarning}>
+        <Text style={styles.webWarningTitle}>Taper is Mobile Only</Text>
+        <Text style={styles.webWarningText}>
+          Taper is designed for iOS and Android devices only.{'\n\n'}
+          SQLite database is not available on web browsers.{'\n\n'}
+          To use Taper, please:{'\n'}
+          • Run on iOS: npx expo start --ios{'\n'}
+          • Run on Android: npx expo start --android{'\n'}
+          • Or use Expo Go app on your mobile device
+        </Text>
+      </View>
+    );
+  }
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
@@ -38,3 +42,25 @@ export default function RootLayout() {
     </ThemeProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  webWarning: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: spacing.xl,
+    backgroundColor: colors.surface,
+  },
+  webWarningTitle: {
+    ...typography.title,
+    color: colors.textPrimary,
+    marginBottom: spacing.lg,
+    textAlign: 'center',
+  },
+  webWarningText: {
+    ...typography.body,
+    color: colors.textSecondary,
+    textAlign: 'center',
+    lineHeight: 24,
+  },
+});

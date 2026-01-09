@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Screen } from '@/components/Screen';
-import { spacing } from '@/lib/theme';
-import { saveTaperSettings } from '@/lib/db-settings';
-import { saveUserPlan } from '@/lib/db-user-plan';
+import { spacing, colors } from '@/lib/theme';
+import { saveTaperSettings, getTaperSettings } from '@/lib/db-settings';
+import { saveUserPlan, getUserPlan } from '@/lib/db-user-plan';
 import { generateDefaultTaperPlan, calculateDailyAllowance } from '@/lib/taper-plan';
 
 const TRIGGERS = [
@@ -37,32 +37,71 @@ export default function TriggersScreen() {
   const handleComplete = async () => {
     setIsSaving(true);
     try {
-      // Save taper settings
+      // Ensure we start fresh - delete any existing settings first
+      // This handles the case where user did "Start Over" and is re-doing onboarding
+      console.log('Onboarding complete: Deleting any existing data...');
+      const { deleteTaperSettings } = await import('@/lib/db-settings');
+      const { deleteUserPlan } = await import('@/lib/db-user-plan');
+      
+      // Delete in sequence to ensure clean state
+      await deleteTaperSettings();
+      await deleteUserPlan();
+      
+      // Verify deletion
+      const checkSettings = await getTaperSettings();
+      const checkPlan = await getUserPlan();
+      if (checkSettings || checkPlan) {
+        console.warn('Warning: Data not fully deleted before creating new', { checkSettings, checkPlan });
+      } else {
+        console.log('Onboarding complete: Data successfully deleted');
+      }
+
+      // Save taper settings (force create new since we just deleted)
+      console.log('Onboarding complete: Saving new taper settings...', { baseline, price });
       const settings = generateDefaultTaperPlan(baseline, 5);
       const settingsId = await saveTaperSettings({
         ...settings,
         pricePerCan: price > 0 ? Math.round(price * 100) : undefined, // Convert to cents
-      });
+      }, true); // forceCreate = true to ensure we create new instead of updating
+      console.log('Onboarding complete: Settings saved with ID:', settingsId);
 
-      // Calculate initial daily allowance
-      const dailyAllowance = calculateDailyAllowance({
-        id: settingsId,
-        baselinePouchesPerDay: baseline,
-        weeklyReductionPercent: 5,
-        startDate: Date.now(),
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-      });
+      // Calculate initial daily allowance using the saved settings
+      const savedSettings = await getTaperSettings();
+      if (!savedSettings) {
+        throw new Error('Failed to retrieve saved settings');
+      }
+      console.log('Onboarding complete: Retrieved saved settings:', savedSettings);
 
-      // Save user plan
+      const dailyAllowance = calculateDailyAllowance(savedSettings, new Date());
+      console.log('Onboarding complete: Calculated daily allowance:', dailyAllowance);
+
+      // Save user plan (force create new since we just deleted)
+      console.log('Onboarding complete: Saving user plan...');
       await saveUserPlan({
         settingsId,
         currentDailyAllowance: dailyAllowance,
         lastCalculatedDate: Date.now(),
-      });
+      }, true); // forceCreate = true to ensure we create new instead of updating
 
-      // Navigate to home
-      router.replace('/(tabs)/home');
+      // Verify data was saved correctly before navigating
+      const verifyPlan = await getUserPlan();
+      const verifySettings = await getTaperSettings();
+      
+      console.log('Onboarding complete: Verifying saved data...', { verifyPlan, verifySettings });
+      
+      if (!verifyPlan || !verifySettings) {
+        console.error('ERROR: Failed to verify saved data!', { verifyPlan, verifySettings });
+        throw new Error('Failed to verify saved data');
+      }
+      
+      console.log('Onboarding complete: Data verified successfully. Navigating to home...');
+
+      // Small delay to ensure database writes are complete
+      await new Promise(resolve => setTimeout(resolve, 200));
+
+      // Navigate to home - use replace to ensure clean navigation
+      // Use push instead of replace to ensure focus event fires
+      router.push('/(tabs)/home');
     } catch (error) {
       console.error('Error completing onboarding:', error);
       alert('Something went wrong. Please try again.');
@@ -154,8 +193,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   triggerButtonSelected: {
-    borderColor: '#0a7ea4',
-    backgroundColor: '#0a7ea4',
+    borderColor: colors.accentStart,
+    backgroundColor: colors.accentStart,
   },
   triggerText: {
     fontSize: 16,
@@ -166,7 +205,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   button: {
-    backgroundColor: '#0a7ea4',
+    backgroundColor: colors.accentStart,
     padding: spacing.md,
     borderRadius: 8,
     alignItems: 'center',
@@ -176,7 +215,7 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   buttonText: {
-    color: '#fff',
+    color: colors.text.inverse,
     fontSize: 18,
     fontWeight: '600',
   },

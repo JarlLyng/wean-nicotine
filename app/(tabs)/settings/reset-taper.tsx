@@ -3,13 +3,14 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'rea
 import { useRouter } from 'expo-router';
 import { Screen } from '@/components/Screen';
 import { spacing } from '@/lib/theme';
-import { getTaperSettings, saveTaperSettings } from '@/lib/db-settings';
-import { saveUserPlan } from '@/lib/db-user-plan';
+import { getTaperSettings, saveTaperSettings, deleteTaperSettings } from '@/lib/db-settings';
+import { saveUserPlan, deleteUserPlan } from '@/lib/db-user-plan';
 import { generateDefaultTaperPlan, calculateDailyAllowance } from '@/lib/taper-plan';
 
 export default function ResetTaperScreen() {
   const router = useRouter();
   const [isResetting, setIsResetting] = useState(false);
+  const [isStartingOver, setIsStartingOver] = useState(false);
 
   const handleReset = async () => {
     Alert.alert(
@@ -78,6 +79,61 @@ export default function ResetTaperScreen() {
     );
   };
 
+  const handleStartOver = async () => {
+    Alert.alert(
+      'Start Over',
+      'This will delete all your settings and progress, and take you back to onboarding. Are you sure?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Start Over',
+          style: 'destructive',
+          onPress: async () => {
+            setIsStartingOver(true);
+            try {
+              // Delete all settings and plans
+              console.log('Starting over: Deleting taper settings...');
+              await deleteTaperSettings();
+              console.log('Starting over: Deleting user plan...');
+              await deleteUserPlan();
+              
+              // Verify deletion
+              const { getTaperSettings } = await import('@/lib/db-settings');
+              const { getUserPlan } = await import('@/lib/db-user-plan');
+              const verifySettings = await getTaperSettings();
+              const verifyPlan = await getUserPlan();
+              
+              if (verifySettings || verifyPlan) {
+                console.error('ERROR: Data still exists after deletion!', { verifySettings, verifyPlan });
+                Alert.alert('Warning', 'Some data may not have been cleared. Please try again.');
+                setIsStartingOver(false);
+                return;
+              }
+              
+              console.log('Starting over: Data successfully deleted');
+
+              Alert.alert('Success', 'All data has been cleared. Returning to onboarding.', [
+                {
+                  text: 'OK',
+                  onPress: () => {
+                    router.replace('/(onboarding)/welcome');
+                  },
+                },
+              ]);
+            } catch (error) {
+              console.error('Error starting over:', error);
+              Alert.alert('Error', 'Failed to clear data. Please try again.');
+              setIsStartingOver(false);
+            }
+          },
+        },
+      ]
+    );
+  };
+
   return (
     <Screen>
       <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -107,13 +163,25 @@ export default function ResetTaperScreen() {
           <TouchableOpacity
             style={[styles.resetButton, isResetting && styles.resetButtonDisabled]}
             onPress={handleReset}
-            disabled={isResetting}>
+            disabled={isResetting || isStartingOver}>
             <Text style={styles.resetButtonText}>
               {isResetting ? 'Resetting...' : 'Reset Taper Plan'}
             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.cancelButton} onPress={() => router.back()}>
+          <TouchableOpacity
+            style={[styles.startOverButton, (isResetting || isStartingOver) && styles.startOverButtonDisabled]}
+            onPress={handleStartOver}
+            disabled={isResetting || isStartingOver}>
+            <Text style={styles.startOverButtonText}>
+              {isStartingOver ? 'Starting Over...' : 'Start Over (Go to Onboarding)'}
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={styles.cancelButton} 
+            onPress={() => router.back()}
+            disabled={isResetting || isStartingOver}>
             <Text style={styles.cancelButtonText}>Cancel</Text>
           </TouchableOpacity>
         </View>
@@ -181,6 +249,21 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   resetButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  startOverButton: {
+    backgroundColor: '#ff6b6b',
+    padding: spacing.md,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginBottom: spacing.md,
+  },
+  startOverButtonDisabled: {
+    opacity: 0.6,
+  },
+  startOverButtonText: {
     color: '#fff',
     fontSize: 18,
     fontWeight: '600',

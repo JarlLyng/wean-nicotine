@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Screen } from '@/components/Screen';
-import { spacing } from '@/lib/theme';
+import { spacing, colors } from '@/lib/theme';
 import * as Haptics from 'expo-haptics';
 
 const BREATHING_CYCLES = [
@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
     borderRadius: 100,
-    backgroundColor: '#0a7ea4',
+    backgroundColor: colors.accentStart,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: spacing.xl,
@@ -177,12 +177,12 @@ const styles = StyleSheet.create({
   phaseText: {
     fontSize: 24,
     fontWeight: '600',
-    color: '#fff',
+    color: colors.text.inverse,
     marginBottom: spacing.sm,
   },
   timerText: {
     fontSize: 18,
-    color: '#fff',
+    color: colors.text.inverse,
     opacity: 0.9,
   },
   instruction: {
@@ -193,13 +193,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.md,
   },
   startButton: {
-    backgroundColor: '#0a7ea4',
+    backgroundColor: colors.accentStart,
     paddingHorizontal: spacing.xl,
     paddingVertical: spacing.md,
     borderRadius: 8,
   },
   startButtonText: {
-    color: '#fff',
+    color: colors.text.inverse,
     fontSize: 18,
     fontWeight: '600',
   },

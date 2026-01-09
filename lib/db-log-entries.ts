@@ -59,12 +59,24 @@ export async function getLogEntries(options?: {
     params.push(options.limit);
   }
 
-  const result = await db.getAllAsync<LogEntry>(query, params);
-  return result.map((row) => ({
+  const result = await db.getAllAsync<{
+    id: number;
+    type: string;
+    timestamp: number;
+    created_at?: number;
+    createdAt?: number;
+  }>(query, params);
+  return result.map((row: {
+    id: number;
+    type: string;
+    timestamp: number;
+    created_at?: number;
+    createdAt?: number;
+  }) => ({
     id: row.id,
     type: row.type as LogEntryType,
     timestamp: row.timestamp,
-    createdAt: row.created_at,
+    createdAt: row.created_at || row.createdAt || row.timestamp, // Handle both snake_case and camelCase
   }));
 }
 
@@ -106,7 +118,10 @@ export async function countLogEntriesByType(
   }
 
   const result = await db.getFirstAsync<{ count: number }>(query, params);
-  return result?.count || 0;
+  if (!result) {
+    return 0;
+  }
+  return result.count;
 }
 
 /**
