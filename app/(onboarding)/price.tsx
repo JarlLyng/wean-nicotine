@@ -49,7 +49,7 @@ export default function PriceScreen() {
         <View style={styles.content}>
           <Card variant="flat" style={styles.card} padding="lg">
             <Text style={styles.description}>
-              If you'd like to track money saved, enter the price you pay per can.
+              If you&apos;d like to track money saved, enter the price you pay per can.
             </Text>
             <Text style={styles.hint}>
               You can skip this and add it later in settings.

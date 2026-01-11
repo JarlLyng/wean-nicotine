@@ -21,8 +21,10 @@ export default function NotificationsScreen() {
 
   const loadNotificationStatus = async () => {
     try {
-      const permission = await requestNotificationPermissions();
-      setHasPermission(permission);
+      // Only check permission status, don't request it
+      const { getPermissionsAsync } = await import('expo-notifications');
+      const { status } = await getPermissionsAsync();
+      setHasPermission(status === 'granted');
 
       const notifications = await getAllScheduledNotifications();
       const hasDailyCheckIn = notifications.some(
@@ -85,7 +87,7 @@ export default function NotificationsScreen() {
         <View style={styles.content}>
           <Text style={styles.title}>Notifications</Text>
           <Text style={styles.subtitle}>
-            Choose when and how you'd like to receive gentle reminders and check-ins.
+            Choose when and how you&apos;d like to receive gentle reminders and check-ins.
           </Text>
 
           {!hasPermission && (

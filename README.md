@@ -80,6 +80,7 @@ Taper helps users:
 - **Expo Router** (file‑based navigation)
 - **Local‑first storage** (SQLite via `expo-sqlite`)
 - **Expo Notifications**
+- **Sentry** (error tracking & monitoring)
 - No backend in MVP
 
 **Note:** This app is designed for mobile (iOS/Android) only. SQLite is not available on web browsers.
@@ -148,6 +149,32 @@ Start the app:
 ```bash
 npx expo start
 ```
+
+### Environment Variables
+
+#### Development (Local)
+Create a `.env` file in the root directory with your Sentry DSN (optional for local development):
+
+```bash
+EXPO_PUBLIC_SENTRY_DSN=https://your-sentry-dsn@sentry.io/project-id
+```
+
+**Note:** Sentry events are **not sent** in development mode - they're only logged to console. The `.env` file is only needed if you want to test Sentry integration locally.
+
+#### Production (EAS Build)
+For production builds, use **EAS Secrets** instead of `.env` files:
+
+```bash
+# Set the secret for your project
+eas secret:create --scope project --name EXPO_PUBLIC_SENTRY_DSN --value "https://your-sentry-dsn@sentry.io/project-id"
+
+# Or for a specific environment
+eas secret:create --scope project --name EXPO_PUBLIC_SENTRY_DSN --value "https://your-sentry-dsn@sentry.io/project-id" --type string --environment production
+```
+
+Get your Sentry DSN from [sentry.io](https://sentry.io) → Your Project → Settings → Client Keys (DSN).
+
+**Note:** Sentry is optional. The app will work without it, but errors won't be tracked in production.
 
 ### Testing Notifications
 

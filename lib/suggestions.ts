@@ -24,45 +24,54 @@ export async function generateSuggestions(
   const suggestions: Suggestion[] = [];
 
   // Check if user is consistently exceeding limits
+  // Get logs from the last 7 days (not just last 7 logs)
+  const today = new Date();
+  today.setHours(23, 59, 59, 999);
+  const sevenDaysAgo = new Date(today);
+  sevenDaysAgo.setDate(today.getDate() - 7);
+  sevenDaysAgo.setHours(0, 0, 0, 0);
+
   const recentLogs = await getLogEntries({
-    limit: 14, // Last 14 days
+    startDate: sevenDaysAgo.getTime(),
+    endDate: today.getTime(),
   });
 
   const usedLogs = recentLogs.filter((log) => log.type === 'pouch_used');
 
-  if (usedLogs.length >= 7) {
-    // Check last 7 days
-    const last7Days = usedLogs.slice(0, 7);
-    let daysOverLimit = 0;
-
-    for (const log of last7Days) {
+  if (usedLogs.length > 0) {
+    // Group logs by day (unique date)
+    const logsByDay = new Map<string, number>();
+    
+    for (const log of usedLogs) {
       const logDate = new Date(log.timestamp);
-      const dayAllowance = calculateDailyAllowance(settings, logDate);
+      const dayKey = `${logDate.getFullYear()}-${logDate.getMonth()}-${logDate.getDate()}`;
+      logsByDay.set(dayKey, (logsByDay.get(dayKey) || 0) + 1);
+    }
 
-      // Count how many logs on this day
-      const dayLogs = last7Days.filter((l) => {
-        const lDate = new Date(l.timestamp);
-        return (
-          lDate.getFullYear() === logDate.getFullYear() &&
-          lDate.getMonth() === logDate.getMonth() &&
-          lDate.getDate() === logDate.getDate()
-        );
-      });
+    // Check each unique day
+    let daysOverLimit = 0;
+    let totalDays = 0;
 
-      const dayUsed = dayLogs.length;
+    for (const [dayKey, dayUsed] of logsByDay.entries()) {
+      const [year, month, day] = dayKey.split('-').map(Number);
+      const dayDate = new Date(year, month, day);
+      const dayAllowance = calculateDailyAllowance(settings, dayDate);
+
+      totalDays++;
       if (dayUsed > dayAllowance) {
         daysOverLimit++;
       }
     }
 
     // If more than 5 out of 7 days over limit, suggest slowing down
-    if (daysOverLimit >= 5) {
+    // Only suggest if we have at least 5 days of data
+    if (totalDays >= 5 && daysOverLimit >= 5) {
       suggestions.push({
         id: 'slow_down_taper',
         type: 'slow_down_taper',
         title: 'Consider Adjusting Your Plan',
         message:
-          'You\'ve been exceeding your daily allowance frequently. This might mean your taper plan is too aggressive. Consider slowing down the reduction rate — progress isn\'t about speed, it\'s about sustainability.',
+          'You&apos;ve been exceeding your daily allowance frequently. This might mean your taper plan is too aggressive. Consider slowing down the reduction rate — progress isn&apos;t about speed, it&apos;s about sustainability.',
         actionLabel: 'Adjust Plan',
         actionRoute: '/(settings)',
       });
@@ -73,9 +82,9 @@ export async function generateSuggestions(
   suggestions.push({
     id: 'encouragement',
     type: 'encouragement',
-    title: 'You\'re Doing Great',
+    title: 'You&apos;re Doing Great',
     message:
-      'Remember: every step forward counts, even the small ones. Progress isn\'t linear, and setbacks are part of the journey. Be kind to yourself.',
+      'Remember: every step forward counts, even the small ones. Progress isn&apos;t linear, and setbacks are part of the journey. Be kind to yourself.',
   });
 
   return suggestions;

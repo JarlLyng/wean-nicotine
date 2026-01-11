@@ -25,8 +25,8 @@ export default function UrgeSurfingScreen() {
             <View style={styles.stepContainer}>
               <Text style={styles.stepNumber}>1</Text>
               <Text style={styles.stepText}>
-                <Text style={styles.stepTitle}>Notice the urge.</Text> When a craving appears, don't
-                fight it. Simply acknowledge it: "I'm having a craving right now."
+                <Text style={styles.stepTitle}>Notice the urge.</Text> When a craving appears, don&apos;t
+                fight it. Simply acknowledge it: &quot;I&apos;m having a craving right now.&quot;
               </Text>
             </View>
 
@@ -43,7 +43,7 @@ export default function UrgeSurfingScreen() {
               <Text style={styles.stepNumber}>3</Text>
               <Text style={styles.stepText}>
                 <Text style={styles.stepTitle}>Ride the wave.</Text> Cravings are temporary. Like a
-                wave, they build, peak, and then subside. Remind yourself: "This will pass."
+                wave, they build, peak, and then subside. Remind yourself: &quot;This will pass.&quot;
               </Text>
             </View>
 
@@ -67,15 +67,15 @@ export default function UrgeSurfingScreen() {
           <View style={styles.section}>
             <Text style={styles.heading}>Remember</Text>
             <Text style={styles.text}>
-              Cravings typically peak within 5-15 minutes and then fade. You don't have to act on
-              them. Each time you successfully ride out a craving, you're strengthening your ability
+              Cravings typically peak within 5-15 minutes and then fade. You don&apos;t have to act on
+              them. Each time you successfully ride out a craving, you&apos;re strengthening your ability
               to handle them.
             </Text>
           </View>
 
           <View style={styles.encouragementBox}>
             <Text style={styles.encouragementText}>
-              You've got this. Every wave passes, and you're learning to surf.
+              You&apos;ve got this. Every wave passes, and you&apos;re learning to surf.
             </Text>
           </View>
         </View>

@@ -17,6 +17,7 @@ export interface TaperSettings {
   pricePerCan?: number; // Optional, in smallest currency unit (e.g., cents)
   weeklyReductionPercent: number; // e.g., 5 for 5% reduction per week
   startDate: number; // Unix timestamp in milliseconds
+  triggers?: string[]; // Selected triggers from onboarding (e.g., ['Coffee', 'Stress', 'After meals'])
   createdAt: number;
   updatedAt: number;
 }

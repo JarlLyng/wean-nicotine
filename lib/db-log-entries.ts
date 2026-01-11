@@ -137,5 +137,22 @@ export async function deleteLogEntry(id: number): Promise<void> {
  */
 export async function deleteAllLogEntries(): Promise<void> {
   const db = await getDatabase();
+  console.log('deleteAllLogEntries: Deleting all log entries...');
+  
+  // First, count how many entries exist
+  const countBefore = await db.getFirstAsync<{ count: number }>('SELECT COUNT(*) as count FROM log_entries');
+  console.log('deleteAllLogEntries: Entries before deletion:', countBefore?.count || 0);
+  
+  // Delete all entries
   await db.runAsync('DELETE FROM log_entries');
+  
+  // Verify deletion
+  const countAfter = await db.getFirstAsync<{ count: number }>('SELECT COUNT(*) as count FROM log_entries');
+  console.log('deleteAllLogEntries: Entries after deletion:', countAfter?.count || 0);
+  
+  if (countAfter && countAfter.count > 0) {
+    console.error('deleteAllLogEntries: WARNING - Some entries were not deleted!');
+  } else {
+    console.log('deleteAllLogEntries: All entries successfully deleted');
+  }
 }

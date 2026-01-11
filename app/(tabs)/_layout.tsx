@@ -4,12 +4,9 @@ import { Platform } from 'react-native';
 
 import { HapticTab } from '@/components/haptic-tab';
 import { Icon } from '@/components/ui/Icon';
-import { useColorScheme } from '@/hooks/use-color-scheme';
 import { colors } from '@/lib/theme';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
   return (
     <Tabs
       screenOptions={{

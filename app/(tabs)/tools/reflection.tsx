@@ -62,7 +62,7 @@ export default function ReflectionScreen() {
         <View style={styles.content}>
           <Text style={styles.title}>Reflection</Text>
           <Text style={styles.subtitle}>
-            Take a moment to reflect. There's no right or wrong answer — just honest
+            Take a moment to reflect. There&apos;s no right or wrong answer — just honest
             self-awareness.
           </Text>
 
@@ -72,7 +72,7 @@ export default function ReflectionScreen() {
 
           {!showFollowUp ? (
             <TouchableOpacity style={styles.button} onPress={handleShowFollowUp}>
-              <Text style={styles.buttonText}>I've reflected on this</Text>
+              <Text style={styles.buttonText}>I&apos;ve reflected on this</Text>
             </TouchableOpacity>
           ) : (
             <View style={styles.followUpContainer}>
@@ -85,7 +85,7 @@ export default function ReflectionScreen() {
 
           <View style={styles.infoBox}>
             <Text style={styles.infoText}>
-              These prompts are here to help you understand your patterns and progress. There's no
+              These prompts are here to help you understand your patterns and progress. There&apos;s no
               pressure to answer perfectly — just be honest with yourself.
             </Text>
           </View>

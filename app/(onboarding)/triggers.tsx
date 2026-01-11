@@ -62,11 +62,12 @@ export default function TriggersScreen() {
       }
 
       // Save taper settings (force create new since we just deleted)
-      console.log('Onboarding complete: Saving new taper settings...', { baseline, price });
+      console.log('Onboarding complete: Saving new taper settings...', { baseline, price, triggers: selectedTriggers });
       const settings = generateDefaultTaperPlan(baseline, 5);
       const settingsId = await saveTaperSettings({
         ...settings,
         pricePerCan: price > 0 ? Math.round(price * 100) : undefined, // Convert to cents
+        triggers: selectedTriggers.length > 0 ? selectedTriggers : undefined, // Save selected triggers
       }, true); // forceCreate = true to ensure we create new instead of updating
       console.log('Onboarding complete: Settings saved with ID:', settingsId);
 

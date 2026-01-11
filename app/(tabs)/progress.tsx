@@ -3,13 +3,13 @@ import { Card } from '@/components/ui/Card';
 import { getTaperSettings } from '@/lib/db-settings';
 import type { TaperSettings } from '@/lib/models';
 import {
-  calculateTotalProgress,
-  calculateWeeklyProgress,
-  detectMilestones,
-  getCurrentWeek,
-  getPreviousWeek,
-  type Milestone,
-  type WeeklyProgress,
+    calculateTotalProgress,
+    calculateWeeklyProgress,
+    detectMilestones,
+    getCurrentWeek,
+    getPreviousWeek,
+    type Milestone,
+    type WeeklyProgress,
 } from '@/lib/progress';
 import { animations, borderRadius, colors, spacing, typography } from '@/lib/theme';
 import { useFocusEffect } from 'expo-router';
@@ -19,6 +19,7 @@ import Animated, { FadeInRight } from 'react-native-reanimated';
 
 export default function ProgressScreen() {
   const [settings, setSettings] = useState<TaperSettings | null>(null);
+  const [settingsId, setSettingsId] = useState<number | null>(null);
   const [currentWeek, setCurrentWeek] = useState<WeeklyProgress | null>(null);
   const [previousWeek, setPreviousWeek] = useState<WeeklyProgress | null>(null);
   const [totalProgress, setTotalProgress] = useState<any>(null);
@@ -37,11 +38,25 @@ export default function ProgressScreen() {
       
       const currentSettings = await getTaperSettings();
       if (!currentSettings) {
+        setSettings(null);
+        setSettingsId(null);
         setIsLoading(false);
         return;
       }
 
+      // Check if settings have changed (e.g., after reset/onboarding)
+      if (settingsId !== null && settingsId !== currentSettings.id) {
+        console.log('Progress screen: Settings changed! Old ID:', settingsId, 'New ID:', currentSettings.id);
+        // Settings have changed - reset everything
+        setSettings(null);
+        setCurrentWeek(null);
+        setPreviousWeek(null);
+        setTotalProgress(null);
+        setMilestones([]);
+      }
+
       setSettings(currentSettings);
+      setSettingsId(currentSettings.id);
 
       // Calculate current week progress
       const { start: currentStart, end: currentEnd } = getCurrentWeek();
@@ -83,6 +98,7 @@ export default function ProgressScreen() {
     useCallback(() => {
       // Reset state when screen comes into focus to ensure fresh data
       setSettings(null);
+      setSettingsId(null);
       setCurrentWeek(null);
       setPreviousWeek(null);
       setTotalProgress(null);
@@ -132,7 +148,7 @@ export default function ProgressScreen() {
   }
 
   // Force remount when settings change (after onboarding/reset)
-  const screenKey = `progress-screen-${settings?.id || 'no-settings'}`;
+  const screenKey = `progress-screen-${settingsId || 'no-settings'}`;
   
   return (
     <Screen key={screenKey} variant="gradient" title="Progress">
@@ -163,15 +179,15 @@ export default function ProgressScreen() {
             <Text style={styles.cardTitle}>{weekLabel}</Text>
             <View style={styles.statRow}>
               <View style={styles.statItem}>
-                <Text style={styles.statValue}>{weekData.pouchesAvoided ?? 0}</Text>
+                <Text style={styles.statValue}>{Number(weekData.pouchesAvoided ?? 0)}</Text>
                 <Text style={styles.statLabel}>Pouches Avoided</Text>
               </View>
               <View style={styles.statItem}>
-                <Text style={styles.statValue}>{weekData.daysUnderLimit ?? 0}</Text>
+                <Text style={styles.statValue}>{Number(weekData.daysUnderLimit ?? 0)}</Text>
                 <Text style={styles.statLabel}>Days Under Limit</Text>
               </View>
             </View>
-            {weekData.moneySaved && weekData.moneySaved > 0 && (
+            {weekData.moneySaved !== undefined && weekData.moneySaved !== null && weekData.moneySaved > 0 && (
               <View style={styles.moneyRow}>
                 <Text style={styles.moneyLabel}>Money Saved:</Text>
                 <Text style={styles.moneyValue}>${((weekData.moneySaved ?? 0) / 100).toFixed(2)}</Text>
@@ -184,15 +200,15 @@ export default function ProgressScreen() {
             <Text style={styles.cardTitle}>Total Progress</Text>
             <View style={styles.statRow}>
               <View style={styles.statItem}>
-                <Text style={styles.statValue}>{totalProgress.totalPouchesAvoided ?? 0}</Text>
+                <Text style={styles.statValue}>{Number(totalProgress.totalPouchesAvoided ?? 0)}</Text>
                 <Text style={styles.statLabel}>Total Pouches Avoided</Text>
               </View>
               <View style={styles.statItem}>
-                <Text style={styles.statValue}>{totalProgress.daysSinceStart ?? 0}</Text>
+                <Text style={styles.statValue}>{Number(totalProgress.daysSinceStart ?? 0)}</Text>
                 <Text style={styles.statLabel}>Days Since Start</Text>
               </View>
             </View>
-            {totalProgress.totalMoneySaved && totalProgress.totalMoneySaved > 0 && (
+            {totalProgress.totalMoneySaved !== undefined && totalProgress.totalMoneySaved !== null && totalProgress.totalMoneySaved > 0 && (
               <View style={styles.moneyRow}>
                 <Text style={styles.moneyLabel}>Total Money Saved:</Text>
                 <Text style={styles.moneyValue}>
@@ -230,7 +246,7 @@ export default function ProgressScreen() {
           {/* Encouragement Message */}
           <Card variant="flat" style={styles.encouragementCard} padding="md">
             <Text style={styles.encouragementText}>
-              Every step forward counts. Progress isn't about perfection — it's about moving in the
+              Every step forward counts. Progress isn&apos;t about perfection — it&apos;s about moving in the
               right direction.
             </Text>
           </Card>

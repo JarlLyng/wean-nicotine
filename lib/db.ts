@@ -65,10 +65,20 @@ export async function initDatabase(): Promise<SQLiteDatabase> {
       price_per_can INTEGER,
       weekly_reduction_percent REAL NOT NULL DEFAULT 5.0,
       start_date INTEGER NOT NULL,
+      triggers TEXT,
       created_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now') * 1000),
       updated_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now') * 1000)
     );
   `);
+
+  // Add triggers column if it doesn't exist (migration for existing databases)
+  try {
+    await db.execAsync(`
+      ALTER TABLE taper_settings ADD COLUMN triggers TEXT;
+    `);
+  } catch (error) {
+    // Column already exists, ignore error
+  }
 
   await db.execAsync(`
     CREATE TABLE IF NOT EXISTS user_plan (

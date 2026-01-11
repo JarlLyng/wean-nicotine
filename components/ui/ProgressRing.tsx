@@ -38,7 +38,12 @@ export function ProgressRing({
 
   // Animate progress changes
   useEffect(() => {
-    const clampedProgress = Math.max(0, Math.min(1, progress));
+    // Guard against NaN and Infinity
+    let safeProgress = progress;
+    if (!Number.isFinite(progress) || isNaN(progress)) {
+      safeProgress = 0;
+    }
+    const clampedProgress = Math.max(0, Math.min(1, safeProgress));
     animatedProgress.value = withTiming(clampedProgress, {
       duration: animations.normal,
       easing: Easing.bezier(0.4, 0, 0.2, 1), // easeInOut
@@ -53,7 +58,9 @@ export function ProgressRing({
     };
   });
 
-  const displayLabel = label !== undefined ? label : `${Math.round(progress * 100)}%`;
+  // Guard against NaN/Infinity in label calculation
+  const safeProgress = Number.isFinite(progress) && !isNaN(progress) ? progress : 0;
+  const displayLabel = label !== undefined ? label : `${Math.round(safeProgress * 100)}%`;
   const gradientId = 'progressGradient';
 
   return (

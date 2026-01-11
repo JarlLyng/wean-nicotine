@@ -4,6 +4,7 @@
  */
 
 import { getDatabase } from './db';
+import { captureError } from './sentry';
 
 export interface AnalyticsEvent {
   id: number;
@@ -43,6 +44,10 @@ export async function logEvent(eventType: string, data?: any): Promise<void> {
   } catch (error) {
     console.error('Error logging analytics event:', error);
     // Fail silently - analytics should never break the app
+    // But capture in Sentry for monitoring
+    if (error instanceof Error) {
+      captureError(error, { context: 'analytics_log_event' });
+    }
   }
 }
 

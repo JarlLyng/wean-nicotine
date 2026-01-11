@@ -1,7 +1,6 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { useFocusEffect } from 'expo-router';
-import { useCallback } from 'react';
 import { Screen } from '@/components/Screen';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -10,8 +9,7 @@ import { spacing, colors, typography } from '@/lib/theme';
 import { getUserPlan } from '@/lib/db-user-plan';
 import { getTaperSettings } from '@/lib/db-settings';
 import { calculateDailyAllowance } from '@/lib/taper-plan';
-import { createLogEntry } from '@/lib/db-log-entries';
-import { getLogEntriesForDay } from '@/lib/db-log-entries';
+import { createLogEntry , getLogEntriesForDay } from '@/lib/db-log-entries';
 import * as Haptics from 'expo-haptics';
 
 export default function HomeScreen() {
@@ -39,17 +37,7 @@ export default function HomeScreen() {
     try {
       console.log('Home screen: Loading data...');
       setIsLoading(true);
-      const userPlan = await getUserPlan();
-      console.log('Home screen: User plan:', userPlan);
-      
-      if (!userPlan) {
-        console.log('Home screen: No user plan found');
-        setDailyAllowance(null);
-        setPouchesUsedToday(0);
-        return;
-      }
-
-      // Get settings to check if we need to recalculate
+      // Get settings first (needed to recreate user_plan if missing)
       const settings = await getTaperSettings();
       console.log('Home screen: Settings:', settings);
       
@@ -59,6 +47,35 @@ export default function HomeScreen() {
         setPouchesUsedToday(0);
         setSettingsId(null);
         return;
+      }
+
+      let userPlan = await getUserPlan();
+      console.log('Home screen: User plan:', userPlan);
+      
+      // If user_plan is missing but settings exist, recreate it
+      if (!userPlan) {
+        console.log('Home screen: No user plan found, recreating from settings...');
+        const { saveUserPlan } = await import('@/lib/db-user-plan');
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const dailyAllowance = calculateDailyAllowance(settings, today);
+        
+        const planId = await saveUserPlan({
+          settingsId: settings.id,
+          currentDailyAllowance: dailyAllowance,
+          lastCalculatedDate: Date.now(),
+        }, true); // forceCreate = true
+        
+        // Reload the plan
+        userPlan = await getUserPlan();
+        console.log('Home screen: Recreated user plan with ID:', planId);
+        
+        if (!userPlan) {
+          console.error('Home screen: Failed to recreate user plan');
+          setDailyAllowance(null);
+          setPouchesUsedToday(0);
+          return;
+        }
       }
 
       // Always recalculate daily allowance from settings to ensure it's up-to-date
@@ -204,13 +221,21 @@ export default function HomeScreen() {
               <View style={styles.progressContainer}>
                 <ProgressRing
                   key={`progress-${dailyAllowance}-${pouchesUsedToday}`}
-                  progress={Math.min(pouchesUsedToday / dailyAllowance, 1)}
+                  progress={
+                    dailyAllowance > 0 
+                      ? Math.min(pouchesUsedToday / dailyAllowance, 1)
+                      : 0
+                  }
                   size={140}
                   strokeWidth={14}
                   color={colors.accentStart}
                   useGradient={true}
                   showLabel={true}
-                  label={`${pouchesUsedToday}/${Math.round(dailyAllowance)}`}
+                  label={
+                    dailyAllowance > 0
+                      ? `${pouchesUsedToday}/${Math.round(dailyAllowance)}`
+                      : `${pouchesUsedToday}/0`
+                  }
                   sublabel="pouches"
                 />
               </View>

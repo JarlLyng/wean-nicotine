@@ -34,18 +34,69 @@ export async function calculateWeeklyProgress(
   weekStart: Date,
   weekEnd: Date
 ): Promise<WeeklyProgress> {
+  // Ensure we only use dates from after the taper start date
+  const settingsStartDate = new Date(settings.startDate);
+  settingsStartDate.setHours(0, 0, 0, 0);
+  
+  // If the week is entirely before the start date, return empty progress
+  if (weekEnd < settingsStartDate) {
+    return {
+      weekStart,
+      weekEnd,
+      baselineTotal: 0,
+      actualUsed: 0,
+      pouchesAvoided: 0,
+      daysUnderLimit: 0,
+      daysOverLimit: 0,
+    };
+  }
+
+  // Only calculate from startDate onwards, and only up to today
+  const effectiveStart = weekStart < settingsStartDate ? settingsStartDate : weekStart;
+  const today = new Date();
+  today.setHours(23, 59, 59, 999);
+  const effectiveEnd = weekEnd > today ? today : weekEnd;
+  
+  // If effective start is after effective end, return empty progress
+  if (effectiveEnd < effectiveStart) {
+    return {
+      weekStart,
+      weekEnd,
+      baselineTotal: 0,
+      actualUsed: 0,
+      pouchesAvoided: 0,
+      moneySaved: 0,
+      daysUnderLimit: 0,
+      daysOverLimit: 0,
+    };
+  }
+
   const logs = await getLogEntries({
-    startDate: weekStart.getTime(),
-    endDate: weekEnd.getTime(),
+    startDate: effectiveStart.getTime(),
+    endDate: effectiveEnd.getTime(),
   });
 
   const usedLogs = logs.filter((log) => log.type === 'pouch_used');
   const actualUsed = usedLogs.length;
 
-  // Calculate baseline for the week
-  const daysInWeek = Math.ceil((weekEnd.getTime() - weekStart.getTime()) / (1000 * 60 * 60 * 24));
+  // Calculate baseline for the week (only count days from start date to today)
+  // Count actual days, not just time difference
+  const days = getDaysInRange(effectiveStart, effectiveEnd);
+  const daysInWeek = days.length;
   const baselineTotal = settings.baselinePouchesPerDay * daysInWeek;
   const pouchesAvoided = Math.max(0, baselineTotal - actualUsed);
+  
+  console.log('calculateWeeklyProgress:', {
+    weekStart: weekStart.toISOString(),
+    weekEnd: weekEnd.toISOString(),
+    settingsStartDate: settingsStartDate.toISOString(),
+    effectiveStart: effectiveStart.toISOString(),
+    effectiveEnd: effectiveEnd.toISOString(),
+    daysInWeek,
+    baselineTotal,
+    actualUsed,
+    pouchesAvoided,
+  });
 
   // Calculate money saved (if price is set)
   let moneySaved: number | undefined;
@@ -56,8 +107,8 @@ export async function calculateWeeklyProgress(
     moneySaved = Math.round(cansAvoided * settings.pricePerCan);
   }
 
-  // Count days under/over limit
-  const days = getDaysInRange(weekStart, weekEnd);
+  // Count days under/over limit (only from effective start)
+  // Note: 'days' is already declared above, so we reuse it
   let daysUnderLimit = 0;
   let daysOverLimit = 0;
 

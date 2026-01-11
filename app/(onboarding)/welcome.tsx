@@ -3,7 +3,7 @@ import { useRouter } from 'expo-router';
 import { Screen } from '@/components/Screen';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
-import { spacing, colors, typography, borderRadius } from '@/lib/theme';
+import { spacing, colors, typography } from '@/lib/theme';
 
 export default function WelcomeScreen() {
   const router = useRouter();
@@ -37,7 +37,7 @@ export default function WelcomeScreen() {
 
             <View style={styles.section}>
               <Text style={styles.text}>
-                Let's get started. This will only take a minute.
+                Let&apos;s get started. This will only take a minute.
               </Text>
             </View>
           </Card>

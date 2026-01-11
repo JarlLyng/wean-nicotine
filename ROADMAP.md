@@ -1,5 +1,3 @@
-
-
 # Taper — Roadmap
 
 This roadmap describes the planned development of **Taper**, from initial foundation to a polished MVP and beyond.
@@ -183,11 +181,17 @@ The roadmap is **phase-based**, not date-based, to allow calm, iterative develop
 - Privacy policy (local-only data)
 - TestFlight build
 - Final bug fixes
+- EAS Build configuration
+- Sentry production setup
+- Complete testing (functional, performance, accessibility)
 
 ### Success criteria
 - App is ready for public release
 - No critical crashes
 - Clear value proposition on App Store page
+
+### Detailed Checklist
+See `docs/RELEASE_CHECKLIST.md` for a comprehensive release checklist covering all technical, legal, and submission requirements.
 
 ---
 

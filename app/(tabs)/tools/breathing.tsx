@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Screen } from '@/components/Screen';
@@ -20,43 +20,23 @@ export default function BreathingExercise() {
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  useEffect(() => {
-    if (isRunning) {
-      startBreathingCycle();
-    } else {
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-      }
-      scaleAnim.setValue(1);
-    }
-
-    return () => {
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-      }
-    };
-  }, [isRunning, currentCycle]);
-
-  const startBreathingCycle = () => {
+  const startBreathingCycle = useCallback(() => {
     const cycle = BREATHING_CYCLES[currentCycle];
     setTimeRemaining(cycle.duration);
 
-    // Animate based on phase
+    // Animate scale based on phase
     if (cycle.phase === 'Breathe In') {
       Animated.timing(scaleAnim, {
-        toValue: 1.3,
+        toValue: 1.2,
         duration: cycle.duration,
         useNativeDriver: true,
       }).start();
     } else if (cycle.phase === 'Breathe Out') {
       Animated.timing(scaleAnim, {
-        toValue: 0.8,
+        toValue: 1,
         duration: cycle.duration,
         useNativeDriver: true,
       }).start();
-    } else {
-      // Hold or Pause - maintain current scale (no animation needed)
-      // Scale stays at current value
     }
 
     // Haptic feedback
@@ -79,7 +59,24 @@ export default function BreathingExercise() {
         setCurrentCycle(nextCycle);
       }
     }, 100);
-  };
+  }, [currentCycle, scaleAnim]);
+
+  useEffect(() => {
+    if (isRunning) {
+      startBreathingCycle();
+    } else {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+      scaleAnim.setValue(1);
+    }
+
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
+  }, [isRunning, currentCycle, startBreathingCycle, scaleAnim]);
 
   const handleStart = () => {
     setIsRunning(true);

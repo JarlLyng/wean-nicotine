@@ -27,6 +27,11 @@ export async function saveTaperSettings(
     []
   );
 
+  // Serialize triggers array to JSON string
+  const triggersJson = settings.triggers && settings.triggers.length > 0
+    ? JSON.stringify(settings.triggers)
+    : null;
+
   if (existing && !forceCreate) {
     // Update existing
     console.log('saveTaperSettings: Updating existing settings with ID:', existing.id);
@@ -36,6 +41,7 @@ export async function saveTaperSettings(
            price_per_can = ?,
            weekly_reduction_percent = ?,
            start_date = ?,
+           triggers = ?,
            updated_at = ?
        WHERE id = ?`,
       [
@@ -43,6 +49,7 @@ export async function saveTaperSettings(
         settings.pricePerCan || null,
         settings.weeklyReductionPercent,
         settings.startDate,
+        triggersJson,
         now,
         existing.id,
       ]
@@ -53,13 +60,14 @@ export async function saveTaperSettings(
     console.log('saveTaperSettings: Creating new settings');
     const result = await db.runAsync(
       `INSERT INTO taper_settings 
-       (baseline_pouches_per_day, price_per_can, weekly_reduction_percent, start_date, created_at, updated_at)
-       VALUES (?, ?, ?, ?, ?, ?)`,
+       (baseline_pouches_per_day, price_per_can, weekly_reduction_percent, start_date, triggers, created_at, updated_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
       [
         settings.baselinePouchesPerDay,
         settings.pricePerCan || null,
         settings.weeklyReductionPercent,
         settings.startDate,
+        triggersJson,
         now,
         now,
       ]
@@ -80,6 +88,7 @@ export async function getTaperSettings(): Promise<TaperSettings | null> {
     price_per_can: number | null;
     weekly_reduction_percent: number;
     start_date: number;
+    triggers: string | null;
     created_at: number;
     updated_at: number;
   }>('SELECT * FROM taper_settings LIMIT 1', []);
@@ -88,12 +97,24 @@ export async function getTaperSettings(): Promise<TaperSettings | null> {
     return null;
   }
 
+  // Parse triggers JSON string to array
+  let triggers: string[] | undefined;
+  if (result.triggers) {
+    try {
+      triggers = JSON.parse(result.triggers);
+    } catch (error) {
+      console.error('Error parsing triggers JSON:', error);
+      triggers = undefined;
+    }
+  }
+
   return {
     id: result.id,
     baselinePouchesPerDay: result.baseline_pouches_per_day,
     pricePerCan: result.price_per_can || undefined,
     weeklyReductionPercent: result.weekly_reduction_percent,
     startDate: result.start_date,
+    triggers,
     createdAt: result.created_at,
     updatedAt: result.updated_at,
   };

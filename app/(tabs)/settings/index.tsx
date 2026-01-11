@@ -33,8 +33,10 @@ export default function SettingsScreen() {
 
   const loadNotificationStatus = async () => {
     try {
-      const permission = await requestNotificationPermissions();
-      setHasPermission(permission);
+      // Only check permission status, don't request it
+      const { getPermissionsAsync } = await import('expo-notifications');
+      const { status } = await getPermissionsAsync();
+      setHasPermission(status === 'granted');
 
       const notifications = await getAllScheduledNotifications();
       const hasDailyCheckIn = notifications.some(
@@ -97,7 +99,7 @@ export default function SettingsScreen() {
               <Text style={styles.sectionTitle}>Taper Plan</Text>
             </View>
             <Text style={styles.sectionDescription}>
-              If you've had a setback or want to start fresh, you can reset your taper plan.
+              If you&apos;ve had a setback or want to start fresh, you can reset your taper plan.
             </Text>
             <Button
               title="Reset Taper Plan"
@@ -182,6 +184,18 @@ export default function SettingsScreen() {
                   </Text>
                 </View>
               )}
+              {settings.triggers && settings.triggers.length > 0 && (
+                <View style={styles.triggersContainer}>
+                  <Text style={styles.triggersLabel}>Selected Triggers:</Text>
+                  <View style={styles.triggersList}>
+                    {settings.triggers.map((trigger, index) => (
+                      <View key={index} style={styles.triggerTag}>
+                        <Text style={styles.triggerText}>{trigger}</Text>
+                      </View>
+                    ))}
+                  </View>
+                </View>
+              )}
             </Card>
           )}
         </View>
@@ -250,5 +264,35 @@ const styles = StyleSheet.create({
   },
   resetButton: {
     marginTop: spacing.sm,
+  },
+  triggersContainer: {
+    marginTop: spacing.md,
+    paddingTop: spacing.md,
+    borderTopWidth: 1,
+    borderTopColor: colors.neutral[200],
+  },
+  triggersLabel: {
+    ...typography.caption,
+    color: colors.textSecondary,
+    marginBottom: spacing.xs,
+    fontWeight: '600',
+  },
+  triggersList: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.xs,
+  },
+  triggerTag: {
+    backgroundColor: colors.accentStart + '20', // 20% opacity
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+    borderRadius: borderRadius.md,
+    borderWidth: 1,
+    borderColor: colors.accentStart + '40', // 40% opacity
+  },
+  triggerText: {
+    ...typography.xs,
+    color: colors.accentStart,
+    fontWeight: '500',
   },
 });

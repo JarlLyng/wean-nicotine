@@ -5,7 +5,7 @@ import { Screen } from '@/components/Screen';
 import { spacing } from '@/lib/theme';
 import { getTaperSettings, saveTaperSettings, deleteTaperSettings } from '@/lib/db-settings';
 import { saveUserPlan, deleteUserPlan } from '@/lib/db-user-plan';
-import { generateDefaultTaperPlan, calculateDailyAllowance } from '@/lib/taper-plan';
+import { calculateDailyAllowance } from '@/lib/taper-plan';
 
 export default function ResetTaperScreen() {
   const router = useRouter();
@@ -143,7 +143,7 @@ export default function ResetTaperScreen() {
         <View style={styles.content}>
           <Text style={styles.title}>Reset Taper Plan</Text>
           <Text style={styles.subtitle}>
-            If you've had a setback or want to start fresh, you can reset your taper plan.
+            If you&apos;ve had a setback or want to start fresh, you can reset your taper plan.
           </Text>
 
           <View style={styles.infoBox}>
@@ -158,8 +158,8 @@ export default function ResetTaperScreen() {
 
           <View style={styles.encouragementBox}>
             <Text style={styles.encouragementText}>
-              Remember: setbacks are normal and part of the journey. Resetting isn't failure —
-              it's giving yourself a fresh start.
+              Remember: setbacks are normal and part of the journey. Resetting isn&apos;t failure —
+              it&apos;s giving yourself a fresh start.
             </Text>
           </View>
 
