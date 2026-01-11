@@ -15,13 +15,17 @@ type SQLiteDatabase = {
 };
 
 // Lazy load expo-sqlite only on native platforms to avoid web bundling issues
-function getSQLite(): typeof import('expo-sqlite') | null {
+// On web, this function returns null immediately to prevent Metro from analyzing expo-sqlite
+function getSQLite(): any {
   if (Platform.OS === 'web') {
     return null;
   }
   try {
-    // Use require to avoid static import analysis
-    return require('expo-sqlite');
+    // Use dynamic require with string concatenation to prevent Metro static analysis
+    // This prevents Metro from analyzing the expo-sqlite import chain on web
+    const sqliteModuleName = 'expo-' + 'sqlite';
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    return require(sqliteModuleName);
   } catch {
     return null;
   }
@@ -36,10 +40,14 @@ export async function initDatabase(): Promise<SQLiteDatabase> {
   // Check if running on web
   const SQLite = getSQLite();
   if (Platform.OS === 'web' || !SQLite) {
-    throw new Error(
-      'Taper is designed for mobile devices only. SQLite is not available on web. ' +
-      'Please use the iOS or Android app, or run: npx expo start --ios or npx expo start --android'
-    );
+    // On web, return a mock database that allows UI to render
+    // This enables viewing the UI for design purposes
+    return {
+      execAsync: async () => {},
+      runAsync: async () => ({ lastInsertRowId: 0 }),
+      getAllAsync: async () => [],
+      getFirstAsync: async () => null,
+    } as SQLiteDatabase;
   }
 
   if (db) {
@@ -108,7 +116,7 @@ export async function initDatabase(): Promise<SQLiteDatabase> {
  */
 export async function getDatabase(): Promise<SQLiteDatabase> {
   if (!db) {
-    return await initDatabase();
+    db = await initDatabase();
   }
   return db;
 }

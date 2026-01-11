@@ -2,8 +2,10 @@
  * CRUD operations for TaperSettings
  */
 
+import { Platform } from 'react-native';
 import { getDatabase } from './db';
 import type { TaperSettings } from './models';
+import { getDummySettings } from './db-web-dummy';
 
 /**
  * Create or update taper settings
@@ -81,6 +83,11 @@ export async function saveTaperSettings(
  * Get current taper settings
  */
 export async function getTaperSettings(): Promise<TaperSettings | null> {
+  // On web, return dummy data for UI preview
+  if (Platform.OS === 'web') {
+    return getDummySettings();
+  }
+
   const db = await getDatabase();
   const result = await db.getFirstAsync<{
     id: number;
@@ -124,6 +131,10 @@ export async function getTaperSettings(): Promise<TaperSettings | null> {
  * Check if settings exist
  */
 export async function hasTaperSettings(): Promise<boolean> {
+  // On web, always return true so onboarding doesn't show
+  if (Platform.OS === 'web') {
+    return true;
+  }
   const settings = await getTaperSettings();
   return settings !== null;
 }

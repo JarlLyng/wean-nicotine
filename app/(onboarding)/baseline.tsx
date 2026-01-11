@@ -62,13 +62,6 @@ export default function BaselineScreen() {
             onPress={handleNext}
             style={styles.button}
           />
-
-          <Button
-            title="Skip for now"
-            onPress={() => router.push('/(onboarding)/price')}
-            variant="ghost"
-            style={styles.skipButton}
-          />
         </View>
       </ScrollView>
     </Screen>
@@ -127,8 +120,5 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: spacing.md,
-  },
-  skipButton: {
-    marginTop: spacing.sm,
   },
 });

@@ -2,8 +2,10 @@
  * CRUD operations for UserPlan
  */
 
+import { Platform } from 'react-native';
 import { getDatabase } from './db';
 import type { UserPlan } from './models';
+import { getDummyUserPlan } from './db-web-dummy';
 
 /**
  * Create or update user plan
@@ -70,6 +72,11 @@ export async function saveUserPlan(
  * Get current user plan
  */
 export async function getUserPlan(): Promise<UserPlan | null> {
+  // On web, return dummy data for UI preview
+  if (Platform.OS === 'web') {
+    return getDummyUserPlan(1);
+  }
+
   const db = await getDatabase();
   const result = await db.getFirstAsync<{
     id: number;

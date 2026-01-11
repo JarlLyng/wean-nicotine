@@ -33,15 +33,6 @@ export default function PriceScreen() {
     });
   };
 
-  const handleSkip = () => {
-    router.push({
-      pathname: '/(onboarding)/triggers',
-      params: {
-        baseline: baseline.toString(),
-        price: '0',
-      },
-    });
-  };
 
   return (
     <Screen variant="gradient" title="Price Per Can">
@@ -52,7 +43,7 @@ export default function PriceScreen() {
               If you&apos;d like to track money saved, enter the price you pay per can.
             </Text>
             <Text style={styles.hint}>
-              You can skip this and add it later in settings.
+              This is optional — you can add it later in settings if needed.
             </Text>
 
             <View style={styles.inputContainer}>
@@ -77,13 +68,6 @@ export default function PriceScreen() {
             title="Continue"
             onPress={handleNext}
             style={styles.button}
-          />
-
-          <Button
-            title="Skip"
-            onPress={handleSkip}
-            variant="ghost"
-            style={styles.skipButton}
           />
         </View>
       </ScrollView>
@@ -143,8 +127,5 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: spacing.md,
-  },
-  skipButton: {
-    marginTop: spacing.sm,
   },
 });

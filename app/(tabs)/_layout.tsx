@@ -33,28 +33,28 @@ export default function TabLayout() {
         name="home"
         options={{
           title: 'Today',
-          tabBarIcon: ({ color }) => <Icon name="house" size={24} color={color} weight="fill" />,
+          tabBarIcon: ({ color }) => <Icon name="house" size={24} color={color} weight="regular" />,
         }}
       />
       <Tabs.Screen
         name="progress"
         options={{
           title: 'Progress',
-          tabBarIcon: ({ color }) => <Icon name="chart-line-up" size={24} color={color} weight="fill" />,
+          tabBarIcon: ({ color }) => <Icon name="chart-line-up" size={24} color={color} weight="regular" />,
         }}
       />
       <Tabs.Screen
         name="tools"
         options={{
           title: 'Tools',
-          tabBarIcon: ({ color }) => <Icon name="heart" size={24} color={color} weight="fill" />,
+          tabBarIcon: ({ color }) => <Icon name="heart" size={24} color={color} weight="regular" />,
         }}
       />
       <Tabs.Screen
         name="settings"
         options={{
           title: 'Settings',
-          tabBarIcon: ({ color }) => <Icon name="gear" size={24} color={color} weight="fill" />,
+          tabBarIcon: ({ color }) => <Icon name="gear" size={24} color={color} weight="regular" />,
         }}
       />
     </Tabs>

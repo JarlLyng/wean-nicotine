@@ -2,7 +2,9 @@
  * CRUD operations for LogEntry
  */
 
+import { Platform } from 'react-native';
 import { getDatabase } from './db';
+import { getDummyLogEntries } from './db-web-dummy';
 import type { LogEntry, LogEntryType } from './models';
 
 /**
@@ -33,6 +35,30 @@ export async function getLogEntries(options?: {
   endDate?: number;
   limit?: number;
 }): Promise<LogEntry[]> {
+  // On web, return dummy data for UI preview
+  if (Platform.OS === 'web') {
+    let dummyEntries = getDummyLogEntries();
+    
+    // Apply filters to dummy data
+    if (options?.type) {
+      dummyEntries = dummyEntries.filter(entry => entry.type === options.type);
+    }
+    
+    if (options?.startDate) {
+      dummyEntries = dummyEntries.filter(entry => entry.timestamp >= options.startDate!);
+    }
+    
+    if (options?.endDate) {
+      dummyEntries = dummyEntries.filter(entry => entry.timestamp <= options.endDate!);
+    }
+    
+    if (options?.limit) {
+      dummyEntries = dummyEntries.slice(0, options.limit);
+    }
+    
+    return dummyEntries;
+  }
+
   const db = await getDatabase();
   let query = 'SELECT * FROM log_entries WHERE 1=1';
   const params: any[] = [];
@@ -84,6 +110,20 @@ export async function getLogEntries(options?: {
  * Get log entries for a specific day (start of day to end of day)
  */
 export async function getLogEntriesForDay(date: Date): Promise<LogEntry[]> {
+  // On web, return dummy data for UI preview
+  if (Platform.OS === 'web') {
+    const dummyEntries = getDummyLogEntries();
+    const startOfDay = new Date(date);
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date(date);
+    endOfDay.setHours(23, 59, 59, 999);
+    
+    return dummyEntries.filter(entry => {
+      const entryDate = new Date(entry.timestamp);
+      return entryDate >= startOfDay && entryDate <= endOfDay;
+    });
+  }
+
   const startOfDay = new Date(date);
   startOfDay.setHours(0, 0, 0, 0);
   const endOfDay = new Date(date);

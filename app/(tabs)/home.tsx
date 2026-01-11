@@ -16,6 +16,7 @@ export default function HomeScreen() {
   const [dailyAllowance, setDailyAllowance] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [pouchesUsedToday, setPouchesUsedToday] = useState(0);
+  const [baselinePouchesPerDay, setBaselinePouchesPerDay] = useState<number | null>(null);
   const [isLogging, setIsLogging] = useState(false);
   const [settingsId, setSettingsId] = useState<number | null>(null); // Track settings ID for debugging
   const isLoadingRef = useRef(false); // Prevent multiple simultaneous loads
@@ -41,10 +42,11 @@ export default function HomeScreen() {
       const settings = await getTaperSettings();
       console.log('Home screen: Settings:', settings);
       
-      if (!settings) {
+        if (!settings) {
         console.log('Home screen: No settings found');
         setDailyAllowance(null);
         setPouchesUsedToday(0);
+        setBaselinePouchesPerDay(null);
         setSettingsId(null);
         return;
       }
@@ -74,6 +76,7 @@ export default function HomeScreen() {
           console.error('Home screen: Failed to recreate user plan');
           setDailyAllowance(null);
           setPouchesUsedToday(0);
+          setBaselinePouchesPerDay(null);
           return;
         }
       }
@@ -114,12 +117,14 @@ export default function HomeScreen() {
       setSettingsId(settings.id);
       setPouchesUsedToday(usedCount);
       setDailyAllowance(roundedAllowance);
+      setBaselinePouchesPerDay(settings.baselinePouchesPerDay);
       
       console.log('Home screen: State update called - dailyAllowance:', roundedAllowance, 'settingsId:', settings.id, 'updatedAt:', settings.updatedAt);
-    } catch (error) {
+      } catch (error) {
       console.error('Error loading data:', error);
       setDailyAllowance(null);
       setPouchesUsedToday(0);
+      setBaselinePouchesPerDay(null);
       setIsLoading(false);
       isLoadingRef.current = false;
     } finally {
@@ -137,6 +142,7 @@ export default function HomeScreen() {
     console.log('Home screen: Component mounted - resetting all state');
     setDailyAllowance(null);
     setPouchesUsedToday(0);
+    setBaselinePouchesPerDay(null);
     setSettingsId(null);
     setIsLoading(true);
     isLoadingRef.current = false;
@@ -212,7 +218,7 @@ export default function HomeScreen() {
             <ActivityIndicator size="large" color={colors.accentStart} />
           </Card>
         ) : dailyAllowance !== null ? (
-          <>
+          <View style={styles.mainContent}>
             {/* Daily Allowance Card with Progress Ring */}
             <Card variant="elevated" style={styles.card} padding="lg">
               <Text style={styles.label}>Your Daily Allowance</Text>
@@ -240,11 +246,20 @@ export default function HomeScreen() {
                 />
               </View>
 
-              {/* Used vs Remaining Stats */}
+              {/* Used, Avoided, and Remaining Stats */}
               <View style={styles.statsContainer}>
                 <View style={styles.statItem}>
                   <Text style={styles.statValue}>{pouchesUsedToday}</Text>
                   <Text style={styles.statLabel}>Used</Text>
+                </View>
+                <View style={styles.statDivider} />
+                <View style={styles.statItem}>
+                  <Text style={styles.statValue}>
+                    {baselinePouchesPerDay !== null 
+                      ? Math.max(0, baselinePouchesPerDay - pouchesUsedToday)
+                      : 0}
+                  </Text>
+                  <Text style={styles.statLabel}>Avoided</Text>
                 </View>
                 <View style={styles.statDivider} />
                 <View style={styles.statItem}>
@@ -256,7 +271,7 @@ export default function HomeScreen() {
               </View>
             </Card>
 
-            {/* Action Buttons */}
+            {/* Action Buttons - Always at bottom */}
             <View style={styles.loggingButtons}>
               <Button
                 title="Used a pouch"
@@ -275,7 +290,7 @@ export default function HomeScreen() {
                 style={styles.logButton}
               />
             </View>
-          </>
+          </View>
         ) : (
           <Card variant="elevated" style={styles.card} padding="lg">
             <Text style={styles.placeholderText}>
@@ -292,6 +307,9 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     paddingTop: spacing.lg,
+  },
+  mainContent: {
+    flex: 1,
   },
   card: {
     marginTop: spacing.md,
@@ -335,7 +353,8 @@ const styles = StyleSheet.create({
     marginHorizontal: spacing.lg,
   },
   loggingButtons: {
-    marginTop: spacing.lg,
+    marginTop: 'auto',
+    marginBottom: spacing.lg,
     gap: spacing.md,
   },
   logButton: {

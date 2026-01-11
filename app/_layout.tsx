@@ -15,22 +15,7 @@ export default function RootLayout() {
   // Initialize app (database, analytics)
   useAppInitialize();
 
-  // Show web warning message
-  if (Platform.OS === 'web') {
-    return (
-      <View style={styles.webWarning}>
-        <Text style={styles.webWarningTitle}>Taper is Mobile Only</Text>
-        <Text style={styles.webWarningText}>
-          Taper is designed for iOS and Android devices only.{'\n\n'}
-          SQLite database is not available on web browsers.{'\n\n'}
-          To use Taper, please:{'\n'}
-          • Run on iOS: npx expo start --ios{'\n'}
-          • Run on Android: npx expo start --android{'\n'}
-          • Or use Expo Go app on your mobile device
-        </Text>
-      </View>
-    );
-  }
+  // Note: On web, database won't work but UI can still be viewed for design purposes
 
   // Error boundary fallback component
   const ErrorFallback = ({ error }: { error: Error }) => (

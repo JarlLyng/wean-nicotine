@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Platform } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { Screen } from '@/components/Screen';
@@ -40,6 +40,14 @@ export default function TriggersScreen() {
   const handleComplete = async () => {
     setIsSaving(true);
     try {
+      // On web, just navigate to home (database doesn't work on web)
+      if (Platform.OS === 'web') {
+        console.log('Onboarding complete (web): Navigating to home (database not available on web)');
+        await new Promise(resolve => setTimeout(resolve, 200));
+        router.replace('/(tabs)/home');
+        return;
+      }
+
       // Ensure we start fresh - delete any existing settings first
       // This handles the case where user did "Start Over" and is re-doing onboarding
       console.log('Onboarding complete: Deleting any existing data...');
@@ -141,7 +149,7 @@ export default function TriggersScreen() {
               Select situations where you typically use snus. This helps us understand your patterns.
             </Text>
             <Text style={styles.hint}>
-              You can skip this and add triggers later.
+              This is optional — you can add triggers later if needed.
             </Text>
 
             <View style={styles.triggersContainer}>
