@@ -8,14 +8,14 @@
  * - Accessible contrast ratios
  * 
  * Gradient usage:
- * - Use gradients sparingly in header areas only (not entire screens)
- * - Primary gradient: accentStart → accentMid → accentEnd (vertical)
- * - Subtle gradient: low-contrast fade for gentle backgrounds
- * - Keep content areas on flat surfaces (white/neutral) for readability
+ * - Subtle gradient applied as background to all screens
+ * - Primary gradient: accentStart → accentMid → accentEnd (vertical) for visual elements
+ * - Subtle gradient: low-contrast fade (20% → 10% → 5% opacity) for screen backgrounds
+ * - Keep content areas on flat white surfaces (cards) for readability
  * 
  * Surface usage:
  * - Use flat white surfaces for cards and content areas
- * - Deep calm background (#0F172A) only for gradient headers
+ * - Subtle gradient background on all screens for cohesive, calming experience
  * - Maintain high contrast between text and backgrounds
  */
 

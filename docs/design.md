@@ -20,8 +20,8 @@ Taper's design is built around three core principles:
 
 ### Core Colors
 
-- **Background:** `#0F172A` — Deep calm background (used for gradient headers)
-- **Surface:** `#FFFFFF` — White surface for content areas
+- **Background:** Subtle gradient (teal/green fade) — Applied to all screens
+- **Surface:** `#FFFFFF` — White surface for content areas (cards)
 - **Text Primary:** `#0F172A` — Primary text color (dark)
 - **Text Secondary:** `#475569` — Secondary text color (medium gray)
 
@@ -79,27 +79,26 @@ xxl: 48px // Maximum spacing
 ### When to Use Gradients
 
 ✅ **DO:**
-- Use in header areas only
-- Use for prominent visual elements
-- Use primary gradient for main headers
-- Use subtle gradient for gentle backgrounds
+- Use subtle gradient as background for all screens
+- Use primary gradient for prominent visual elements (progress rings, etc.)
+- Keep gradients subtle and calming
 
 ❌ **DON'T:**
-- Use gradients on entire screens
-- Use gradients in content areas
-- Overuse gradients (keep it minimal)
+- Use gradients in content areas (cards remain white)
+- Overuse gradients (keep it minimal and calming)
 
 ### Gradient Variants
 
 1. **Primary Gradient** (`variant="primary"`)
    - Strong accent gradient: `accentStart → accentMid → accentEnd`
-   - Used for main screen headers
+   - Used for visual elements like progress rings
    - Vertical direction
 
 2. **Subtle Gradient** (`variant="subtle"`)
    - Low-contrast fade with opacity
-   - Gentle background effect
+   - Applied as background to all screens
    - 20% → 10% → 5% opacity
+   - Creates a calming, cohesive visual experience
 
 ---
 
@@ -124,15 +123,16 @@ xxl: 48px // Maximum spacing
 
 ### Screen Layout
 
-**Gradient Variant:**
-- Gradient header at top (with title)
-- White content area below
-- Cards with elevation for content
+**All Screens:**
+- Subtle gradient background applied to entire screen
+- White cards with elevation for content
+- No gradient headers or titles
+- Clean, minimal design
 
-**Plain Variant:**
-- White background throughout
-- Simple title at top
-- Content flows naturally
+**Screen Variants:**
+- **Gradient variant:** Same as plain (both use subtle background)
+- **Plain variant:** Same as gradient (both use subtle background)
+- Note: Variant parameter exists for backward compatibility but both render the same
 
 ### Cards
 
@@ -150,10 +150,10 @@ xxl: 48px // Maximum spacing
 
 ## 📱 Visual Hierarchy
 
-1. **Headers:** Gradient background with white text
-2. **Primary Content:** Large, bold numbers/values
+1. **Background:** Subtle gradient provides calming base
+2. **Primary Content:** Large, bold numbers/values on white cards
 3. **Secondary Content:** Body text in secondary color
-4. **Actions:** Prominent buttons with clear labels
+4. **Actions:** Prominent buttons with clear labels, positioned at bottom
 
 ---
 
@@ -211,9 +211,9 @@ borderRadius: borderRadius.lg
 
 ## 🎨 Design Principles Summary
 
-1. **Gradients:** Use sparingly, only in headers
-2. **Surfaces:** Flat white for content areas
-3. **Colors:** Calm teal/green gradient for accents
+1. **Gradients:** Subtle background on all screens, primary gradient for visual elements
+2. **Surfaces:** Flat white cards for content areas
+3. **Colors:** Calm teal/green gradient for accents and backgrounds
 4. **Typography:** Clear hierarchy, accessible scaling
 5. **Spacing:** Consistent scale throughout
 6. **Accessibility:** Built-in from the start
