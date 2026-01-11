@@ -38,10 +38,30 @@ export function getDummyUserPlan(settingsId: number): UserPlan {
   };
 }
 
+// Cache dummy log entries per session to ensure deterministic data
+let cachedDummyEntries: LogEntry[] | null = null;
+
 // Generate dummy log entries for the last 14 days
+// Cached per session to ensure deterministic data for visual QA
 export function getDummyLogEntries(): LogEntry[] {
+  // Return cached data if available
+  if (cachedDummyEntries) {
+    return cachedDummyEntries;
+  }
+
   const now = Date.now();
   const entries: LogEntry[] = [];
+  
+  // Use a simple seeded random for deterministic results
+  // Seed based on a fixed date to ensure consistency
+  const seedDate = new Date('2024-01-01').getTime();
+  let seed = Math.floor(seedDate / 1000);
+  
+  // Simple seeded random function
+  const seededRandom = () => {
+    seed = (seed * 9301 + 49297) % 233280;
+    return seed / 233280;
+  };
   
   // Generate logs for the last 14 days
   for (let day = 0; day < 14; day++) {
@@ -51,7 +71,7 @@ export function getDummyLogEntries(): LogEntry[] {
     
     // Random number of pouches used per day (between 6-11, trending downward)
     const baseUsage = 12 - (day * 0.3); // Gradually decreasing
-    const pouchesUsed = Math.max(6, Math.floor(baseUsage + (Math.random() * 2 - 1)));
+    const pouchesUsed = Math.max(6, Math.floor(baseUsage + (seededRandom() * 2 - 1)));
     
     // Distribute pouches throughout the day
     const hours = [8, 10, 12, 14, 16, 18, 20]; // Common times
@@ -68,8 +88,8 @@ export function getDummyLogEntries(): LogEntry[] {
     });
     
     // Add some cravings resisted (about 1-2 per day)
-    if (Math.random() > 0.3) {
-      const cravingTime = dayStart + (14 * 60 * 60 * 1000) + (Math.random() * 4 * 60 * 60 * 1000);
+    if (seededRandom() > 0.3) {
+      const cravingTime = dayStart + (14 * 60 * 60 * 1000) + (seededRandom() * 4 * 60 * 60 * 1000);
       entries.push({
         id: entries.length + 1,
         type: 'craving_resisted',
@@ -80,5 +100,6 @@ export function getDummyLogEntries(): LogEntry[] {
   }
   
   // Sort by timestamp descending (most recent first)
-  return entries.sort((a, b) => b.timestamp - a.timestamp);
+  cachedDummyEntries = entries.sort((a, b) => b.timestamp - a.timestamp);
+  return cachedDummyEntries;
 }

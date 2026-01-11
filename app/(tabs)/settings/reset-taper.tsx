@@ -34,11 +34,13 @@ export default function ResetTaperScreen() {
               }
 
               // Reset taper plan with same baseline but new start date
+              // Preserve triggers when resetting (they're not part of the taper plan)
               const newSettings = {
                 baselinePouchesPerDay: currentSettings.baselinePouchesPerDay,
                 pricePerCan: currentSettings.pricePerCan,
                 weeklyReductionPercent: currentSettings.weeklyReductionPercent,
                 startDate: Date.now(),
+                triggers: currentSettings.triggers, // Preserve triggers
               };
 
               const settingsId = await saveTaperSettings(newSettings);

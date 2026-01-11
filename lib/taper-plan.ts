@@ -15,15 +15,20 @@ export function calculateDailyAllowance(
   const startDate = new Date(settings.startDate);
   const weeksSinceStart = getWeeksBetween(startDate, currentDate);
   
+  // Clamp to non-negative weeks to prevent allowance exceeding baseline
+  // This handles edge cases like timezone issues or device clock being wrong
+  const clampedWeeks = Math.max(0, weeksSinceStart);
+  
   const reductionFactor = Math.pow(
     1 - settings.weeklyReductionPercent / 100,
-    weeksSinceStart
+    clampedWeeks
   );
   
   const allowance = settings.baselinePouchesPerDay * reductionFactor;
   
   // Round to 1 decimal place, but never go below 0
-  return Math.max(0, Math.round(allowance * 10) / 10);
+  // Also ensure allowance never exceeds baseline (safety check)
+  return Math.max(0, Math.min(settings.baselinePouchesPerDay, Math.round(allowance * 10) / 10));
 }
 
 /**

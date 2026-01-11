@@ -108,21 +108,21 @@ export async function calculateWeeklyProgress(
   }
 
   // Count days under/over limit (only from effective start)
-  // Note: 'days' is already declared above, so we reuse it
+  // Optimize: Pre-group logs by day to avoid O(n^2) filtering
+  const logsByDay = new Map<string, number>();
+  for (const log of usedLogs) {
+    const logDate = new Date(log.timestamp);
+    const dayKey = `${logDate.getFullYear()}-${logDate.getMonth()}-${logDate.getDate()}`;
+    logsByDay.set(dayKey, (logsByDay.get(dayKey) || 0) + 1);
+  }
+
   let daysUnderLimit = 0;
   let daysOverLimit = 0;
 
   for (const day of days) {
     const dayAllowance = calculateDailyAllowance(settings, day);
-    const dayLogs = usedLogs.filter((log) => {
-      const logDate = new Date(log.timestamp);
-      return (
-        logDate.getFullYear() === day.getFullYear() &&
-        logDate.getMonth() === day.getMonth() &&
-        logDate.getDate() === day.getDate()
-      );
-    });
-    const dayUsed = dayLogs.length;
+    const dayKey = `${day.getFullYear()}-${day.getMonth()}-${day.getDate()}`;
+    const dayUsed = logsByDay.get(dayKey) || 0;
 
     if (dayUsed <= dayAllowance) {
       daysUnderLimit++;
