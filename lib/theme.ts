@@ -165,6 +165,7 @@ export const borderRadius = {
   lg: 12,
   xl: 16,
   '2xl': 20,
+  '3xl': 24,
   full: 9999,
 } as const;
 
@@ -180,7 +181,7 @@ export const shadows = {
   md: {
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.16,
+    shadowOpacity: 0.08,
     shadowRadius: 4,
     elevation: 2,
   },
