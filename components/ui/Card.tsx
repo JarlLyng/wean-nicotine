@@ -34,30 +34,35 @@ export function Card({ children, variant = 'flat', style, padding = 'md' }: Card
     transform: [{ translateY: translateY.value }],
   }));
 
+  // Ensure colors are defined with fallbacks
+  const surfaceDefault = colors.surface?.default || colors.background?.app || '#FFFFFF';
+  const surfaceRaised = colors.surface?.raised || surfaceDefault;
+  const borderSubtle = colors.border?.subtle || colors.border?.default || 'rgba(0, 0, 0, 0.1)';
+
   const getCardStyle = (): ViewStyle => {
     const baseStyle: ViewStyle = {
       borderRadius: borderRadius.lg,
       padding: spacing[padding],
-      backgroundColor: colors.surface.default,
+      backgroundColor: surfaceDefault,
     };
 
     switch (variant) {
       case 'elevated':
         return {
           ...baseStyle,
-          backgroundColor: colors.surface.raised,
+          backgroundColor: surfaceRaised,
           ...shadows.md,
         };
       case 'flat':
         return {
           ...baseStyle,
-          backgroundColor: colors.surface.default,
+          backgroundColor: surfaceDefault,
         };
       case 'outlined':
         return {
           ...baseStyle,
           borderWidth: 1,
-          borderColor: colors.border.subtle,
+          borderColor: borderSubtle,
         };
       default:
         return baseStyle;
