@@ -212,6 +212,71 @@ export default function HomeScreen() {
   // This ensures we get a completely fresh component instance
   const screenKey = `home-screen-${settingsId || 'no-settings'}`;
   
+  // Create styles inside component to access dynamic colors
+  const styles = StyleSheet.create({
+    content: {
+      flex: 1,
+      paddingTop: spacing.lg,
+    },
+    mainContent: {
+      flex: 1,
+    },
+    card: {
+      marginTop: spacing.md,
+    },
+    label: {
+      ...typography.body,
+      color: colors.text.secondary,
+      marginBottom: spacing.lg,
+      textAlign: 'center',
+    },
+    progressContainer: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom: spacing.lg,
+    },
+    statsContainer: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop: spacing.md,
+    },
+    statItem: {
+      flex: 1,
+      alignItems: 'center',
+    },
+    statValue: {
+      ...typography.title,
+      fontSize: 24,
+      fontWeight: '700',
+      color: colors.primary,
+      marginBottom: spacing.xs,
+    },
+    statLabel: {
+      ...typography.caption,
+      color: colors.text.secondary,
+    },
+    statDivider: {
+      width: 1,
+      height: 40,
+      backgroundColor: colors.border.subtle,
+      marginHorizontal: spacing.lg,
+    },
+    loggingButtons: {
+      marginTop: 'auto',
+      marginBottom: spacing.lg,
+      gap: spacing.md,
+    },
+    logButton: {
+      width: '100%',
+    },
+    placeholderText: {
+      ...typography.body,
+      color: colors.text.secondary,
+      textAlign: 'center',
+    },
+  });
+  
   return (
     <Screen key={screenKey} variant="gradient" title="Today">
       <View style={styles.content}>
@@ -304,67 +369,3 @@ export default function HomeScreen() {
     </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  content: {
-    flex: 1,
-    paddingTop: spacing.lg,
-  },
-  mainContent: {
-    flex: 1,
-  },
-  card: {
-    marginTop: spacing.md,
-  },
-  label: {
-    ...typography.body,
-    color: colors.text.secondary,
-    marginBottom: spacing.lg,
-    textAlign: 'center',
-  },
-  progressContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: spacing.lg,
-  },
-  statsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: spacing.md,
-  },
-  statItem: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  statValue: {
-    ...typography.title,
-    fontSize: 24,
-    fontWeight: '700',
-    color: colors.primary,
-    marginBottom: spacing.xs,
-  },
-  statLabel: {
-    ...typography.caption,
-    color: colors.text.secondary,
-  },
-  statDivider: {
-    width: 1,
-    height: 40,
-    backgroundColor: colors.border.subtle,
-    marginHorizontal: spacing.lg,
-  },
-  loggingButtons: {
-    marginTop: 'auto',
-    marginBottom: spacing.lg,
-    gap: spacing.md,
-  },
-  logButton: {
-    width: '100%',
-  },
-  placeholderText: {
-    ...typography.body,
-    color: colors.text.secondary,
-    textAlign: 'center',
-  },
-});
