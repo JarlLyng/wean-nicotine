@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { View, StyleSheet, ViewStyle } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming, FadeInDown, Easing } from 'react-native-reanimated';
 import { spacing, borderRadius, shadows, animations } from '@/lib/theme';
@@ -34,65 +34,64 @@ export function Card({ children, variant = 'flat', style, padding = 'md' }: Card
     transform: [{ translateY: translateY.value }],
   }));
 
-  // Ensure colors are defined with fallbacks - extract as strings to avoid undefined in Reanimated
-  // Direct access with explicit fallbacks for Reanimated compatibility
-  const surfaceDefault = (colors && colors.surface && colors.surface.default) 
-    ? String(colors.surface.default) 
-    : (colors && colors.background && colors.background.app) 
-      ? String(colors.background.app) 
-      : '#FFFFFF';
-  const surfaceRaised = (colors && colors.surface && colors.surface.raised) 
-    ? String(colors.surface.raised) 
-    : surfaceDefault;
-  const borderSubtle = (colors && colors.border && colors.border.subtle) 
-    ? String(colors.border.subtle) 
-    : (colors && colors.border && colors.border.default) 
-      ? String(colors.border.default) 
-      : 'rgba(0, 0, 0, 0.1)';
-  
-  // Use the string values directly
-  const backgroundColorDefault = surfaceDefault;
-  const backgroundColorRaised = surfaceRaised;
-  const borderColorSubtle = borderSubtle;
+  // Memoize card style to avoid recalculating in Reanimated worklet context
+  const cardStyle = useMemo(() => {
+    // Ensure colors are defined with fallbacks - extract as strings to avoid undefined in Reanimated
+    const surfaceDefault = (colors?.surface?.default) 
+      ? String(colors.surface.default) 
+      : (colors?.background?.app) 
+        ? String(colors.background.app) 
+        : '#FFFFFF';
+    const surfaceRaised = (colors?.surface?.raised) 
+      ? String(colors.surface.raised) 
+      : surfaceDefault;
+    const borderSubtle = (colors?.border?.subtle) 
+      ? String(colors.border.subtle) 
+      : (colors?.border?.default) 
+        ? String(colors.border.default) 
+        : 'rgba(0, 0, 0, 0.1)';
 
-  // Ensure shadowColor is always a string for Reanimated compatibility
-  const shadowStyle = {
-    ...shadows.md,
-    shadowColor: String(shadows.md.shadowColor || '#000000'),
-  };
+    // Ensure shadowColor is always a string for Reanimated compatibility
+    const shadowColor = String(shadows.md.shadowColor || '#000000');
+    const shadowStyle = {
+      shadowColor,
+      shadowOffset: shadows.md.shadowOffset,
+      shadowOpacity: shadows.md.shadowOpacity,
+      shadowRadius: shadows.md.shadowRadius,
+      elevation: shadows.md.elevation,
+    };
 
-  const getCardStyle = (): ViewStyle => {
     const baseStyle: ViewStyle = {
       borderRadius: borderRadius.lg,
       padding: spacing[padding],
-      backgroundColor: backgroundColorDefault,
+      backgroundColor: surfaceDefault,
     };
 
     switch (variant) {
       case 'elevated':
         return {
           ...baseStyle,
-          backgroundColor: backgroundColorRaised,
+          backgroundColor: surfaceRaised,
           ...shadowStyle,
         };
       case 'flat':
         return {
           ...baseStyle,
-          backgroundColor: backgroundColorDefault,
+          backgroundColor: surfaceDefault,
         };
       case 'outlined':
         return {
           ...baseStyle,
           borderWidth: 1,
-          borderColor: borderColorSubtle,
+          borderColor: borderSubtle,
         };
       default:
         return baseStyle;
     }
-  };
+  }, [colors, variant, padding]);
 
   return (
-    <Animated.View style={[getCardStyle(), animatedStyle, style]} entering={FadeInDown.duration(animations.normal)}>
+    <Animated.View style={[cardStyle, animatedStyle, style]} entering={FadeInDown.duration(animations.normal)}>
       {children}
     </Animated.View>
   );
