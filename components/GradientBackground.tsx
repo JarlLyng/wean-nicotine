@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, ViewStyle } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { colors } from '@/lib/theme';
+import { useDesignTokens } from '@/lib/design';
 
 interface GradientBackgroundProps {
   children: React.ReactNode;
@@ -9,22 +9,39 @@ interface GradientBackgroundProps {
   style?: ViewStyle;
 }
 
+// Helper to convert hex to rgba
+function hexToRgba(hex: string, alpha: number): string {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
 export function GradientBackground({ children, variant = 'primary', style }: GradientBackgroundProps) {
+  const { colors } = useDesignTokens();
+  
   const getGradientColors = (): [string, string, string] => {
     switch (variant) {
       case 'primary':
-        // Vertical gradient: accentStart → accentMid → accentEnd
-        return [colors.accentStart, colors.accentMid, colors.accentEnd];
-      case 'subtle':
-        // Low-contrast fade with opacity (using rgba format)
-        // Convert hex to rgba with reduced opacity
+        // Use IAMJARL primary color with slight opacity variation for visual interest
         return [
-          'rgba(14, 165, 164, 0.2)', // accentStart at 20% opacity
-          'rgba(52, 211, 153, 0.1)', // accentMid at 10% opacity
-          'rgba(110, 231, 183, 0.05)', // accentEnd at 5% opacity
+          colors.primary,
+          hexToRgba(colors.primary, 0.8),
+          hexToRgba(colors.primary, 0.6),
+        ];
+      case 'subtle':
+        // Subtle background using primary color with low opacity
+        return [
+          hexToRgba(colors.primary, 0.05),
+          hexToRgba(colors.primary, 0.03),
+          hexToRgba(colors.primary, 0.01),
         ];
       default:
-        return [colors.accentStart, colors.accentMid, colors.accentEnd];
+        return [
+          colors.primary,
+          hexToRgba(colors.primary, 0.8),
+          hexToRgba(colors.primary, 0.6),
+        ];
     }
   };
 

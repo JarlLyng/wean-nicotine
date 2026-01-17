@@ -7,7 +7,8 @@ import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useAppInitialize } from '@/hooks/useAppInitialize';
-import { spacing, colors, typography } from '@/lib/theme';
+import { spacing, typography } from '@/lib/theme';
+import { useDesignTokens } from '@/lib/design';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -18,17 +19,21 @@ export default function RootLayout() {
   // Note: On web, database won't work but UI can still be viewed for design purposes
 
   // Error boundary fallback component
-  const ErrorFallback = ({ error }: { error: Error }) => (
-    <View style={styles.errorContainer}>
-      <Text style={styles.errorTitle}>Something went wrong</Text>
-      <Text style={styles.errorText}>
-        The app encountered an unexpected error. Please restart the app.
-      </Text>
-      {__DEV__ && error && (
-        <Text style={styles.errorDetails}>{error.toString()}</Text>
-      )}
-    </View>
-  );
+  const ErrorFallback = ({ error }: { error: Error }) => {
+    const { colors } = useDesignTokens();
+    const errorStyles = createErrorStyles(colors);
+    return (
+      <View style={errorStyles.errorContainer}>
+        <Text style={errorStyles.errorTitle}>Something went wrong</Text>
+        <Text style={errorStyles.errorText}>
+          The app encountered an unexpected error. Please restart the app.
+        </Text>
+        {__DEV__ && error && (
+          <Text style={errorStyles.errorDetails}>{error.toString()}</Text>
+        )}
+      </View>
+    );
+  };
 
   // Wrap app with Sentry ErrorBoundary (skip on web)
   if (Platform.OS === 'web') {
@@ -58,48 +63,29 @@ export default function RootLayout() {
   );
 }
 
-const styles = StyleSheet.create({
-  webWarning: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: spacing.xl,
-    backgroundColor: colors.surface,
-  },
-  webWarningTitle: {
-    ...typography.title,
-    color: colors.textPrimary,
-    marginBottom: spacing.lg,
-    textAlign: 'center',
-  },
-  webWarningText: {
-    ...typography.body,
-    color: colors.textSecondary,
-    textAlign: 'center',
-    lineHeight: 24,
-  },
+const createErrorStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => StyleSheet.create({
   errorContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: spacing.xl,
-    backgroundColor: colors.surface,
+    backgroundColor: colors.surface.default,
   },
   errorTitle: {
     ...typography.title,
-    color: colors.textPrimary,
+    color: colors.text.primary,
     marginBottom: spacing.md,
     textAlign: 'center',
   },
   errorText: {
     ...typography.body,
-    color: colors.textSecondary,
+    color: colors.text.secondary,
     textAlign: 'center',
     marginBottom: spacing.md,
   },
   errorDetails: {
     ...typography.sm,
-    color: colors.semantic.error.main,
+    color: colors.error,
     textAlign: 'center',
     marginTop: spacing.lg,
     fontFamily: 'monospace',

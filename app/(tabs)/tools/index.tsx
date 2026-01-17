@@ -4,7 +4,8 @@ import Animated, { FadeInDown } from 'react-native-reanimated';
 import { Screen } from '@/components/Screen';
 import { Card } from '@/components/ui/Card';
 import { Icon } from '@/components/ui/Icon';
-import { spacing, colors, typography, borderRadius, animations } from '@/lib/theme';
+import { spacing, typography, borderRadius, animations } from '@/lib/theme';
+import { useDesignTokens } from '@/lib/design';
 
 const TOOLS = [
   {
@@ -28,38 +29,40 @@ const TOOLS = [
 ];
 
 export default function ToolsScreen() {
+  const { colors } = useDesignTokens();
   const router = useRouter();
+  const toolsStyles = createToolsStyles(colors);
 
   return (
     <Screen variant="gradient" title="Support Tools">
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <View style={styles.content}>
-          <Text style={styles.subtitle}>
+      <ScrollView contentContainerStyle={toolsStyles.scrollContent}>
+        <View style={toolsStyles.content}>
+          <Text style={toolsStyles.subtitle}>
             Tools to help you through cravings and difficult moments. Use them whenever you need
             support.
           </Text>
 
-          <View style={styles.toolsContainer}>
+          <View style={toolsStyles.toolsContainer}>
             {TOOLS.map((tool, index) => (
               <Animated.View
                 key={tool.id}
                 entering={FadeInDown.delay(index * 100).duration(animations.normal).springify()}>
                 <TouchableOpacity
                   onPress={() => router.push(`/(tabs)/tools/${tool.id}` as any)}>
-                  <Card variant="elevated" style={styles.toolCard} padding="lg">
-                    <View style={styles.iconContainer}>
-                      <Icon name={tool.icon} size={48} color={colors.accentStart} weight="duotone" />
+                  <Card variant="elevated" style={toolsStyles.toolCard} padding="lg">
+                    <View style={toolsStyles.iconContainer}>
+                      <Icon name={tool.icon} size={48} color={colors.primary} weight="duotone" />
                     </View>
-                    <Text style={styles.toolTitle}>{tool.title}</Text>
-                    <Text style={styles.toolDescription}>{tool.description}</Text>
+                    <Text style={toolsStyles.toolTitle}>{tool.title}</Text>
+                    <Text style={toolsStyles.toolDescription}>{tool.description}</Text>
                   </Card>
                 </TouchableOpacity>
               </Animated.View>
             ))}
           </View>
 
-          <Card variant="flat" style={styles.infoBox} padding="md">
-            <Text style={styles.infoText}>
+          <Card variant="flat" style={toolsStyles.infoBox} padding="md">
+            <Text style={toolsStyles.infoText}>
               Remember: setbacks are part of the journey. These tools are here to support you,
               not to judge you.
             </Text>
@@ -70,7 +73,7 @@ export default function ToolsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createToolsStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
   },
@@ -81,7 +84,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     ...typography.body,
-    color: colors.textSecondary,
+    color: colors.text.secondary,
     marginBottom: spacing.xl,
     textAlign: 'center',
   },
@@ -100,24 +103,24 @@ const styles = StyleSheet.create({
   toolTitle: {
     ...typography.xl,
     fontWeight: '600',
-    color: colors.textPrimary,
+    color: colors.text.primary,
     marginBottom: spacing.xs,
     textAlign: 'center',
   },
   toolDescription: {
     ...typography.caption,
-    color: colors.textSecondary,
+    color: colors.text.secondary,
     textAlign: 'center',
   },
   infoBox: {
-    backgroundColor: colors.semantic.success.light,
+    backgroundColor: colors.success + '20', // 20% opacity
     borderRadius: borderRadius.lg,
     padding: spacing.md,
     marginTop: spacing.lg,
   },
   infoText: {
     ...typography.caption,
-    color: colors.semantic.success.dark,
+    color: colors.success,
     textAlign: 'center',
   },
 });

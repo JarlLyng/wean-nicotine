@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet, ViewStyle, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { spacing, colors, typography } from '@/lib/theme';
+import { spacing, typography } from '@/lib/theme';
+import { useDesignTokens } from '@/lib/design';
 import { GradientBackground } from './GradientBackground';
 
 interface ScreenProps {
@@ -12,6 +13,9 @@ interface ScreenProps {
 }
 
 export function Screen({ children, title, variant = 'plain', style }: ScreenProps) {
+  const { colors } = useDesignTokens();
+  const styles = createStyles(colors);
+  
   // On web, use simpler structure to reduce DOM nesting
   if (Platform.OS === 'web') {
     if (variant === 'gradient') {
@@ -69,13 +73,14 @@ export function Screen({ children, title, variant = 'plain', style }: ScreenProp
   );
 }
 
-const styles = StyleSheet.create({
+// Styles are created inside component to access colors from hook
+const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => StyleSheet.create({
   container: {
     flex: 1,
   },
   plainTitle: {
     ...typography.title,
-    color: colors.textPrimary,
+    color: colors.text.primary,
     paddingHorizontal: spacing.md,
     paddingTop: spacing.md,
     paddingBottom: spacing.sm,

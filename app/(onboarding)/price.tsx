@@ -4,15 +4,18 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Screen } from '@/components/Screen';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
-import { spacing, colors, typography, borderRadius } from '@/lib/theme';
+import { spacing, typography, borderRadius } from '@/lib/theme';
+import { useDesignTokens } from '@/lib/design';
 
 export default function PriceScreen() {
+  const { colors } = useDesignTokens();
   const router = useRouter();
   const params = useLocalSearchParams();
   const baseline = params.baseline ? parseInt(params.baseline as string, 10) : 10;
   
   const [price, setPrice] = useState('');
   const [error, setError] = useState('');
+  const priceStyles = createPriceStyles(colors);
 
   const handleNext = () => {
     if (price && price.trim() !== '') {
@@ -36,19 +39,19 @@ export default function PriceScreen() {
 
   return (
     <Screen variant="gradient" title="Price Per Can">
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <View style={styles.content}>
-          <Card variant="flat" style={styles.card} padding="lg">
-            <Text style={styles.description}>
+      <ScrollView contentContainerStyle={priceStyles.scrollContent}>
+        <View style={priceStyles.content}>
+          <Card variant="flat" style={priceStyles.card} padding="lg">
+            <Text style={priceStyles.description}>
               If you&apos;d like to track money saved, enter the price you pay per can.
             </Text>
-            <Text style={styles.hint}>
+            <Text style={priceStyles.hint}>
               This is optional — you can add it later in settings if needed.
             </Text>
 
-            <View style={styles.inputContainer}>
+            <View style={priceStyles.inputContainer}>
               <TextInput
-                style={styles.input}
+                style={priceStyles.input}
                 value={price}
                 onChangeText={(text) => {
                   setPrice(text);
@@ -58,16 +61,16 @@ export default function PriceScreen() {
                 placeholderTextColor={colors.text.secondary}
                 keyboardType="decimal-pad"
               />
-              <Text style={styles.inputLabel}>price per can</Text>
+              <Text style={priceStyles.inputLabel}>price per can</Text>
             </View>
 
-            {error ? <Text style={styles.error}>{error}</Text> : null}
+            {error ? <Text style={priceStyles.error}>{error}</Text> : null}
           </Card>
 
           <Button
             title="Continue"
             onPress={handleNext}
-            style={styles.button}
+            style={priceStyles.button}
           />
         </View>
       </ScrollView>
@@ -75,7 +78,7 @@ export default function PriceScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createPriceStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
   },
@@ -104,7 +107,7 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 2,
-    borderColor: colors.neutral[200],
+    borderColor: colors.border.subtle,
     borderRadius: borderRadius.lg,
     padding: spacing.md,
     ...typography['2xl'],
@@ -112,7 +115,7 @@ const styles = StyleSheet.create({
     color: colors.text.primary,
     textAlign: 'center',
     marginBottom: spacing.xs,
-    backgroundColor: colors.surface,
+    backgroundColor: colors.surface.default,
   },
   inputLabel: {
     ...typography.caption,
@@ -121,7 +124,7 @@ const styles = StyleSheet.create({
   },
   error: {
     ...typography.caption,
-    color: colors.semantic.error.main,
+    color: colors.error,
     marginBottom: spacing.sm,
     textAlign: 'center',
   },

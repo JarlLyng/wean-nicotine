@@ -2,7 +2,8 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Screen } from '@/components/Screen';
-import { spacing, colors } from '@/lib/theme';
+import { spacing } from '@/lib/theme';
+import { useDesignTokens } from '@/lib/design';
 import * as Haptics from 'expo-haptics';
 
 const BREATHING_CYCLES = [
@@ -13,12 +14,14 @@ const BREATHING_CYCLES = [
 ];
 
 export default function BreathingExercise() {
+  const { colors } = useDesignTokens();
   const router = useRouter();
   const [isRunning, setIsRunning] = useState(false);
   const [currentCycle, setCurrentCycle] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState(BREATHING_CYCLES[0].duration);
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const breathingStyles = createBreathingStyles(colors);
 
   const startBreathingCycle = useCallback(() => {
     const cycle = BREATHING_CYCLES[currentCycle];
@@ -95,43 +98,43 @@ export default function BreathingExercise() {
 
   return (
     <Screen>
-      <View style={styles.container}>
-        <Text style={styles.title}>Breathing Exercise</Text>
-        <Text style={styles.subtitle}>
+      <View style={breathingStyles.container}>
+        <Text style={breathingStyles.title}>Breathing Exercise</Text>
+        <Text style={breathingStyles.subtitle}>
           Take a moment to center yourself. This exercise can help reduce cravings.
         </Text>
 
-        <View style={styles.exerciseContainer}>
+        <View style={breathingStyles.exerciseContainer}>
           <Animated.View
             style={[
-              styles.circle,
+              breathingStyles.circle,
               {
                 transform: [{ scale: scaleAnim }],
               },
             ]}>
-            <Text style={styles.phaseText}>{currentPhase.phase}</Text>
+            <Text style={breathingStyles.phaseText}>{currentPhase.phase}</Text>
             {isRunning && (
-              <Text style={styles.timerText}>{secondsRemaining}s</Text>
+              <Text style={breathingStyles.timerText}>{secondsRemaining}s</Text>
             )}
           </Animated.View>
 
-          <Text style={styles.instruction}>{currentPhase.instruction}</Text>
+          <Text style={breathingStyles.instruction}>{currentPhase.instruction}</Text>
 
           {!isRunning && (
-            <TouchableOpacity style={styles.startButton} onPress={handleStart}>
-              <Text style={styles.startButtonText}>Start</Text>
+            <TouchableOpacity style={breathingStyles.startButton} onPress={handleStart}>
+              <Text style={breathingStyles.startButtonText}>Start</Text>
             </TouchableOpacity>
           )}
 
           {isRunning && (
-            <TouchableOpacity style={styles.stopButton} onPress={handleStop}>
-              <Text style={styles.stopButtonText}>Stop</Text>
+            <TouchableOpacity style={breathingStyles.stopButton} onPress={handleStop}>
+              <Text style={breathingStyles.stopButtonText}>Stop</Text>
             </TouchableOpacity>
           )}
         </View>
 
-        <View style={styles.infoBox}>
-          <Text style={styles.infoText}>
+        <View style={breathingStyles.infoBox}>
+          <Text style={breathingStyles.infoText}>
             Complete a few cycles. You can stop anytime. This is a tool to help you pause and
             refocus.
           </Text>
@@ -141,7 +144,7 @@ export default function BreathingExercise() {
   );
 }
 
-const styles = StyleSheet.create({
+const createBreathingStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => StyleSheet.create({
   container: {
     flex: 1,
     padding: spacing.md,
@@ -150,10 +153,11 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: 'bold',
     marginBottom: spacing.sm,
+    color: colors.text.primary,
   },
   subtitle: {
     fontSize: 16,
-    color: '#666',
+    color: colors.text.secondary,
     marginBottom: spacing.xl,
     lineHeight: 24,
   },
@@ -166,7 +170,7 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
     borderRadius: 100,
-    backgroundColor: colors.accentStart,
+    backgroundColor: colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: spacing.xl,
@@ -184,13 +188,13 @@ const styles = StyleSheet.create({
   },
   instruction: {
     fontSize: 18,
-    color: '#333',
+    color: colors.text.primary,
     textAlign: 'center',
     marginBottom: spacing.xl,
     paddingHorizontal: spacing.md,
   },
   startButton: {
-    backgroundColor: colors.accentStart,
+    backgroundColor: colors.primary,
     paddingHorizontal: spacing.xl,
     paddingVertical: spacing.md,
     borderRadius: 8,
@@ -201,25 +205,25 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   stopButton: {
-    backgroundColor: '#666',
+    backgroundColor: colors.text.secondary,
     paddingHorizontal: spacing.xl,
     paddingVertical: spacing.md,
     borderRadius: 8,
   },
   stopButtonText: {
-    color: '#fff',
+    color: colors.text.inverse,
     fontSize: 18,
     fontWeight: '600',
   },
   infoBox: {
-    backgroundColor: '#f5f5f5',
+    backgroundColor: colors.background.muted,
     borderRadius: 8,
     padding: spacing.md,
     marginTop: spacing.lg,
   },
   infoText: {
     fontSize: 14,
-    color: '#666',
+    color: colors.text.secondary,
     lineHeight: 20,
     textAlign: 'center',
   },

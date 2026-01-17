@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Screen } from '@/components/Screen';
-import { spacing, colors } from '@/lib/theme';
+import { spacing } from '@/lib/theme';
+import { useDesignTokens } from '@/lib/design';
 
 const REFLECTION_PROMPTS = [
   {
@@ -42,8 +43,10 @@ const REFLECTION_PROMPTS = [
 ];
 
 export default function ReflectionScreen() {
+  const { colors } = useDesignTokens();
   const [currentPromptIndex, setCurrentPromptIndex] = useState(0);
   const [showFollowUp, setShowFollowUp] = useState(false);
+  const reflectionStyles = createReflectionStyles(colors);
 
   const currentPrompt = REFLECTION_PROMPTS[currentPromptIndex];
 
@@ -58,33 +61,33 @@ export default function ReflectionScreen() {
 
   return (
     <Screen>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <View style={styles.content}>
-          <Text style={styles.title}>Reflection</Text>
-          <Text style={styles.subtitle}>
+      <ScrollView contentContainerStyle={reflectionStyles.scrollContent}>
+        <View style={reflectionStyles.content}>
+          <Text style={reflectionStyles.title}>Reflection</Text>
+          <Text style={reflectionStyles.subtitle}>
             Take a moment to reflect. There&apos;s no right or wrong answer — just honest
             self-awareness.
           </Text>
 
-          <View style={styles.promptContainer}>
-            <Text style={styles.promptText}>{currentPrompt.prompt}</Text>
+          <View style={reflectionStyles.promptContainer}>
+            <Text style={reflectionStyles.promptText}>{currentPrompt.prompt}</Text>
           </View>
 
           {!showFollowUp ? (
-            <TouchableOpacity style={styles.button} onPress={handleShowFollowUp}>
-              <Text style={styles.buttonText}>I&apos;ve reflected on this</Text>
+            <TouchableOpacity style={reflectionStyles.button} onPress={handleShowFollowUp}>
+              <Text style={reflectionStyles.buttonText}>I&apos;ve reflected on this</Text>
             </TouchableOpacity>
           ) : (
-            <View style={styles.followUpContainer}>
-              <Text style={styles.followUpText}>{currentPrompt.followUp}</Text>
-              <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
-                <Text style={styles.nextButtonText}>Next Prompt</Text>
+            <View style={reflectionStyles.followUpContainer}>
+              <Text style={reflectionStyles.followUpText}>{currentPrompt.followUp}</Text>
+              <TouchableOpacity style={reflectionStyles.nextButton} onPress={handleNext}>
+                <Text style={reflectionStyles.nextButtonText}>Next Prompt</Text>
               </TouchableOpacity>
             </View>
           )}
 
-          <View style={styles.infoBox}>
-            <Text style={styles.infoText}>
+          <View style={reflectionStyles.infoBox}>
+            <Text style={reflectionStyles.infoText}>
               These prompts are here to help you understand your patterns and progress. There&apos;s no
               pressure to answer perfectly — just be honest with yourself.
             </Text>
@@ -95,7 +98,7 @@ export default function ReflectionScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createReflectionStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
   },
@@ -107,15 +110,16 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: 'bold',
     marginBottom: spacing.sm,
+    color: colors.text.primary,
   },
   subtitle: {
     fontSize: 16,
-    color: '#666',
+    color: colors.text.secondary,
     marginBottom: spacing.xl,
     lineHeight: 24,
   },
   promptContainer: {
-    backgroundColor: '#f5f5f5',
+    backgroundColor: colors.background.muted,
     borderRadius: 12,
     padding: spacing.xl,
     marginBottom: spacing.lg,
@@ -125,12 +129,12 @@ const styles = StyleSheet.create({
   promptText: {
     fontSize: 20,
     fontWeight: '500',
-    color: '#333',
+    color: colors.text.primary,
     textAlign: 'center',
     lineHeight: 28,
   },
   button: {
-    backgroundColor: colors.accentStart,
+    backgroundColor: colors.primary,
     padding: spacing.md,
     borderRadius: 8,
     alignItems: 'center',
@@ -146,14 +150,14 @@ const styles = StyleSheet.create({
   },
   followUpText: {
     fontSize: 16,
-    color: '#666',
+    color: colors.text.secondary,
     lineHeight: 24,
     marginBottom: spacing.md,
     textAlign: 'center',
     fontStyle: 'italic',
   },
   nextButton: {
-    backgroundColor: colors.accentStart,
+    backgroundColor: colors.primary,
     padding: spacing.md,
     borderRadius: 8,
     alignItems: 'center',
@@ -164,14 +168,14 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   infoBox: {
-    backgroundColor: '#e8f5e9',
+    backgroundColor: colors.success + '20', // 20% opacity
     borderRadius: 8,
     padding: spacing.md,
     marginTop: spacing.lg,
   },
   infoText: {
     fontSize: 14,
-    color: '#2e7d32',
+    color: colors.success,
     lineHeight: 20,
     textAlign: 'center',
   },

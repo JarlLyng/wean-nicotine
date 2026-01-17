@@ -5,7 +5,8 @@ import { Screen } from '@/components/Screen';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
-import { spacing, colors, typography, borderRadius } from '@/lib/theme';
+import { spacing, typography, borderRadius } from '@/lib/theme';
+import { useDesignTokens } from '@/lib/design';
 import { getTaperSettings } from '@/lib/db-settings';
 import type { TaperSettings } from '@/lib/models';
 import {
@@ -16,11 +17,13 @@ import {
 } from '@/lib/notifications';
 
 export default function SettingsScreen() {
+  const { colors } = useDesignTokens();
   const router = useRouter();
   const [settings, setSettings] = useState<TaperSettings | null>(null);
   const [hasPermission, setHasPermission] = useState(false);
   const [dailyCheckInEnabled, setDailyCheckInEnabled] = useState(false);
   const [isLoadingNotifications, setIsLoadingNotifications] = useState(true);
+  const styles = createStyles(colors);
 
   const loadData = async () => {
     try {
@@ -95,7 +98,7 @@ export default function SettingsScreen() {
           {/* Reset Taper Section */}
           <Card variant="elevated" style={styles.section} padding="lg">
             <View style={styles.sectionTitleRow}>
-              <Icon name="arrow-clockwise" size={24} color={colors.textPrimary} weight="regular" />
+              <Icon name="arrow-clockwise" size={24} color={colors.text.primary} weight="regular" />
               <Text style={styles.sectionTitle}>Taper Plan</Text>
             </View>
             <Text style={styles.sectionDescription}>
@@ -105,8 +108,8 @@ export default function SettingsScreen() {
               title="Reset Taper Plan"
               onPress={() => router.push('/(tabs)/settings/reset-taper')}
               variant="secondary"
-              style={[styles.resetButton, { borderColor: colors.semantic.error.main }]}
-              textStyle={{ color: colors.semantic.error.main }}
+              style={[styles.resetButton, { borderColor: colors.error }]}
+              textStyle={{ color: colors.error }}
             />
           </Card>
 
@@ -118,7 +121,7 @@ export default function SettingsScreen() {
                   <Icon 
                     name={dailyCheckInEnabled && hasPermission ? "bell" : "bell-slash"} 
                     size={24} 
-                    color={colors.textPrimary} 
+                    color={colors.text.primary} 
                     weight="regular" 
                   />
                   <Text style={styles.sectionTitle}>Daily Check-In Notification</Text>
@@ -132,8 +135,8 @@ export default function SettingsScreen() {
                   value={dailyCheckInEnabled && hasPermission}
                   onValueChange={handleToggleDailyCheckIn}
                   disabled={!hasPermission}
-                  trackColor={{ false: colors.neutral[300], true: colors.accentStart }}
-                  thumbColor={colors.surface}
+                  trackColor={{ false: colors.border.subtle, true: colors.primary }}
+                  thumbColor={colors.surface.default}
                 />
               )}
             </View>
@@ -163,22 +166,22 @@ export default function SettingsScreen() {
           {settings && (
             <Card variant="elevated" style={styles.section} padding="lg">
               <View style={styles.sectionTitleRow}>
-                <Icon name="gear" size={24} color={colors.textPrimary} weight="regular" />
+                <Icon name="gear" size={24} color={colors.text.primary} weight="regular" />
                 <Text style={styles.sectionTitle}>Current Settings</Text>
               </View>
               <View style={styles.infoRow}>
-                <Icon name="calendar" size={20} color={colors.textSecondary} weight="regular" />
+                <Icon name="calendar" size={20} color={colors.text.secondary} weight="regular" />
                 <Text style={styles.info}>Baseline: {settings.baselinePouchesPerDay} pouches/day</Text>
               </View>
               <View style={styles.infoRow}>
-                <Icon name="chart-line-up" size={20} color={colors.textSecondary} weight="regular" />
+                <Icon name="chart-line-up" size={20} color={colors.text.secondary} weight="regular" />
                 <Text style={styles.info}>
                   Weekly Reduction: {settings.weeklyReductionPercent}%
                 </Text>
               </View>
               {settings.pricePerCan && (
                 <View style={styles.infoRow}>
-                  <Icon name="currency-dollar" size={20} color={colors.textSecondary} weight="regular" />
+                  <Icon name="currency-dollar" size={20} color={colors.text.secondary} weight="regular" />
                   <Text style={styles.info}>
                     Price per can: ${(settings.pricePerCan / 100).toFixed(2)}
                   </Text>
@@ -204,7 +207,7 @@ export default function SettingsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
   },
@@ -235,7 +238,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     ...typography.xl,
     fontWeight: '600',
-    color: colors.textPrimary,
+    color: colors.text.primary,
   },
   infoRow: {
     flexDirection: 'row',
@@ -245,7 +248,7 @@ const styles = StyleSheet.create({
   },
   sectionDescription: {
     ...typography.caption,
-    color: colors.textSecondary,
+    color: colors.text.secondary,
     lineHeight: 20,
   },
   permissionButton: {
@@ -253,14 +256,14 @@ const styles = StyleSheet.create({
   },
   notificationInfo: {
     ...typography.caption,
-    color: colors.textSecondary,
+    color: colors.text.secondary,
     marginTop: spacing.md,
     fontStyle: 'italic',
   },
   info: {
     ...typography.caption,
     marginBottom: spacing.xs,
-    color: colors.textPrimary,
+    color: colors.text.primary,
   },
   resetButton: {
     marginTop: spacing.sm,
@@ -269,11 +272,11 @@ const styles = StyleSheet.create({
     marginTop: spacing.md,
     paddingTop: spacing.md,
     borderTopWidth: 1,
-    borderTopColor: colors.neutral[200],
+    borderTopColor: colors.border.subtle,
   },
   triggersLabel: {
     ...typography.caption,
-    color: colors.textSecondary,
+    color: colors.text.secondary,
     marginBottom: spacing.xs,
     fontWeight: '600',
   },
@@ -283,16 +286,16 @@ const styles = StyleSheet.create({
     gap: spacing.xs,
   },
   triggerTag: {
-    backgroundColor: colors.accentStart + '20', // 20% opacity
+    backgroundColor: colors.primary + '20', // 20% opacity
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.xs,
     borderRadius: borderRadius.md,
     borderWidth: 1,
-    borderColor: colors.accentStart + '40', // 40% opacity
+    borderColor: colors.primary + '40', // 40% opacity
   },
   triggerText: {
     ...typography.xs,
-    color: colors.accentStart,
+    color: colors.primary,
     fontWeight: '500',
   },
 });

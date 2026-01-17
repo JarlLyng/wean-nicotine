@@ -1,80 +1,84 @@
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { Screen } from '@/components/Screen';
-import { spacing, colors } from '@/lib/theme';
+import { spacing } from '@/lib/theme';
+import { useDesignTokens } from '@/lib/design';
 
 export default function UrgeSurfingScreen() {
+  const { colors } = useDesignTokens();
+  const urgeStyles = createUrgeStyles(colors);
+  
   return (
     <Screen>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <View style={styles.content}>
-          <Text style={styles.title}>Urge Surfing</Text>
-          <Text style={styles.subtitle}>
+      <ScrollView contentContainerStyle={urgeStyles.scrollContent}>
+        <View style={urgeStyles.content}>
+          <Text style={urgeStyles.title}>Urge Surfing</Text>
+          <Text style={urgeStyles.subtitle}>
             A technique to help you ride out cravings without giving in
           </Text>
 
-          <View style={styles.section}>
-            <Text style={styles.heading}>What is Urge Surfing?</Text>
-            <Text style={styles.text}>
+          <View style={urgeStyles.section}>
+            <Text style={urgeStyles.heading}>What is Urge Surfing?</Text>
+            <Text style={urgeStyles.text}>
               Urge surfing is a mindfulness technique where you observe your craving like a wave —
               noticing it rise, peak, and fall — without acting on it.
             </Text>
           </View>
 
-          <View style={styles.section}>
-            <Text style={styles.heading}>How to Practice</Text>
-            <View style={styles.stepContainer}>
-              <Text style={styles.stepNumber}>1</Text>
-              <Text style={styles.stepText}>
-                <Text style={styles.stepTitle}>Notice the urge.</Text> When a craving appears, don&apos;t
+          <View style={urgeStyles.section}>
+            <Text style={urgeStyles.heading}>How to Practice</Text>
+            <View style={urgeStyles.stepContainer}>
+              <Text style={urgeStyles.stepNumber}>1</Text>
+              <Text style={urgeStyles.stepText}>
+                <Text style={urgeStyles.stepTitle}>Notice the urge.</Text> When a craving appears, don&apos;t
                 fight it. Simply acknowledge it: &quot;I&apos;m having a craving right now.&quot;
               </Text>
             </View>
 
-            <View style={styles.stepContainer}>
-              <Text style={styles.stepNumber}>2</Text>
-              <Text style={styles.stepText}>
-                <Text style={styles.stepTitle}>Observe without judgment.</Text> Notice where you
+            <View style={urgeStyles.stepContainer}>
+              <Text style={urgeStyles.stepNumber}>2</Text>
+              <Text style={urgeStyles.stepText}>
+                <Text style={urgeStyles.stepTitle}>Observe without judgment.</Text> Notice where you
                 feel it in your body. Is it tension? Restlessness? Just observe, without judging
                 yourself.
               </Text>
             </View>
 
-            <View style={styles.stepContainer}>
-              <Text style={styles.stepNumber}>3</Text>
-              <Text style={styles.stepText}>
-                <Text style={styles.stepTitle}>Ride the wave.</Text> Cravings are temporary. Like a
+            <View style={urgeStyles.stepContainer}>
+              <Text style={urgeStyles.stepNumber}>3</Text>
+              <Text style={urgeStyles.stepText}>
+                <Text style={urgeStyles.stepTitle}>Ride the wave.</Text> Cravings are temporary. Like a
                 wave, they build, peak, and then subside. Remind yourself: &quot;This will pass.&quot;
               </Text>
             </View>
 
-            <View style={styles.stepContainer}>
-              <Text style={styles.stepNumber}>4</Text>
-              <Text style={styles.stepText}>
-                <Text style={styles.stepTitle}>Breathe through it.</Text> Take slow, deep breaths.
+            <View style={urgeStyles.stepContainer}>
+              <Text style={urgeStyles.stepNumber}>4</Text>
+              <Text style={urgeStyles.stepText}>
+                <Text style={urgeStyles.stepTitle}>Breathe through it.</Text> Take slow, deep breaths.
                 Focus on your breathing as the craving peaks and begins to fade.
               </Text>
             </View>
 
-            <View style={styles.stepContainer}>
-              <Text style={styles.stepNumber}>5</Text>
-              <Text style={styles.stepText}>
-                <Text style={styles.stepTitle}>Notice it passing.</Text> As the urge subsides,
+            <View style={urgeStyles.stepContainer}>
+              <Text style={urgeStyles.stepNumber}>5</Text>
+              <Text style={urgeStyles.stepText}>
+                <Text style={urgeStyles.stepTitle}>Notice it passing.</Text> As the urge subsides,
                 acknowledge that you rode it out. Each time you do this, it gets easier.
               </Text>
             </View>
           </View>
 
-          <View style={styles.section}>
-            <Text style={styles.heading}>Remember</Text>
-            <Text style={styles.text}>
+          <View style={urgeStyles.section}>
+            <Text style={urgeStyles.heading}>Remember</Text>
+            <Text style={urgeStyles.text}>
               Cravings typically peak within 5-15 minutes and then fade. You don&apos;t have to act on
               them. Each time you successfully ride out a craving, you&apos;re strengthening your ability
               to handle them.
             </Text>
           </View>
 
-          <View style={styles.encouragementBox}>
-            <Text style={styles.encouragementText}>
+          <View style={urgeStyles.encouragementBox}>
+            <Text style={urgeStyles.encouragementText}>
               You&apos;ve got this. Every wave passes, and you&apos;re learning to surf.
             </Text>
           </View>
@@ -84,7 +88,7 @@ export default function UrgeSurfingScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createUrgeStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
   },
@@ -96,10 +100,11 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: 'bold',
     marginBottom: spacing.sm,
+    color: colors.text.primary,
   },
   subtitle: {
     fontSize: 16,
-    color: '#666',
+    color: colors.text.secondary,
     marginBottom: spacing.xl,
     lineHeight: 24,
   },
@@ -110,12 +115,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '600',
     marginBottom: spacing.md,
-    color: '#333',
+    color: colors.text.primary,
   },
   text: {
     fontSize: 16,
     lineHeight: 24,
-    color: '#333',
+    color: colors.text.primary,
     marginBottom: spacing.sm,
   },
   stepContainer: {
@@ -125,7 +130,7 @@ const styles = StyleSheet.create({
   stepNumber: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: colors.accentStart,
+    color: colors.primary,
     width: 40,
     marginRight: spacing.md,
   },
@@ -133,21 +138,21 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     lineHeight: 24,
-    color: '#333',
+    color: colors.text.primary,
   },
   stepTitle: {
     fontWeight: '600',
-    color: colors.accentStart,
+    color: colors.primary,
   },
   encouragementBox: {
-    backgroundColor: '#e8f5e9',
+    backgroundColor: colors.success + '20', // 20% opacity
     borderRadius: 8,
     padding: spacing.md,
     marginTop: spacing.lg,
   },
   encouragementText: {
     fontSize: 16,
-    color: '#2e7d32',
+    color: colors.success,
     lineHeight: 24,
     textAlign: 'center',
     fontWeight: '500',

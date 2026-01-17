@@ -5,7 +5,8 @@ import { Screen } from '@/components/Screen';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { ProgressRing } from '@/components/ui/ProgressRing';
-import { spacing, colors, typography } from '@/lib/theme';
+import { spacing, typography } from '@/lib/theme';
+import { useDesignTokens } from '@/lib/design';
 import { getUserPlan } from '@/lib/db-user-plan';
 import { getTaperSettings } from '@/lib/db-settings';
 import { calculateDailyAllowance } from '@/lib/taper-plan';
@@ -13,6 +14,7 @@ import { createLogEntry , getLogEntriesForDay } from '@/lib/db-log-entries';
 import * as Haptics from 'expo-haptics';
 
 export default function HomeScreen() {
+  const { colors } = useDesignTokens();
   const [dailyAllowance, setDailyAllowance] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [pouchesUsedToday, setPouchesUsedToday] = useState(0);
@@ -215,7 +217,7 @@ export default function HomeScreen() {
       <View style={styles.content}>
         {isLoading ? (
           <Card variant="elevated" style={styles.card} padding="lg">
-            <ActivityIndicator size="large" color={colors.accentStart} />
+            <ActivityIndicator size="large" color={colors.primary} />
           </Card>
         ) : dailyAllowance !== null ? (
           <View style={styles.mainContent}>
@@ -234,7 +236,7 @@ export default function HomeScreen() {
                   }
                   size={140}
                   strokeWidth={14}
-                  color={colors.accentStart}
+                  color={colors.primary}
                   useGradient={true}
                   showLabel={true}
                   label={
@@ -316,7 +318,7 @@ const styles = StyleSheet.create({
   },
   label: {
     ...typography.body,
-    color: colors.textSecondary,
+    color: colors.text.secondary,
     marginBottom: spacing.lg,
     textAlign: 'center',
   },
@@ -339,17 +341,17 @@ const styles = StyleSheet.create({
     ...typography.title,
     fontSize: 24,
     fontWeight: '700',
-    color: colors.accentStart,
+    color: colors.primary,
     marginBottom: spacing.xs,
   },
   statLabel: {
     ...typography.caption,
-    color: colors.textSecondary,
+    color: colors.text.secondary,
   },
   statDivider: {
     width: 1,
     height: 40,
-    backgroundColor: colors.neutral[200],
+    backgroundColor: colors.border.subtle,
     marginHorizontal: spacing.lg,
   },
   loggingButtons: {
@@ -362,7 +364,7 @@ const styles = StyleSheet.create({
   },
   placeholderText: {
     ...typography.body,
-    color: colors.textSecondary,
+    color: colors.text.secondary,
     textAlign: 'center',
   },
 });

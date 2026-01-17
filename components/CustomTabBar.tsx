@@ -1,21 +1,90 @@
 import React from 'react';
-import { View, TouchableOpacity, Text, StyleSheet, Platform } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Platform, Text } from 'react-native';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
-import Animated, { useAnimatedStyle, withTiming, FadeIn, FadeOut } from 'react-native-reanimated';
+import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated';
 
 import { Icon } from '@/components/ui/Icon';
-import { borderRadius, colors, shadows, spacing, animations } from '@/lib/theme';
+import { borderRadius, shadows, spacing, animations } from '@/lib/theme';
+import { useDesignTokens } from '@/lib/design';
+
+const AnimatedText = Animated.createAnimatedComponent(Text);
+
+interface TabItemProps {
+  route: any;
+  options: any;
+  isFocused: boolean;
+  onPress: () => void;
+  onLongPress: () => void;
+  colors: ReturnType<typeof useDesignTokens>['colors'];
+}
+
+function TabItem({ route, options, isFocused, onPress, onLongPress, colors }: TabItemProps) {
+  const label = options.tabBarLabel ?? options.title ?? route.name;
+  
+  // Get icon name based on route
+  const getIconName = () => {
+    switch (route.name) {
+      case 'home':
+        return 'house';
+      case 'progress':
+        return 'chart-line-up';
+      case 'tools':
+        return 'heart';
+      case 'settings':
+        return 'gear';
+      default:
+        return 'circle';
+    }
+  };
+
+  const color = isFocused ? colors.primary : colors.text.secondary;
+
+  const labelAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: withTiming(isFocused ? 1 : 0, {
+        duration: animations.slow,
+      }),
+      height: withTiming(isFocused ? 14 : 0, {
+        duration: animations.slow,
+      }),
+      marginTop: withTiming(isFocused ? spacing.xs : 0, {
+        duration: animations.slow,
+      }),
+    };
+  });
+
+  return (
+    <TouchableOpacity
+      accessibilityRole="button"
+      accessibilityState={isFocused ? { selected: true } : {}}
+      accessibilityLabel={options.tabBarAccessibilityLabel}
+      testID={options.tabBarTestID}
+      onPress={onPress}
+      onLongPress={onLongPress}
+      style={styles.tabItem}>
+      <View style={styles.iconWrapper}>
+        <Icon name={getIconName()} size={24} color={color} weight="regular" />
+      </View>
+      <AnimatedText 
+        style={[styles.tabLabel, { color }, labelAnimatedStyle]}>
+        {label}
+      </AnimatedText>
+    </TouchableOpacity>
+  );
+}
 
 export function CustomTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
+  const { colors } = useDesignTokens();
 
   return (
     <View
       style={[
         styles.tabBar,
         {
+          backgroundColor: colors.surface.default,
           marginHorizontal: spacing.md,
           marginBottom: spacing.sm + insets.bottom,
           paddingBottom: spacing.sm,
@@ -23,7 +92,6 @@ export function CustomTabBar({ state, descriptors, navigation }: BottomTabBarPro
       ]}>
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
-        const label = options.tabBarLabel ?? options.title ?? route.name;
         const isFocused = state.index === index;
 
         const onPress = () => {
@@ -49,66 +117,26 @@ export function CustomTabBar({ state, descriptors, navigation }: BottomTabBarPro
           });
         };
 
-        // Get icon name based on route
-        const getIconName = () => {
-          switch (route.name) {
-            case 'home':
-              return 'house';
-            case 'progress':
-              return 'chart-line-up';
-            case 'tools':
-              return 'heart';
-            case 'settings':
-              return 'gear';
-            default:
-              return 'circle';
-          }
-        };
-
-        const color = isFocused ? colors.accentStart : colors.textSecondary;
-
-        const labelAnimatedStyle = useAnimatedStyle(() => {
-          return {
-            opacity: withTiming(isFocused ? 1 : 0, {
-              duration: animations.slow,
-            }),
-            height: withTiming(isFocused ? 14 : 0, {
-              duration: animations.slow,
-            }),
-            marginTop: withTiming(isFocused ? spacing.xs : 0, {
-              duration: animations.slow,
-            }),
-          };
-        });
-
         return (
-          <TouchableOpacity
+          <TabItem
             key={route.key}
-            accessibilityRole="button"
-            accessibilityState={isFocused ? { selected: true } : {}}
-            accessibilityLabel={options.tabBarAccessibilityLabel}
-            testID={options.tabBarTestID}
+            route={route}
+            options={options}
+            isFocused={isFocused}
             onPress={onPress}
             onLongPress={onLongPress}
-            style={styles.tabItem}>
-            <View style={styles.iconWrapper}>
-              <Icon name={getIconName()} size={24} color={color} weight="regular" />
-            </View>
-            <Animated.Text 
-              style={[styles.tabLabel, { color }, labelAnimatedStyle]}>
-              {label}
-            </Animated.Text>
-          </TouchableOpacity>
+            colors={colors}
+          />
         );
       })}
     </View>
   );
 }
 
+// Static styles (colors are applied inline for light/dark mode support)
 const styles = StyleSheet.create({
   tabBar: {
     flexDirection: 'row',
-    backgroundColor: colors.surface,
     borderRadius: borderRadius.lg,
     ...shadows.md,
     justifyContent: 'space-around',

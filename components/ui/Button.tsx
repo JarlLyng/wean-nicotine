@@ -1,7 +1,8 @@
 import React from 'react';
 import { Text, StyleSheet, ActivityIndicator, ViewStyle, TextStyle, Pressable } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withSpring, withTiming } from 'react-native-reanimated';
-import { colors, spacing, typography, borderRadius, shadows, animations } from '@/lib/theme';
+import { spacing, typography, borderRadius, shadows, animations } from '@/lib/theme';
+import { useDesignTokens } from '@/lib/design';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -30,6 +31,7 @@ export function Button({
   accessibilityLabel,
   accessibilityHint,
 }: ButtonProps) {
+  const { colors } = useDesignTokens();
   const isDisabled = disabled || loading;
 
   const getButtonStyle = (): ViewStyle => {
@@ -46,7 +48,7 @@ export function Button({
       case 'primary':
         return {
           ...baseStyle,
-          backgroundColor: isDisabled ? colors.neutral[300] : colors.accent.primary,
+          backgroundColor: isDisabled ? colors.border.subtle : colors.primary,
           ...shadows.sm,
         };
       case 'secondary':
@@ -54,7 +56,7 @@ export function Button({
           ...baseStyle,
           backgroundColor: 'transparent',
           borderWidth: 2,
-          borderColor: isDisabled ? colors.neutral[300] : colors.accent.primary,
+          borderColor: isDisabled ? colors.border.subtle : colors.primary,
         };
       case 'ghost':
         return {
@@ -76,17 +78,17 @@ export function Button({
       case 'primary':
         return {
           ...baseStyle,
-          color: isDisabled ? colors.neutral[500] : colors.text.inverse,
+          color: isDisabled ? colors.text.tertiary : colors.text.inverse,
         };
       case 'secondary':
         return {
           ...baseStyle,
-          color: isDisabled ? colors.neutral[400] : colors.accent.primary,
+          color: isDisabled ? colors.text.tertiary : colors.primary,
         };
       case 'ghost':
         return {
           ...baseStyle,
-          color: isDisabled ? colors.neutral[400] : colors.accent.primary,
+          color: isDisabled ? colors.text.tertiary : colors.primary,
         };
       default:
         return baseStyle;
@@ -135,7 +137,7 @@ export function Button({
       {loading ? (
         <ActivityIndicator
           size="small"
-          color={variant === 'primary' ? colors.text.inverse : colors.accent.primary}
+          color={variant === 'primary' ? colors.text.inverse : colors.primary}
         />
       ) : (
         <Text style={[getTextStyle(), textStyle]}>{title}</Text>

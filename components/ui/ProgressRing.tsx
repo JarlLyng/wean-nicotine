@@ -2,7 +2,8 @@ import React, { useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Svg, { Circle, Defs, LinearGradient, Stop } from 'react-native-svg';
 import Animated, { useSharedValue, useAnimatedProps, withTiming, Easing } from 'react-native-reanimated';
-import { colors, typography, spacing, animations } from '@/lib/theme';
+import { typography, spacing, animations } from '@/lib/theme';
+import { useDesignTokens } from '@/lib/design';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
@@ -25,10 +26,14 @@ export function ProgressRing({
   showLabel = true,
   label,
   sublabel,
-  color = colors.accent.primary,
-  backgroundColor = colors.neutral[200],
+  color,
+  backgroundColor,
   useGradient = false,
 }: ProgressRingProps) {
+  const { colors } = useDesignTokens();
+  const defaultColor = color || colors.primary;
+  const defaultBackgroundColor = backgroundColor || colors.background.muted;
+  
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const center = size / 2;
@@ -62,6 +67,7 @@ export function ProgressRing({
   const safeProgress = Number.isFinite(progress) && !isNaN(progress) ? progress : 0;
   const displayLabel = label !== undefined ? label : `${Math.round(safeProgress * 100)}%`;
   const gradientId = 'progressGradient';
+  const styles = createStyles(colors);
 
   return (
     <View style={styles.container}>
@@ -70,9 +76,9 @@ export function ProgressRing({
           <Defs>
             {useGradient && (
               <LinearGradient id={gradientId} x1="0%" y1="0%" x2="0%" y2="100%">
-                <Stop offset="0%" stopColor={colors.accentStart} stopOpacity="1" />
-                <Stop offset="50%" stopColor={colors.accentMid} stopOpacity="1" />
-                <Stop offset="100%" stopColor={colors.accentEnd} stopOpacity="1" />
+                <Stop offset="0%" stopColor={colors.primary} stopOpacity="1" />
+                <Stop offset="50%" stopColor={colors.primary} stopOpacity="0.8" />
+                <Stop offset="100%" stopColor={colors.primary} stopOpacity="0.6" />
               </LinearGradient>
             )}
           </Defs>
@@ -81,7 +87,7 @@ export function ProgressRing({
             cx={center}
             cy={center}
             r={radius}
-            stroke={backgroundColor}
+            stroke={defaultBackgroundColor}
             strokeWidth={strokeWidth}
             fill="transparent"
           />
@@ -90,7 +96,7 @@ export function ProgressRing({
             cx={center}
             cy={center}
             r={radius}
-            stroke={useGradient ? `url(#${gradientId})` : color}
+            stroke={useGradient ? `url(#${gradientId})` : defaultColor}
             strokeWidth={strokeWidth}
             fill="transparent"
             strokeDasharray={circumference}
@@ -110,7 +116,8 @@ export function ProgressRing({
   );
 }
 
-const styles = StyleSheet.create({
+// Styles are created inside component to access colors from hook
+const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',

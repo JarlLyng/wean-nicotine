@@ -4,12 +4,15 @@ import { useRouter } from 'expo-router';
 import { Screen } from '@/components/Screen';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
-import { spacing, colors, typography, borderRadius } from '@/lib/theme';
+import { spacing, typography, borderRadius } from '@/lib/theme';
+import { useDesignTokens } from '@/lib/design';
 
 export default function BaselineScreen() {
+  const { colors } = useDesignTokens();
   const router = useRouter();
   const [baseline, setBaseline] = useState('');
   const [error, setError] = useState('');
+  const baselineStyles = createBaselineStyles(colors);
 
   const handleNext = () => {
     const value = parseInt(baseline, 10);
@@ -28,19 +31,19 @@ export default function BaselineScreen() {
 
   return (
     <Screen variant="gradient" title="Set Your Baseline">
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <View style={styles.content}>
-          <Card variant="flat" style={styles.card} padding="lg">
-            <Text style={styles.description}>
+      <ScrollView contentContainerStyle={baselineStyles.scrollContent}>
+        <View style={baselineStyles.content}>
+          <Card variant="flat" style={baselineStyles.card} padding="lg">
+            <Text style={baselineStyles.description}>
               How many pouches do you typically use per day?
             </Text>
-            <Text style={styles.hint}>
+            <Text style={baselineStyles.hint}>
               Be honest — this helps us create a realistic plan for you.
             </Text>
 
-            <View style={styles.inputContainer}>
+            <View style={baselineStyles.inputContainer}>
               <TextInput
-                style={styles.input}
+                style={baselineStyles.input}
                 value={baseline}
                 onChangeText={(text) => {
                   setBaseline(text);
@@ -51,16 +54,16 @@ export default function BaselineScreen() {
                 keyboardType="number-pad"
                 autoFocus
               />
-              <Text style={styles.inputLabel}>pouches per day</Text>
+              <Text style={baselineStyles.inputLabel}>pouches per day</Text>
             </View>
 
-            {error ? <Text style={styles.error}>{error}</Text> : null}
+            {error ? <Text style={baselineStyles.error}>{error}</Text> : null}
           </Card>
 
           <Button
             title="Continue"
             onPress={handleNext}
-            style={styles.button}
+            style={baselineStyles.button}
           />
         </View>
       </ScrollView>
@@ -68,7 +71,7 @@ export default function BaselineScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createBaselineStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => {
   scrollContent: {
     flexGrow: 1,
   },
@@ -97,7 +100,7 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 2,
-    borderColor: colors.neutral[200],
+    borderColor: colors.border.subtle,
     borderRadius: borderRadius.lg,
     padding: spacing.md,
     ...typography['2xl'],
@@ -105,7 +108,7 @@ const styles = StyleSheet.create({
     color: colors.text.primary,
     textAlign: 'center',
     marginBottom: spacing.xs,
-    backgroundColor: colors.surface,
+    backgroundColor: colors.surface.default,
   },
   inputLabel: {
     ...typography.caption,
@@ -114,11 +117,11 @@ const styles = StyleSheet.create({
   },
   error: {
     ...typography.caption,
-    color: colors.semantic.error.main,
+    color: colors.error,
     marginBottom: spacing.sm,
     textAlign: 'center',
   },
   button: {
     marginTop: spacing.md,
   },
-});
+} as const);

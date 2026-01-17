@@ -1,115 +1,169 @@
 /**
  * Theme tokens for Taper app
- * Provides spacing, typography, colors, shadows, borders, and animations
+ * 
+ * Now based on IAMJARL Design System (https://jarllyng.github.io/iamjarl-design/)
+ * 
+ * This file provides backward-compatible exports while using IAMJARL tokens as the source of truth.
+ * For new code, prefer using `useDesignTokens()` hook from `@/lib/design` for automatic light/dark mode support.
  * 
  * Design principles:
- * - Calm and supportive (not clinical)
- * - Clear visual hierarchy
- * - Accessible contrast ratios
- * 
- * Gradient usage:
- * - Subtle gradient applied as background to all screens
- * - Primary gradient: accentStart → accentMid → accentEnd (vertical) for visual elements
- * - Subtle gradient: low-contrast fade (20% → 10% → 5% opacity) for screen backgrounds
- * - Keep content areas on flat white surfaces (cards) for readability
- * 
- * Surface usage:
- * - Use flat white surfaces for cards and content areas
- * - Subtle gradient background on all screens for cohesive, calming experience
- * - Maintain high contrast between text and backgrounds
+ * - Follow IAMJARL Design System strictly
+ * - Always support light + dark mode
+ * - Use design tokens, never hardcode values
+ * - Use Phosphor icons with regular weight by default
  */
 
+import { designTokens, getColors } from './design';
+import { useColorScheme } from '@/hooks/use-color-scheme';
+
+// IAMJARL spacing tokens (source of truth)
 export const spacing = {
-  xs: 4,
-  sm: 8,
-  md: 16,
-  lg: 24,
-  xl: 32,
-  xxl: 48,
+  xs: designTokens.spacing.xs,
+  sm: designTokens.spacing.sm,
+  md: designTokens.spacing.md,
+  lg: designTokens.spacing.lg,
+  xl: designTokens.spacing.xl,
+  xxl: designTokens.spacing.xxl,
+  xxxl: designTokens.spacing.xxxl,
 } as const;
 
+// IAMJARL typography tokens mapped to React Native format
 export const typography = {
-  title: {
-    fontSize: 28,
-    lineHeight: 36,
-    fontWeight: '700',
-    allowFontScaling: true,
-  },
-  body: {
-    fontSize: 16,
-    lineHeight: 24,
-    fontWeight: '400',
-    allowFontScaling: true,
-  },
-  caption: {
-    fontSize: 14,
-    lineHeight: 20,
-    fontWeight: '400',
-    allowFontScaling: true,
-  },
-  // Keep existing scale for backward compatibility
+  // IAMJARL sizes
   xs: {
-    fontSize: 12,
-    lineHeight: 16,
+    fontSize: designTokens.typography.sizes.xs,
+    lineHeight: designTokens.typography.lineHeights.sm,
+    fontWeight: designTokens.typography.weights.regular.toString(),
     allowFontScaling: true,
   },
   sm: {
-    fontSize: 14,
-    lineHeight: 20,
+    fontSize: designTokens.typography.sizes.sm,
+    lineHeight: designTokens.typography.lineHeights.tight,
+    fontWeight: designTokens.typography.weights.regular.toString(),
     allowFontScaling: true,
   },
   base: {
-    fontSize: 16,
-    lineHeight: 24,
+    fontSize: designTokens.typography.sizes.base,
+    lineHeight: designTokens.typography.lineHeights.normal,
+    fontWeight: designTokens.typography.weights.regular.toString(),
     allowFontScaling: true,
   },
   lg: {
-    fontSize: 18,
-    lineHeight: 28,
+    fontSize: designTokens.typography.sizes.lg,
+    lineHeight: designTokens.typography.lineHeights.relaxed,
+    fontWeight: designTokens.typography.weights.regular.toString(),
     allowFontScaling: true,
   },
   xl: {
-    fontSize: 20,
-    lineHeight: 30,
+    fontSize: designTokens.typography.sizes.xl,
+    lineHeight: designTokens.typography.lineHeights.normal,
+    fontWeight: designTokens.typography.weights.semibold.toString(),
+    allowFontScaling: true,
+  },
+  xxl: {
+    fontSize: designTokens.typography.sizes.xxl,
+    lineHeight: designTokens.typography.lineHeights.xxl,
+    fontWeight: designTokens.typography.weights.semibold.toString(),
+    allowFontScaling: true,
+  },
+  // Backward compatibility aliases
+  title: {
+    fontSize: designTokens.typography.sizes.xxl,
+    lineHeight: designTokens.typography.lineHeights.xxl,
+    fontWeight: designTokens.typography.weights.bold.toString(),
+    allowFontScaling: true,
+  },
+  body: {
+    fontSize: designTokens.typography.sizes.base,
+    lineHeight: designTokens.typography.lineHeights.normal,
+    fontWeight: designTokens.typography.weights.regular.toString(),
+    allowFontScaling: true,
+  },
+  caption: {
+    fontSize: designTokens.typography.sizes.sm,
+    lineHeight: designTokens.typography.lineHeights.tight,
+    fontWeight: designTokens.typography.weights.regular.toString(),
     allowFontScaling: true,
   },
   '2xl': {
-    fontSize: 24,
-    lineHeight: 32,
+    fontSize: designTokens.typography.sizes.xl,
+    lineHeight: designTokens.typography.lineHeights.normal,
+    fontWeight: designTokens.typography.weights.semibold.toString(),
     allowFontScaling: true,
   },
   '3xl': {
-    fontSize: 30,
+    fontSize: 28, // Not in IAMJARL, keeping for backward compatibility
     lineHeight: 36,
+    fontWeight: designTokens.typography.weights.bold.toString(),
     allowFontScaling: true,
   },
   '4xl': {
-    fontSize: 36,
-    lineHeight: 44,
+    fontSize: designTokens.typography.sizes.xxl,
+    lineHeight: designTokens.typography.lineHeights.xxl,
+    fontWeight: designTokens.typography.weights.bold.toString(),
     allowFontScaling: true,
   },
 } as const;
 
+// IAMJARL font weights
 export const fontWeights = {
-  regular: '400' as const,
+  regular: designTokens.typography.weights.regular.toString() as const,
+  semibold: designTokens.typography.weights.semibold.toString() as const,
+  bold: designTokens.typography.weights.bold.toString() as const,
+  // Backward compatibility
   medium: '500' as const,
-  semibold: '600' as const,
-  bold: '700' as const,
 } as const;
 
+/**
+ * Colors - WARNING: This is a static export that defaults to light mode.
+ * For proper light/dark mode support, use `useDesignTokens()` hook instead.
+ * 
+ * This export is kept for backward compatibility but will be deprecated.
+ * New code should use `useDesignTokens()` from `@/lib/design`.
+ */
+const lightColors = getColors('light');
 export const colors = {
-  // Core color tokens for gradient-based design
-  background: '#0F172A', // Deep calm background
-  surface: '#FFFFFF', // White surface for content
-  textPrimary: '#0F172A', // Primary text color
-  textSecondary: '#475569', // Secondary text color
+  // IAMJARL primary color (light mode default)
+  primary: lightColors.primary,
   
-  // Gradient accent colors (teal → green → mint)
-  accentStart: '#0EA5A4', // Teal
-  accentMid: '#34D399', // Green
-  accentEnd: '#6EE7B7', // Mint
+  // IAMJARL text colors (light mode default)
+  text: {
+    primary: lightColors.text.primary,
+    secondary: lightColors.text.secondary,
+    tertiary: lightColors.text.tertiary,
+    inverse: lightColors.text.inverse,
+  },
   
-  // Legacy support (keep for backward compatibility)
+  // IAMJARL border colors (light mode default)
+  border: {
+    subtle: lightColors.border.subtle,
+    default: lightColors.border.default,
+  },
+  
+  // IAMJARL shared semantic colors
+  success: designTokens.colors.shared.success,
+  warning: designTokens.colors.shared.warning,
+  error: designTokens.colors.shared.error,
+  
+  // Backward compatibility aliases (deprecated - use IAMJARL tokens via useDesignTokens())
+  // These are flat strings for compatibility with existing code
+  background: lightColors.background.app,
+  surface: lightColors.surface.default,
+  textPrimary: lightColors.text.primary,
+  textSecondary: lightColors.text.secondary,
+  
+  // IAMJARL background and surface (for new code, prefer useDesignTokens())
+  backgroundApp: lightColors.background.app,
+  backgroundMuted: lightColors.background.muted,
+  backgroundCard: lightColors.background.card,
+  surfaceRaised: lightColors.surface.raised,
+  
+  // Legacy gradient colors - DEPRECATED: Use primary instead
+  accentStart: lightColors.primary, // Using IAMJARL primary
+  accentMid: lightColors.primary, // Using IAMJARL primary
+  accentEnd: lightColors.primary, // Using IAMJARL primary
+  
+  // Legacy support (deprecated)
   neutral: {
     50: '#fafafa',
     100: '#f5f5f5',
@@ -124,18 +178,18 @@ export const colors = {
     950: '#0a0a0a',
   },
   accent: {
-    primary: '#0EA5A4',
-    primaryDark: '#0F172A',
-    primaryLight: '#6EE7B7',
+    primary: lightColors.primary,
+    primaryDark: designTokens.colors.modes.dark.primary,
+    primaryLight: lightColors.primary,
   },
   semantic: {
     success: {
-      main: '#10b981',
+      main: designTokens.colors.shared.success,
       light: '#d1fae5',
       dark: '#059669',
     },
     warning: {
-      main: '#f59e0b',
+      main: designTokens.colors.shared.warning,
       light: '#fef3c7',
       dark: '#d97706',
     },
@@ -145,25 +199,21 @@ export const colors = {
       dark: '#2563eb',
     },
     error: {
-      main: '#ef4444',
+      main: designTokens.colors.shared.error,
       light: '#fee2e2',
       dark: '#dc2626',
     },
   },
-  text: {
-    primary: '#0F172A',
-    secondary: '#475569',
-    tertiary: '#9ca3af',
-    inverse: '#ffffff',
-  },
 } as const;
 
+// IAMJARL radius tokens
 export const borderRadius = {
   none: 0,
-  sm: 4,
-  md: 8,
-  lg: 12,
-  xl: 16,
+  sm: designTokens.radius.sm,
+  md: designTokens.radius.md,
+  lg: designTokens.radius.lg,
+  // Backward compatibility
+  xl: 16, // Same as lg in IAMJARL
   '2xl': 20,
   '3xl': 24,
   full: 9999,

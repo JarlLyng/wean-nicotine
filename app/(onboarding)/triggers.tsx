@@ -5,7 +5,8 @@ import Animated, { FadeInDown } from 'react-native-reanimated';
 import { Screen } from '@/components/Screen';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
-import { spacing, colors, typography, borderRadius, animations } from '@/lib/theme';
+import { spacing, typography, borderRadius, animations } from '@/lib/theme';
+import { useDesignTokens } from '@/lib/design';
 import { saveTaperSettings, getTaperSettings } from '@/lib/db-settings';
 import { saveUserPlan, getUserPlan } from '@/lib/db-user-plan';
 import { generateDefaultTaperPlan, calculateDailyAllowance } from '@/lib/taper-plan';
@@ -21,6 +22,7 @@ const TRIGGERS = [
 ];
 
 export default function TriggersScreen() {
+  const { colors } = useDesignTokens();
   const router = useRouter();
   const params = useLocalSearchParams();
   const baseline = params.baseline ? parseInt(params.baseline as string, 10) : 10;
@@ -28,6 +30,7 @@ export default function TriggersScreen() {
 
   const [selectedTriggers, setSelectedTriggers] = useState<string[]>([]);
   const [isSaving, setIsSaving] = useState(false);
+  const triggersStyles = createTriggersStyles(colors);
 
   const toggleTrigger = (trigger: string) => {
     if (selectedTriggers.includes(trigger)) {
@@ -142,31 +145,31 @@ export default function TriggersScreen() {
 
   return (
     <Screen variant="gradient" title="Common Triggers">
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <View style={styles.content}>
-          <Card variant="flat" style={styles.card} padding="lg">
-            <Text style={styles.description}>
+      <ScrollView contentContainerStyle={triggersStyles.scrollContent}>
+        <View style={triggersStyles.content}>
+          <Card variant="flat" style={triggersStyles.card} padding="lg">
+            <Text style={triggersStyles.description}>
               Select situations where you typically use snus. This helps us understand your patterns.
             </Text>
-            <Text style={styles.hint}>
+            <Text style={triggersStyles.hint}>
               This is optional — you can add triggers later if needed.
             </Text>
 
-            <View style={styles.triggersContainer}>
+            <View style={triggersStyles.triggersContainer}>
               {TRIGGERS.map((trigger, index) => (
                 <Animated.View
                   key={trigger}
                   entering={FadeInDown.delay(index * 50).duration(animations.normal).springify()}>
                   <TouchableOpacity
                     style={[
-                      styles.triggerButton,
-                      selectedTriggers.includes(trigger) && styles.triggerButtonSelected,
+                      triggersStyles.triggerButton,
+                      selectedTriggers.includes(trigger) && triggersStyles.triggerButtonSelected,
                     ]}
                     onPress={() => toggleTrigger(trigger)}>
                     <Text
                       style={[
-                        styles.triggerText,
-                        selectedTriggers.includes(trigger) && styles.triggerTextSelected,
+                        triggersStyles.triggerText,
+                        selectedTriggers.includes(trigger) && triggersStyles.triggerTextSelected,
                       ]}>
                       {trigger}
                     </Text>
@@ -181,7 +184,7 @@ export default function TriggersScreen() {
             onPress={handleComplete}
             disabled={isSaving}
             loading={isSaving}
-            style={styles.button}
+            style={triggersStyles.button}
           />
         </View>
       </ScrollView>
@@ -189,7 +192,7 @@ export default function TriggersScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createTriggersStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
   },
@@ -224,12 +227,12 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.sm,
     borderRadius: borderRadius.full,
     borderWidth: 2,
-    borderColor: colors.neutral[200],
-    backgroundColor: colors.surface,
+    borderColor: colors.border.subtle,
+    backgroundColor: colors.surface.default,
   },
   triggerButtonSelected: {
-    borderColor: colors.accent.primary,
-    backgroundColor: colors.accent.primary,
+    borderColor: colors.primary,
+    backgroundColor: colors.primary,
   },
   triggerText: {
     ...typography.body,
