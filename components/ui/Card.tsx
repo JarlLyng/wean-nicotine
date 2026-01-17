@@ -34,35 +34,41 @@ export function Card({ children, variant = 'flat', style, padding = 'md' }: Card
     transform: [{ translateY: translateY.value }],
   }));
 
-  // Ensure colors are defined with fallbacks
+  // Ensure colors are defined with fallbacks - extract as strings to avoid undefined in Reanimated
+  // Direct access without optional chaining for Reanimated compatibility
   const surfaceDefault = colors.surface?.default || colors.background?.app || '#FFFFFF';
   const surfaceRaised = colors.surface?.raised || surfaceDefault;
   const borderSubtle = colors.border?.subtle || colors.border?.default || 'rgba(0, 0, 0, 0.1)';
+  
+  // Convert to strings explicitly to ensure Reanimated compatibility
+  const backgroundColorDefault = String(surfaceDefault);
+  const backgroundColorRaised = String(surfaceRaised);
+  const borderColorSubtle = String(borderSubtle);
 
   const getCardStyle = (): ViewStyle => {
     const baseStyle: ViewStyle = {
       borderRadius: borderRadius.lg,
       padding: spacing[padding],
-      backgroundColor: surfaceDefault,
+      backgroundColor: backgroundColorDefault,
     };
 
     switch (variant) {
       case 'elevated':
         return {
           ...baseStyle,
-          backgroundColor: surfaceRaised,
+          backgroundColor: backgroundColorRaised,
           ...shadows.md,
         };
       case 'flat':
         return {
           ...baseStyle,
-          backgroundColor: surfaceDefault,
+          backgroundColor: backgroundColorDefault,
         };
       case 'outlined':
         return {
           ...baseStyle,
           borderWidth: 1,
-          borderColor: borderSubtle,
+          borderColor: borderColorSubtle,
         };
       default:
         return baseStyle;
