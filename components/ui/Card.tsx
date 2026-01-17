@@ -35,15 +35,31 @@ export function Card({ children, variant = 'flat', style, padding = 'md' }: Card
   }));
 
   // Ensure colors are defined with fallbacks - extract as strings to avoid undefined in Reanimated
-  // Direct access without optional chaining for Reanimated compatibility
-  const surfaceDefault = colors.surface?.default || colors.background?.app || '#FFFFFF';
-  const surfaceRaised = colors.surface?.raised || surfaceDefault;
-  const borderSubtle = colors.border?.subtle || colors.border?.default || 'rgba(0, 0, 0, 0.1)';
+  // Direct access with explicit fallbacks for Reanimated compatibility
+  const surfaceDefault = (colors && colors.surface && colors.surface.default) 
+    ? String(colors.surface.default) 
+    : (colors && colors.background && colors.background.app) 
+      ? String(colors.background.app) 
+      : '#FFFFFF';
+  const surfaceRaised = (colors && colors.surface && colors.surface.raised) 
+    ? String(colors.surface.raised) 
+    : surfaceDefault;
+  const borderSubtle = (colors && colors.border && colors.border.subtle) 
+    ? String(colors.border.subtle) 
+    : (colors && colors.border && colors.border.default) 
+      ? String(colors.border.default) 
+      : 'rgba(0, 0, 0, 0.1)';
   
-  // Convert to strings explicitly to ensure Reanimated compatibility
-  const backgroundColorDefault = String(surfaceDefault);
-  const backgroundColorRaised = String(surfaceRaised);
-  const borderColorSubtle = String(borderSubtle);
+  // Use the string values directly
+  const backgroundColorDefault = surfaceDefault;
+  const backgroundColorRaised = surfaceRaised;
+  const borderColorSubtle = borderSubtle;
+
+  // Ensure shadowColor is always a string for Reanimated compatibility
+  const shadowStyle = {
+    ...shadows.md,
+    shadowColor: String(shadows.md.shadowColor || '#000000'),
+  };
 
   const getCardStyle = (): ViewStyle => {
     const baseStyle: ViewStyle = {
@@ -57,7 +73,7 @@ export function Card({ children, variant = 'flat', style, padding = 'md' }: Card
         return {
           ...baseStyle,
           backgroundColor: backgroundColorRaised,
-          ...shadows.md,
+          ...shadowStyle,
         };
       case 'flat':
         return {
