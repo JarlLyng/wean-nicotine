@@ -71,7 +71,7 @@ export default function BaselineScreen() {
   );
 }
 
-const createBaselineStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => {
+const createBaselineStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
   },
@@ -124,4 +124,4 @@ const createBaselineStyles = (colors: ReturnType<typeof useDesignTokens>['colors
   button: {
     marginTop: spacing.md,
   },
-} as const);
+});
