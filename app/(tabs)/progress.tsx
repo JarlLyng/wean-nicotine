@@ -143,8 +143,8 @@ export default function ProgressScreen() {
   if (!weekData) {
     return (
       <Screen>
-        <View style={styles.emptyContainer}>
-          <Text style={styles.emptyText}>No progress data available</Text>
+        <View style={progressStyles.emptyContainer}>
+          <Text style={progressStyles.emptyText}>No progress data available</Text>
         </View>
       </Screen>
     );
@@ -156,7 +156,7 @@ export default function ProgressScreen() {
   return (
     <Screen key={screenKey} variant="gradient" title="Progress">
       <ScrollView
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={progressStyles.scrollContent}
         refreshControl={<RefreshControl refreshing={isLoading} onRefresh={loadData} />}>
         <View style={progressStyles.content}>
           {/* Week Selector */}
