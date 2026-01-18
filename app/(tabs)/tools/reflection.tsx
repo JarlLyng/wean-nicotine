@@ -78,12 +78,14 @@ export default function ReflectionScreen() {
               <Text style={reflectionStyles.buttonText}>I&apos;ve reflected on this</Text>
             </TouchableOpacity>
           ) : (
-            <View style={reflectionStyles.followUpContainer}>
-              <Text style={reflectionStyles.followUpText}>{currentPrompt.followUp}</Text>
+            <>
               <TouchableOpacity style={reflectionStyles.nextButton} onPress={handleNext}>
                 <Text style={reflectionStyles.nextButtonText}>Next Prompt</Text>
               </TouchableOpacity>
-            </View>
+              <View style={reflectionStyles.followUpContainer}>
+                <Text style={reflectionStyles.followUpText}>{currentPrompt.followUp}</Text>
+              </View>
+            </>
           )}
 
           <View style={reflectionStyles.infoBox}>
@@ -172,10 +174,6 @@ const createReflectionStyles = (colors: ReturnType<typeof useDesignTokens>['colo
     borderRadius: 8,
     padding: spacing.md,
     marginTop: spacing.lg,
-    borderWidth: 1,
-    borderColor: colors.border.subtle,
-    borderLeftWidth: 2,
-    borderLeftColor: colors.success,
   },
   infoText: {
     fontSize: 14,

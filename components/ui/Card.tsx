@@ -42,7 +42,7 @@ export function Card({ children, variant = 'flat', style, padding = 'md' }: Card
       return {
         borderRadius: borderRadius.lg,
         padding: spacing[padding],
-        backgroundColor: designTokens.colors.static.white,
+        backgroundColor: designTokens.colors.modes.light.background.card,
       };
     }
 
@@ -55,11 +55,10 @@ export function Card({ children, variant = 'flat', style, padding = 'md' }: Card
       return value;
     };
 
-    // Cards should always use surface.default (white in light mode, black in dark mode)
-    // Never fall back to background.app as that might be different
-    const surfaceDefault = getColorString(
-      colors.surface?.default,
-      designTokens.colors.modes.light.surface.default
+    // Design-system: cards use background.card (subtle translucent surface) in both modes.
+    const backgroundCard = getColorString(
+      colors.background?.card,
+      designTokens.colors.modes.light.background.card
     );
     const borderSubtle = getColorString(
       colors.border?.subtle,
@@ -82,21 +81,18 @@ export function Card({ children, variant = 'flat', style, padding = 'md' }: Card
     const baseStyle: ViewStyle = {
       borderRadius: borderRadius.lg,
       padding: paddingValue,
-      backgroundColor: surfaceDefault,
+      backgroundColor: backgroundCard,
     };
 
     switch (variant) {
       case 'elevated':
         return {
           ...baseStyle,
-          // Design-system: cards should be solid (not translucent) on top of gradient
-          backgroundColor: surfaceDefault,
           ...shadowStyle,
         };
       case 'flat':
         return {
           ...baseStyle,
-          backgroundColor: surfaceDefault,
         };
       case 'outlined':
         return {

@@ -197,10 +197,6 @@ const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => {
       borderRadius: 8,
       padding: spacing.md,
       marginTop: spacing.lg,
-      borderWidth: 1,
-      borderColor: colors.border.subtle,
-      borderLeftWidth: 2,
-      borderLeftColor: colors.shared.success,
     } as ViewStyle,
     infoText: {
       fontSize: 14,

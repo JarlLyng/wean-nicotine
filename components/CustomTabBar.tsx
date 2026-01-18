@@ -82,59 +82,70 @@ export function CustomTabBar({ state, descriptors, navigation }: BottomTabBarPro
   return (
     <View
       style={[
-        styles.tabBar,
+        styles.tabBarOuter,
         {
-          backgroundColor: colors.surface.default,
-          marginHorizontal: spacing.md,
-          marginBottom: spacing.sm + insets.bottom,
-          paddingBottom: spacing.sm,
+          paddingHorizontal: spacing.md,
+          paddingBottom: spacing.sm + insets.bottom,
         },
       ]}>
-      {state.routes.map((route, index) => {
-        const { options } = descriptors[route.key];
-        const isFocused = state.index === index;
+      <View
+        style={[
+          styles.tabBar,
+          {
+            backgroundColor: colors.surface.default,
+            paddingBottom: spacing.sm,
+          },
+        ]}>
+        {state.routes.map((route, index) => {
+          const { options } = descriptors[route.key];
+          const isFocused = state.index === index;
 
-        const onPress = () => {
-          const event = navigation.emit({
-            type: 'tabPress',
-            target: route.key,
-            canPreventDefault: true,
-          });
+          const onPress = () => {
+            const event = navigation.emit({
+              type: 'tabPress',
+              target: route.key,
+              canPreventDefault: true,
+            });
 
-          if (!isFocused && !event.defaultPrevented) {
-            navigation.navigate(route.name);
-          }
+            if (!isFocused && !event.defaultPrevented) {
+              navigation.navigate(route.name);
+            }
 
-          if (Platform.OS === 'ios') {
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-          }
-        };
+            if (Platform.OS === 'ios') {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            }
+          };
 
-        const onLongPress = () => {
-          navigation.emit({
-            type: 'tabLongPress',
-            target: route.key,
-          });
-        };
+          const onLongPress = () => {
+            navigation.emit({
+              type: 'tabLongPress',
+              target: route.key,
+            });
+          };
 
-        return (
-          <TabItem
-            key={route.key}
-            route={route}
-            options={options}
-            isFocused={isFocused}
-            onPress={onPress}
-            onLongPress={onLongPress}
-            colors={colors}
-          />
-        );
-      })}
+          return (
+            <TabItem
+              key={route.key}
+              route={route}
+              options={options}
+              isFocused={isFocused}
+              onPress={onPress}
+              onLongPress={onLongPress}
+              colors={colors}
+            />
+          );
+        })}
+      </View>
     </View>
   );
 }
 
 // Static styles (colors are applied inline for light/dark mode support)
 const styles = StyleSheet.create({
+  tabBarOuter: {
+    // Use padding instead of margins so the tab bar shadow has space and won't be clipped
+    backgroundColor: 'transparent',
+  },
   tabBar: {
     flexDirection: 'row',
     borderRadius: borderRadius.lg,

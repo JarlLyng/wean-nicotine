@@ -149,10 +149,6 @@ const createUrgeStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) 
     borderRadius: 8,
     padding: spacing.md,
     marginTop: spacing.lg,
-    borderWidth: 1,
-    borderColor: colors.border.subtle,
-    borderLeftWidth: 2,
-    borderLeftColor: colors.success,
   },
   encouragementText: {
     fontSize: 16,

@@ -99,35 +99,11 @@ export default function SettingsScreen() {
     <Screen variant="gradient" title="Settings">
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.content}>
-          {/* Reset Taper Section */}
-          <Card variant="elevated" style={styles.section} padding="lg">
-            <View style={styles.sectionTitleRow}>
-              <Icon name="arrow-clockwise" size={24} color={colors.text.primary} weight="regular" />
-              <Text style={styles.sectionTitle}>Taper Plan</Text>
-            </View>
-            <Text style={styles.sectionDescription}>
-              If you&apos;ve had a setback or want to start fresh, you can reset your taper plan.
-            </Text>
-            <Button
-              title="Reset Taper Plan"
-              onPress={() => router.push('/(tabs)/settings/reset-taper')}
-              variant="secondary"
-              style={{ ...styles.resetButton, borderColor: colors.error }}
-              textStyle={{ color: colors.error }}
-            />
-          </Card>
-
           {/* Notifications Section */}
           <Card variant="elevated" style={styles.section} padding="lg">
             <View style={styles.sectionHeader}>
               <View style={styles.sectionHeaderText}>
                 <View style={styles.sectionTitleRow}>
-                  <Icon 
-                    name={dailyCheckInEnabled && hasPermission ? "bell" : "bell-slash"} 
-                    size={24} 
-                    color={colors.text.primary} 
-                    weight="regular" 
-                  />
                   <Text style={styles.sectionTitle}>Daily Check-In Notification</Text>
                 </View>
                 <Text style={styles.sectionDescription}>
@@ -152,7 +128,6 @@ export default function SettingsScreen() {
             <View style={styles.sectionHeader}>
               <View style={styles.sectionHeaderText}>
                 <View style={styles.sectionTitleRow}>
-                  <Icon name="gear" size={24} color={colors.text.primary} weight="regular" />
                   <Text style={styles.sectionTitle}>Theme</Text>
                 </View>
                 <Text style={styles.sectionDescription}>
@@ -168,14 +143,29 @@ export default function SettingsScreen() {
                 thumbColor={colors.surface.default}
               />
             </View>
-            <Text style={styles.notificationInfo}>Current: {colorScheme === 'dark' ? 'Dark' : 'Light'}</Text>
+          </Card>
+
+          {/* Reset Taper Section */}
+          <Card variant="elevated" style={styles.section} padding="lg">
+            <View style={styles.sectionTitleRow}>
+              <Text style={styles.sectionTitle}>Taper Plan</Text>
+            </View>
+            <Text style={styles.sectionDescription}>
+              If you&apos;ve had a setback or want to start fresh, you can reset your taper plan.
+            </Text>
+            <Button
+              title="Reset Taper Plan"
+              onPress={() => router.push('/(tabs)/settings/reset-taper')}
+              variant="secondary"
+              style={{ ...styles.resetButton, borderColor: colors.error }}
+              textStyle={{ color: colors.error }}
+            />
           </Card>
 
           {/* Current Settings Info */}
           {settings && (
             <Card variant="elevated" style={styles.section} padding="lg">
               <View style={styles.sectionTitleRow}>
-                <Icon name="gear" size={24} color={colors.text.primary} weight="regular" />
                 <Text style={styles.sectionTitle}>Current Settings</Text>
               </View>
               <View style={styles.infoRow}>

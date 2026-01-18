@@ -228,8 +228,6 @@ const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) =>
       borderRadius: 12,
       padding: spacing.lg,
       marginBottom: spacing.lg,
-      borderWidth: 1,
-      borderColor: colors.border.subtle,
     },
     infoTitle: {
       fontSize: 18,
@@ -247,8 +245,6 @@ const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) =>
       borderRadius: 8,
       padding: spacing.md,
       marginBottom: spacing.xl,
-      borderWidth: 1,
-      borderColor: colors.border.subtle,
     },
     encouragementText: {
       fontSize: 14,

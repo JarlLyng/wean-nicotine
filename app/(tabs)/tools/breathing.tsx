@@ -168,6 +168,7 @@ const createBreathingStyles = (colors: ReturnType<typeof useDesignTokens>['color
     height: 200,
     borderRadius: 100,
     backgroundColor: colors.primary,
+    paddingTop: 12,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: spacing.xl,
