@@ -15,16 +15,16 @@ const TOOLS = [
     icon: 'wind' as const,
   },
   {
-    id: 'urge-surfing',
-    title: 'Urge Surfing',
-    description: 'Learn how to ride out cravings like a wave',
-    icon: 'waves' as const,
-  },
-  {
     id: 'reflection',
     title: 'Reflection Prompts',
     description: 'Thoughtful questions to help you understand your patterns',
     icon: 'brain' as const,
+  },
+  {
+    id: 'urge-surfing',
+    title: 'Urge Surfing',
+    description: 'Learn how to ride out cravings like a wave',
+    icon: 'waves' as const,
   },
 ];
 
