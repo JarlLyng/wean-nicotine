@@ -15,6 +15,9 @@ import * as Haptics from 'expo-haptics';
 
 export default function HomeScreen() {
   const { colors } = useDesignTokens();
+  const devLog = (...args: unknown[]) => {
+    if (__DEV__) console.log(...args);
+  };
   const [dailyAllowance, setDailyAllowance] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [pouchesUsedToday, setPouchesUsedToday] = useState(0);
@@ -33,19 +36,19 @@ export default function HomeScreen() {
     
     // Prevent multiple simultaneous loads
     if (isLoadingRef.current) {
-      console.log('Home screen: Load already in progress, skipping...');
+      devLog('Home screen: Load already in progress, skipping...');
       return;
     }
     isLoadingRef.current = true;
     try {
-      console.log('Home screen: Loading data...');
+      devLog('Home screen: Loading data...');
       setIsLoading(true);
       // Get settings first (needed to recreate user_plan if missing)
       const settings = await getTaperSettings();
-      console.log('Home screen: Settings:', settings);
+      devLog('Home screen: Settings:', settings);
       
         if (!settings) {
-        console.log('Home screen: No settings found');
+        devLog('Home screen: No settings found');
         setDailyAllowance(null);
         setPouchesUsedToday(0);
         setBaselinePouchesPerDay(null);
@@ -54,11 +57,11 @@ export default function HomeScreen() {
       }
 
       let userPlan = await getUserPlan();
-      console.log('Home screen: User plan:', userPlan);
+      devLog('Home screen: User plan:', userPlan);
       
       // If user_plan is missing but settings exist, recreate it
       if (!userPlan) {
-        console.log('Home screen: No user plan found, recreating from settings...');
+        devLog('Home screen: No user plan found, recreating from settings...');
         const { saveUserPlan } = await import('@/lib/db-user-plan');
         const today = new Date();
         today.setHours(0, 0, 0, 0);
@@ -72,7 +75,7 @@ export default function HomeScreen() {
         
         // Reload the plan
         userPlan = await getUserPlan();
-        console.log('Home screen: Recreated user plan with ID:', planId);
+        devLog('Home screen: Recreated user plan with ID:', planId);
         
         if (!userPlan) {
           console.error('Home screen: Failed to recreate user plan');
@@ -93,7 +96,7 @@ export default function HomeScreen() {
       // Recalculate allowance based on current settings and date
       // This ensures we always show the correct allowance, especially after reset/onboarding
       const calculatedAllowance = calculateDailyAllowance(settings, today);
-      console.log('Home screen: Calculated allowance:', calculatedAllowance, 'from settings:', {
+      devLog('Home screen: Calculated allowance:', calculatedAllowance, 'from settings:', {
         baseline: settings.baselinePouchesPerDay,
         startDate: new Date(settings.startDate).toISOString(),
         reductionPercent: settings.weeklyReductionPercent,
@@ -113,7 +116,7 @@ export default function HomeScreen() {
 
       // Update all state atomically to ensure React re-renders
       const roundedAllowance = Math.round(allowance);
-      console.log('Home screen: About to update state - dailyAllowance:', roundedAllowance, 'settingsId:', settings.id, 'updatedAt:', settings.updatedAt, 'usedCount:', usedCount);
+      devLog('Home screen: About to update state - dailyAllowance:', roundedAllowance, 'settingsId:', settings.id, 'updatedAt:', settings.updatedAt, 'usedCount:', usedCount);
       
       // Update state - React will handle re-rendering automatically
       setSettingsId(settings.id);
@@ -121,7 +124,7 @@ export default function HomeScreen() {
       setDailyAllowance(roundedAllowance);
       setBaselinePouchesPerDay(settings.baselinePouchesPerDay);
       
-      console.log('Home screen: State update called - dailyAllowance:', roundedAllowance, 'settingsId:', settings.id, 'updatedAt:', settings.updatedAt);
+      devLog('Home screen: State update called - dailyAllowance:', roundedAllowance, 'settingsId:', settings.id, 'updatedAt:', settings.updatedAt);
       } catch (error) {
       console.error('Error loading data:', error);
       setDailyAllowance(null);
@@ -141,7 +144,7 @@ export default function HomeScreen() {
 
   // Reset all state on mount to ensure clean start
   useEffect(() => {
-    console.log('Home screen: Component mounted - resetting all state');
+    devLog('Home screen: Component mounted - resetting all state');
     setDailyAllowance(null);
     setPouchesUsedToday(0);
     setBaselinePouchesPerDay(null);
@@ -153,7 +156,7 @@ export default function HomeScreen() {
   // Load data when screen comes into focus
   useFocusEffect(
     useCallback(() => {
-      console.log('Home screen: useFocusEffect triggered');
+      devLog('Home screen: useFocusEffect triggered');
       // Clear any pending loads
       if (loadTimeoutRef.current) {
         clearTimeout(loadTimeoutRef.current);
@@ -179,7 +182,7 @@ export default function HomeScreen() {
 
   // Log when dailyAllowance changes to debug rendering
   useEffect(() => {
-    console.log('Home screen: dailyAllowance changed to:', dailyAllowance, 'settingsId:', settingsId);
+    devLog('Home screen: dailyAllowance changed to:', dailyAllowance, 'settingsId:', settingsId);
   }, [dailyAllowance, settingsId]);
 
   const handleLogPouch = async () => {

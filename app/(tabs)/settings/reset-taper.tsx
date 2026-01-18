@@ -3,14 +3,20 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'rea
 import { useRouter } from 'expo-router';
 import { Screen } from '@/components/Screen';
 import { spacing } from '@/lib/theme';
+import { useDesignTokens } from '@/lib/design';
 import { getTaperSettings, saveTaperSettings, deleteTaperSettings } from '@/lib/db-settings';
 import { saveUserPlan, deleteUserPlan } from '@/lib/db-user-plan';
 import { calculateDailyAllowance } from '@/lib/taper-plan';
 
 export default function ResetTaperScreen() {
   const router = useRouter();
+  const { colors } = useDesignTokens();
+  const styles = createStyles(colors);
   const [isResetting, setIsResetting] = useState(false);
   const [isStartingOver, setIsStartingOver] = useState(false);
+  const devLog = (...args: unknown[]) => {
+    if (__DEV__) console.log(...args);
+  };
 
   const handleReset = async () => {
     Alert.alert(
@@ -97,11 +103,11 @@ export default function ResetTaperScreen() {
             setIsStartingOver(true);
             try {
               // Delete all settings, plans, and log entries
-              console.log('Starting over: Deleting taper settings...');
+              devLog('Starting over: Deleting taper settings...');
               await deleteTaperSettings();
-              console.log('Starting over: Deleting user plan...');
+              devLog('Starting over: Deleting user plan...');
               await deleteUserPlan();
-              console.log('Starting over: Deleting all log entries...');
+              devLog('Starting over: Deleting all log entries...');
               const { deleteAllLogEntries } = await import('@/lib/db-log-entries');
               await deleteAllLogEntries();
               
@@ -118,7 +124,7 @@ export default function ResetTaperScreen() {
                 return;
               }
               
-              console.log('Starting over: Data successfully deleted');
+              devLog('Starting over: Data successfully deleted');
 
               Alert.alert('Success', 'All data has been cleared. Returning to onboarding.', [
                 {
@@ -195,90 +201,96 @@ export default function ResetTaperScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  scrollContent: {
-    flexGrow: 1,
-  },
-  content: {
-    flex: 1,
-    padding: spacing.md,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: spacing.sm,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#666',
-    marginBottom: spacing.xl,
-    lineHeight: 24,
-  },
-  infoBox: {
-    backgroundColor: '#f5f5f5',
-    borderRadius: 12,
-    padding: spacing.lg,
-    marginBottom: spacing.lg,
-  },
-  infoTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#333',
-    marginBottom: spacing.md,
-  },
-  infoText: {
-    fontSize: 16,
-    color: '#666',
-    lineHeight: 24,
-  },
-  encouragementBox: {
-    backgroundColor: '#e8f5e9',
-    borderRadius: 8,
-    padding: spacing.md,
-    marginBottom: spacing.xl,
-  },
-  encouragementText: {
-    fontSize: 14,
-    color: '#2e7d32',
-    lineHeight: 20,
-    textAlign: 'center',
-  },
-  resetButton: {
-    backgroundColor: '#d32f2f',
-    padding: spacing.md,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginBottom: spacing.md,
-  },
-  resetButtonDisabled: {
-    opacity: 0.6,
-  },
-  resetButtonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: '600',
-  },
-  startOverButton: {
-    backgroundColor: '#ff6b6b',
-    padding: spacing.md,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginBottom: spacing.md,
-  },
-  startOverButtonDisabled: {
-    opacity: 0.6,
-  },
-  startOverButtonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: '600',
-  },
-  cancelButton: {
-    padding: spacing.md,
-    alignItems: 'center',
-  },
-  cancelButtonText: {
-    color: '#666',
-    fontSize: 16,
-  },
-});
+const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) =>
+  StyleSheet.create({
+    scrollContent: {
+      flexGrow: 1,
+    },
+    content: {
+      flex: 1,
+      padding: spacing.md,
+    },
+    title: {
+      fontSize: 28,
+      fontWeight: '700',
+      marginBottom: spacing.sm,
+      color: colors.text.primary,
+    },
+    subtitle: {
+      fontSize: 16,
+      color: colors.text.secondary,
+      marginBottom: spacing.xl,
+      lineHeight: 24,
+    },
+    infoBox: {
+      backgroundColor: colors.background.muted,
+      borderRadius: 12,
+      padding: spacing.lg,
+      marginBottom: spacing.lg,
+      borderWidth: 1,
+      borderColor: colors.border.subtle,
+    },
+    infoTitle: {
+      fontSize: 18,
+      fontWeight: '600',
+      color: colors.text.primary,
+      marginBottom: spacing.md,
+    },
+    infoText: {
+      fontSize: 16,
+      color: colors.text.secondary,
+      lineHeight: 24,
+    },
+    encouragementBox: {
+      backgroundColor: colors.background.muted,
+      borderRadius: 8,
+      padding: spacing.md,
+      marginBottom: spacing.xl,
+      borderWidth: 1,
+      borderColor: colors.border.subtle,
+    },
+    encouragementText: {
+      fontSize: 14,
+      color: colors.text.secondary,
+      lineHeight: 20,
+      textAlign: 'center',
+    },
+    resetButton: {
+      backgroundColor: colors.shared.error,
+      padding: spacing.md,
+      borderRadius: 8,
+      alignItems: 'center',
+      marginBottom: spacing.md,
+    },
+    resetButtonDisabled: {
+      opacity: 0.6,
+    },
+    resetButtonText: {
+      color: colors.text.inverse,
+      fontSize: 18,
+      fontWeight: '600',
+    },
+    startOverButton: {
+      backgroundColor: colors.shared.warning,
+      padding: spacing.md,
+      borderRadius: 8,
+      alignItems: 'center',
+      marginBottom: spacing.md,
+    },
+    startOverButtonDisabled: {
+      opacity: 0.6,
+    },
+    startOverButtonText: {
+      color: colors.text.inverse,
+      fontSize: 18,
+      fontWeight: '600',
+    },
+    cancelButton: {
+      padding: spacing.md,
+      alignItems: 'center',
+    },
+    cancelButtonText: {
+      color: colors.text.secondary,
+      fontSize: 16,
+    },
+  });

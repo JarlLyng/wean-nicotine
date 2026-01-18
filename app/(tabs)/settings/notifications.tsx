@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Switch, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Switch, TouchableOpacity, Alert, TextStyle, ViewStyle } from 'react-native';
 import { Screen } from '@/components/Screen';
 import { spacing } from '@/lib/theme';
+import { useDesignTokens } from '@/lib/design';
 import {
   requestNotificationPermissions,
   scheduleDailyCheckIn,
@@ -9,7 +10,16 @@ import {
   getAllScheduledNotifications,
 } from '@/lib/notifications';
 
+function hexToRgba(hex: string, alpha: number): string {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
 export default function NotificationsScreen() {
+  const { colors } = useDesignTokens();
+  const styles = createStyles(colors);
   const [hasPermission, setHasPermission] = useState(false);
   const [dailyCheckInEnabled, setDailyCheckInEnabled] = useState(false);
   const [checkInHour] = useState(20);
@@ -125,6 +135,8 @@ export default function NotificationsScreen() {
                 value={dailyCheckInEnabled && hasPermission}
                 onValueChange={handleToggleDailyCheckIn}
                 disabled={!hasPermission}
+                trackColor={{ false: colors.border.subtle, true: colors.primary }}
+                thumbColor={colors.surface.default}
               />
             </View>
 
@@ -146,99 +158,116 @@ export default function NotificationsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  scrollContent: {
-    flexGrow: 1,
-  },
-  content: {
-    flex: 1,
-    padding: spacing.md,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    marginBottom: spacing.sm,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#666',
-    marginBottom: spacing.xl,
-    lineHeight: 24,
-  },
-  permissionBox: {
-    backgroundColor: '#fff3cd',
-    borderRadius: 12,
-    padding: spacing.md,
-    marginBottom: spacing.lg,
-  },
-  permissionText: {
-    fontSize: 14,
-    color: '#856404',
-    marginBottom: spacing.md,
-    lineHeight: 20,
-  },
-  permissionButton: {
-    backgroundColor: '#856404',
-    padding: spacing.md,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  permissionButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  section: {
-    backgroundColor: '#f5f5f5',
-    borderRadius: 12,
-    padding: spacing.md,
-    marginBottom: spacing.md,
-  },
-  sectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-  },
-  sectionHeaderText: {
-    flex: 1,
-    marginRight: spacing.md,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#333',
-    marginBottom: spacing.xs,
-  },
-  sectionDescription: {
-    fontSize: 14,
-    color: '#666',
-    lineHeight: 20,
-  },
-  timeInfo: {
-    marginTop: spacing.md,
-    paddingTop: spacing.md,
-    borderTopWidth: 1,
-    borderTopColor: '#ddd',
-  },
-  timeText: {
-    fontSize: 14,
-    color: '#666',
-  },
-  infoBox: {
-    backgroundColor: '#e8f5e9',
-    borderRadius: 8,
-    padding: spacing.md,
-    marginTop: spacing.lg,
-  },
-  infoText: {
-    fontSize: 14,
-    color: '#2e7d32',
-    lineHeight: 20,
-    textAlign: 'center',
-  },
-});
+const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => {
+  const warningBg = hexToRgba(colors.shared.warning, 0.15);
+  const warningText = colors.text.primary;
+  const warningButtonBg = colors.shared.warning;
+  const sectionBg = colors.background.muted;
+  const infoBg = hexToRgba(colors.shared.success, 0.12);
+
+  const styles = {
+    scrollContent: {
+      flexGrow: 1,
+    } as ViewStyle,
+    content: {
+      flex: 1,
+      padding: spacing.md,
+    } as ViewStyle,
+    loadingContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    } as ViewStyle,
+    title: {
+      fontSize: 32,
+      fontWeight: '700' as const,
+      marginBottom: spacing.sm,
+      color: colors.text.primary,
+    } as TextStyle,
+    subtitle: {
+      fontSize: 16,
+      color: colors.text.secondary,
+      marginBottom: spacing.xl,
+      lineHeight: 24,
+    } as TextStyle,
+    permissionBox: {
+      backgroundColor: warningBg,
+      borderRadius: 12,
+      padding: spacing.md,
+      marginBottom: spacing.lg,
+      borderWidth: 1,
+      borderColor: colors.border.subtle,
+    } as ViewStyle,
+    permissionText: {
+      fontSize: 14,
+      color: warningText,
+      marginBottom: spacing.md,
+      lineHeight: 20,
+    } as TextStyle,
+    permissionButton: {
+      backgroundColor: warningButtonBg,
+      padding: spacing.md,
+      borderRadius: 8,
+      alignItems: 'center',
+    } as ViewStyle,
+    permissionButtonText: {
+      color: colors.text.inverse,
+      fontSize: 16,
+      fontWeight: '600' as const,
+    } as TextStyle,
+    section: {
+      backgroundColor: sectionBg,
+      borderRadius: 12,
+      padding: spacing.md,
+      marginBottom: spacing.md,
+      borderWidth: 1,
+      borderColor: colors.border.subtle,
+    } as ViewStyle,
+    sectionHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'flex-start',
+    } as ViewStyle,
+    sectionHeaderText: {
+      flex: 1,
+      marginRight: spacing.md,
+    } as ViewStyle,
+    sectionTitle: {
+      fontSize: 18,
+      fontWeight: '600' as const,
+      color: colors.text.primary,
+      marginBottom: spacing.xs,
+    } as TextStyle,
+    sectionDescription: {
+      fontSize: 14,
+      color: colors.text.secondary,
+      lineHeight: 20,
+    } as TextStyle,
+    timeInfo: {
+      marginTop: spacing.md,
+      paddingTop: spacing.md,
+      borderTopWidth: 1,
+      borderTopColor: colors.border.subtle,
+    } as ViewStyle,
+    timeText: {
+      fontSize: 14,
+      color: colors.text.secondary,
+    } as TextStyle,
+    infoBox: {
+      backgroundColor: infoBg,
+      borderRadius: 8,
+      padding: spacing.md,
+      marginTop: spacing.lg,
+      borderWidth: 1,
+      borderColor: colors.border.subtle,
+    } as ViewStyle,
+    infoText: {
+      fontSize: 14,
+      color: colors.text.primary,
+      lineHeight: 20,
+      textAlign: 'center' as const,
+    } as TextStyle,
+  };
+
+  return StyleSheet.create(styles);
+};

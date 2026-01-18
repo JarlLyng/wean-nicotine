@@ -20,6 +20,9 @@ import Animated, { FadeInRight } from 'react-native-reanimated';
 
 export default function ProgressScreen() {
   const { colors } = useDesignTokens();
+  const devLog = (...args: unknown[]) => {
+    if (__DEV__) console.log(...args);
+  };
   const [settings, setSettings] = useState<TaperSettings | null>(null);
   const [settingsId, setSettingsId] = useState<number | null>(null);
   const [currentWeek, setCurrentWeek] = useState<WeeklyProgress | null>(null);
@@ -49,7 +52,7 @@ export default function ProgressScreen() {
 
       // Check if settings have changed (e.g., after reset/onboarding)
       if (settingsId !== null && settingsId !== currentSettings.id) {
-        console.log('Progress screen: Settings changed! Old ID:', settingsId, 'New ID:', currentSettings.id);
+        devLog('Progress screen: Settings changed! Old ID:', settingsId, 'New ID:', currentSettings.id);
         // Settings have changed - reset everything
         setSettings(null);
         setCurrentWeek(null);
@@ -63,13 +66,13 @@ export default function ProgressScreen() {
 
       // Calculate current week progress
       const { start: currentStart, end: currentEnd } = getCurrentWeek();
-      console.log('Progress screen: Calculating current week progress from', currentStart.toISOString(), 'to', currentEnd.toISOString());
+      devLog('Progress screen: Calculating current week progress from', currentStart.toISOString(), 'to', currentEnd.toISOString());
       const currentWeekData = await calculateWeeklyProgress(
         currentSettings,
         currentStart,
         currentEnd
       );
-      console.log('Progress screen: Current week data:', currentWeekData);
+      devLog('Progress screen: Current week data:', currentWeekData);
       setCurrentWeek(currentWeekData);
 
       // Calculate previous week progress
@@ -82,9 +85,9 @@ export default function ProgressScreen() {
       setPreviousWeek(previousWeekData);
 
       // Calculate total progress
-      console.log('Progress screen: Calculating total progress from start date', new Date(currentSettings.startDate).toISOString());
+      devLog('Progress screen: Calculating total progress from start date', new Date(currentSettings.startDate).toISOString());
       const total = await calculateTotalProgress(currentSettings);
-      console.log('Progress screen: Total progress data:', total);
+      devLog('Progress screen: Total progress data:', total);
       setTotalProgress(total);
 
       // Detect milestones

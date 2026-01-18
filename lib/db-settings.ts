@@ -24,19 +24,30 @@ export async function saveTaperSettings(
   }
 
   // Check if settings already exist
-  const existing = await db.getFirstAsync<{ id: number }>(
-    'SELECT id FROM taper_settings LIMIT 1',
+  // Also read triggers so we can preserve them on partial updates.
+  const existing = await db.getFirstAsync<{ id: number; triggers: string | null }>(
+    'SELECT id, triggers FROM taper_settings LIMIT 1',
     []
   );
 
-  // Serialize triggers array to JSON string
-  const triggersJson = settings.triggers && settings.triggers.length > 0
-    ? JSON.stringify(settings.triggers)
-    : null;
+  /**
+   * Serialize triggers:
+   * - If `settings.triggers` is `undefined`, preserve existing triggers (do not overwrite).
+   * - If it's an empty array (or falsy), explicitly clear triggers to `null`.
+   * - Otherwise store JSON string.
+   */
+  const triggersJson =
+    settings.triggers === undefined
+      ? existing?.triggers ?? null
+      : settings.triggers.length > 0
+        ? JSON.stringify(settings.triggers)
+        : null;
 
   if (existing && !forceCreate) {
     // Update existing
-    console.log('saveTaperSettings: Updating existing settings with ID:', existing.id);
+    if (__DEV__) {
+      console.log('saveTaperSettings: Updating existing settings with ID:', existing.id);
+    }
     await db.runAsync(
       `UPDATE taper_settings 
        SET baseline_pouches_per_day = ?,
@@ -59,7 +70,9 @@ export async function saveTaperSettings(
     return existing.id;
   } else {
     // Create new
-    console.log('saveTaperSettings: Creating new settings');
+    if (__DEV__) {
+      console.log('saveTaperSettings: Creating new settings');
+    }
     const result = await db.runAsync(
       `INSERT INTO taper_settings 
        (baseline_pouches_per_day, price_per_can, weekly_reduction_percent, start_date, triggers, created_at, updated_at)
@@ -74,7 +87,9 @@ export async function saveTaperSettings(
         now,
       ]
     );
-    console.log('saveTaperSettings: Created new settings with ID:', result.lastInsertRowId);
+    if (__DEV__) {
+      console.log('saveTaperSettings: Created new settings with ID:', result.lastInsertRowId);
+    }
     return result.lastInsertRowId;
   }
 }

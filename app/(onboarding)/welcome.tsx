@@ -1,12 +1,15 @@
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Screen } from '@/components/Screen';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
-import { spacing, colors, typography } from '@/lib/theme';
+import { useDesignTokens } from '@/lib/design';
+import { spacing, typography } from '@/lib/theme';
+import { ScrollView, StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native';
 
 export default function WelcomeScreen() {
   const router = useRouter();
+  const { colors } = useDesignTokens();
+  const styles = createStyles(colors);
 
   return (
     <Screen variant="gradient" title="Welcome">
@@ -53,39 +56,42 @@ export default function WelcomeScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  scrollContent: {
-    flexGrow: 1,
-  },
-  content: {
-    flex: 1,
-    padding: spacing.md,
-  },
-  card: {
-    marginBottom: spacing.lg,
-  },
-  title: {
-    ...typography['3xl'],
-    fontWeight: '700',
-    color: colors.text.primary,
-    marginBottom: spacing.xl,
-    textAlign: 'center',
-  },
-  section: {
-    marginBottom: spacing.lg,
-  },
-  heading: {
-    ...typography.xl,
-    fontWeight: '600',
-    color: colors.text.primary,
-    marginBottom: spacing.sm,
-  },
-  text: {
-    ...typography.body,
-    color: colors.text.secondary,
-    marginBottom: spacing.sm,
-  },
-  button: {
-    marginTop: spacing.md,
-  },
-});
+const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => {
+  const styles = {
+    scrollContent: {
+      flexGrow: 1,
+    } as ViewStyle,
+    content: {
+      flex: 1,
+      padding: spacing.md,
+    } as ViewStyle,
+    card: {
+      marginBottom: spacing.lg,
+    } as ViewStyle,
+    title: {
+      ...typography['3xl'],
+      fontWeight: '700' as const,
+      color: colors.text.primary,
+      marginBottom: spacing.xl,
+      textAlign: 'center' as const,
+    } as TextStyle,
+    section: {
+      marginBottom: spacing.lg,
+    } as ViewStyle,
+    heading: {
+      ...typography.xl,
+      fontWeight: '600' as const,
+      color: colors.text.primary,
+      marginBottom: spacing.sm,
+    } as TextStyle,
+    text: {
+      ...typography.body,
+      color: colors.text.secondary,
+      marginBottom: spacing.sm,
+    } as TextStyle,
+    button: {
+      marginTop: spacing.md,
+    } as ViewStyle,
+  };
+  return StyleSheet.create(styles);
+};

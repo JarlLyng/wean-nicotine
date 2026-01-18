@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, ViewStyle } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming, withSpring } from 'react-native-reanimated';
-import { colors, typography, spacing, animations } from '@/lib/theme';
+import { typography, spacing, animations } from '@/lib/theme';
+import { useDesignTokens } from '@/lib/design';
 
 interface StatCardProps {
   value: string | number;
@@ -11,6 +12,7 @@ interface StatCardProps {
 }
 
 export function StatCard({ value, label, variant = 'default', style }: StatCardProps) {
+  const { colors } = useDesignTokens();
   const scale = useSharedValue(0.8);
   const opacity = useSharedValue(0);
 
@@ -31,9 +33,9 @@ export function StatCard({ value, label, variant = 'default', style }: StatCardP
   const getValueColor = () => {
     switch (variant) {
       case 'highlight':
-        return colors.accent.primary;
+        return colors.primary;
       case 'warning':
-        return colors.semantic.warning.main;
+        return colors.shared.warning;
       default:
         return colors.text.primary;
     }
@@ -44,7 +46,7 @@ export function StatCard({ value, label, variant = 'default', style }: StatCardP
       <Animated.View style={animatedStyle}>
         <Text style={[styles.value, { color: getValueColor() }]}>{value}</Text>
       </Animated.View>
-      <Text style={styles.label}>{label}</Text>
+      <Text style={[styles.label, { color: colors.text.secondary }]}>{label}</Text>
     </View>
   );
 }
@@ -60,7 +62,6 @@ const styles = StyleSheet.create({
   },
   label: {
     ...typography.sm,
-    color: colors.text.secondary,
     marginTop: spacing.xs,
   },
 });

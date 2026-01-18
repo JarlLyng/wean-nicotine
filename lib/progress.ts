@@ -86,17 +86,19 @@ export async function calculateWeeklyProgress(
   const baselineTotal = settings.baselinePouchesPerDay * daysInWeek;
   const pouchesAvoided = Math.max(0, baselineTotal - actualUsed);
   
-  console.log('calculateWeeklyProgress:', {
-    weekStart: weekStart.toISOString(),
-    weekEnd: weekEnd.toISOString(),
-    settingsStartDate: settingsStartDate.toISOString(),
-    effectiveStart: effectiveStart.toISOString(),
-    effectiveEnd: effectiveEnd.toISOString(),
-    daysInWeek,
-    baselineTotal,
-    actualUsed,
-    pouchesAvoided,
-  });
+  if (__DEV__) {
+    console.log('calculateWeeklyProgress:', {
+      weekStart: weekStart.toISOString(),
+      weekEnd: weekEnd.toISOString(),
+      settingsStartDate: settingsStartDate.toISOString(),
+      effectiveStart: effectiveStart.toISOString(),
+      effectiveEnd: effectiveEnd.toISOString(),
+      daysInWeek,
+      baselineTotal,
+      actualUsed,
+      pouchesAvoided,
+    });
+  }
 
   // Calculate money saved (if price is set)
   let moneySaved: number | undefined;
@@ -182,7 +184,8 @@ export async function calculateTotalProgress(
   const usedLogs = logs.filter((log) => log.type === 'pouch_used');
   const totalUsed = usedLogs.length;
 
-  const daysSinceStart = Math.ceil((today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+  const rawDaysSinceStart = Math.ceil((today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+  const daysSinceStart = Math.max(0, rawDaysSinceStart);
   const baselineTotal = settings.baselinePouchesPerDay * daysSinceStart;
   const totalPouchesAvoided = Math.max(0, baselineTotal - totalUsed);
 
