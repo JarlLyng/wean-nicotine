@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Switch, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Switch, Alert, ViewStyle, TextStyle } from 'react-native';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import { Screen } from '@/components/Screen';
@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
 import { spacing, typography, borderRadius } from '@/lib/theme';
 import { useDesignTokens } from '@/lib/design';
+import { useColorScheme } from '@/hooks/use-color-scheme';
 import { getTaperSettings } from '@/lib/db-settings';
 import type { TaperSettings } from '@/lib/models';
 import {
@@ -18,6 +19,7 @@ import {
 
 export default function SettingsScreen() {
   const { colors } = useDesignTokens();
+  const colorScheme = useColorScheme();
   const router = useRouter();
   const [settings, setSettings] = useState<TaperSettings | null>(null);
   const [hasPermission, setHasPermission] = useState(false);
@@ -108,7 +110,7 @@ export default function SettingsScreen() {
               title="Reset Taper Plan"
               onPress={() => router.push('/(tabs)/settings/reset-taper')}
               variant="secondary"
-              style={[styles.resetButton, { borderColor: colors.error }]}
+              style={{ ...styles.resetButton, borderColor: colors.error }}
               textStyle={{ color: colors.error }}
             />
           </Card>
@@ -162,6 +164,26 @@ export default function SettingsScreen() {
             )}
           </Card>
 
+          {/* Theme Info */}
+          <Card variant="elevated" style={styles.section} padding="lg">
+            <View style={styles.sectionTitleRow}>
+              <Icon name="gear" size={24} color={colors.text.primary} weight="regular" />
+              <Text style={styles.sectionTitle}>Theme</Text>
+            </View>
+            <View style={styles.infoRow}>
+              <Icon name="check-circle" size={20} color={colors.text.secondary} weight="regular" />
+              <Text style={styles.info}>
+                Mode: {colorScheme === 'dark' ? 'Dark' : 'Light'}
+              </Text>
+            </View>
+            <View style={styles.infoRow}>
+              <Icon name="check-circle" size={20} color={colors.surface.default} weight="regular" />
+              <Text style={styles.info}>
+                Card background: {colors.surface.default}
+              </Text>
+            </View>
+          </Card>
+
           {/* Current Settings Info */}
           {settings && (
             <Card variant="elevated" style={styles.section} padding="lg">
@@ -207,95 +229,104 @@ export default function SettingsScreen() {
   );
 }
 
-const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => StyleSheet.create({
-  scrollContent: {
-    flexGrow: 1,
-  },
-  content: {
-    flex: 1,
-    paddingTop: spacing.lg,
-    paddingHorizontal: spacing.md,
-  },
-  section: {
-    marginBottom: spacing.md,
-  },
-  sectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: spacing.md,
-  },
-  sectionHeaderText: {
-    flex: 1,
-    marginRight: spacing.md,
-  },
-  sectionTitleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-    marginBottom: spacing.sm,
-  },
-  sectionTitle: {
-    ...typography.xl,
-    fontWeight: '600',
-    color: colors.text.primary,
-  },
-  infoRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-    marginBottom: spacing.xs,
-  },
-  sectionDescription: {
-    ...typography.caption,
-    color: colors.text.secondary,
-    lineHeight: 20,
-  },
-  permissionButton: {
-    marginTop: spacing.md,
-  },
-  notificationInfo: {
-    ...typography.caption,
-    color: colors.text.secondary,
-    marginTop: spacing.md,
-    fontStyle: 'italic',
-  },
-  info: {
-    ...typography.caption,
-    marginBottom: spacing.xs,
-    color: colors.text.primary,
-  },
-  resetButton: {
-    marginTop: spacing.sm,
-  },
-  triggersContainer: {
-    marginTop: spacing.md,
-    paddingTop: spacing.md,
-    borderTopWidth: 1,
-    borderTopColor: colors.border.subtle,
-  },
-  triggersLabel: {
-    ...typography.caption,
-    color: colors.text.secondary,
-    marginBottom: spacing.xs,
-    fontWeight: '600',
-  },
-  triggersList: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.xs,
-  },
-  triggerTag: {
-    backgroundColor: colors.primary + '20', // 20% opacity
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-    borderRadius: borderRadius.md,
-    borderWidth: 1,
-    borderColor: colors.primary + '40', // 40% opacity
-  },
-  triggerText: {
-    ...typography.xs,
-    color: colors.primary,
-    fontWeight: '500',
-  },
-});
+const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => {
+  // Guard against any unexpected undefined values
+  const primary = colors?.primary ?? '#00FF7B';
+  const primary20 = `${primary}20`; // 8-digit hex alpha
+  const primary40 = `${primary}40`;
+
+  const styles = {
+    scrollContent: {
+      flexGrow: 1,
+    } as ViewStyle,
+    content: {
+      flex: 1,
+      paddingTop: spacing.lg,
+      paddingHorizontal: spacing.md,
+    } as ViewStyle,
+    section: {
+      marginBottom: spacing.md,
+    } as ViewStyle,
+    sectionHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'flex-start',
+      marginBottom: spacing.md,
+    } as ViewStyle,
+    sectionHeaderText: {
+      flex: 1,
+      marginRight: spacing.md,
+    } as ViewStyle,
+    sectionTitleRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing.sm,
+      marginBottom: spacing.sm,
+    } as ViewStyle,
+    sectionTitle: {
+      ...typography.xl,
+      fontWeight: '600' as const,
+      color: colors.text.primary,
+    } as TextStyle,
+    infoRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing.sm,
+      marginBottom: spacing.xs,
+    } as ViewStyle,
+    sectionDescription: {
+      ...typography.caption,
+      color: colors.text.secondary,
+      lineHeight: 20,
+    } as TextStyle,
+    permissionButton: {
+      marginTop: spacing.md,
+    } as ViewStyle,
+    notificationInfo: {
+      ...typography.caption,
+      color: colors.text.secondary,
+      marginTop: spacing.md,
+      fontStyle: 'italic',
+    } as TextStyle,
+    info: {
+      ...typography.caption,
+      marginBottom: spacing.xs,
+      color: colors.text.primary,
+    } as TextStyle,
+    resetButton: {
+      marginTop: spacing.sm,
+    } as ViewStyle,
+    triggersContainer: {
+      marginTop: spacing.md,
+      paddingTop: spacing.md,
+      borderTopWidth: 1,
+      borderTopColor: colors.border.subtle,
+    } as ViewStyle,
+    triggersLabel: {
+      ...typography.caption,
+      color: colors.text.secondary,
+      marginBottom: spacing.xs,
+      fontWeight: '600' as const,
+    } as TextStyle,
+    triggersList: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: spacing.xs,
+    } as ViewStyle,
+    triggerTag: {
+      backgroundColor: primary20,
+      paddingHorizontal: spacing.sm,
+      paddingVertical: spacing.xs,
+      borderRadius: borderRadius.md,
+      borderWidth: 1,
+      borderColor: primary40,
+    } as ViewStyle,
+    triggerText: {
+      ...typography.xs,
+      color: primary,
+      fontWeight: '500' as const,
+    } as TextStyle,
+  };
+
+  return StyleSheet.create(styles);
+};

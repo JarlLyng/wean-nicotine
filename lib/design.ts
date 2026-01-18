@@ -132,6 +132,10 @@ export function getColors(colorScheme: 'light' | 'dark' | null = 'light') {
     ...designTokens.colors.modes[mode],
     static: designTokens.colors.static,
     shared: designTokens.colors.shared,
+    // Backward-compatible aliases for shared semantic colors
+    success: designTokens.colors.shared.success,
+    warning: designTokens.colors.shared.warning,
+    error: designTokens.colors.shared.error,
   };
 }
 
