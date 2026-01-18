@@ -22,7 +22,7 @@ export default function HomeScreen() {
   const [isLogging, setIsLogging] = useState(false);
   const [settingsId, setSettingsId] = useState<number | null>(null); // Track settings ID for debugging
   const isLoadingRef = useRef(false); // Prevent multiple simultaneous loads
-  const loadTimeoutRef = useRef<NodeJS.Timeout | null>(null); // Debounce timer
+  const loadTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null); // Debounce timer
 
   const loadData = useCallback(async () => {
     // Clear any pending loads

@@ -21,7 +21,7 @@ export function StatCard({ value, label, variant = 'default', style }: StatCardP
       stiffness: 200,
     });
     opacity.value = withTiming(1, { duration: animations.normal });
-  }, [value]);
+  }, [value, opacity, scale]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],

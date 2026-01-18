@@ -30,7 +30,7 @@ export default function ProgressScreen() {
   const [showPreviousWeek, setShowPreviousWeek] = useState(false);
   const progressStyles = createProgressStyles(colors);
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       setIsLoading(true);
       // Reset state to ensure fresh data
@@ -95,7 +95,7 @@ export default function ProgressScreen() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [settingsId]);
 
   useFocusEffect(
     useCallback(() => {
@@ -114,7 +114,7 @@ export default function ProgressScreen() {
       return () => {
         clearTimeout(timer);
       };
-    }, [])
+    }, [loadData])
   );
 
   if (isLoading) {

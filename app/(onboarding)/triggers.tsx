@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Platform } from 'react-native';
+import { Platform, ScrollView, StyleSheet, Text, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { Screen } from '@/components/Screen';
@@ -192,57 +192,60 @@ export default function TriggersScreen() {
   );
 }
 
-const createTriggersStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => StyleSheet.create({
-  scrollContent: {
-    flexGrow: 1,
-  },
-  content: {
-    flex: 1,
-    padding: spacing.md,
-  },
-  card: {
-    marginBottom: spacing.lg,
-  },
-  description: {
-    ...typography.xl,
-    fontWeight: '600',
-    color: colors.text.primary,
-    marginBottom: spacing.sm,
-    textAlign: 'center',
-  },
-  hint: {
-    ...typography.caption,
-    color: colors.text.secondary,
-    marginBottom: spacing.xl,
-    textAlign: 'center',
-  },
-  triggersContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.sm,
-    marginBottom: spacing.md,
-  },
-  triggerButton: {
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    borderRadius: borderRadius.full,
-    borderWidth: 2,
-    borderColor: colors.border.subtle,
-    backgroundColor: colors.surface.default,
-  },
-  triggerButtonSelected: {
-    borderColor: colors.primary,
-    backgroundColor: colors.primary,
-  },
-  triggerText: {
-    ...typography.body,
-    color: colors.text.primary,
-  },
-  triggerTextSelected: {
-    color: colors.text.inverse,
-    fontWeight: '600',
-  },
-  button: {
-    marginTop: spacing.md,
-  },
-});
+const createTriggersStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => {
+  const styles = {
+    scrollContent: {
+      flexGrow: 1,
+    } as ViewStyle,
+    content: {
+      flex: 1,
+      padding: spacing.md,
+    } as ViewStyle,
+    card: {
+      marginBottom: spacing.lg,
+    } as ViewStyle,
+    description: {
+      ...typography.xl,
+      fontWeight: '600' as const,
+      color: colors.text.primary,
+      marginBottom: spacing.sm,
+      textAlign: 'center' as const,
+    } as TextStyle,
+    hint: {
+      ...typography.caption,
+      color: colors.text.secondary,
+      marginBottom: spacing.xl,
+      textAlign: 'center' as const,
+    } as TextStyle,
+    triggersContainer: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: spacing.sm,
+      marginBottom: spacing.md,
+    } as ViewStyle,
+    triggerButton: {
+      paddingHorizontal: spacing.md,
+      paddingVertical: spacing.sm,
+      borderRadius: borderRadius.full,
+      borderWidth: 2,
+      borderColor: colors.border.subtle,
+      backgroundColor: colors.surface.default,
+    } as ViewStyle,
+    triggerButtonSelected: {
+      borderColor: colors.primary,
+      backgroundColor: colors.primary,
+    } as ViewStyle,
+    triggerText: {
+      ...typography.body,
+      color: colors.text.primary,
+    } as TextStyle,
+    triggerTextSelected: {
+      color: colors.text.inverse,
+      fontWeight: '600' as const,
+    } as TextStyle,
+    button: {
+      marginTop: spacing.md,
+    } as ViewStyle,
+  };
+  return StyleSheet.create(styles);
+};

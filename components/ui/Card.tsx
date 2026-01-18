@@ -27,7 +27,7 @@ export function Card({ children, variant = 'flat', style, padding = 'md' }: Card
       duration: animations.normal,
       easing: Easing.bezier(0.4, 0, 0.2, 1),
     });
-  }, []);
+  }, [opacity, translateY]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: opacity.value,

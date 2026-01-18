@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Switch, Alert, ViewStyle, TextStyle } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Switch, Alert, ViewStyle, TextStyle } from 'react-native';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import { Screen } from '@/components/Screen';

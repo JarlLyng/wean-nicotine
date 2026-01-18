@@ -53,7 +53,7 @@ export function ProgressRing({
       duration: animations.normal,
       easing: Easing.bezier(0.4, 0, 0.2, 1), // easeInOut
     });
-  }, [progress]);
+  }, [progress, animatedProgress]);
 
   // Animated props for the progress circle
   const animatedCircleProps = useAnimatedProps(() => {

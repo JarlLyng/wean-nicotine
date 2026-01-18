@@ -33,83 +33,83 @@ export const typography = {
   xs: {
     fontSize: designTokens.typography.sizes.xs,
     lineHeight: designTokens.typography.lineHeights.sm,
-    fontWeight: designTokens.typography.weights.regular.toString(),
+    fontWeight: `${designTokens.typography.weights.regular}`,
     allowFontScaling: true,
   },
   sm: {
     fontSize: designTokens.typography.sizes.sm,
     lineHeight: designTokens.typography.lineHeights.tight,
-    fontWeight: designTokens.typography.weights.regular.toString(),
+    fontWeight: `${designTokens.typography.weights.regular}`,
     allowFontScaling: true,
   },
   base: {
     fontSize: designTokens.typography.sizes.base,
     lineHeight: designTokens.typography.lineHeights.normal,
-    fontWeight: designTokens.typography.weights.regular.toString(),
+    fontWeight: `${designTokens.typography.weights.regular}`,
     allowFontScaling: true,
   },
   lg: {
     fontSize: designTokens.typography.sizes.lg,
     lineHeight: designTokens.typography.lineHeights.relaxed,
-    fontWeight: designTokens.typography.weights.regular.toString(),
+    fontWeight: `${designTokens.typography.weights.regular}`,
     allowFontScaling: true,
   },
   xl: {
     fontSize: designTokens.typography.sizes.xl,
     lineHeight: designTokens.typography.lineHeights.normal,
-    fontWeight: designTokens.typography.weights.semibold.toString(),
+    fontWeight: `${designTokens.typography.weights.semibold}`,
     allowFontScaling: true,
   },
   xxl: {
     fontSize: designTokens.typography.sizes.xxl,
     lineHeight: designTokens.typography.lineHeights.xxl,
-    fontWeight: designTokens.typography.weights.semibold.toString(),
+    fontWeight: `${designTokens.typography.weights.semibold}`,
     allowFontScaling: true,
   },
   // Backward compatibility aliases
   title: {
     fontSize: designTokens.typography.sizes.xxl,
     lineHeight: designTokens.typography.lineHeights.xxl,
-    fontWeight: designTokens.typography.weights.bold.toString(),
+    fontWeight: `${designTokens.typography.weights.bold}`,
     allowFontScaling: true,
   },
   body: {
     fontSize: designTokens.typography.sizes.base,
     lineHeight: designTokens.typography.lineHeights.normal,
-    fontWeight: designTokens.typography.weights.regular.toString(),
+    fontWeight: `${designTokens.typography.weights.regular}`,
     allowFontScaling: true,
   },
   caption: {
     fontSize: designTokens.typography.sizes.sm,
     lineHeight: designTokens.typography.lineHeights.tight,
-    fontWeight: designTokens.typography.weights.regular.toString(),
+    fontWeight: `${designTokens.typography.weights.regular}`,
     allowFontScaling: true,
   },
   '2xl': {
     fontSize: designTokens.typography.sizes.xl,
     lineHeight: designTokens.typography.lineHeights.normal,
-    fontWeight: designTokens.typography.weights.semibold.toString(),
+    fontWeight: `${designTokens.typography.weights.semibold}`,
     allowFontScaling: true,
   },
   '3xl': {
     fontSize: 28, // Not in IAMJARL, keeping for backward compatibility
     lineHeight: 36,
-    fontWeight: designTokens.typography.weights.bold.toString(),
+    fontWeight: `${designTokens.typography.weights.bold}`,
     allowFontScaling: true,
   },
   '4xl': {
     fontSize: designTokens.typography.sizes.xxl,
     lineHeight: designTokens.typography.lineHeights.xxl,
-    fontWeight: designTokens.typography.weights.bold.toString(),
+    fontWeight: `${designTokens.typography.weights.bold}`,
     allowFontScaling: true,
   },
 } as const;
 
 // IAMJARL font weights
 export const fontWeights = {
-  regular: designTokens.typography.weights.regular.toString() as const,
-  semibold: designTokens.typography.weights.semibold.toString() as const,
-  bold: designTokens.typography.weights.bold.toString() as const,
+  regular: `${designTokens.typography.weights.regular}`,
+  semibold: `${designTokens.typography.weights.semibold}`,
+  bold: `${designTokens.typography.weights.bold}`,
   // Backward compatibility
   medium: '500' as const,
 } as const;

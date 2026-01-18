@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ViewStyle, Platform } from 'react-native';
+import { View, Text, StyleSheet, Platform, StyleProp, TextStyle, ViewStyle } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { spacing, typography } from '@/lib/theme';
 import { useDesignTokens } from '@/lib/design';
@@ -9,7 +9,7 @@ interface ScreenProps {
   children: React.ReactNode;
   title?: string;
   variant?: 'plain' | 'gradient';
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
 }
 
 export function Screen({ children, title, variant = 'plain', style }: ScreenProps) {
@@ -74,19 +74,23 @@ export function Screen({ children, title, variant = 'plain', style }: ScreenProp
 }
 
 // Styles are created inside component to access colors from hook
-const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  plainTitle: {
-    ...typography.title,
-    color: colors.text.primary,
-    paddingHorizontal: spacing.md,
-    paddingTop: spacing.md,
-    paddingBottom: spacing.sm,
-  },
-  content: {
-    flex: 1,
-    paddingHorizontal: spacing.md,
-  },
-});
+const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => {
+  const styles = {
+    container: {
+      flex: 1,
+    } as ViewStyle,
+    plainTitle: {
+      ...typography.title,
+      color: colors.text.primary,
+      paddingHorizontal: spacing.md,
+      paddingTop: spacing.md,
+      paddingBottom: spacing.sm,
+    } as TextStyle,
+    content: {
+      flex: 1,
+      paddingHorizontal: spacing.md,
+    } as ViewStyle,
+  };
+
+  return StyleSheet.create(styles);
+};

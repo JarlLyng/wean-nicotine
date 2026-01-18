@@ -12,7 +12,7 @@ import {
 export default function NotificationsScreen() {
   const [hasPermission, setHasPermission] = useState(false);
   const [dailyCheckInEnabled, setDailyCheckInEnabled] = useState(false);
-  const [checkInHour, setCheckInHour] = useState(20);
+  const [checkInHour] = useState(20);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

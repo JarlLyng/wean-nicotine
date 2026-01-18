@@ -19,17 +19,18 @@ export default function RootLayout() {
   // Note: On web, database won't work but UI can still be viewed for design purposes
 
   // Error boundary fallback component
-  const ErrorFallback = ({ error }: { error: Error }) => {
+  const ErrorFallback = ({ error }: { error: unknown; componentStack: string; eventId: string; resetError(): void }) => {
     const { colors } = useDesignTokens();
     const errorStyles = createErrorStyles(colors);
+    const message = error instanceof Error ? error.toString() : String(error);
     return (
       <View style={errorStyles.errorContainer}>
         <Text style={errorStyles.errorTitle}>Something went wrong</Text>
         <Text style={errorStyles.errorText}>
           The app encountered an unexpected error. Please restart the app.
         </Text>
-        {__DEV__ && error && (
-          <Text style={errorStyles.errorDetails}>{error.toString()}</Text>
+        {__DEV__ && Boolean(error) && (
+          <Text style={errorStyles.errorDetails}>{message}</Text>
         )}
       </View>
     );

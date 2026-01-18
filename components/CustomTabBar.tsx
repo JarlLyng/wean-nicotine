@@ -35,7 +35,7 @@ function TabItem({ route, options, isFocused, onPress, onLongPress, colors }: Ta
       case 'settings':
         return 'gear';
       default:
-        return 'circle';
+        return 'x-circle';
     }
   };
 

@@ -1,12 +1,12 @@
 import React from 'react';
-import { View, StyleSheet, ViewStyle } from 'react-native';
+import { StyleProp, StyleSheet, ViewStyle } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useDesignTokens } from '@/lib/design';
 
 interface GradientBackgroundProps {
   children: React.ReactNode;
   variant?: 'primary' | 'subtle';
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
 }
 
 // Helper to convert hex to rgba

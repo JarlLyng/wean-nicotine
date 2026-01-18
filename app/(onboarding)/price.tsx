@@ -1,11 +1,11 @@
-import { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, ScrollView } from 'react-native';
-import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Screen } from '@/components/Screen';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
-import { spacing, typography, borderRadius } from '@/lib/theme';
 import { useDesignTokens } from '@/lib/design';
+import { borderRadius, spacing, typography } from '@/lib/theme';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useState } from 'react';
+import { ScrollView, StyleSheet, Text, TextInput, TextStyle, View, ViewStyle } from 'react-native';
 
 export default function PriceScreen() {
   const { colors } = useDesignTokens();
@@ -78,57 +78,60 @@ export default function PriceScreen() {
   );
 }
 
-const createPriceStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => StyleSheet.create({
-  scrollContent: {
-    flexGrow: 1,
-  },
-  content: {
-    flex: 1,
-    padding: spacing.md,
-  },
-  card: {
-    marginBottom: spacing.lg,
-  },
-  description: {
-    ...typography.xl,
-    fontWeight: '600',
-    color: colors.text.primary,
-    marginBottom: spacing.sm,
-    textAlign: 'center',
-  },
-  hint: {
-    ...typography.caption,
-    color: colors.text.secondary,
-    marginBottom: spacing.xl,
-    textAlign: 'center',
-  },
-  inputContainer: {
-    marginBottom: spacing.md,
-  },
-  input: {
-    borderWidth: 2,
-    borderColor: colors.border.subtle,
-    borderRadius: borderRadius.lg,
-    padding: spacing.md,
-    ...typography['2xl'],
-    fontWeight: '600',
-    color: colors.text.primary,
-    textAlign: 'center',
-    marginBottom: spacing.xs,
-    backgroundColor: colors.surface.default,
-  },
-  inputLabel: {
-    ...typography.caption,
-    color: colors.text.secondary,
-    textAlign: 'center',
-  },
-  error: {
-    ...typography.caption,
-    color: colors.error,
-    marginBottom: spacing.sm,
-    textAlign: 'center',
-  },
-  button: {
-    marginTop: spacing.md,
-  },
-});
+const createPriceStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => {
+  const styles = {
+    scrollContent: {
+      flexGrow: 1,
+    } as ViewStyle,
+    content: {
+      flex: 1,
+      padding: spacing.md,
+    } as ViewStyle,
+    card: {
+      marginBottom: spacing.lg,
+    } as ViewStyle,
+    description: {
+      ...typography.xl,
+      fontWeight: '600' as const,
+      color: colors.text.primary,
+      marginBottom: spacing.sm,
+      textAlign: 'center' as const,
+    } as TextStyle,
+    hint: {
+      ...typography.caption,
+      color: colors.text.secondary,
+      marginBottom: spacing.xl,
+      textAlign: 'center' as const,
+    } as TextStyle,
+    inputContainer: {
+      marginBottom: spacing.md,
+    } as ViewStyle,
+    input: {
+      borderWidth: 2,
+      borderColor: colors.border.subtle,
+      borderRadius: borderRadius.lg,
+      padding: spacing.md,
+      ...typography['2xl'],
+      fontWeight: '600' as const,
+      color: colors.text.primary,
+      textAlign: 'center' as const,
+      marginBottom: spacing.xs,
+      backgroundColor: colors.surface.default,
+    } as TextStyle,
+    inputLabel: {
+      ...typography.caption,
+      color: colors.text.secondary,
+      textAlign: 'center' as const,
+    } as TextStyle,
+    error: {
+      ...typography.caption,
+      color: colors.error,
+      marginBottom: spacing.sm,
+      textAlign: 'center' as const,
+    } as TextStyle,
+    button: {
+      marginTop: spacing.md,
+    } as ViewStyle,
+  };
+  return StyleSheet.create(styles);
+};

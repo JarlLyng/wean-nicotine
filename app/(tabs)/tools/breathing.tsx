@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
-import { useRouter } from 'expo-router';
 import { Screen } from '@/components/Screen';
 import { spacing } from '@/lib/theme';
 import { useDesignTokens } from '@/lib/design';
@@ -15,7 +14,6 @@ const BREATHING_CYCLES = [
 
 export default function BreathingExercise() {
   const { colors } = useDesignTokens();
-  const router = useRouter();
   const [isRunning, setIsRunning] = useState(false);
   const [currentCycle, setCurrentCycle] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState(BREATHING_CYCLES[0].duration);
@@ -93,7 +91,6 @@ export default function BreathingExercise() {
   };
 
   const currentPhase = BREATHING_CYCLES[currentCycle];
-  const progress = 1 - timeRemaining / currentPhase.duration;
   const secondsRemaining = Math.ceil(timeRemaining / 1000);
 
   return (
