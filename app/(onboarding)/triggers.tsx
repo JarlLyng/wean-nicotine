@@ -10,6 +10,7 @@ import { useDesignTokens } from '@/lib/design';
 import { saveTaperSettings, getTaperSettings } from '@/lib/db-settings';
 import { saveUserPlan, getUserPlan } from '@/lib/db-user-plan';
 import { generateDefaultTaperPlan, calculateDailyAllowance } from '@/lib/taper-plan';
+import type { CurrencyCode } from '@/lib/currency';
 
 const TRIGGERS = [
   'Stress',
@@ -27,6 +28,7 @@ export default function TriggersScreen() {
   const params = useLocalSearchParams();
   const baseline = params.baseline ? parseInt(params.baseline as string, 10) : 10;
   const price = params.price ? parseFloat(params.price as string) : 0;
+  const currency = (params.currency as CurrencyCode | undefined) ?? 'DKK';
 
   const [selectedTriggers, setSelectedTriggers] = useState<string[]>([]);
   const [isSaving, setIsSaving] = useState(false);
@@ -78,6 +80,7 @@ export default function TriggersScreen() {
       const settingsId = await saveTaperSettings({
         ...settings,
         pricePerCan: price > 0 ? Math.round(price * 100) : undefined, // Convert to cents
+        currency,
         triggers: selectedTriggers.length > 0 ? selectedTriggers : undefined, // Save selected triggers
       }, true); // forceCreate = true to ensure we create new instead of updating
       console.log('Onboarding complete: Settings saved with ID:', settingsId);
@@ -240,7 +243,7 @@ const createTriggersStyles = (colors: ReturnType<typeof useDesignTokens>['colors
       color: colors.text.primary,
     } as TextStyle,
     triggerTextSelected: {
-      color: colors.text.inverse,
+      color: colors.onPrimary,
       fontWeight: '600' as const,
     } as TextStyle,
     button: {

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Switch, TouchableOpacity, Alert, TextStyle, ViewStyle } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Switch, Alert, TextStyle, ViewStyle } from 'react-native';
 import { Screen } from '@/components/Screen';
 import { spacing } from '@/lib/theme';
 import { useDesignTokens } from '@/lib/design';
@@ -9,13 +9,6 @@ import {
   cancelDailyCheckIn,
   getAllScheduledNotifications,
 } from '@/lib/notifications';
-
-function hexToRgba(hex: string, alpha: number): string {
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-}
 
 export default function NotificationsScreen() {
   const { colors } = useDesignTokens();
@@ -100,28 +93,6 @@ export default function NotificationsScreen() {
             Choose when and how you&apos;d like to receive gentle reminders and check-ins.
           </Text>
 
-          {!hasPermission && (
-            <View style={styles.permissionBox}>
-              <Text style={styles.permissionText}>
-                Notifications are disabled. Enable them to receive helpful reminders.
-              </Text>
-              <TouchableOpacity
-                style={styles.permissionButton}
-                onPress={async () => {
-                  const granted = await requestNotificationPermissions();
-                  setHasPermission(granted);
-                  if (!granted) {
-                    Alert.alert(
-                      'Permission Required',
-                      'Please enable notifications in your device settings to use this feature.'
-                    );
-                  }
-                }}>
-                <Text style={styles.permissionButtonText}>Enable Notifications</Text>
-              </TouchableOpacity>
-            </View>
-          )}
-
           {/* Daily Check-In */}
           <View style={styles.section}>
             <View style={styles.sectionHeader}>
@@ -134,7 +105,6 @@ export default function NotificationsScreen() {
               <Switch
                 value={dailyCheckInEnabled && hasPermission}
                 onValueChange={handleToggleDailyCheckIn}
-                disabled={!hasPermission}
                 trackColor={{ false: colors.border.subtle, true: colors.primary }}
                 thumbColor={colors.surface.default}
               />
@@ -159,12 +129,6 @@ export default function NotificationsScreen() {
 }
 
 const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => {
-  const warningBg = hexToRgba(colors.shared.warning, 0.15);
-  const warningText = colors.text.primary;
-  const warningButtonBg = colors.shared.warning;
-  const sectionBg = colors.background.muted;
-  const infoBg = hexToRgba(colors.shared.success, 0.12);
-
   const styles = {
     scrollContent: {
       flexGrow: 1,
@@ -190,33 +154,8 @@ const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => {
       marginBottom: spacing.xl,
       lineHeight: 24,
     } as TextStyle,
-    permissionBox: {
-      backgroundColor: warningBg,
-      borderRadius: 12,
-      padding: spacing.md,
-      marginBottom: spacing.lg,
-      borderWidth: 1,
-      borderColor: colors.border.subtle,
-    } as ViewStyle,
-    permissionText: {
-      fontSize: 14,
-      color: warningText,
-      marginBottom: spacing.md,
-      lineHeight: 20,
-    } as TextStyle,
-    permissionButton: {
-      backgroundColor: warningButtonBg,
-      padding: spacing.md,
-      borderRadius: 8,
-      alignItems: 'center',
-    } as ViewStyle,
-    permissionButtonText: {
-      color: colors.text.inverse,
-      fontSize: 16,
-      fontWeight: '600' as const,
-    } as TextStyle,
     section: {
-      backgroundColor: sectionBg,
+      backgroundColor: colors.background.muted,
       borderRadius: 12,
       padding: spacing.md,
       marginBottom: spacing.md,
@@ -254,12 +193,14 @@ const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => {
       color: colors.text.secondary,
     } as TextStyle,
     infoBox: {
-      backgroundColor: infoBg,
+      backgroundColor: colors.background.card,
       borderRadius: 8,
       padding: spacing.md,
       marginTop: spacing.lg,
       borderWidth: 1,
       borderColor: colors.border.subtle,
+      borderLeftWidth: 2,
+      borderLeftColor: colors.shared.success,
     } as ViewStyle,
     infoText: {
       fontSize: 14,

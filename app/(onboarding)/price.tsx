@@ -3,9 +3,11 @@ import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { useDesignTokens } from '@/lib/design';
 import { borderRadius, spacing, typography } from '@/lib/theme';
+import type { CurrencyCode } from '@/lib/currency';
+import { CURRENCY_OPTIONS } from '@/lib/currency';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
-import { ScrollView, StyleSheet, Text, TextInput, TextStyle, View, ViewStyle } from 'react-native';
+import { ScrollView, StyleSheet, Text, TextInput, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native';
 
 export default function PriceScreen() {
   const { colors } = useDesignTokens();
@@ -14,12 +16,14 @@ export default function PriceScreen() {
   const baseline = params.baseline ? parseInt(params.baseline as string, 10) : 10;
   
   const [price, setPrice] = useState('');
+  const [currency, setCurrency] = useState<CurrencyCode>('DKK');
   const [error, setError] = useState('');
   const priceStyles = createPriceStyles(colors);
 
   const handleNext = () => {
+    const normalizedPrice = price.replace(',', '.');
     if (price && price.trim() !== '') {
-      const value = parseFloat(price);
+      const value = parseFloat(normalizedPrice);
       if (isNaN(value) || value < 0) {
         setError('Please enter a valid price');
         return;
@@ -31,7 +35,8 @@ export default function PriceScreen() {
       pathname: '/(onboarding)/triggers',
       params: {
         baseline: baseline.toString(),
-        price: price || '0',
+        price: normalizedPrice || '0',
+        currency,
       },
     });
   };
@@ -49,6 +54,34 @@ export default function PriceScreen() {
               This is optional — you can add it later in settings if needed.
             </Text>
 
+            <View style={priceStyles.currencyContainer}>
+              <Text style={priceStyles.currencyLabel}>Currency</Text>
+              <View style={priceStyles.currencyGrid}>
+                {CURRENCY_OPTIONS.map((option) => {
+                  const isSelected = currency === option.code;
+                  return (
+                    <TouchableOpacity
+                      key={option.code}
+                      style={[
+                        priceStyles.currencyPill,
+                        isSelected && priceStyles.currencyPillSelected,
+                      ]}
+                      onPress={() => setCurrency(option.code)}
+                      accessibilityRole="button"
+                      accessibilityLabel={`Select ${option.label}`}>
+                      <Text
+                        style={[
+                          priceStyles.currencyPillText,
+                          isSelected && priceStyles.currencyPillTextSelected,
+                        ]}>
+                        {option.code}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+            </View>
+
             <View style={priceStyles.inputContainer}>
               <TextInput
                 style={priceStyles.input}
@@ -61,7 +94,7 @@ export default function PriceScreen() {
                 placeholderTextColor={colors.text.secondary}
                 keyboardType="decimal-pad"
               />
-              <Text style={priceStyles.inputLabel}>price per can</Text>
+              <Text style={priceStyles.inputLabel}>price per can ({currency})</Text>
             </View>
 
             {error ? <Text style={priceStyles.error}>{error}</Text> : null}
@@ -102,6 +135,44 @@ const createPriceStyles = (colors: ReturnType<typeof useDesignTokens>['colors'])
       color: colors.text.secondary,
       marginBottom: spacing.xl,
       textAlign: 'center' as const,
+    } as TextStyle,
+    currencyContainer: {
+      marginBottom: spacing.lg,
+    } as ViewStyle,
+    currencyLabel: {
+      ...typography.caption,
+      color: colors.text.secondary,
+      textAlign: 'center' as const,
+      marginBottom: spacing.sm,
+      fontWeight: '600' as const,
+    } as TextStyle,
+    currencyGrid: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      justifyContent: 'center',
+      gap: spacing.xs,
+    } as ViewStyle,
+    currencyPill: {
+      paddingHorizontal: spacing.md,
+      paddingVertical: spacing.sm,
+      borderRadius: borderRadius.full,
+      borderWidth: 2,
+      borderColor: colors.border.subtle,
+      backgroundColor: colors.surface.default,
+      minWidth: 64,
+      alignItems: 'center',
+    } as ViewStyle,
+    currencyPillSelected: {
+      borderColor: colors.primary,
+      backgroundColor: colors.primary,
+    } as ViewStyle,
+    currencyPillText: {
+      ...typography.body,
+      color: colors.text.primary,
+      fontWeight: '600' as const,
+    } as TextStyle,
+    currencyPillTextSelected: {
+      color: colors.onPrimary,
     } as TextStyle,
     inputContainer: {
       marginBottom: spacing.md,

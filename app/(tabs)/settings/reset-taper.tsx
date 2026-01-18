@@ -44,6 +44,7 @@ export default function ResetTaperScreen() {
               const newSettings = {
                 baselinePouchesPerDay: currentSettings.baselinePouchesPerDay,
                 pricePerCan: currentSettings.pricePerCan,
+                currency: currentSettings.currency,
                 weeklyReductionPercent: currentSettings.weeklyReductionPercent,
                 startDate: Date.now(),
                 triggers: currentSettings.triggers, // Preserve triggers
@@ -266,7 +267,7 @@ const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) =>
       opacity: 0.6,
     },
     resetButtonText: {
-      color: colors.text.inverse,
+      color: colors.onError,
       fontSize: 18,
       fontWeight: '600',
     },
@@ -281,7 +282,7 @@ const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) =>
       opacity: 0.6,
     },
     startOverButtonText: {
-      color: colors.text.inverse,
+      color: colors.onWarning,
       fontSize: 18,
       fontWeight: '600',
     },

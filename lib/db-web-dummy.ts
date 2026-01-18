@@ -13,7 +13,8 @@ export function getDummySettings(): TaperSettings {
   return {
     id: 1,
     baselinePouchesPerDay: 12,
-    pricePerCan: 5000, // $50.00 in cents
+    pricePerCan: 5000, // 50.00 in smallest unit
+    currency: 'DKK',
     weeklyReductionPercent: 5,
     startDate,
     triggers: ['Stress', 'After meals', 'With coffee'],

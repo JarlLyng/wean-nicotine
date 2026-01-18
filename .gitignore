@@ -42,3 +42,6 @@ app-example
 # generated native folders
 /ios
 /android
+
+# IAMJARL design system snapshots (source of truth is remote)
+docs/iamjarl-v*/

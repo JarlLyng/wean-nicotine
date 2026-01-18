@@ -15,6 +15,7 @@
 import { useColorScheme } from '@/hooks/use-color-scheme';
 
 // IAMJARL Design Tokens (from tokens.json)
+// Version: v0.1.1 (source of truth: https://jarllyng.github.io/iamjarl-design/tokens.json)
 export const designTokens = {
   radius: {
     sm: 8,
@@ -63,12 +64,16 @@ export const designTokens = {
     },
     shared: {
       success: '#4CAF50',
+      onSuccess: '#FFFFFF',
       warning: '#FF6B35',
+      onWarning: '#000000',
       error: '#FF3B30',
+      onError: '#FFFFFF',
     },
     modes: {
       light: {
         primary: '#00FF7B',
+        onPrimary: '#000000',
         text: {
           primary: '#000000',
           secondary: 'rgba(0, 0, 0, 0.70)',
@@ -91,6 +96,7 @@ export const designTokens = {
       },
       dark: {
         primary: '#D0FF00',
+        onPrimary: '#000000',
         text: {
           primary: '#FFFFFF',
           secondary: 'rgba(255, 255, 255, 0.75)',
@@ -136,6 +142,10 @@ export function getColors(colorScheme: 'light' | 'dark' | null = 'light') {
     success: designTokens.colors.shared.success,
     warning: designTokens.colors.shared.warning,
     error: designTokens.colors.shared.error,
+    // Semantic on-colors (design system requirement for colored backgrounds)
+    onSuccess: designTokens.colors.shared.onSuccess,
+    onWarning: designTokens.colors.shared.onWarning,
+    onError: designTokens.colors.shared.onError,
   };
 }
 

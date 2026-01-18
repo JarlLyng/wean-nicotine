@@ -78,7 +78,8 @@ export function Button({
       case 'primary':
         return {
           ...baseStyle,
-          color: isDisabled ? colors.text.tertiary : colors.text.inverse,
+          // Design-system: primary background must use onPrimary for contrast
+          color: isDisabled ? colors.text.tertiary : colors.onPrimary,
         };
       case 'secondary':
         return {
@@ -137,7 +138,7 @@ export function Button({
       {loading ? (
         <ActivityIndicator
           size="small"
-          color={variant === 'primary' ? colors.text.inverse : colors.primary}
+          color={variant === 'primary' ? colors.onPrimary : colors.primary}
         />
       ) : (
         <Text style={[getTextStyle(), textStyle]}>{title}</Text>

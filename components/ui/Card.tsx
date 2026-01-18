@@ -2,7 +2,7 @@ import React, { useEffect, useMemo } from 'react';
 import { StyleProp, ViewStyle } from 'react-native';
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { spacing, borderRadius, shadows, animations } from '@/lib/theme';
-import { useDesignTokens } from '@/lib/design';
+import { designTokens, useDesignTokens } from '@/lib/design';
 
 export type CardVariant = 'elevated' | 'flat' | 'outlined';
 
@@ -42,7 +42,7 @@ export function Card({ children, variant = 'flat', style, padding = 'md' }: Card
       return {
         borderRadius: borderRadius.lg,
         padding: spacing[padding],
-        backgroundColor: '#FFFFFF',
+        backgroundColor: designTokens.colors.static.white,
       };
     }
 
@@ -57,14 +57,17 @@ export function Card({ children, variant = 'flat', style, padding = 'md' }: Card
 
     // Cards should always use surface.default (white in light mode, black in dark mode)
     // Never fall back to background.app as that might be different
-    const surfaceDefault = getColorString(colors.surface?.default, '#FFFFFF');
+    const surfaceDefault = getColorString(
+      colors.surface?.default,
+      designTokens.colors.modes.light.surface.default
+    );
     const borderSubtle = getColorString(
       colors.border?.subtle,
-      getColorString(colors.border?.default, 'rgba(0, 0, 0, 0.1)')
+      getColorString(colors.border?.default, designTokens.colors.modes.light.border.subtle)
     );
 
     // Ensure shadowColor is always a string for Reanimated compatibility
-    const shadowColor = String(shadows.md.shadowColor || '#000000');
+    const shadowColor = String(shadows.md.shadowColor || designTokens.colors.static.black);
     const shadowStyle = {
       shadowColor,
       shadowOffset: shadows.md.shadowOffset,

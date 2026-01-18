@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, Platform, StyleProp, TextStyle, ViewStyle } fro
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { spacing, typography } from '@/lib/theme';
 import { useDesignTokens } from '@/lib/design';
-import { GradientBackground } from './GradientBackground';
 
 interface ScreenProps {
   children: React.ReactNode;
@@ -18,19 +17,8 @@ export function Screen({ children, title, variant = 'plain', style }: ScreenProp
   
   // On web, use simpler structure to reduce DOM nesting
   if (Platform.OS === 'web') {
-    if (variant === 'gradient') {
-      return (
-        <GradientBackground variant="subtle" style={[styles.container, style]}>
-          <View style={styles.content}>
-            {children}
-          </View>
-        </GradientBackground>
-      );
-    }
-
-    // Plain variant for web
     return (
-      <GradientBackground variant="subtle" style={[styles.container, style]}>
+      <View style={[styles.container, style]}>
         {title && (
           <Text style={styles.plainTitle} accessibilityRole="header">
             {title}
@@ -39,27 +27,14 @@ export function Screen({ children, title, variant = 'plain', style }: ScreenProp
         <View style={styles.content}>
           {children}
         </View>
-      </GradientBackground>
+      </View>
     );
   }
 
   // Native platforms use SafeAreaView
-  if (variant === 'gradient') {
-    return (
-      <GradientBackground variant="subtle" style={[styles.container, style]}>
-        <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
-          <View style={styles.content}>
-            {children}
-          </View>
-        </SafeAreaView>
-      </GradientBackground>
-    );
-  }
-
-  // Plain variant (default)
   return (
-    <GradientBackground variant="subtle" style={[styles.container, style]}>
-      <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
+    <View style={[styles.container, style]}>
+      <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
         {title && (
           <Text style={styles.plainTitle} accessibilityRole="header">
             {title}
@@ -69,7 +44,7 @@ export function Screen({ children, title, variant = 'plain', style }: ScreenProp
           {children}
         </View>
       </SafeAreaView>
-    </GradientBackground>
+    </View>
   );
 }
 
@@ -77,6 +52,10 @@ export function Screen({ children, title, variant = 'plain', style }: ScreenProp
 const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => {
   const styles = {
     container: {
+      flex: 1,
+      backgroundColor: colors.background.app,
+    } as ViewStyle,
+    safeArea: {
       flex: 1,
     } as ViewStyle,
     plainTitle: {

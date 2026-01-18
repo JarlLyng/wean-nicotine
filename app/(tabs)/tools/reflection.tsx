@@ -141,7 +141,7 @@ const createReflectionStyles = (colors: ReturnType<typeof useDesignTokens>['colo
     marginBottom: spacing.md,
   },
   buttonText: {
-    color: colors.text.inverse,
+    color: colors.onPrimary,
     fontSize: 18,
     fontWeight: '600',
   },
@@ -163,15 +163,19 @@ const createReflectionStyles = (colors: ReturnType<typeof useDesignTokens>['colo
     alignItems: 'center',
   },
   nextButtonText: {
-    color: colors.text.inverse,
+    color: colors.onPrimary,
     fontSize: 18,
     fontWeight: '600',
   },
   infoBox: {
-    backgroundColor: colors.success + '20', // 20% opacity
+    backgroundColor: colors.background.card,
     borderRadius: 8,
     padding: spacing.md,
     marginTop: spacing.lg,
+    borderWidth: 1,
+    borderColor: colors.border.subtle,
+    borderLeftWidth: 2,
+    borderLeftColor: colors.success,
   },
   infoText: {
     fontSize: 14,

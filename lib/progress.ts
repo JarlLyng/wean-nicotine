@@ -5,6 +5,7 @@
 import type { TaperSettings, LogEntry } from './models';
 import { getLogEntries } from './db-log-entries';
 import { calculateDailyAllowance } from './taper-plan';
+import { formatMoney } from './currency';
 
 export interface WeeklyProgress {
   weekStart: Date;
@@ -281,8 +282,8 @@ export async function detectMilestones(
         milestones.push({
           id: `money_saved_${threshold}`,
           type: 'money_saved',
-          title: `$${(threshold / 100).toFixed(2)} Saved`,
-          description: `You've saved $${(threshold / 100).toFixed(2)} compared to your baseline!`,
+          title: `${formatMoney(threshold, settings.currency ?? 'DKK')} Saved`,
+          description: `You've saved ${formatMoney(threshold, settings.currency ?? 'DKK')} compared to your baseline!`,
           achievedAt: today.getTime(),
           value: totalProgress.totalMoneySaved,
         });

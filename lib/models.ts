@@ -15,6 +15,7 @@ export interface TaperSettings {
   id: number;
   baselinePouchesPerDay: number;
   pricePerCan?: number; // Optional, in smallest currency unit (e.g., cents)
+  currency?: 'DKK' | 'SEK' | 'NOK' | 'EUR' | 'USD';
   weeklyReductionPercent: number; // e.g., 5 for 5% reduction per week
   startDate: number; // Unix timestamp in milliseconds
   triggers?: string[]; // Selected triggers from onboarding (e.g., ['Coffee', 'Stress', 'After meals'])

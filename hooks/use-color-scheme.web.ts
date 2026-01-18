@@ -1,21 +1,18 @@
 import { useEffect, useState } from 'react';
-import { useColorScheme as useRNColorScheme } from 'react-native';
+import {
+  getPreferredColorSchemeSync,
+  hydratePreferredColorScheme,
+  subscribePreferredColorScheme,
+  type PreferredColorScheme,
+} from '@/lib/color-scheme';
 
-/**
- * To support static rendering, this value needs to be re-calculated on the client side for web
- */
-export function useColorScheme() {
-  const [hasHydrated, setHasHydrated] = useState(false);
+export function useColorScheme(): PreferredColorScheme {
+  const [scheme, setScheme] = useState<PreferredColorScheme>(getPreferredColorSchemeSync());
 
   useEffect(() => {
-    setHasHydrated(true);
+    hydratePreferredColorScheme();
+    return subscribePreferredColorScheme(setScheme);
   }, []);
 
-  const colorScheme = useRNColorScheme();
-
-  if (hasHydrated) {
-    return colorScheme;
-  }
-
-  return 'light';
+  return scheme;
 }

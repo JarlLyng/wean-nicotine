@@ -25,6 +25,7 @@ import {
   ArrowClockwise,
   Calendar,
   CurrencyDollar,
+  Coins,
 } from 'phosphor-react-native';
 
 export type IconName = 
@@ -46,7 +47,8 @@ export type IconName =
   | 'bell-slash'
   | 'arrow-clockwise'
   | 'calendar'
-  | 'currency-dollar';
+  | 'currency-dollar'
+  | 'coins';
 
 export type IconWeight = 'thin' | 'light' | 'regular' | 'bold' | 'fill' | 'duotone';
 
@@ -79,6 +81,7 @@ const ICON_MAP: Record<IconName, React.ComponentType<any>> = {
   'arrow-clockwise': ArrowClockwise,
   'calendar': Calendar,
   'currency-dollar': CurrencyDollar,
+  'coins': Coins,
 };
 
 export function Icon({ name, size = 24, color, weight = 'regular', style }: IconProps) {

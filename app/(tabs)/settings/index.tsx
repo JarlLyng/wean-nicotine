@@ -8,8 +8,10 @@ import { Icon } from '@/components/ui/Icon';
 import { spacing, typography, borderRadius } from '@/lib/theme';
 import { useDesignTokens } from '@/lib/design';
 import { useColorScheme } from '@/hooks/use-color-scheme';
+import { setPreferredColorScheme } from '@/lib/color-scheme';
 import { getTaperSettings } from '@/lib/db-settings';
 import type { TaperSettings } from '@/lib/models';
+import { formatMoney } from '@/lib/currency';
 import {
   requestNotificationPermissions,
   scheduleDailyCheckIn,
@@ -132,33 +134,14 @@ export default function SettingsScreen() {
                   Receive a gentle reminder each day at 8 PM to log your progress
                 </Text>
               </View>
-              {!isLoadingNotifications && (
-                <Switch
-                  value={dailyCheckInEnabled && hasPermission}
-                  onValueChange={handleToggleDailyCheckIn}
-                  disabled={!hasPermission}
-                  trackColor={{ false: colors.border.subtle, true: colors.primary }}
-                  thumbColor={colors.surface.default}
-                />
-              )}
-            </View>
-            {!hasPermission && (
-              <Button
-                title="Enable Notifications"
-                onPress={async () => {
-                  const granted = await requestNotificationPermissions();
-                  setHasPermission(granted);
-                  if (!granted) {
-                    Alert.alert(
-                      'Permission Required',
-                      'Please enable notifications in your device settings to use this feature.'
-                    );
-                  }
-                }}
-                variant="primary"
-                style={styles.permissionButton}
+              <Switch
+                value={dailyCheckInEnabled && hasPermission}
+                onValueChange={handleToggleDailyCheckIn}
+                disabled={isLoadingNotifications}
+                trackColor={{ false: colors.border.subtle, true: colors.primary }}
+                thumbColor={colors.surface.default}
               />
-            )}
+            </View>
             {dailyCheckInEnabled && hasPermission && (
               <Text style={styles.notificationInfo}>Scheduled for 20:00 daily</Text>
             )}
@@ -166,22 +149,26 @@ export default function SettingsScreen() {
 
           {/* Theme Info */}
           <Card variant="elevated" style={styles.section} padding="lg">
-            <View style={styles.sectionTitleRow}>
-              <Icon name="gear" size={24} color={colors.text.primary} weight="regular" />
-              <Text style={styles.sectionTitle}>Theme</Text>
+            <View style={styles.sectionHeader}>
+              <View style={styles.sectionHeaderText}>
+                <View style={styles.sectionTitleRow}>
+                  <Icon name="gear" size={24} color={colors.text.primary} weight="regular" />
+                  <Text style={styles.sectionTitle}>Theme</Text>
+                </View>
+                <Text style={styles.sectionDescription}>
+                  Default is Dark mode. Turn on Light mode if you prefer a brighter look.
+                </Text>
+              </View>
+              <Switch
+                value={colorScheme === 'light'}
+                onValueChange={(isLight) => {
+                  setPreferredColorScheme(isLight ? 'light' : 'dark');
+                }}
+                trackColor={{ false: colors.border.subtle, true: colors.primary }}
+                thumbColor={colors.surface.default}
+              />
             </View>
-            <View style={styles.infoRow}>
-              <Icon name="check-circle" size={20} color={colors.text.secondary} weight="regular" />
-              <Text style={styles.info}>
-                Mode: {colorScheme === 'dark' ? 'Dark' : 'Light'}
-              </Text>
-            </View>
-            <View style={styles.infoRow}>
-              <Icon name="check-circle" size={20} color={colors.surface.default} weight="regular" />
-              <Text style={styles.info}>
-                Card background: {colors.surface.default}
-              </Text>
-            </View>
+            <Text style={styles.notificationInfo}>Current: {colorScheme === 'dark' ? 'Dark' : 'Light'}</Text>
           </Card>
 
           {/* Current Settings Info */}
@@ -203,9 +190,9 @@ export default function SettingsScreen() {
               </View>
               {settings.pricePerCan && (
                 <View style={styles.infoRow}>
-                  <Icon name="currency-dollar" size={20} color={colors.text.secondary} weight="regular" />
+                  <Icon name="coins" size={20} color={colors.text.secondary} weight="regular" />
                   <Text style={styles.info}>
-                    Price per can: ${(settings.pricePerCan / 100).toFixed(2)}
+                    Price per can: {formatMoney(settings.pricePerCan, settings.currency ?? 'DKK')}
                   </Text>
                 </View>
               )}
@@ -230,11 +217,6 @@ export default function SettingsScreen() {
 }
 
 const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => {
-  // Guard against any unexpected undefined values
-  const primary = colors?.primary ?? '#00FF7B';
-  const primary20 = `${primary}20`; // 8-digit hex alpha
-  const primary40 = `${primary}40`;
-
   const styles = {
     scrollContent: {
       flexGrow: 1,
@@ -279,9 +261,6 @@ const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => {
       color: colors.text.secondary,
       lineHeight: 20,
     } as TextStyle,
-    permissionButton: {
-      marginTop: spacing.md,
-    } as ViewStyle,
     notificationInfo: {
       ...typography.caption,
       color: colors.text.secondary,
@@ -314,16 +293,16 @@ const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => {
       gap: spacing.xs,
     } as ViewStyle,
     triggerTag: {
-      backgroundColor: primary20,
+      backgroundColor: colors.background.card,
       paddingHorizontal: spacing.sm,
       paddingVertical: spacing.xs,
       borderRadius: borderRadius.md,
       borderWidth: 1,
-      borderColor: primary40,
+      borderColor: colors.border.subtle,
     } as ViewStyle,
     triggerText: {
       ...typography.xs,
-      color: primary,
+      color: colors.primary,
       fontWeight: '500' as const,
     } as TextStyle,
   };

@@ -175,12 +175,12 @@ const createBreathingStyles = (colors: ReturnType<typeof useDesignTokens>['color
   phaseText: {
     fontSize: 24,
     fontWeight: '600',
-    color: colors.text.inverse,
+    color: colors.onPrimary,
     marginBottom: spacing.sm,
   },
   timerText: {
     fontSize: 18,
-    color: colors.text.inverse,
+    color: colors.onPrimary,
     opacity: 0.9,
   },
   instruction: {
@@ -197,18 +197,20 @@ const createBreathingStyles = (colors: ReturnType<typeof useDesignTokens>['color
     borderRadius: 8,
   },
   startButtonText: {
-    color: colors.text.inverse,
+    color: colors.onPrimary,
     fontSize: 18,
     fontWeight: '600',
   },
   stopButton: {
-    backgroundColor: colors.text.secondary,
+    backgroundColor: colors.background.card,
     paddingHorizontal: spacing.xl,
     paddingVertical: spacing.md,
     borderRadius: 8,
+    borderWidth: 1,
+    borderColor: colors.border.subtle,
   },
   stopButtonText: {
-    color: colors.text.inverse,
+    color: colors.text.primary,
     fontSize: 18,
     fontWeight: '600',
   },

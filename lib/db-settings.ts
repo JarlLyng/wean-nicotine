@@ -25,8 +25,8 @@ export async function saveTaperSettings(
 
   // Check if settings already exist
   // Also read triggers so we can preserve them on partial updates.
-  const existing = await db.getFirstAsync<{ id: number; triggers: string | null }>(
-    'SELECT id, triggers FROM taper_settings LIMIT 1',
+  const existing = await db.getFirstAsync<{ id: number; triggers: string | null; currency: string | null }>(
+    'SELECT id, triggers, currency FROM taper_settings LIMIT 1',
     []
   );
 
@@ -43,6 +43,9 @@ export async function saveTaperSettings(
         ? JSON.stringify(settings.triggers)
         : null;
 
+  const currencyValue =
+    settings.currency === undefined ? (existing?.currency ?? 'DKK') : settings.currency;
+
   if (existing && !forceCreate) {
     // Update existing
     if (__DEV__) {
@@ -52,6 +55,7 @@ export async function saveTaperSettings(
       `UPDATE taper_settings 
        SET baseline_pouches_per_day = ?,
            price_per_can = ?,
+           currency = ?,
            weekly_reduction_percent = ?,
            start_date = ?,
            triggers = ?,
@@ -60,6 +64,7 @@ export async function saveTaperSettings(
       [
         settings.baselinePouchesPerDay,
         settings.pricePerCan || null,
+        currencyValue,
         settings.weeklyReductionPercent,
         settings.startDate,
         triggersJson,
@@ -75,11 +80,12 @@ export async function saveTaperSettings(
     }
     const result = await db.runAsync(
       `INSERT INTO taper_settings 
-       (baseline_pouches_per_day, price_per_can, weekly_reduction_percent, start_date, triggers, created_at, updated_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+       (baseline_pouches_per_day, price_per_can, currency, weekly_reduction_percent, start_date, triggers, created_at, updated_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         settings.baselinePouchesPerDay,
         settings.pricePerCan || null,
+        currencyValue,
         settings.weeklyReductionPercent,
         settings.startDate,
         triggersJson,
@@ -108,6 +114,7 @@ export async function getTaperSettings(): Promise<TaperSettings | null> {
     id: number;
     baseline_pouches_per_day: number;
     price_per_can: number | null;
+    currency: string | null;
     weekly_reduction_percent: number;
     start_date: number;
     triggers: string | null;
@@ -134,6 +141,14 @@ export async function getTaperSettings(): Promise<TaperSettings | null> {
     id: result.id,
     baselinePouchesPerDay: result.baseline_pouches_per_day,
     pricePerCan: result.price_per_can || undefined,
+    currency:
+      result.currency === 'DKK' ||
+      result.currency === 'SEK' ||
+      result.currency === 'NOK' ||
+      result.currency === 'EUR' ||
+      result.currency === 'USD'
+        ? result.currency
+        : 'DKK',
     weeklyReductionPercent: result.weekly_reduction_percent,
     startDate: result.start_date,
     triggers,

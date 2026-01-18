@@ -14,9 +14,10 @@ import {
 import { animations, borderRadius, spacing, typography } from '@/lib/theme';
 import { useDesignTokens } from '@/lib/design';
 import { useFocusEffect } from 'expo-router';
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Animated, { FadeInRight } from 'react-native-reanimated';
+import { formatMoney } from '@/lib/currency';
 
 export default function ProgressScreen() {
   const { colors } = useDesignTokens();
@@ -31,38 +32,42 @@ export default function ProgressScreen() {
   const [milestones, setMilestones] = useState<Milestone[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showPreviousWeek, setShowPreviousWeek] = useState(false);
+  const settingsIdRef = useRef<number | null>(null);
   const progressStyles = createProgressStyles(colors);
 
   const loadData = useCallback(async () => {
     try {
       setIsLoading(true);
-      // Reset state to ensure fresh data
-      setCurrentWeek(null);
-      setPreviousWeek(null);
-      setTotalProgress(null);
-      setMilestones([]);
-      
+
       const currentSettings = await getTaperSettings();
       if (!currentSettings) {
         setSettings(null);
         setSettingsId(null);
+        settingsIdRef.current = null;
+        setCurrentWeek(null);
+        setPreviousWeek(null);
+        setTotalProgress(null);
+        setMilestones([]);
         setIsLoading(false);
         return;
       }
 
       // Check if settings have changed (e.g., after reset/onboarding)
-      if (settingsId !== null && settingsId !== currentSettings.id) {
-        devLog('Progress screen: Settings changed! Old ID:', settingsId, 'New ID:', currentSettings.id);
+      const prevSettingsId = settingsIdRef.current;
+      if (prevSettingsId !== null && prevSettingsId !== currentSettings.id) {
+        devLog('Progress screen: Settings changed! Old ID:', prevSettingsId, 'New ID:', currentSettings.id);
         // Settings have changed - reset everything
         setSettings(null);
         setCurrentWeek(null);
         setPreviousWeek(null);
         setTotalProgress(null);
         setMilestones([]);
+        setShowPreviousWeek(false);
       }
 
       setSettings(currentSettings);
       setSettingsId(currentSettings.id);
+      settingsIdRef.current = currentSettings.id;
 
       // Calculate current week progress
       const { start: currentStart, end: currentEnd } = getCurrentWeek();
@@ -98,29 +103,17 @@ export default function ProgressScreen() {
     } finally {
       setIsLoading(false);
     }
-  }, [settingsId]);
+  }, []);
 
   useFocusEffect(
     useCallback(() => {
-      // Reset state when screen comes into focus to ensure fresh data
-      setSettings(null);
-      setSettingsId(null);
-      setCurrentWeek(null);
-      setPreviousWeek(null);
-      setTotalProgress(null);
-      setMilestones([]);
-      setIsLoading(true);
-      // Small delay to ensure database is ready
-      const timer = setTimeout(() => {
-        loadData();
-      }, 100);
-      return () => {
-        clearTimeout(timer);
-      };
+      loadData();
+      return () => {};
     }, [loadData])
   );
 
-  if (isLoading) {
+  // Only show the full-screen loader on first load (or when we truly have no data yet).
+  if (isLoading && (!settings || !currentWeek || !totalProgress)) {
     return (
       <Screen>
         <View style={progressStyles.loadingContainer}>
@@ -139,6 +132,8 @@ export default function ProgressScreen() {
       </Screen>
     );
   }
+
+  const currency = settings.currency ?? 'DKK';
 
   const weekData = showPreviousWeek && previousWeek ? previousWeek : currentWeek;
   const weekLabel = showPreviousWeek ? 'Previous Week' : 'This Week';
@@ -196,7 +191,9 @@ export default function ProgressScreen() {
             {weekData.moneySaved !== undefined && weekData.moneySaved !== null && weekData.moneySaved > 0 && (
               <View style={progressStyles.moneyRow}>
                 <Text style={progressStyles.moneyLabel}>Money Saved:</Text>
-                <Text style={progressStyles.moneyValue}>${((weekData.moneySaved ?? 0) / 100).toFixed(2)}</Text>
+                <Text style={progressStyles.moneyValue}>
+                  {formatMoney(weekData.moneySaved ?? 0, currency)}
+                </Text>
               </View>
             )}
           </Card>
@@ -218,7 +215,7 @@ export default function ProgressScreen() {
               <View style={progressStyles.moneyRow}>
                 <Text style={progressStyles.moneyLabel}>Total Money Saved:</Text>
                 <Text style={progressStyles.moneyValue}>
-                  ${((totalProgress.totalMoneySaved ?? 0) / 100).toFixed(2)}
+                  {formatMoney(totalProgress.totalMoneySaved ?? 0, currency)}
                 </Text>
               </View>
             )}
@@ -309,7 +306,7 @@ const createProgressStyles = (colors: ReturnType<typeof useDesignTokens>['colors
     color: colors.text.primary,
   },
   weekButtonTextActive: {
-    color: colors.text.inverse,
+    color: colors.onPrimary,
   },
   card: {
     marginBottom: spacing.md,

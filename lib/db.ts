@@ -71,6 +71,7 @@ export async function initDatabase(): Promise<SQLiteDatabase> {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       baseline_pouches_per_day INTEGER NOT NULL,
       price_per_can INTEGER,
+      currency TEXT,
       weekly_reduction_percent REAL NOT NULL DEFAULT 5.0,
       start_date INTEGER NOT NULL,
       triggers TEXT,
@@ -87,6 +88,22 @@ export async function initDatabase(): Promise<SQLiteDatabase> {
   } catch (error) {
     // Column already exists, ignore error
   }
+
+  // Add currency column if it doesn't exist (migration for existing databases)
+  try {
+    await db.execAsync(`
+      ALTER TABLE taper_settings ADD COLUMN currency TEXT;
+    `);
+  } catch (error) {
+    // Column already exists, ignore error
+  }
+
+  await db.execAsync(`
+    CREATE TABLE IF NOT EXISTS app_preferences (
+      key TEXT PRIMARY KEY,
+      value TEXT NOT NULL
+    );
+  `);
 
   await db.execAsync(`
     CREATE TABLE IF NOT EXISTS user_plan (

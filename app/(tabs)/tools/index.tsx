@@ -113,10 +113,14 @@ const createToolsStyles = (colors: ReturnType<typeof useDesignTokens>['colors'])
     textAlign: 'center',
   },
   infoBox: {
-    backgroundColor: colors.success + '20', // 20% opacity
+    backgroundColor: colors.background.card,
     borderRadius: borderRadius.lg,
     padding: spacing.md,
     marginTop: spacing.lg,
+    borderWidth: 1,
+    borderColor: colors.border.subtle,
+    borderLeftWidth: 2,
+    borderLeftColor: colors.success,
   },
   infoText: {
     ...typography.caption,
