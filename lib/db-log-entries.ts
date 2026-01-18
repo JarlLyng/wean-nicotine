@@ -4,7 +4,7 @@
 
 import { Platform } from 'react-native';
 import { getDatabase } from './db';
-import { getDummyLogEntries } from './db-web-dummy';
+import { addDummyLogEntry, getDummyLogEntries } from './db-web-dummy';
 import type { LogEntry, LogEntryType } from './models';
 
 /**
@@ -14,6 +14,11 @@ export async function createLogEntry(
   type: LogEntryType,
   timestamp?: number
 ): Promise<number> {
+  // On web, write to in-memory dummy store so UI preview is interactive.
+  if (Platform.OS === 'web') {
+    return addDummyLogEntry(type, timestamp);
+  }
+
   const db = await getDatabase();
   const now = Date.now();
   const entryTimestamp = timestamp || now;

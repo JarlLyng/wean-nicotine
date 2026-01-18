@@ -187,6 +187,10 @@ export default function ProgressScreen() {
                 <Text style={progressStyles.statValue}>{Number(weekData.daysUnderLimit ?? 0)}</Text>
                 <Text style={progressStyles.statLabel}>Days Under Limit</Text>
               </View>
+              <View style={progressStyles.statItem}>
+                <Text style={progressStyles.statValue}>{Number(weekData.cravingsResisted ?? 0)}</Text>
+                <Text style={progressStyles.statLabel}>Cravings Resisted</Text>
+              </View>
             </View>
             {weekData.moneySaved !== undefined && weekData.moneySaved !== null && weekData.moneySaved > 0 && (
               <View style={progressStyles.moneyRow}>
@@ -209,6 +213,10 @@ export default function ProgressScreen() {
               <View style={progressStyles.statItem}>
                 <Text style={progressStyles.statValue}>{Number(totalProgress.daysSinceStart ?? 0)}</Text>
                 <Text style={progressStyles.statLabel}>Days Since Start</Text>
+              </View>
+              <View style={progressStyles.statItem}>
+                <Text style={progressStyles.statValue}>{Number(totalProgress.totalCravingsResisted ?? 0)}</Text>
+                <Text style={progressStyles.statLabel}>Total Resisted</Text>
               </View>
             </View>
             {totalProgress.totalMoneySaved !== undefined && totalProgress.totalMoneySaved !== null && totalProgress.totalMoneySaved > 0 && (

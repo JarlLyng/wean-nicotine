@@ -21,6 +21,7 @@ export default function HomeScreen() {
   const [dailyAllowance, setDailyAllowance] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [pouchesUsedToday, setPouchesUsedToday] = useState(0);
+  const [cravingsResistedToday, setCravingsResistedToday] = useState(0);
   const [baselinePouchesPerDay, setBaselinePouchesPerDay] = useState<number | null>(null);
   const [isLogging, setIsLogging] = useState(false);
   const [settingsId, setSettingsId] = useState<number | null>(null); // Track settings ID for debugging
@@ -51,6 +52,7 @@ export default function HomeScreen() {
         devLog('Home screen: No settings found');
         setDailyAllowance(null);
         setPouchesUsedToday(0);
+        setCravingsResistedToday(0);
         setBaselinePouchesPerDay(null);
         setSettingsId(null);
         return;
@@ -81,6 +83,7 @@ export default function HomeScreen() {
           console.error('Home screen: Failed to recreate user plan');
           setDailyAllowance(null);
           setPouchesUsedToday(0);
+          setCravingsResistedToday(0);
           setBaselinePouchesPerDay(null);
           return;
         }
@@ -113,14 +116,16 @@ export default function HomeScreen() {
       // Load pouches used today first
       const todayLogs = await getLogEntriesForDay(today);
       const usedCount = todayLogs.filter(log => log.type === 'pouch_used').length;
+      const resistedCount = todayLogs.filter(log => log.type === 'craving_resisted').length;
 
       // Update all state atomically to ensure React re-renders
       const roundedAllowance = Math.round(allowance);
-      devLog('Home screen: About to update state - dailyAllowance:', roundedAllowance, 'settingsId:', settings.id, 'updatedAt:', settings.updatedAt, 'usedCount:', usedCount);
+      devLog('Home screen: About to update state - dailyAllowance:', roundedAllowance, 'settingsId:', settings.id, 'updatedAt:', settings.updatedAt, 'usedCount:', usedCount, 'resistedCount:', resistedCount);
       
       // Update state - React will handle re-rendering automatically
       setSettingsId(settings.id);
       setPouchesUsedToday(usedCount);
+      setCravingsResistedToday(resistedCount);
       setDailyAllowance(roundedAllowance);
       setBaselinePouchesPerDay(settings.baselinePouchesPerDay);
       
@@ -147,6 +152,7 @@ export default function HomeScreen() {
     devLog('Home screen: Component mounted - resetting all state');
     setDailyAllowance(null);
     setPouchesUsedToday(0);
+    setCravingsResistedToday(0);
     setBaselinePouchesPerDay(null);
     setSettingsId(null);
     setIsLoading(true);
@@ -239,10 +245,13 @@ export default function HomeScreen() {
       marginBottom: spacing.lg,
     },
     statsContainer: {
+      marginTop: spacing.md,
+      gap: spacing.sm,
+    },
+    statsRow: {
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
-      marginTop: spacing.md,
     },
     statItem: {
       flex: 1,
@@ -316,27 +325,36 @@ export default function HomeScreen() {
                 />
               </View>
 
-              {/* Used, Avoided, and Remaining Stats */}
+              {/* Used, Avoided, Remaining, Resisted Stats */}
               <View style={styles.statsContainer}>
-                <View style={styles.statItem}>
-                  <Text style={styles.statValue}>{pouchesUsedToday}</Text>
-                  <Text style={styles.statLabel}>Used</Text>
+                <View style={styles.statsRow}>
+                  <View style={styles.statItem}>
+                    <Text style={styles.statValue}>{pouchesUsedToday}</Text>
+                    <Text style={styles.statLabel}>Used</Text>
+                  </View>
+                  <View style={styles.statDivider} />
+                  <View style={styles.statItem}>
+                    <Text style={styles.statValue}>
+                      {baselinePouchesPerDay !== null
+                        ? Math.max(0, baselinePouchesPerDay - pouchesUsedToday)
+                        : 0}
+                    </Text>
+                    <Text style={styles.statLabel}>Avoided</Text>
+                  </View>
                 </View>
-                <View style={styles.statDivider} />
-                <View style={styles.statItem}>
-                  <Text style={styles.statValue}>
-                    {baselinePouchesPerDay !== null 
-                      ? Math.max(0, baselinePouchesPerDay - pouchesUsedToday)
-                      : 0}
-                  </Text>
-                  <Text style={styles.statLabel}>Avoided</Text>
-                </View>
-                <View style={styles.statDivider} />
-                <View style={styles.statItem}>
-                  <Text style={styles.statValue}>
-                    {Math.max(0, Math.round(dailyAllowance - pouchesUsedToday))}
-                  </Text>
-                  <Text style={styles.statLabel}>Remaining</Text>
+
+                <View style={styles.statsRow}>
+                  <View style={styles.statItem}>
+                    <Text style={styles.statValue}>
+                      {Math.max(0, Math.round(dailyAllowance - pouchesUsedToday))}
+                    </Text>
+                    <Text style={styles.statLabel}>Remaining</Text>
+                  </View>
+                  <View style={styles.statDivider} />
+                  <View style={styles.statItem}>
+                    <Text style={styles.statValue}>{cravingsResistedToday}</Text>
+                    <Text style={styles.statLabel}>Resisted</Text>
+                  </View>
                 </View>
               </View>
             </Card>

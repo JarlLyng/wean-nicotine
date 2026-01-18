@@ -3,7 +3,7 @@
  * Provides realistic sample data so the UI can be viewed on web
  */
 
-import type { TaperSettings, UserPlan, LogEntry } from './models';
+import type { TaperSettings, UserPlan, LogEntry, LogEntryType } from './models';
 
 // Generate dummy settings
 export function getDummySettings(): TaperSettings {
@@ -39,15 +39,24 @@ export function getDummyUserPlan(settingsId: number): UserPlan {
   };
 }
 
-// Cache dummy log entries per session to ensure deterministic data
-let cachedDummyEntries: LogEntry[] | null = null;
+// Cache base dummy log entries per session to ensure deterministic data
+let cachedBaseDummyEntries: LogEntry[] | null = null;
+
+// Session-added log entries for interactive web preview (e.g. clicking "Used a pouch")
+let sessionAddedEntries: LogEntry[] = [];
+let nextSessionId: number | null = null;
 
 // Generate dummy log entries for the last 14 days
 // Cached per session to ensure deterministic data for visual QA
 export function getDummyLogEntries(): LogEntry[] {
-  // Return cached data if available
-  if (cachedDummyEntries) {
-    return cachedDummyEntries;
+  // Return combined base + session entries (keeps preview interactive)
+  const base = ensureBaseDummyEntries();
+  return [...base, ...sessionAddedEntries].sort((a, b) => b.timestamp - a.timestamp);
+}
+
+function ensureBaseDummyEntries(): LogEntry[] {
+  if (cachedBaseDummyEntries) {
+    return cachedBaseDummyEntries;
   }
 
   const now = Date.now();
@@ -101,6 +110,32 @@ export function getDummyLogEntries(): LogEntry[] {
   }
   
   // Sort by timestamp descending (most recent first)
-  cachedDummyEntries = entries.sort((a, b) => b.timestamp - a.timestamp);
-  return cachedDummyEntries;
+  cachedBaseDummyEntries = entries.sort((a, b) => b.timestamp - a.timestamp);
+  nextSessionId = cachedBaseDummyEntries.length + 1;
+  return cachedBaseDummyEntries;
+}
+
+/**
+ * Add a log entry to the in-memory web preview store so UI updates instantly.
+ * This is ONLY for web preview; native platforms use SQLite.
+ */
+export function addDummyLogEntry(type: LogEntryType, timestamp?: number): number {
+  const base = ensureBaseDummyEntries();
+  if (nextSessionId === null) {
+    nextSessionId = base.length + 1;
+  }
+  const now = Date.now();
+  const entryTimestamp = timestamp ?? now;
+
+  const id = nextSessionId;
+  nextSessionId += 1;
+
+  sessionAddedEntries.push({
+    id,
+    type,
+    timestamp: entryTimestamp,
+    createdAt: now,
+  });
+
+  return id;
 }

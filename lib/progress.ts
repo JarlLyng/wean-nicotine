@@ -13,6 +13,7 @@ export interface WeeklyProgress {
   baselineTotal: number;
   actualUsed: number;
   pouchesAvoided: number;
+  cravingsResisted: number;
   moneySaved?: number; // in cents
   daysUnderLimit: number;
   daysOverLimit: number;
@@ -20,7 +21,7 @@ export interface WeeklyProgress {
 
 export interface Milestone {
   id: string;
-  type: 'first_day_under_limit' | 'week_under_limit' | 'pouches_avoided' | 'money_saved';
+  type: 'first_day_under_limit' | 'week_under_limit' | 'pouches_avoided' | 'money_saved' | 'cravings_resisted';
   title: string;
   description: string;
   achievedAt: number;
@@ -47,6 +48,7 @@ export async function calculateWeeklyProgress(
       baselineTotal: 0,
       actualUsed: 0,
       pouchesAvoided: 0,
+      cravingsResisted: 0,
       daysUnderLimit: 0,
       daysOverLimit: 0,
     };
@@ -66,6 +68,7 @@ export async function calculateWeeklyProgress(
       baselineTotal: 0,
       actualUsed: 0,
       pouchesAvoided: 0,
+      cravingsResisted: 0,
       moneySaved: 0,
       daysUnderLimit: 0,
       daysOverLimit: 0,
@@ -79,6 +82,8 @@ export async function calculateWeeklyProgress(
 
   const usedLogs = logs.filter((log) => log.type === 'pouch_used');
   const actualUsed = usedLogs.length;
+  const resistedLogs = logs.filter((log) => log.type === 'craving_resisted');
+  const cravingsResisted = resistedLogs.length;
 
   // Calculate baseline for the week (only count days from start date to today)
   // Count actual days, not just time difference
@@ -98,6 +103,7 @@ export async function calculateWeeklyProgress(
       baselineTotal,
       actualUsed,
       pouchesAvoided,
+      cravingsResisted,
     });
   }
 
@@ -140,6 +146,7 @@ export async function calculateWeeklyProgress(
     baselineTotal,
     actualUsed,
     pouchesAvoided,
+    cravingsResisted,
     moneySaved,
     daysUnderLimit,
     daysOverLimit,
@@ -169,6 +176,7 @@ export async function calculateTotalProgress(
   settings: TaperSettings
 ): Promise<{
   totalPouchesAvoided: number;
+  totalCravingsResisted: number;
   totalMoneySaved?: number;
   daysSinceStart: number;
   averageDailyUsage: number;
@@ -184,6 +192,7 @@ export async function calculateTotalProgress(
 
   const usedLogs = logs.filter((log) => log.type === 'pouch_used');
   const totalUsed = usedLogs.length;
+  const totalCravingsResisted = logs.filter((log) => log.type === 'craving_resisted').length;
 
   const rawDaysSinceStart = Math.ceil((today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
   const daysSinceStart = Math.max(0, rawDaysSinceStart);
@@ -201,6 +210,7 @@ export async function calculateTotalProgress(
 
   return {
     totalPouchesAvoided,
+    totalCravingsResisted,
     totalMoneySaved,
     daysSinceStart,
     averageDailyUsage,
@@ -270,6 +280,21 @@ export async function detectMilestones(
         description: `You've avoided ${threshold} pouches compared to your baseline!`,
         achievedAt: today.getTime(),
         value: totalProgress.totalPouchesAvoided,
+      });
+    }
+  }
+
+  // Check for resisted cravings milestones (10, 25, 50, 100, 250)
+  const resistedThresholds = [10, 25, 50, 100, 250];
+  for (const threshold of resistedThresholds) {
+    if (totalProgress.totalCravingsResisted >= threshold) {
+      milestones.push({
+        id: `cravings_resisted_${threshold}`,
+        type: 'cravings_resisted',
+        title: `${threshold} Cravings Resisted`,
+        description: `You've resisted ${threshold} cravings. That's real progress.`,
+        achievedAt: today.getTime(),
+        value: totalProgress.totalCravingsResisted,
       });
     }
   }
