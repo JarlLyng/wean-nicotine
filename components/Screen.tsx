@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Platform, StyleProp, TextStyle, ViewStyle } fro
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { spacing, typography } from '@/lib/theme';
 import { useDesignTokens } from '@/lib/design';
+import { GradientBackground } from '@/components/GradientBackground';
 
 interface ScreenProps {
   children: React.ReactNode;
@@ -14,11 +15,26 @@ interface ScreenProps {
 export function Screen({ children, title, variant = 'plain', style }: ScreenProps) {
   const { colors } = useDesignTokens();
   const styles = createStyles(colors);
+  const isGradient = variant === 'gradient';
+
+  const Container = ({ children: containerChildren }: { children: React.ReactNode }) => {
+    if (isGradient) {
+      return (
+        <GradientBackground
+          variant="subtle"
+          style={[styles.container, styles.gradientContainer, style]}>
+          {containerChildren}
+        </GradientBackground>
+      );
+    }
+
+    return <View style={[styles.container, style]}>{containerChildren}</View>;
+  };
   
   // On web, use simpler structure to reduce DOM nesting
   if (Platform.OS === 'web') {
     return (
-      <View style={[styles.container, style]}>
+      <Container>
         {title && (
           <Text style={styles.plainTitle} accessibilityRole="header">
             {title}
@@ -27,13 +43,13 @@ export function Screen({ children, title, variant = 'plain', style }: ScreenProp
         <View style={styles.content}>
           {children}
         </View>
-      </View>
+      </Container>
     );
   }
 
   // Native platforms use SafeAreaView
   return (
-    <View style={[styles.container, style]}>
+    <Container>
       <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
         {title && (
           <Text style={styles.plainTitle} accessibilityRole="header">
@@ -44,7 +60,7 @@ export function Screen({ children, title, variant = 'plain', style }: ScreenProp
           {children}
         </View>
       </SafeAreaView>
-    </View>
+    </Container>
   );
 }
 
@@ -54,6 +70,10 @@ const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => {
     container: {
       flex: 1,
       backgroundColor: colors.background.app,
+    } as ViewStyle,
+    gradientContainer: {
+      // Let the gradient show through
+      backgroundColor: 'transparent',
     } as ViewStyle,
     safeArea: {
       flex: 1,

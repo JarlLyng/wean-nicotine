@@ -31,7 +31,7 @@ export async function saveUserPlan(
 
   if (existing && !forceCreate) {
     // Update existing
-    console.log('saveUserPlan: Updating existing plan with ID:', existing.id);
+    if (__DEV__) console.log('saveUserPlan: Updating existing plan with ID:', existing.id);
     await db.runAsync(
       `UPDATE user_plan 
        SET settings_id = ?,
@@ -50,7 +50,7 @@ export async function saveUserPlan(
     return existing.id;
   } else {
     // Create new
-    console.log('saveUserPlan: Creating new plan');
+    if (__DEV__) console.log('saveUserPlan: Creating new plan');
     const result = await db.runAsync(
       `INSERT INTO user_plan 
        (settings_id, current_daily_allowance, last_calculated_date, created_at, updated_at)
@@ -63,7 +63,7 @@ export async function saveUserPlan(
         now,
       ]
     );
-    console.log('saveUserPlan: Created new plan with ID:', result.lastInsertRowId);
+    if (__DEV__) console.log('saveUserPlan: Created new plan with ID:', result.lastInsertRowId);
     return result.lastInsertRowId;
   }
 }

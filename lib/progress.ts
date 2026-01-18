@@ -239,17 +239,18 @@ export async function detectMilestones(
   const days = getDaysInRange(startDate, today);
   let firstDayUnderLimit: Date | null = null;
 
+  // Pre-group used logs per day to avoid O(n^2) filtering
+  const usedCountsByDay = new Map<string, number>();
+  for (const log of usedLogs) {
+    const logDate = new Date(log.timestamp);
+    const dayKey = `${logDate.getFullYear()}-${logDate.getMonth()}-${logDate.getDate()}`;
+    usedCountsByDay.set(dayKey, (usedCountsByDay.get(dayKey) || 0) + 1);
+  }
+
   for (const day of days) {
     const dayAllowance = calculateDailyAllowance(settings, day);
-    const dayLogs = usedLogs.filter((log) => {
-      const logDate = new Date(log.timestamp);
-      return (
-        logDate.getFullYear() === day.getFullYear() &&
-        logDate.getMonth() === day.getMonth() &&
-        logDate.getDate() === day.getDate()
-      );
-    });
-    const dayUsed = dayLogs.length;
+    const dayKey = `${day.getFullYear()}-${day.getMonth()}-${day.getDate()}`;
+    const dayUsed = usedCountsByDay.get(dayKey) || 0;
 
     if (dayUsed <= dayAllowance && dayUsed > 0) {
       firstDayUnderLimit = day;
@@ -324,7 +325,9 @@ export async function detectMilestones(
  */
 export function getCurrentWeek(): { start: Date; end: Date } {
   const today = new Date();
-  const dayOfWeek = today.getDay(); // 0 = Sunday, 1 = Monday, etc.
+  // Monday-start weeks (common in DK/SE/NO)
+  // Convert JS day (Sun=0..Sat=6) to Monday-first index (Mon=0..Sun=6)
+  const dayOfWeek = (today.getDay() + 6) % 7;
   const start = new Date(today);
   start.setDate(today.getDate() - dayOfWeek);
   start.setHours(0, 0, 0, 0);

@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, ScrollView, Switch, Alert, ViewStyle, TextStyle } from 'react-native';
-import { useState, useEffect } from 'react';
-import { useRouter } from 'expo-router';
+import { useState, useCallback } from 'react';
+import { useRouter, useFocusEffect } from 'expo-router';
 import { Screen } from '@/components/Screen';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -29,16 +29,17 @@ export default function SettingsScreen() {
   const [isLoadingNotifications, setIsLoadingNotifications] = useState(true);
   const styles = createStyles(colors);
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       const currentSettings = await getTaperSettings();
       setSettings(currentSettings);
     } catch (error) {
       console.error('Error loading data:', error);
     }
-  };
+  }, []);
 
-  const loadNotificationStatus = async () => {
+  const loadNotificationStatus = useCallback(async () => {
+    setIsLoadingNotifications(true);
     try {
       // Only check permission status, don't request it
       const { getPermissionsAsync } = await import('expo-notifications');
@@ -55,12 +56,16 @@ export default function SettingsScreen() {
     } finally {
       setIsLoadingNotifications(false);
     }
-  };
-
-  useEffect(() => {
-    loadData();
-    loadNotificationStatus();
   }, []);
+
+  // Refresh when returning to Settings tab (tabs are often not unmounted)
+  useFocusEffect(
+    useCallback(() => {
+      loadData();
+      loadNotificationStatus();
+      return () => {};
+    }, [loadData, loadNotificationStatus])
+  );
 
   const handleToggleDailyCheckIn = async (enabled: boolean) => {
     if (!hasPermission) {

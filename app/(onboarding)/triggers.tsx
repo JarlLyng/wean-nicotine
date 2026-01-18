@@ -29,6 +29,12 @@ export default function TriggersScreen() {
   const baseline = params.baseline ? parseInt(params.baseline as string, 10) : 10;
   const price = params.price ? parseFloat(params.price as string) : 0;
   const currency = (params.currency as CurrencyCode | undefined) ?? 'DKK';
+  const devLog = (...args: unknown[]) => {
+    if (__DEV__) console.log(...args);
+  };
+  const devWarn = (...args: unknown[]) => {
+    if (__DEV__) console.warn(...args);
+  };
 
   const [selectedTriggers, setSelectedTriggers] = useState<string[]>([]);
   const [isSaving, setIsSaving] = useState(false);
@@ -47,7 +53,7 @@ export default function TriggersScreen() {
     try {
       // On web, just navigate to home (database doesn't work on web)
       if (Platform.OS === 'web') {
-        console.log('Onboarding complete (web): Navigating to home (database not available on web)');
+        devLog('Onboarding complete (web): Navigating to home (database not available on web)');
         await new Promise(resolve => setTimeout(resolve, 200));
         router.replace('/(tabs)/home');
         return;
@@ -55,7 +61,7 @@ export default function TriggersScreen() {
 
       // Ensure we start fresh - delete any existing settings first
       // This handles the case where user did "Start Over" and is re-doing onboarding
-      console.log('Onboarding complete: Deleting any existing data...');
+      devLog('Onboarding complete: Deleting any existing data...');
       const { deleteTaperSettings } = await import('@/lib/db-settings');
       const { deleteUserPlan } = await import('@/lib/db-user-plan');
       const { deleteAllLogEntries } = await import('@/lib/db-log-entries');
@@ -69,13 +75,13 @@ export default function TriggersScreen() {
       const checkSettings = await getTaperSettings();
       const checkPlan = await getUserPlan();
       if (checkSettings || checkPlan) {
-        console.warn('Warning: Data not fully deleted before creating new', { checkSettings, checkPlan });
+        devWarn('Warning: Data not fully deleted before creating new', { checkSettings, checkPlan });
       } else {
-        console.log('Onboarding complete: Data successfully deleted');
+        devLog('Onboarding complete: Data successfully deleted');
       }
 
       // Save taper settings (force create new since we just deleted)
-      console.log('Onboarding complete: Saving new taper settings...', { baseline, price, triggers: selectedTriggers });
+      devLog('Onboarding complete: Saving new taper settings...', { baseline, price, triggers: selectedTriggers });
       const settings = generateDefaultTaperPlan(baseline, 5);
       const settingsId = await saveTaperSettings({
         ...settings,
@@ -83,20 +89,20 @@ export default function TriggersScreen() {
         currency,
         triggers: selectedTriggers.length > 0 ? selectedTriggers : undefined, // Save selected triggers
       }, true); // forceCreate = true to ensure we create new instead of updating
-      console.log('Onboarding complete: Settings saved with ID:', settingsId);
+      devLog('Onboarding complete: Settings saved with ID:', settingsId);
 
       // Calculate initial daily allowance using the saved settings
       const savedSettings = await getTaperSettings();
       if (!savedSettings) {
         throw new Error('Failed to retrieve saved settings');
       }
-      console.log('Onboarding complete: Retrieved saved settings:', savedSettings);
+      devLog('Onboarding complete: Retrieved saved settings:', savedSettings);
 
       const dailyAllowance = calculateDailyAllowance(savedSettings, new Date());
-      console.log('Onboarding complete: Calculated daily allowance:', dailyAllowance);
+      devLog('Onboarding complete: Calculated daily allowance:', dailyAllowance);
 
       // Save user plan (force create new since we just deleted)
-      console.log('Onboarding complete: Saving user plan...');
+      devLog('Onboarding complete: Saving user plan...');
       await saveUserPlan({
         settingsId,
         currentDailyAllowance: dailyAllowance,
@@ -107,7 +113,7 @@ export default function TriggersScreen() {
       const verifyPlan = await getUserPlan();
       const verifySettings = await getTaperSettings();
       
-      console.log('Onboarding complete: Verifying saved data...', { 
+      devLog('Onboarding complete: Verifying saved data...', { 
         verifyPlan: verifyPlan ? {
           id: verifyPlan.id,
           settingsId: verifyPlan.settingsId,
@@ -129,10 +135,10 @@ export default function TriggersScreen() {
       
       // Calculate what the allowance should be
       const expectedAllowance = calculateDailyAllowance(verifySettings, new Date());
-      console.log('Onboarding complete: Expected daily allowance:', expectedAllowance);
-      console.log('Onboarding complete: Saved daily allowance:', verifyPlan.currentDailyAllowance);
-      console.log('Onboarding complete: Settings updatedAt:', new Date(verifySettings.updatedAt).toISOString());
-      console.log('Onboarding complete: Data verified successfully. Navigating to home...');
+      devLog('Onboarding complete: Expected daily allowance:', expectedAllowance);
+      devLog('Onboarding complete: Saved daily allowance:', verifyPlan.currentDailyAllowance);
+      devLog('Onboarding complete: Settings updatedAt:', new Date(verifySettings.updatedAt).toISOString());
+      devLog('Onboarding complete: Data verified successfully. Navigating to home...');
 
       // Small delay to ensure database writes are complete
       await new Promise(resolve => setTimeout(resolve, 200));
