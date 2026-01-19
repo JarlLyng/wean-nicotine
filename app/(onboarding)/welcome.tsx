@@ -12,8 +12,8 @@ export default function WelcomeScreen() {
   const styles = createStyles(colors);
 
   return (
-    <Screen variant="gradient" title="Welcome">
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+    <Screen title="Welcome">
+      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.content}>
           <Card variant="flat" style={styles.card} padding="lg">
             <Text style={styles.title}>Welcome to Taper</Text>

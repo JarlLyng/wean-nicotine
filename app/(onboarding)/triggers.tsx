@@ -153,8 +153,8 @@ export default function TriggersScreen() {
   };
 
   return (
-    <Screen variant="gradient" title="Common Triggers">
-      <ScrollView contentContainerStyle={triggersStyles.scrollContent}>
+    <Screen title="Common Triggers">
+      <ScrollView contentContainerStyle={triggersStyles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={triggersStyles.content}>
           <Card variant="flat" style={triggersStyles.card} padding="lg">
             <Text style={triggersStyles.description}>

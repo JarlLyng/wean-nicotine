@@ -1,23 +1,23 @@
 import { Screen } from '@/components/Screen';
 import { Card } from '@/components/ui/Card';
+import { formatMoney } from '@/lib/currency';
 import { getTaperSettings } from '@/lib/db-settings';
+import { useDesignTokens } from '@/lib/design';
 import type { TaperSettings } from '@/lib/models';
 import {
-    calculateTotalProgress,
-    calculateWeeklyProgress,
-    detectMilestones,
-    getCurrentWeek,
-    getPreviousWeek,
-    type Milestone,
-    type WeeklyProgress,
+  calculateTotalProgress,
+  calculateWeeklyProgress,
+  detectMilestones,
+  getCurrentWeek,
+  getPreviousWeek,
+  type Milestone,
+  type WeeklyProgress,
 } from '@/lib/progress';
 import { animations, borderRadius, spacing, typography } from '@/lib/theme';
-import { useDesignTokens } from '@/lib/design';
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useRef, useState } from 'react';
 import { RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Animated, { FadeInRight } from 'react-native-reanimated';
-import { formatMoney } from '@/lib/currency';
 
 export default function ProgressScreen() {
   const { colors } = useDesignTokens();
@@ -152,9 +152,10 @@ export default function ProgressScreen() {
   const screenKey = `progress-screen-${settingsId || 'no-settings'}`;
   
   return (
-    <Screen key={screenKey} variant="gradient" title="Progress">
+    <Screen key={screenKey} title="Progress">
       <ScrollView
         contentContainerStyle={progressStyles.scrollContent}
+        showsVerticalScrollIndicator={false}
         refreshControl={<RefreshControl refreshing={isLoading} onRefresh={loadData} />}>
         <View style={progressStyles.content}>
           {/* Week Selector */}
@@ -194,7 +195,7 @@ export default function ProgressScreen() {
             </View>
             {weekData.moneySaved !== undefined && weekData.moneySaved !== null && weekData.moneySaved > 0 && (
               <View style={progressStyles.moneyRow}>
-                <Text style={progressStyles.moneyLabel}>Money Saved:</Text>
+                <Text style={progressStyles.moneyLabel}>Money Saved</Text>
                 <Text style={progressStyles.moneyValue}>
                   {formatMoney(weekData.moneySaved ?? 0, currency)}
                 </Text>
@@ -208,11 +209,11 @@ export default function ProgressScreen() {
             <View style={progressStyles.statRow}>
               <View style={progressStyles.statItem}>
                 <Text style={progressStyles.statValue}>{Number(totalProgress.totalPouchesAvoided ?? 0)}</Text>
-                <Text style={progressStyles.statLabel}>Total Pouches Avoided</Text>
+                <Text style={progressStyles.statLabel}>Pouches Avoided</Text>
               </View>
               <View style={progressStyles.statItem}>
                 <Text style={progressStyles.statValue}>{Number(totalProgress.daysSinceStart ?? 0)}</Text>
-                <Text style={progressStyles.statLabel}>Days Since Start</Text>
+                <Text style={progressStyles.statLabel}>Total Days</Text>
               </View>
               <View style={progressStyles.statItem}>
                 <Text style={progressStyles.statValue}>{Number(totalProgress.totalCravingsResisted ?? 0)}</Text>
@@ -221,7 +222,7 @@ export default function ProgressScreen() {
             </View>
             {totalProgress.totalMoneySaved !== undefined && totalProgress.totalMoneySaved !== null && totalProgress.totalMoneySaved > 0 && (
               <View style={progressStyles.moneyRow}>
-                <Text style={progressStyles.moneyLabel}>Total Money Saved:</Text>
+                <Text style={progressStyles.moneyLabel}>Total Money Saved</Text>
                 <Text style={progressStyles.moneyValue}>
                   {formatMoney(totalProgress.totalMoneySaved ?? 0, currency)}
                 </Text>
@@ -273,7 +274,9 @@ const createProgressStyles = (colors: ReturnType<typeof useDesignTokens>['colors
   },
   content: {
     flex: 1,
-    padding: spacing.md,
+    // Match preview: remove left/right padding, keep vertical padding
+    paddingVertical: spacing.md,
+    paddingHorizontal: 0,
   },
   loadingContainer: {
     flex: 1,
@@ -317,7 +320,7 @@ const createProgressStyles = (colors: ReturnType<typeof useDesignTokens>['colors
     color: colors.onPrimary,
   },
   card: {
-    marginBottom: spacing.md,
+    marginBottom: spacing.lg,
   },
   cardTitle: {
     ...typography.xl,
@@ -340,7 +343,8 @@ const createProgressStyles = (colors: ReturnType<typeof useDesignTokens>['colors
     marginBottom: spacing.xs,
   },
   statLabel: {
-    ...typography.caption,
+    // Match preview: 12px labels (e.g. "Days Under Limit")
+    ...typography.xs,
     color: colors.text.secondary,
   },
   moneyRow: {

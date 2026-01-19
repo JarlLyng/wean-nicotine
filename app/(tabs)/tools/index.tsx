@@ -34,8 +34,8 @@ export default function ToolsScreen() {
   const toolsStyles = createToolsStyles(colors);
 
   return (
-    <Screen variant="gradient" title="Support Tools">
-      <ScrollView contentContainerStyle={toolsStyles.scrollContent}>
+    <Screen title="Support Tools">
+      <ScrollView contentContainerStyle={toolsStyles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={toolsStyles.content}>
           <Text style={toolsStyles.subtitle}>
             Tools to help you through cravings and difficult moments. Use them whenever you need
@@ -80,7 +80,8 @@ const createToolsStyles = (colors: ReturnType<typeof useDesignTokens>['colors'])
   content: {
     flex: 1,
     paddingTop: spacing.lg,
-    paddingHorizontal: spacing.md,
+    // Match preview: remove left/right padding, keep top padding
+    paddingHorizontal: 0,
   },
   subtitle: {
     ...typography.body,

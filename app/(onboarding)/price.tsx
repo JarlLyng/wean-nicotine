@@ -43,8 +43,8 @@ export default function PriceScreen() {
 
 
   return (
-    <Screen variant="gradient" title="Price Per Can">
-      <ScrollView contentContainerStyle={priceStyles.scrollContent}>
+    <Screen title="Price Per Can">
+      <ScrollView contentContainerStyle={priceStyles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={priceStyles.content}>
           <Card variant="flat" style={priceStyles.card} padding="lg">
             <Text style={priceStyles.description}>

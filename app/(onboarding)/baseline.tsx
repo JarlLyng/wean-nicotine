@@ -30,8 +30,8 @@ export default function BaselineScreen() {
   };
 
   return (
-    <Screen variant="gradient" title="Set Your Baseline">
-      <ScrollView contentContainerStyle={baselineStyles.scrollContent}>
+    <Screen title="Set Your Baseline">
+      <ScrollView contentContainerStyle={baselineStyles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={baselineStyles.content}>
           <Card variant="flat" style={baselineStyles.card} padding="lg">
             <Text style={baselineStyles.description}>

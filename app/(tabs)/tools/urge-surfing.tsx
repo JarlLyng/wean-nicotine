@@ -9,7 +9,7 @@ export default function UrgeSurfingScreen() {
   
   return (
     <Screen>
-      <ScrollView contentContainerStyle={urgeStyles.scrollContent}>
+      <ScrollView contentContainerStyle={urgeStyles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={urgeStyles.content}>
           <Text style={urgeStyles.title}>Urge Surfing</Text>
           <Text style={urgeStyles.subtitle}>

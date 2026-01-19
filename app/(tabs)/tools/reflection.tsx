@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-nati
 import { Screen } from '@/components/Screen';
 import { spacing } from '@/lib/theme';
 import { useDesignTokens } from '@/lib/design';
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
 const REFLECTION_PROMPTS = [
   {
@@ -59,9 +60,14 @@ export default function ReflectionScreen() {
     setShowFollowUp(true);
   };
 
+  const buttonLabel = showFollowUp ? 'Next Prompt' : "I've reflected on this";
+  const buttonOnPress = showFollowUp ? handleNext : handleShowFollowUp;
+  const buttonStyle = showFollowUp ? reflectionStyles.nextButton : reflectionStyles.button;
+  const buttonTextStyle = showFollowUp ? reflectionStyles.nextButtonText : reflectionStyles.buttonText;
+
   return (
     <Screen>
-      <ScrollView contentContainerStyle={reflectionStyles.scrollContent}>
+      <ScrollView contentContainerStyle={reflectionStyles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={reflectionStyles.content}>
           <Text style={reflectionStyles.title}>Reflection</Text>
           <Text style={reflectionStyles.subtitle}>
@@ -73,19 +79,21 @@ export default function ReflectionScreen() {
             <Text style={reflectionStyles.promptText}>{currentPrompt.prompt}</Text>
           </View>
 
-          {!showFollowUp ? (
-            <TouchableOpacity style={reflectionStyles.button} onPress={handleShowFollowUp}>
-              <Text style={reflectionStyles.buttonText}>I&apos;ve reflected on this</Text>
-            </TouchableOpacity>
-          ) : (
-            <>
-              <TouchableOpacity style={reflectionStyles.nextButton} onPress={handleNext}>
-                <Text style={reflectionStyles.nextButtonText}>Next Prompt</Text>
-              </TouchableOpacity>
-              <View style={reflectionStyles.followUpContainer}>
-                <Text style={reflectionStyles.followUpText}>{currentPrompt.followUp}</Text>
-              </View>
-            </>
+          <TouchableOpacity style={buttonStyle} onPress={buttonOnPress}>
+            <Animated.Text
+              // Force remount of label so FadeOut/FadeIn runs on swap
+              key={buttonLabel}
+              entering={FadeIn.duration(160)}
+              exiting={FadeOut.duration(160)}
+              style={buttonTextStyle}>
+              {buttonLabel}
+            </Animated.Text>
+          </TouchableOpacity>
+
+          {showFollowUp && (
+            <View style={reflectionStyles.followUpContainer}>
+              <Text style={reflectionStyles.followUpText}>{currentPrompt.followUp}</Text>
+            </View>
           )}
 
           <View style={reflectionStyles.infoBox}>

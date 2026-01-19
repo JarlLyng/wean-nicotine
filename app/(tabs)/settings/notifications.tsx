@@ -86,7 +86,7 @@ export default function NotificationsScreen() {
 
   return (
     <Screen>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.content}>
           <Text style={styles.title}>Notifications</Text>
           <Text style={styles.subtitle}>

@@ -84,6 +84,8 @@ export function CustomTabBar({ state, descriptors, navigation }: BottomTabBarPro
       style={[
         styles.tabBarOuter,
         {
+          // Match preview: don't let the tabbar safe-area padding be transparent
+          backgroundColor: colors.surface.default,
           paddingHorizontal: spacing.md,
           paddingBottom: spacing.sm + insets.bottom,
         },
@@ -150,6 +152,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderRadius: borderRadius.lg,
     ...shadows.md,
+    // Match preview shadow: 0px 2px 8px rgba(0,0,0,0.16)
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.16,
+    shadowRadius: 8,
+    elevation: 8,
     justifyContent: 'space-around',
     alignItems: 'center',
     minHeight: 64,

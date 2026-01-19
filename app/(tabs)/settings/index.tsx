@@ -101,8 +101,8 @@ export default function SettingsScreen() {
   };
 
   return (
-    <Screen variant="gradient" title="Settings">
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+    <Screen title="Settings">
+      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.content}>
           {/* Notifications Section */}
           <Card variant="elevated" style={styles.section} padding="lg">
@@ -150,23 +150,6 @@ export default function SettingsScreen() {
             </View>
           </Card>
 
-          {/* Reset Taper Section */}
-          <Card variant="elevated" style={styles.section} padding="lg">
-            <View style={styles.sectionTitleRow}>
-              <Text style={styles.sectionTitle}>Taper Plan</Text>
-            </View>
-            <Text style={styles.sectionDescription}>
-              If you&apos;ve had a setback or want to start fresh, you can reset your taper plan.
-            </Text>
-            <Button
-              title="Reset Taper Plan"
-              onPress={() => router.push('/(tabs)/settings/reset-taper')}
-              variant="secondary"
-              style={{ ...styles.resetButton, borderColor: colors.error }}
-              textStyle={{ color: colors.error }}
-            />
-          </Card>
-
           {/* Current Settings Info */}
           {settings && (
             <Card variant="elevated" style={styles.section} padding="lg">
@@ -205,6 +188,23 @@ export default function SettingsScreen() {
               )}
             </Card>
           )}
+
+          {/* Reset Taper Section */}
+          <Card variant="elevated" style={styles.section} padding="lg">
+            <View style={styles.sectionTitleRow}>
+              <Text style={styles.sectionTitle}>Taper Plan</Text>
+            </View>
+            <Text style={styles.sectionDescription}>
+              If you&apos;ve had a setback or want to start fresh, you can reset your taper plan.
+            </Text>
+            <Button
+              title="Reset Taper Plan"
+              onPress={() => router.push('/(tabs)/settings/reset-taper')}
+              variant="secondary"
+              style={{ ...styles.resetButton, borderColor: colors.error }}
+              textStyle={{ color: colors.error }}
+            />
+          </Card>
         </View>
       </ScrollView>
     </Screen>
@@ -243,6 +243,7 @@ const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => {
     sectionTitle: {
       ...typography.xl,
       fontWeight: '600' as const,
+      lineHeight: 28,
       color: colors.text.primary,
     } as TextStyle,
     infoRow: {
@@ -297,7 +298,8 @@ const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => {
     } as ViewStyle,
     triggerText: {
       ...typography.xs,
-      color: colors.primary,
+      // Match preview: chip text should be black in light mode (and readable in dark mode)
+      color: colors.text.primary,
       fontWeight: '500' as const,
     } as TextStyle,
   };

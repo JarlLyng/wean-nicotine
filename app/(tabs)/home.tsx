@@ -28,7 +28,7 @@ export default function HomeScreen() {
   const isLoadingRef = useRef(false); // Prevent multiple simultaneous loads
   const loadTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null); // Debounce timer
 
-  const loadData = useCallback(async () => {
+  const loadData = useCallback(async ({ showLoading = true }: { showLoading?: boolean } = {}) => {
     // Clear any pending loads
     if (loadTimeoutRef.current) {
       clearTimeout(loadTimeoutRef.current);
@@ -43,7 +43,7 @@ export default function HomeScreen() {
     isLoadingRef.current = true;
     try {
       devLog('Home screen: Loading data...');
-      setIsLoading(true);
+      if (showLoading) setIsLoading(true);
       // Get settings first (needed to recreate user_plan if missing)
       const settings = await getTaperSettings();
       devLog('Home screen: Settings:', settings);
@@ -196,7 +196,10 @@ export default function HomeScreen() {
       setIsLogging(true);
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
       await createLogEntry('pouch_used');
-      await loadData(); // Reload to update count
+      // Optimistic UI update (avoid full-screen reload/spinner)
+      setPouchesUsedToday((prev) => prev + 1);
+      // Reconcile in background (no loading state)
+      void loadData({ showLoading: false });
     } catch (error) {
       console.error('Error logging pouch:', error);
     } finally {
@@ -209,7 +212,10 @@ export default function HomeScreen() {
       setIsLogging(true);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       await createLogEntry('craving_resisted');
-      await loadData(); // Reload to update count
+      // Optimistic UI update (avoid full-screen reload/spinner)
+      setCravingsResistedToday((prev) => prev + 1);
+      // Reconcile in background (no loading state)
+      void loadData({ showLoading: false });
     } catch (error) {
       console.error('Error logging craving resisted:', error);
     } finally {
@@ -290,7 +296,7 @@ export default function HomeScreen() {
   });
   
   return (
-    <Screen key={screenKey} variant="gradient" title="Today">
+    <Screen key={screenKey} title="Today">
       <View style={styles.content}>
         {isLoading ? (
           <Card variant="elevated" style={styles.card} padding="lg">
@@ -305,7 +311,6 @@ export default function HomeScreen() {
               {/* Progress Ring Visualization */}
               <View style={styles.progressContainer}>
                 <ProgressRing
-                  key={`progress-${dailyAllowance}-${pouchesUsedToday}`}
                   progress={
                     dailyAllowance > 0 
                       ? Math.min(pouchesUsedToday / dailyAllowance, 1)
