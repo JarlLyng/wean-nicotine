@@ -4,6 +4,27 @@ This roadmap describes the planned development of **Taper**, from initial founda
 
 The roadmap is **phase-based**, not date-based, to allow calm, iterative development and room for learning.
 
+## Progress tracker (Updated 2026-01-20)
+
+This section is the “at a glance” view of where the project stands right now.
+
+### Overall status
+- [x] Phase 0 — Foundation (Setup & Structure)
+- [x] Phase 1 — Core Taper Flow (MVP core)
+- [x] Phase 2 — Progress & Motivation
+- [x] Phase 3 — Support & Resilience
+- [ ] Phase 4 — Notifications & Polish (partially done)
+- [ ] Phase 4.5 — Design & Visual Polish (partially done)
+- [ ] Phase 5 — Release Preparation
+
+### Phase 4 — what’s done vs pending
+- [x] Optional daily check-in notification
+- [ ] Trigger-based reminder notifications (notification logic exists, needs product/UI wiring)
+- [x] App icon + launch screen
+- [x] Basic analytics (local only, no tracking)
+- [ ] Accessibility pass (Dynamic Type, contrast) — do a final sweep before release
+- [ ] Sentry production setup (DSN/org/project + release tagging) before App Store builds
+
 ---
 
 ## Phase 0 — Foundation (Setup & Structure)
@@ -89,7 +110,7 @@ The roadmap is **phase-based**, not date-based, to allow calm, iterative develop
   - Breathing exercise
   - Urge surfing explanation
   - Short reflection prompts
-- “Reset taper” flow after slip-ups
+- “Start Over” flow (full data reset + return to onboarding)
 - Smart suggestions:
   - Slow down taper if limits are consistently exceeded
 
@@ -105,7 +126,7 @@ The roadmap is **phase-based**, not date-based, to allow calm, iterative develop
 
 ### Deliverables
 - Optional daily check-in notification
-- Trigger-based reminder notifications
+- Trigger-based reminder notifications (planned)
 - Polished copy and microcopy
 - Accessibility pass (Dynamic Type, contrast)
 - App icon + launch screen
