@@ -121,6 +121,9 @@ export default function SettingsScreen() {
                 disabled={isLoadingNotifications}
                 trackColor={{ false: colors.border.subtle, true: colors.primary }}
                 thumbColor={colors.surface.default}
+                accessibilityRole="switch"
+                accessibilityLabel="Daily check-in notification"
+                accessibilityHint="Turns the daily reminder on or off."
               />
             </View>
             {dailyCheckInEnabled && hasPermission && (
@@ -146,6 +149,9 @@ export default function SettingsScreen() {
                 }}
                 trackColor={{ false: colors.border.subtle, true: colors.primary }}
                 thumbColor={colors.surface.default}
+                accessibilityRole="switch"
+                accessibilityLabel="Light mode"
+                accessibilityHint="Turns light mode on or off."
               />
             </View>
           </Card>

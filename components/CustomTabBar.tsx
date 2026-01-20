@@ -57,9 +57,10 @@ function TabItem({ route, options, isFocused, onPress, onLongPress, colors }: Ta
 
   return (
     <TouchableOpacity
-      accessibilityRole="button"
-      accessibilityState={isFocused ? { selected: true } : {}}
-      accessibilityLabel={options.tabBarAccessibilityLabel}
+      accessibilityRole="tab"
+      accessibilityState={{ selected: isFocused }}
+      accessibilityLabel={options.tabBarAccessibilityLabel ?? String(label)}
+      accessibilityHint={`Go to ${String(label)} tab.`}
       testID={options.tabBarTestID}
       onPress={onPress}
       onLongPress={onLongPress}

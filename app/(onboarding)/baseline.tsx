@@ -53,6 +53,8 @@ export default function BaselineScreen() {
                 placeholderTextColor={colors.text.secondary}
                 keyboardType="number-pad"
                 autoFocus
+                accessibilityLabel="Baseline pouches per day"
+                accessibilityHint="Enter how many pouches you typically use per day."
               />
               <Text style={baselineStyles.inputLabel}>pouches per day</Text>
             </View>

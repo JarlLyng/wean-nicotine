@@ -79,7 +79,12 @@ export default function ReflectionScreen() {
             <Text style={reflectionStyles.promptText}>{currentPrompt.prompt}</Text>
           </View>
 
-          <TouchableOpacity style={buttonStyle} onPress={buttonOnPress}>
+          <TouchableOpacity
+            style={buttonStyle}
+            onPress={buttonOnPress}
+            accessibilityRole="button"
+            accessibilityLabel={buttonLabel}
+            accessibilityHint={showFollowUp ? 'Shows the next reflection prompt.' : 'Shows a follow-up message.'}>
             <Animated.Text
               // Force remount of label so FadeOut/FadeIn runs on swap
               key={buttonLabel}

@@ -174,7 +174,11 @@ export default function TriggersScreen() {
                       triggersStyles.triggerButton,
                       selectedTriggers.includes(trigger) && triggersStyles.triggerButtonSelected,
                     ]}
-                    onPress={() => toggleTrigger(trigger)}>
+                    onPress={() => toggleTrigger(trigger)}
+                    accessibilityRole="button"
+                    accessibilityLabel={trigger}
+                    accessibilityHint="Toggles this trigger on or off."
+                    accessibilityState={{ selected: selectedTriggers.includes(trigger) }}>
                     <Text
                       style={[
                         triggersStyles.triggerText,

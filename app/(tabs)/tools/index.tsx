@@ -48,6 +48,9 @@ export default function ToolsScreen() {
                 key={tool.id}
                 entering={FadeInDown.delay(index * 100).duration(animations.normal).springify()}>
                 <TouchableOpacity
+                  accessibilityRole="button"
+                  accessibilityLabel={tool.title}
+                  accessibilityHint={tool.description}
                   onPress={() => router.push(`/(tabs)/tools/${tool.id}` as any)}>
                   <Card variant="elevated" style={toolsStyles.toolCard} padding="lg">
                     <View style={toolsStyles.iconContainer}>

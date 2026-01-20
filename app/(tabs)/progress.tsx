@@ -5,13 +5,13 @@ import { getTaperSettings } from '@/lib/db-settings';
 import { useDesignTokens } from '@/lib/design';
 import type { TaperSettings } from '@/lib/models';
 import {
-  calculateTotalProgress,
-  calculateWeeklyProgress,
-  detectMilestones,
-  getCurrentWeek,
-  getPreviousWeek,
-  type Milestone,
-  type WeeklyProgress,
+    calculateTotalProgress,
+    calculateWeeklyProgress,
+    detectMilestones,
+    getCurrentWeek,
+    getPreviousWeek,
+    type Milestone,
+    type WeeklyProgress,
 } from '@/lib/progress';
 import { animations, borderRadius, spacing, typography } from '@/lib/theme';
 import { useFocusEffect } from 'expo-router';
@@ -162,6 +162,9 @@ export default function ProgressScreen() {
           <View style={progressStyles.weekSelector}>
             <TouchableOpacity
               style={[progressStyles.weekButton, !showPreviousWeek && progressStyles.weekButtonActive]}
+              accessibilityRole="button"
+              accessibilityLabel="This week"
+              accessibilityState={{ selected: !showPreviousWeek }}
               onPress={() => setShowPreviousWeek(false)}>
               <Text style={[progressStyles.weekButtonText, !showPreviousWeek && progressStyles.weekButtonTextActive]}>
                 This Week
@@ -169,6 +172,9 @@ export default function ProgressScreen() {
             </TouchableOpacity>
             <TouchableOpacity
               style={[progressStyles.weekButton, showPreviousWeek && progressStyles.weekButtonActive]}
+              accessibilityRole="button"
+              accessibilityLabel="Previous week"
+              accessibilityState={{ selected: showPreviousWeek }}
               onPress={() => setShowPreviousWeek(true)}>
               <Text style={[progressStyles.weekButtonText, showPreviousWeek && progressStyles.weekButtonTextActive]}>
                 Previous Week

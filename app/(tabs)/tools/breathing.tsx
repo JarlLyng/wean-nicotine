@@ -118,13 +118,23 @@ export default function BreathingExercise() {
           <Text style={breathingStyles.instruction}>{currentPhase.instruction}</Text>
 
           {!isRunning && (
-            <TouchableOpacity style={breathingStyles.startButton} onPress={handleStart}>
+            <TouchableOpacity
+              style={breathingStyles.startButton}
+              onPress={handleStart}
+              accessibilityRole="button"
+              accessibilityLabel="Start breathing exercise"
+              accessibilityHint="Starts a guided breathing cycle.">
               <Text style={breathingStyles.startButtonText}>Start</Text>
             </TouchableOpacity>
           )}
 
           {isRunning && (
-            <TouchableOpacity style={breathingStyles.stopButton} onPress={handleStop}>
+            <TouchableOpacity
+              style={breathingStyles.stopButton}
+              onPress={handleStop}
+              accessibilityRole="button"
+              accessibilityLabel="Stop breathing exercise"
+              accessibilityHint="Stops the exercise.">
               <Text style={breathingStyles.stopButtonText}>Stop</Text>
             </TouchableOpacity>
           )}

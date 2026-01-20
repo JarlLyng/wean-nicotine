@@ -107,6 +107,9 @@ export default function NotificationsScreen() {
                 onValueChange={handleToggleDailyCheckIn}
                 trackColor={{ false: colors.border.subtle, true: colors.primary }}
                 thumbColor={colors.surface.default}
+                accessibilityRole="switch"
+                accessibilityLabel="Daily check-in"
+                accessibilityHint="Turns the daily reminder on or off."
               />
             </View>
 

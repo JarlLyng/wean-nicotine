@@ -111,7 +111,11 @@ export default function ResetTaperScreen() {
           <TouchableOpacity
             style={[styles.startOverButton, isStartingOver && styles.startOverButtonDisabled]}
             onPress={handleStartOver}
-            disabled={isStartingOver}>
+            disabled={isStartingOver}
+            accessibilityRole="button"
+            accessibilityLabel="Start Over"
+            accessibilityHint="Deletes all data and returns to onboarding."
+            accessibilityState={{ disabled: isStartingOver }}>
             <Text style={styles.startOverButtonText}>
               {isStartingOver ? 'Starting Over...' : 'Start Over (Go to Onboarding)'}
             </Text>
@@ -120,7 +124,11 @@ export default function ResetTaperScreen() {
           <TouchableOpacity 
             style={styles.cancelButton} 
             onPress={() => router.back()}
-            disabled={isStartingOver}>
+            disabled={isStartingOver}
+            accessibilityRole="button"
+            accessibilityLabel="Cancel"
+            accessibilityHint="Go back to settings."
+            accessibilityState={{ disabled: isStartingOver }}>
             <Text style={styles.cancelButtonText}>Cancel</Text>
           </TouchableOpacity>
         </View>

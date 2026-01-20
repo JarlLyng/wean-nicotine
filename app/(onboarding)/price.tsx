@@ -93,6 +93,8 @@ export default function PriceScreen() {
                 placeholder="e.g., 50.00"
                 placeholderTextColor={colors.text.secondary}
                 keyboardType="decimal-pad"
+                accessibilityLabel={`Price per can (${currency})`}
+                accessibilityHint="Optional. Leave blank if you don't want to track money saved."
               />
               <Text style={priceStyles.inputLabel}>price per can ({currency})</Text>
             </View>
