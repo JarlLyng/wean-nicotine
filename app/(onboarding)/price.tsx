@@ -51,7 +51,7 @@ export default function PriceScreen() {
               If you&apos;d like to track money saved, enter the price you pay per can.
             </Text>
             <Text style={priceStyles.hint}>
-              This is optional — you can add it later in settings if needed.
+              This is optional — leave it blank if you don&apos;t want to track money saved.
             </Text>
 
             <View style={priceStyles.currencyContainer}>

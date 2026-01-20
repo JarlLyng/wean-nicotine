@@ -161,7 +161,7 @@ export default function TriggersScreen() {
               Select situations where you typically use snus. This helps us understand your patterns.
             </Text>
             <Text style={triggersStyles.hint}>
-              This is optional — you can add triggers later if needed.
+              This is optional — you can skip this step if you want.
             </Text>
 
             <View style={triggersStyles.triggersContainer}>

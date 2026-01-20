@@ -16,8 +16,6 @@ export default function WelcomeScreen() {
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.content}>
           <Card variant="flat" style={styles.card} padding="lg">
-            <Text style={styles.title}>Welcome to Taper</Text>
-            
             <View style={styles.section}>
               <Text style={styles.heading}>What is tapering?</Text>
               <Text style={styles.text}>
@@ -68,13 +66,6 @@ const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => {
     card: {
       marginBottom: spacing.lg,
     } as ViewStyle,
-    title: {
-      ...typography['3xl'],
-      fontWeight: '700' as const,
-      color: colors.text.primary,
-      marginBottom: spacing.xl,
-      textAlign: 'center' as const,
-    } as TextStyle,
     section: {
       marginBottom: spacing.lg,
     } as ViewStyle,
