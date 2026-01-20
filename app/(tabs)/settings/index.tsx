@@ -189,16 +189,16 @@ export default function SettingsScreen() {
             </Card>
           )}
 
-          {/* Reset Taper Section */}
+          {/* Start Over Section */}
           <Card variant="elevated" style={styles.section} padding="lg">
             <View style={styles.sectionTitleRow}>
-              <Text style={styles.sectionTitle}>Taper Plan</Text>
+              <Text style={styles.sectionTitle}>Start Over</Text>
             </View>
             <Text style={styles.sectionDescription}>
-              If you&apos;ve had a setback or want to start fresh, you can reset your taper plan.
+              Delete all your data and return to onboarding.
             </Text>
             <Button
-              title="Reset Taper Plan"
+              title="Start Over"
               onPress={() => router.push('/(tabs)/settings/reset-taper')}
               variant="secondary"
               style={{ ...styles.resetButton, borderColor: colors.error }}

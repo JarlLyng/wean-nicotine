@@ -24,3 +24,9 @@ export async function setPreference(key: string, value: string): Promise<void> {
   );
 }
 
+export async function deleteAllPreferences(): Promise<void> {
+  if (Platform.OS === 'web') return;
+  const db = await getDatabase();
+  await db.runAsync('DELETE FROM app_preferences');
+}
+

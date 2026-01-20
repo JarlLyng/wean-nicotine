@@ -4,94 +4,24 @@ import { useRouter } from 'expo-router';
 import { Screen } from '@/components/Screen';
 import { spacing } from '@/lib/theme';
 import { useDesignTokens } from '@/lib/design';
-import { getTaperSettings, saveTaperSettings, deleteTaperSettings } from '@/lib/db-settings';
-import { saveUserPlan, deleteUserPlan } from '@/lib/db-user-plan';
-import { calculateDailyAllowance } from '@/lib/taper-plan';
+import { deleteTaperSettings } from '@/lib/db-settings';
+import { deleteUserPlan } from '@/lib/db-user-plan';
+import { deleteAllPreferences } from '@/lib/db-preferences';
+import { cancelAllNotifications } from '@/lib/notifications';
 
 export default function ResetTaperScreen() {
   const router = useRouter();
   const { colors } = useDesignTokens();
   const styles = createStyles(colors);
-  const [isResetting, setIsResetting] = useState(false);
   const [isStartingOver, setIsStartingOver] = useState(false);
   const devLog = (...args: unknown[]) => {
     if (__DEV__) console.log(...args);
   };
 
-  const handleReset = async () => {
-    Alert.alert(
-      'Reset Taper Plan',
-      'This will reset your taper plan to start fresh from today. Your progress history will be preserved. Are you sure?',
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-        {
-          text: 'Reset',
-          style: 'destructive',
-          onPress: async () => {
-            setIsResetting(true);
-            try {
-              const currentSettings = await getTaperSettings();
-              if (!currentSettings) {
-                Alert.alert('Error', 'No settings found');
-                return;
-              }
-
-              // Reset taper plan with same baseline but new start date
-              // Preserve triggers when resetting (they're not part of the taper plan)
-              const newSettings = {
-                baselinePouchesPerDay: currentSettings.baselinePouchesPerDay,
-                pricePerCan: currentSettings.pricePerCan,
-                currency: currentSettings.currency,
-                weeklyReductionPercent: currentSettings.weeklyReductionPercent,
-                startDate: Date.now(),
-                triggers: currentSettings.triggers, // Preserve triggers
-              };
-
-              const settingsId = await saveTaperSettings(newSettings);
-
-              // Calculate new daily allowance
-              const dailyAllowance = calculateDailyAllowance(
-                {
-                  ...newSettings,
-                  id: settingsId,
-                  createdAt: Date.now(),
-                  updatedAt: Date.now(),
-                },
-                new Date()
-              );
-
-              // Save new plan
-              await saveUserPlan({
-                settingsId,
-                currentDailyAllowance: dailyAllowance,
-                lastCalculatedDate: Date.now(),
-              });
-
-              Alert.alert('Success', 'Your taper plan has been reset. Starting fresh from today.', [
-                {
-                  text: 'OK',
-                  onPress: () => router.back(),
-                },
-              ]);
-            } catch (error) {
-              console.error('Error resetting taper:', error);
-              Alert.alert('Error', 'Failed to reset taper plan. Please try again.');
-            } finally {
-              setIsResetting(false);
-            }
-          },
-        },
-      ]
-    );
-  };
-
   const handleStartOver = async () => {
     Alert.alert(
       'Start Over',
-      'This will delete all your settings and progress, and take you back to onboarding. Are you sure?',
+      'This will delete ALL your data and take you back to onboarding. Are you sure?',
       [
         {
           text: 'Cancel',
@@ -103,6 +33,10 @@ export default function ResetTaperScreen() {
           onPress: async () => {
             setIsStartingOver(true);
             try {
+              // Cancel scheduled notifications (daily check-in, trigger reminders, etc.)
+              devLog('Starting over: Canceling notifications...');
+              await cancelAllNotifications();
+
               // Delete all settings, plans, and log entries
               devLog('Starting over: Deleting taper settings...');
               await deleteTaperSettings();
@@ -111,6 +45,8 @@ export default function ResetTaperScreen() {
               devLog('Starting over: Deleting all log entries...');
               const { deleteAllLogEntries } = await import('@/lib/db-log-entries');
               await deleteAllLogEntries();
+              devLog('Starting over: Deleting app preferences...');
+              await deleteAllPreferences();
               
               // Verify deletion
               const { getTaperSettings } = await import('@/lib/db-settings');
@@ -150,41 +86,32 @@ export default function ResetTaperScreen() {
     <Screen>
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.content}>
-          <Text style={styles.title}>Reset Taper Plan</Text>
+          <Text style={styles.title}>Start Over</Text>
           <Text style={styles.subtitle}>
-            If you&apos;ve had a setback or want to start fresh, you can reset your taper plan.
+            This will permanently delete all your data and take you back to onboarding.
           </Text>
 
           <View style={styles.infoBox}>
-            <Text style={styles.infoTitle}>What happens when you reset:</Text>
+            <Text style={styles.infoTitle}>What happens when you start over:</Text>
             <Text style={styles.infoText}>
-              • Your taper plan starts fresh from today{'\n'}
-              • Your baseline and reduction rate stay the same{'\n'}
-              • All your progress history is preserved{'\n'}
-              • You can continue tracking from this new starting point
+              • Your taper settings are deleted{'\n'}
+              • Your progress history (logs) is deleted{'\n'}
+              • Your plan + allowance are deleted{'\n'}
+              • Scheduled notifications are canceled{'\n'}
+              • You&apos;ll return to onboarding
             </Text>
           </View>
 
           <View style={styles.encouragementBox}>
             <Text style={styles.encouragementText}>
-              Remember: setbacks are normal and part of the journey. Resetting isn&apos;t failure —
-              it&apos;s giving yourself a fresh start.
+              This is a full reset. If you&apos;re sure, tap Start Over below.
             </Text>
           </View>
 
           <TouchableOpacity
-            style={[styles.resetButton, isResetting && styles.resetButtonDisabled]}
-            onPress={handleReset}
-            disabled={isResetting || isStartingOver}>
-            <Text style={styles.resetButtonText}>
-              {isResetting ? 'Resetting...' : 'Reset Taper Plan'}
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[styles.startOverButton, (isResetting || isStartingOver) && styles.startOverButtonDisabled]}
+            style={[styles.startOverButton, isStartingOver && styles.startOverButtonDisabled]}
             onPress={handleStartOver}
-            disabled={isResetting || isStartingOver}>
+            disabled={isStartingOver}>
             <Text style={styles.startOverButtonText}>
               {isStartingOver ? 'Starting Over...' : 'Start Over (Go to Onboarding)'}
             </Text>
@@ -193,7 +120,7 @@ export default function ResetTaperScreen() {
           <TouchableOpacity 
             style={styles.cancelButton} 
             onPress={() => router.back()}
-            disabled={isResetting || isStartingOver}>
+            disabled={isStartingOver}>
             <Text style={styles.cancelButtonText}>Cancel</Text>
           </TouchableOpacity>
         </View>
@@ -251,21 +178,6 @@ const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) =>
       color: colors.text.secondary,
       lineHeight: 20,
       textAlign: 'center',
-    },
-    resetButton: {
-      backgroundColor: colors.shared.error,
-      padding: spacing.md,
-      borderRadius: 8,
-      alignItems: 'center',
-      marginBottom: spacing.md,
-    },
-    resetButtonDisabled: {
-      opacity: 0.6,
-    },
-    resetButtonText: {
-      color: colors.onError,
-      fontSize: 18,
-      fontWeight: '600',
     },
     startOverButton: {
       backgroundColor: colors.shared.warning,
