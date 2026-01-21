@@ -32,7 +32,7 @@ export default function WelcomeScreen() {
                 • Set your baseline (current daily usage){'\n'}
                 • Follow a gradual reduction plan{'\n'}
                 • Track your progress without pressure{'\n'}
-                • Adjust as needed — no judgment
+                • Start over anytime — no judgment
               </Text>
             </View>
 

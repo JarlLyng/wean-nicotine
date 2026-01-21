@@ -90,7 +90,7 @@ export default function NotificationsScreen() {
         <View style={styles.content}>
           <Text style={styles.title}>Notifications</Text>
           <Text style={styles.subtitle}>
-            Choose when and how you&apos;d like to receive gentle reminders and check-ins.
+            Manage your daily check-in reminder.
           </Text>
 
           {/* Daily Check-In */}
