@@ -199,7 +199,7 @@ This section is the “at a glance” view of where the project stands right now
 ### Deliverables
 - App Store description & keywords
 - Screenshots
-- Privacy policy (local-only data)
+- Privacy policy (live): `https://taper.iamjarl.com/privacy/`
 - TestFlight build
 - Final bug fixes
 - EAS Build configuration

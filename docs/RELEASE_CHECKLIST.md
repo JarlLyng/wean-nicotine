@@ -64,9 +64,9 @@ Android + iPad kan komme senere.
   - Hvad gør det anderledes?
 - [ ] **Keywords**: snus, nicotine, taper, quit, reduce, pouches, etc.
 - [ ] **Kategori**: Health & Fitness (eller relevant)
-- [ ] **Privacy Policy URL**: (se næste sektion)
-- [ ] **Support URL**: (hvis relevant)
-- [ ] **Marketing URL**: (hvis relevant)
+- [x] **Privacy Policy URL**: `https://taper.iamjarl.com/privacy/`
+- [ ] **Support URL**: `https://taper.iamjarl.com/support`
+- [ ] **Marketing URL**: `https://taper.iamjarl.com/`
 - [ ] **Age Rating**: Konfigurer baseret på indhold
 - [ ] **App Preview Video**: (valgfrit, men anbefalet)
  
@@ -77,14 +77,15 @@ Android + iPad kan komme senere.
 ## 🔒 Privacy & Legal
 
 ### Privacy Policy
-- [ ] Opret privacy policy side/website
+- [x] Opret privacy policy side/website
 - [ ] Beskriv:
   - Alle data gemmes lokalt på enheden
   - Ingen data sendes til servere (undtagen Sentry error tracking)
   - Ingen tracking (evt. lokal statistik tæller kun på device)
   - Ingen tredjeparts services
   - Hvordan data kan slettes (via app)
-- [ ] Host privacy policy (GitHub Pages, Netlify, eller lignende)
+- [x] Host privacy policy (GitHub Pages, Netlify, eller lignende)
+- [x] Link: `https://taper.iamjarl.com/privacy/`
 - [ ] (Valgfrit) Tilføj link til privacy policy i appen
 
 ### Terms of Service

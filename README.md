@@ -83,6 +83,11 @@ Taper helps users:
 **Note:** This app is designed for mobile (iOS/Android) only. SQLite is not available on web browsers.
 Initial release focus is **iPhone**.
 
+## 🔗 Links
+
+- **Marketing site**: `https://taper.iamjarl.com/`
+- **Privacy policy**: `https://taper.iamjarl.com/privacy/`
+
 ---
 
 ## 📂 Project structure
