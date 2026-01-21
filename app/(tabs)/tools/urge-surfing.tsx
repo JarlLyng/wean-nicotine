@@ -149,7 +149,8 @@ const createUrgeStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) 
   },
   encouragementText: {
     fontSize: 16,
-    color: colors.success,
+    // Avoid low-contrast semantic green as body text.
+    color: colors.text.secondary,
     lineHeight: 24,
     textAlign: 'center',
     fontWeight: '500',

@@ -342,11 +342,16 @@ const createProgressStyles = (colors: ReturnType<typeof useDesignTokens>['colors
   },
   statRow: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+    rowGap: spacing.md,
     marginBottom: spacing.md,
   },
   statItem: {
     alignItems: 'center',
+    flexGrow: 1,
+    flexBasis: '30%',
+    minWidth: 96,
   },
   statValue: {
     fontSize: 32,
@@ -420,7 +425,8 @@ const createProgressStyles = (colors: ReturnType<typeof useDesignTokens>['colors
   },
   encouragementText: {
     ...typography.caption,
-    color: colors.success,
+    // Avoid low-contrast semantic green as body text (better for Dynamic Type/contrast).
+    color: colors.text.secondary,
     lineHeight: 20,
     textAlign: 'center',
   },

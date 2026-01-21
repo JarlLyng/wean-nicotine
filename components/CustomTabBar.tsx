@@ -43,13 +43,19 @@ function TabItem({ route, options, isFocused, onPress, onLongPress, colors }: Ta
 
   const labelAnimatedStyle = useAnimatedStyle(() => {
     return {
-      opacity: withTiming(isFocused ? 1 : 0, {
+      // Avoid animating height to prevent clipping with Dynamic Type.
+      // Keep label space stable and only animate opacity/position.
+      opacity: withTiming(isFocused ? 1 : 0.85, {
         duration: animations.slow,
       }),
-      height: withTiming(isFocused ? 14 : 0, {
-        duration: animations.slow,
-      }),
-      marginTop: withTiming(isFocused ? spacing.xs : 0, {
+      transform: [
+        {
+          translateY: withTiming(isFocused ? 0 : -2, {
+            duration: animations.slow,
+          }),
+        },
+      ],
+      marginTop: withTiming(spacing.xs, {
         duration: animations.slow,
       }),
     };
@@ -68,7 +74,8 @@ function TabItem({ route, options, isFocused, onPress, onLongPress, colors }: Ta
       <View style={styles.iconWrapper}>
         <Icon name={getIconName()} size={24} color={color} weight="regular" />
       </View>
-      <AnimatedText 
+      <AnimatedText
+        numberOfLines={1}
         style={[styles.tabLabel, { color }, labelAnimatedStyle]}>
         {label}
       </AnimatedText>
@@ -161,8 +168,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
     minHeight: 64,
-    height: 64,
     paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
   },
   tabItem: {
     flex: 1,
@@ -177,7 +184,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   tabLabel: {
-    fontSize: 10,
+    fontSize: 11,
     marginTop: spacing.xs,
     marginBottom: 0,
     textAlign: 'center',

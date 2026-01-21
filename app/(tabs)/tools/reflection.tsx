@@ -187,7 +187,8 @@ const createReflectionStyles = (colors: ReturnType<typeof useDesignTokens>['colo
   },
   infoText: {
     fontSize: 14,
-    color: colors.success,
+    // Avoid low-contrast semantic green as body text.
+    color: colors.text.secondary,
     lineHeight: 20,
     textAlign: 'center',
   },

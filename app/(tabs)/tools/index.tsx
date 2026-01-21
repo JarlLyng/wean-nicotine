@@ -124,7 +124,8 @@ const createToolsStyles = (colors: ReturnType<typeof useDesignTokens>['colors'])
   },
   infoText: {
     ...typography.caption,
-    color: colors.success,
+    // Avoid low-contrast semantic green as body text.
+    color: colors.text.secondary,
     textAlign: 'center',
   },
 });
