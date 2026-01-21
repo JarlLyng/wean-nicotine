@@ -225,7 +225,8 @@ const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => {
     content: {
       flex: 1,
       paddingTop: spacing.lg,
-      paddingHorizontal: spacing.md,
+      // Screen-komponenten giver allerede horizontal padding
+      paddingHorizontal: 0,
     } as ViewStyle,
     section: {
       marginBottom: spacing.md,

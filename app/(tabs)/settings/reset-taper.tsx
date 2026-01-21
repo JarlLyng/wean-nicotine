@@ -83,10 +83,9 @@ export default function ResetTaperScreen() {
   };
 
   return (
-    <Screen>
+    <Screen title="Start Over">
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.content}>
-          <Text style={styles.title}>Start Over</Text>
           <Text style={styles.subtitle}>
             This will permanently delete all your data and take you back to onboarding.
           </Text>
@@ -144,19 +143,17 @@ const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) =>
     },
     content: {
       flex: 1,
-      padding: spacing.md,
-    },
-    title: {
-      fontSize: 28,
-      fontWeight: '700',
-      marginBottom: spacing.sm,
-      color: colors.text.primary,
+      paddingTop: spacing.lg,
+      // Screen-komponenten giver allerede horizontal padding
+      paddingHorizontal: 0,
+      paddingBottom: spacing.lg,
     },
     subtitle: {
       fontSize: 16,
       color: colors.text.secondary,
       marginBottom: spacing.xl,
       lineHeight: 24,
+      textAlign: 'center',
     },
     infoBox: {
       backgroundColor: colors.background.muted,

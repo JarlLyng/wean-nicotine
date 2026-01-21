@@ -61,7 +61,10 @@ const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => {
     } as ViewStyle,
     content: {
       flex: 1,
-      padding: spacing.md,
+      paddingTop: spacing.lg,
+      // Screen-komponenten giver allerede horizontal padding
+      paddingHorizontal: 0,
+      paddingBottom: spacing.lg,
     } as ViewStyle,
     card: {
       marginBottom: spacing.lg,

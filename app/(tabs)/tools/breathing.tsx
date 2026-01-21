@@ -96,7 +96,6 @@ export default function BreathingExercise() {
   return (
     <Screen>
       <View style={breathingStyles.container}>
-        <Text style={breathingStyles.title}>Breathing Exercise</Text>
         <Text style={breathingStyles.subtitle}>
           Take a moment to center yourself. This exercise can help reduce cravings.
         </Text>
@@ -154,19 +153,17 @@ export default function BreathingExercise() {
 const createBreathingStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => StyleSheet.create({
   container: {
     flex: 1,
-    padding: spacing.md,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: spacing.sm,
-    color: colors.text.primary,
+    paddingTop: spacing.md,
+    // Screen-komponenten giver allerede horizontal padding
+    paddingHorizontal: 0,
+    paddingBottom: spacing.lg,
   },
   subtitle: {
     fontSize: 16,
     color: colors.text.secondary,
     marginBottom: spacing.xl,
     lineHeight: 24,
+    textAlign: 'center',
   },
   exerciseContainer: {
     flex: 1,

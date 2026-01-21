@@ -228,19 +228,18 @@ export default function NotificationsScreen() {
 
   if (isLoading) {
     return (
-      <Screen>
+      <Screen title="Notifications">
         <View style={styles.loadingContainer}>
-          <Text>Loading...</Text>
+          <Text style={styles.loadingText}>Loading...</Text>
         </View>
       </Screen>
     );
   }
 
   return (
-    <Screen>
+    <Screen title="Notifications">
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.content}>
-          <Text style={styles.title}>Notifications</Text>
           <Text style={styles.subtitle}>
             Manage your daily check-in reminder.
           </Text>
@@ -329,24 +328,26 @@ const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => {
     } as ViewStyle,
     content: {
       flex: 1,
-      padding: spacing.md,
+      paddingTop: spacing.lg,
+      // Screen-komponenten giver allerede horizontal padding
+      paddingHorizontal: 0,
+      paddingBottom: spacing.lg,
     } as ViewStyle,
     loadingContainer: {
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
     } as ViewStyle,
-    title: {
-      fontSize: 32,
-      fontWeight: '700' as const,
-      marginBottom: spacing.sm,
-      color: colors.text.primary,
+    loadingText: {
+      fontSize: 14,
+      color: colors.text.secondary,
     } as TextStyle,
     subtitle: {
       fontSize: 16,
       color: colors.text.secondary,
       marginBottom: spacing.xl,
       lineHeight: 24,
+      textAlign: 'center' as const,
     } as TextStyle,
     section: {
       backgroundColor: colors.background.muted,

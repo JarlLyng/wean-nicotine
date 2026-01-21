@@ -387,7 +387,7 @@ export default function HomeScreen() {
         ) : (
           <Card variant="elevated" style={styles.card} padding="lg">
             <Text style={styles.placeholderText}>
-              Daily allowance will appear here
+              No plan yet. Complete onboarding to see your daily allowance.
             </Text>
           </Card>
         )}

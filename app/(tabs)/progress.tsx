@@ -16,7 +16,7 @@ import {
 import { animations, borderRadius, spacing, typography } from '@/lib/theme';
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useRef, useState } from 'react';
-import { RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Animated, { FadeInRight } from 'react-native-reanimated';
 
 export default function ProgressScreen() {
@@ -117,7 +117,8 @@ export default function ProgressScreen() {
     return (
       <Screen>
         <View style={progressStyles.loadingContainer}>
-          <Text>Loading progress...</Text>
+          <ActivityIndicator size="large" color={colors.primary} />
+          <Text style={progressStyles.loadingText}>Loading progress...</Text>
         </View>
       </Screen>
     );
@@ -127,7 +128,7 @@ export default function ProgressScreen() {
     return (
       <Screen>
         <View style={progressStyles.emptyContainer}>
-          <Text style={progressStyles.emptyText}>No progress data available</Text>
+          <Text style={progressStyles.emptyText}>No data yet. Complete onboarding to start tracking.</Text>
         </View>
       </Screen>
     );
@@ -142,7 +143,7 @@ export default function ProgressScreen() {
     return (
       <Screen>
         <View style={progressStyles.emptyContainer}>
-          <Text style={progressStyles.emptyText}>No progress data available</Text>
+          <Text style={progressStyles.emptyText}>No data yet. Complete onboarding to start tracking.</Text>
         </View>
       </Screen>
     );
@@ -288,6 +289,11 @@ const createProgressStyles = (colors: ReturnType<typeof useDesignTokens>['colors
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  loadingText: {
+    ...typography.caption,
+    color: colors.text.secondary,
+    marginTop: spacing.sm,
   },
   emptyContainer: {
     flex: 1,

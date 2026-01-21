@@ -11,7 +11,6 @@ export default function UrgeSurfingScreen() {
     <Screen>
       <ScrollView contentContainerStyle={urgeStyles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={urgeStyles.content}>
-          <Text style={urgeStyles.title}>Urge Surfing</Text>
           <Text style={urgeStyles.subtitle}>
             A technique to help you ride out cravings without giving in
           </Text>
@@ -94,19 +93,17 @@ const createUrgeStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) 
   },
   content: {
     flex: 1,
-    padding: spacing.md,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: spacing.sm,
-    color: colors.text.primary,
+    paddingTop: spacing.md,
+    // Screen-komponenten giver allerede horizontal padding
+    paddingHorizontal: 0,
+    paddingBottom: spacing.lg,
   },
   subtitle: {
     fontSize: 16,
     color: colors.text.secondary,
     marginBottom: spacing.xl,
     lineHeight: 24,
+    textAlign: 'center',
   },
   section: {
     marginBottom: spacing.xl,

@@ -69,7 +69,6 @@ export default function ReflectionScreen() {
     <Screen>
       <ScrollView contentContainerStyle={reflectionStyles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={reflectionStyles.content}>
-          <Text style={reflectionStyles.title}>Reflection</Text>
           <Text style={reflectionStyles.subtitle}>
             Take a moment to reflect. There&apos;s no right or wrong answer — just honest
             self-awareness.
@@ -119,19 +118,17 @@ const createReflectionStyles = (colors: ReturnType<typeof useDesignTokens>['colo
   },
   content: {
     flex: 1,
-    padding: spacing.md,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: spacing.sm,
-    color: colors.text.primary,
+    paddingTop: spacing.md,
+    // Screen-komponenten giver allerede horizontal padding
+    paddingHorizontal: 0,
+    paddingBottom: spacing.lg,
   },
   subtitle: {
     fontSize: 16,
     color: colors.text.secondary,
     marginBottom: spacing.xl,
     lineHeight: 24,
+    textAlign: 'center',
   },
   promptContainer: {
     backgroundColor: colors.background.muted,
