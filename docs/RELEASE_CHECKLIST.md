@@ -1,26 +1,28 @@
-# Release Checklist — Taper
+# Release Checklist — Taper (iPhone / iOS v1.0)
 
-Dette dokument indeholder alle opgaver der skal gennemføres før appen kan releases til App Store og Google Play.
+Dette dokument er en praktisk checklist til **første iOS release (iPhone-only)**.
+Android + iPad kan komme senere.
 
 ---
 
 ## 🔧 Teknisk Setup
 
 ### EAS Build Konfiguration
-- [ ] Opret `eas.json` med build profiler:
-  - Development build (til testing)
-  - Production build (til release)
-  - iOS og Android konfigurationer
-- [ ] Test EAS Build lokalt: `eas build --profile development --platform ios`
-- [ ] Verificer at alle dependencies bygger korrekt
+- [ ] Opret `eas.json` med build profiler (iOS):
+  - Development build (til device-testing)
+  - Production build (til TestFlight/App Store)
+- [ ] Log ind i EAS: `eas login`
+- [ ] Konfigurér projektet: `eas build:configure`
+- [ ] Første iOS build: `eas build --profile development --platform ios`
+- [ ] (Når Apple Developer Account er klar) Første TestFlight build: `eas build --profile production --platform ios`
 
 ### Sentry Production Setup
 - [ ] Opret EAS Secret for `EXPO_PUBLIC_SENTRY_DSN`:
   ```bash
   eas secret:create --scope project --name EXPO_PUBLIC_SENTRY_DSN --value "https://din-dsn@sentry.io/project-id" --type string
   ```
-- [ ] Test at Sentry modtager events i production build
-- [ ] Verificer at Sentry ikke sender events i development (kun console logs)
+- [ ] Verificer at Sentry ikke sender events i `__DEV__` (kun console logs)
+- [ ] Test at Sentry modtager events i en production/TestFlight build (kræver Apple Developer Account)
 
 ### Version & Build Numbers
 - [ ] Opdater `version` i `app.json` (f.eks. "1.0.0")
@@ -30,33 +32,22 @@ Dette dokument indeholder alle opgaver der skal gennemføres før appen kan rele
     "buildNumber": "1"
   }
   ```
-- [ ] Tilføj Android `versionCode` i `app.json`:
-  ```json
-  "android": {
-    "versionCode": 1
-  }
-  ```
 
 ---
 
 ## 🎨 Assets & Branding
 
 ### App Icon & Splash Screen
-- [ ] Verificer at alle app ikoner er korrekte:
+- [ ] Verificer at app icon + assets er korrekte:
   - `assets/images/icon.png` (1024x1024)
-  - `assets/images/android-icon-foreground.png`
-  - `assets/images/android-icon-background.png`
-  - `assets/images/android-icon-monochrome.png`
-- [ ] Test splash screen på iOS og Android
+- [ ] Test splash screen på iOS
 - [ ] Verificer at splash screen farver matcher app tema
 
 ### App Store Screenshots
-- [ ] Design og generer screenshots for iPhone (alle størrelser):
+- [ ] Design og generer screenshots for iPhone (App Store Connect krav):
   - 6.7" Display (iPhone 14 Pro Max, etc.)
   - 6.5" Display (iPhone 11 Pro Max, etc.)
   - 5.5" Display (iPhone 8 Plus, etc.)
-- [ ] Design og generer screenshots for iPad (hvis relevant)
-- [ ] Design og generer screenshots for Android (alle størrelser)
 - [ ] Screenshots skal vise: onboarding, home screen, progress screen, tools
 
 ---
@@ -78,16 +69,8 @@ Dette dokument indeholder alle opgaver der skal gennemføres før appen kan rele
 - [ ] **Marketing URL**: (hvis relevant)
 - [ ] **Age Rating**: Konfigurer baseret på indhold
 - [ ] **App Preview Video**: (valgfrit, men anbefalet)
-
-### Google Play Console
-- [ ] **App Navn**: "Taper"
-- [ ] **Kort beskrivelse**: (80 tegn)
-- [ ] **Fuld beskrivelse**: Samme som iOS
-- [ ] **App Icon**: 512x512 PNG
-- [ ] **Feature Graphic**: 1024x500 PNG
-- [ ] **Kategori**: Health & Fitness
-- [ ] **Privacy Policy URL**: (se næste sektion)
-- [ ] **Content Rating**: Konfigurer baseret på indhold
+ 
+> Android release er ikke i scope for v1.0 (iPhone-only).
 
 ---
 
@@ -98,11 +81,11 @@ Dette dokument indeholder alle opgaver der skal gennemføres før appen kan rele
 - [ ] Beskriv:
   - Alle data gemmes lokalt på enheden
   - Ingen data sendes til servere (undtagen Sentry error tracking)
-  - Ingen tracking eller analytics
+  - Ingen tracking (evt. lokal statistik tæller kun på device)
   - Ingen tredjeparts services
   - Hvordan data kan slettes (via app)
 - [ ] Host privacy policy (GitHub Pages, Netlify, eller lignende)
-- [ ] Tilføj link til privacy policy i app settings (valgfrit)
+- [ ] (Valgfrit) Tilføj link til privacy policy i appen
 
 ### Terms of Service
 - [ ] Overvej om Terms of Service er nødvendig
@@ -120,18 +103,10 @@ Dette dokument indeholder alle opgaver der skal gennemføres før appen kan rele
   - [ ] Onboarding (ny bruger)
   - [ ] Daily logging (pouches brugt)
   - [ ] Progress tracking
-  - [ ] Settings & reset taper
+  - [ ] Settings & Start Over
   - [ ] Notifications (hvis aktiveret)
-- [ ] Test på forskellige iOS versioner (minimum iOS 13+)
-- [ ] Test på forskellige enheder (iPhone, iPad)
-
-### Google Play Internal Testing (Android)
-- [ ] Byg production build: `eas build --profile production --platform android`
-- [ ] Upload til Google Play Internal Testing
-- [ ] Inviter testers
-- [ ] Test alle flows (samme som iOS)
-- [ ] Test på forskellige Android versioner (minimum Android 8+)
-- [ ] Test på forskellige enheder
+- [ ] Test på forskellige iOS versioner (vælg minimum efter Expo/React Native support)
+- [ ] Test på mindst 2 iPhone størrelser (lille + stor)
 
 ### Functional Testing
 - [ ] **Onboarding Flow**:
@@ -148,7 +123,7 @@ Dette dokument indeholder alle opgaver der skal gennemføres før appen kan rele
   - [ ] Milestones vises
   - [ ] Money saved beregnes korrekt
 - [ ] **Settings**:
-  - [ ] Reset taper fungerer
+  - [ ] Start Over fungerer
   - [ ] Notifications kan aktiveres/deaktiveres
 - [ ] **Tools**:
   - [ ] Alle tools åbner korrekt
@@ -159,8 +134,8 @@ Dette dokument indeholder alle opgaver der skal gennemføres før appen kan rele
 ### Edge Cases & Error Handling
 - [ ] Test med ingen internetforbindelse
 - [ ] Test med fuld database (mange log entries)
-- [ ] Test reset taper efter lang tids brug
-- [ ] Test onboarding efter reset
+- [ ] Test Start Over efter lang tids brug
+- [ ] Test onboarding efter Start Over
 - [ ] Verificer at alle error states håndteres gracefully
 - [ ] Test med gamle data (hvis opgradering fra tidligere version)
 
@@ -172,7 +147,7 @@ Dette dokument indeholder alle opgaver der skal gennemføres før appen kan rele
 - [ ] Test memory usage (ikke memory leaks)
 
 ### Accessibility Testing
-- [ ] Test med VoiceOver (iOS) / TalkBack (Android)
+- [ ] Test med VoiceOver (iOS)
 - [ ] Test med Dynamic Type (store tekststørrelser)
 - [ ] Verificer kontrast ratios (WCAG AA minimum)
 - [ ] Test med farveblindhed simulators
@@ -226,15 +201,6 @@ Dette dokument indeholder alle opgaver der skal gennemføres før appen kan rele
 - [ ] Submit for review
 - [ ] Vente på review (typisk 1-3 dage)
 
-### Google Play
-- [ ] Opret app i Google Play Console
-- [ ] Upload build via EAS Submit eller manuelt
-- [ ] Udfyld alle metadata felter
-- [ ] Upload screenshots og feature graphic
-- [ ] Konfigurer pricing (gratis)
-- [ ] Submit for review
-- [ ] Vente på review (typisk 1-7 dage)
-
 ---
 
 ## 📋 Post-Release
@@ -261,7 +227,7 @@ Før du submitter, verificer:
 - [ ] Version numbers er korrekte
 - [ ] Console logs er fjernet
 - [ ] Code quality er god
-- [ ] App fungerer på både iOS og Android
+- [ ] App fungerer på iPhone (iOS)
 - [ ] Alle flows er testet
 - [ ] Error handling er på plads
 
@@ -277,4 +243,4 @@ Tilføj noter her undervejs:
 
 ---
 
-**God release! 🎉**
+**God release!**

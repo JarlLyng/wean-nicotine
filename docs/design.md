@@ -1,8 +1,8 @@
 # Design System Documentation
 
-**Date:** 2024-12-19  
+**Date:** 2026-01-21  
 **Status:** Active  
-**Version:** 1.0
+**Version:** 1.1
 
 ---
 
@@ -18,28 +18,15 @@ Taper's design is built around three core principles:
 
 ## 🌈 Color System
 
-### Core Colors
+Design tokens live in `lib/design.ts` / `lib/theme.ts` and are consumed via `useDesignTokens()`.
 
-- **Background:** Subtle gradient (teal/green fade) — Applied to all screens
-- **Surface:** `#FFFFFF` — White surface for content areas (cards)
-- **Text Primary:** `#0F172A` — Primary text color (dark)
-- **Text Secondary:** `#475569` — Secondary text color (medium gray)
+Praktisk regel:
+- **Background**: app-level background (calm, low contrast)
+- **Surface/Card**: cards og “content surfaces”
+- **Text**: primary/secondary/tertiary
+- **Semantic**: success/warning/error
 
-### Gradient Accent Colors
-
-The app uses a vertical gradient for headers and prominent elements:
-
-- **Accent Start:** `#0EA5A4` — Teal
-- **Accent Mid:** `#34D399` — Green  
-- **Accent End:** `#6EE7B7` — Mint
-
-**Gradient Direction:** Vertical (top to bottom)
-
-### Legacy Colors (Backward Compatibility)
-
-- **Neutral:** Gray scale (50-950)
-- **Accent:** Primary teal variants
-- **Semantic:** Success, warning, info, error colors
+> Undgå hard-coded hex i UI-kode – brug tokens, så light/dark mode holder.
 
 ---
 
@@ -74,31 +61,10 @@ xxl: 48px // Maximum spacing
 
 ---
 
-## 🎭 Gradient Usage
+## 🎭 Backgrounds (Plain vs Gradient)
 
-### When to Use Gradients
-
-✅ **DO:**
-- Use subtle gradient as background for all screens
-- Use primary gradient for prominent visual elements (progress rings, etc.)
-- Keep gradients subtle and calming
-
-❌ **DON'T:**
-- Use gradients in content areas (cards remain white)
-- Overuse gradients (keep it minimal and calming)
-
-### Gradient Variants
-
-1. **Primary Gradient** (`variant="primary"`)
-   - Strong accent gradient: `accentStart → accentMid → accentEnd`
-   - Used for visual elements like progress rings
-   - Vertical direction
-
-2. **Subtle Gradient** (`variant="subtle"`)
-   - Low-contrast fade with opacity
-   - Applied as background to all screens
-   - 20% → 10% → 5% opacity
-   - Creates a calming, cohesive visual experience
+`Screen` kan rendere plain eller (subtil) gradient background via `GradientBackground`.
+Brug gradient sparsomt – det skal føles roligt, ikke “larmende”.
 
 ---
 
@@ -124,15 +90,13 @@ xxl: 48px // Maximum spacing
 ### Screen Layout
 
 **All Screens:**
-- Subtle gradient background applied to entire screen
-- White cards with elevation for content
-- No gradient headers or titles
-- Clean, minimal design
+- Brug `Screen` som wrapper (safe areas + title)
+- Undgå dobbelt padding (Screen giver allerede horizontal padding)
+- Brug `Card` til grupperet indhold og rolig hierarchy
 
 **Screen Variants:**
-- **Gradient variant:** Same as plain (both use subtle background)
-- **Plain variant:** Same as gradient (both use subtle background)
-- Note: Variant parameter exists for backward compatibility but both render the same
+- **Plain**: default
+- **Gradient**: kun hvor det giver en rolig “hero” effekt
 
 ### Cards
 
@@ -169,18 +133,20 @@ xxl: 48px // Maximum spacing
 
 ## 🔧 Implementation
 
-All design tokens are defined in `lib/theme.ts`:
+Tokens + helpers:
 
 ```typescript
-import { colors, spacing, typography, borderRadius, shadows } from '@/lib/theme';
+import { spacing, typography, borderRadius, shadows } from '@/lib/theme';
+import { useDesignTokens } from '@/lib/design';
 ```
 
 ### Usage Examples
 
 ```typescript
-// Colors
-backgroundColor: colors.surface
-color: colors.textPrimary
+// Colors (via hook)
+const { colors } = useDesignTokens();
+backgroundColor: colors.background.card
+color: colors.text.primary
 
 // Spacing
 padding: spacing.md
@@ -220,4 +186,4 @@ borderRadius: borderRadius.lg
 
 ---
 
-*Last updated: 2024-12-19*
+*Last updated: 2026-01-21*

@@ -4,7 +4,7 @@ This roadmap describes the planned development of **Taper**, from initial founda
 
 The roadmap is **phase-based**, not date-based, to allow calm, iterative development and room for learning.
 
-## Progress tracker (Updated 2026-01-20)
+## Progress tracker (Updated 2026-01-21)
 
 This section is the “at a glance” view of where the project stands right now.
 
@@ -13,17 +13,17 @@ This section is the “at a glance” view of where the project stands right now
 - [x] Phase 1 — Core Taper Flow (MVP core)
 - [x] Phase 2 — Progress & Motivation
 - [x] Phase 3 — Support & Resilience
-- [ ] Phase 4 — Notifications & Polish (partially done)
-- [ ] Phase 4.5 — Design & Visual Polish (partially done)
-- [ ] Phase 5 — Release Preparation
+- [x] Phase 4 — Notifications & Polish
+- [x] Phase 4.5 — Design & Visual Polish
+- [ ] Phase 5 — Release Preparation (blocked on Apple Developer Account for TestFlight/App Store)
 
 ### Phase 4 — what’s done vs pending
 - [x] Optional daily check-in notification
-- [ ] Trigger-based reminder notifications (notification logic exists, needs product/UI wiring)
+- [x] Trigger-based reminder notifications (UI + wiring)
 - [x] App icon + launch screen
 - [x] Basic analytics (local only, no tracking)
-- [ ] Accessibility pass (Dynamic Type, contrast) — do a final sweep before release
-- [ ] Sentry production setup (DSN/org/project + release tagging) before App Store builds
+- [x] Accessibility pass (VoiceOver + labels)
+- [ ] Sentry production setup (verify in TestFlight/production build)
 
 ---
 
@@ -126,9 +126,9 @@ This section is the “at a glance” view of where the project stands right now
 
 ### Deliverables
 - Optional daily check-in notification
-- Trigger-based reminder notifications (planned)
+- Trigger-based reminder notifications
 - Polished copy and microcopy
-- Accessibility pass (Dynamic Type, contrast)
+- Accessibility pass (VoiceOver + labels; do final Dynamic Type/contrast sweep before submission)
 - App icon + launch screen
 - Basic analytics (local only, no tracking)
 

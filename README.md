@@ -40,7 +40,6 @@ Taper helps users:
 ## 📱 MVP feature set
 
 ### Onboarding
-- Choose goal: *Gradual reduction* (default)
 - Set baseline usage (pouches per day)
 - Optional price per can (for savings tracking)
 - Select common triggers (stress, coffee, after meals, etc.)
@@ -49,17 +48,15 @@ Taper helps users:
 - One‑tap log: *Used a pouch*
 - One‑tap log: *Craving resisted*
 - Daily allowance based on taper plan
-- Friendly nudges when limits are exceeded
+- Calm, non-judgmental UI even if you go over the limit
 
 ### Taper plan
 - Automatic reduction over time (weekly % reduction)
-- Adjustable pace
-- Smart suggestions if the plan is too aggressive
+- Default pace is intentionally simple (MVP)
 
 ### Progress & motivation
 - Pouches avoided vs baseline
 - Money saved
-- Time since last pouch (when applicable)
 - Small, supportive milestones (not aggressive streaks)
 
 ### Support tools
@@ -84,6 +81,7 @@ Taper helps users:
 - No backend in MVP
 
 **Note:** This app is designed for mobile (iOS/Android) only. SQLite is not available on web browsers.
+Initial release focus is **iPhone**.
 
 ---
 
