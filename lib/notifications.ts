@@ -134,6 +134,58 @@ export async function scheduleTriggerReminder(
 }
 
 /**
+ * Schedule a single trigger reminders notification (MVP).
+ *
+ * We only schedule ONE reminder per day to avoid spam.
+ * If the user has selected triggers during onboarding, we reference one as an example.
+ */
+export async function scheduleTriggerReminders(
+  triggers: string[] | undefined,
+  hour: number = 20,
+  minute: number = 0
+): Promise<string | null> {
+  try {
+    // Snapshot existing reminders so we can avoid losing them if scheduling fails.
+    const allNotifications = await Notifications.getAllScheduledNotificationsAsync();
+    const existingTriggerReminders = allNotifications.filter(
+      (n) => n.content.data?.type === 'trigger_reminder'
+    );
+
+    const exampleTrigger = triggers && triggers.length > 0 ? triggers[0] : null;
+    const body = exampleTrigger
+      ? `If you feel a trigger like "${exampleTrigger}", try a tool instead. You've got this!`
+      : `Remember your plan. You've got this!`;
+
+    const notificationId = await Notifications.scheduleNotificationAsync({
+      content: {
+        title: 'Trigger Reminder',
+        body,
+        sound: true,
+        data: { type: 'trigger_reminder', triggers: triggers ?? [] },
+      },
+      trigger: {
+        type: 'daily' as const,
+        hour,
+        minute,
+      } as DailyTriggerInput,
+    });
+
+    // Now that the new one is scheduled, remove older ones to keep it to 1/day.
+    for (const notification of existingTriggerReminders) {
+      await Notifications.cancelScheduledNotificationAsync(notification.identifier);
+    }
+
+    return notificationId;
+  } catch (error) {
+    console.error('Error scheduling trigger reminders:', error);
+    if (error instanceof Error) {
+      captureError(error, { context: 'schedule_trigger_reminders' });
+    }
+    return null;
+  }
+}
+
+/**
  * Cancel all trigger reminders
  */
 export async function cancelTriggerReminders(): Promise<void> {

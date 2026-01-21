@@ -1,14 +1,31 @@
 import { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Switch, Alert, TextStyle, ViewStyle } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Switch, Alert, Pressable, TextStyle, ViewStyle } from 'react-native';
 import { Screen } from '@/components/Screen';
 import { spacing } from '@/lib/theme';
 import { useDesignTokens } from '@/lib/design';
+import { getTaperSettings } from '@/lib/db-settings';
+import { getPreference, setPreference } from '@/lib/db-preferences';
 import {
   requestNotificationPermissions,
   scheduleDailyCheckIn,
   cancelDailyCheckIn,
   getAllScheduledNotifications,
+  scheduleTriggerReminders,
+  cancelTriggerReminders,
 } from '@/lib/notifications';
+
+const PREF_TRIGGER_REMINDERS_ENABLED = 'triggerRemindersEnabled';
+const PREF_TRIGGER_REMINDERS_TIME = 'triggerRemindersTime'; // JSON: { hour: number, minute: number }
+
+type ReminderTime = { hour: number; minute: number };
+
+function pad2(n: number) {
+  return String(n).padStart(2, '0');
+}
+
+function formatTime(t: ReminderTime) {
+  return `${pad2(t.hour)}:${pad2(t.minute)}`;
+}
 
 export default function NotificationsScreen() {
   const { colors } = useDesignTokens();
@@ -16,6 +33,9 @@ export default function NotificationsScreen() {
   const [hasPermission, setHasPermission] = useState(false);
   const [dailyCheckInEnabled, setDailyCheckInEnabled] = useState(false);
   const [checkInHour] = useState(20);
+  const [triggerRemindersEnabled, setTriggerRemindersEnabled] = useState(false);
+  const [triggerReminderTime, setTriggerReminderTime] = useState<ReminderTime>({ hour: 20, minute: 0 });
+  const [selectedTriggers, setSelectedTriggers] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -29,16 +49,103 @@ export default function NotificationsScreen() {
       const { status } = await getPermissionsAsync();
       setHasPermission(status === 'granted');
 
+      const settings = await getTaperSettings();
+      const triggers = settings?.triggers ?? [];
+      setSelectedTriggers(triggers);
+
       const notifications = await getAllScheduledNotifications();
       const hasDailyCheckIn = notifications.some(
         (n) => n.content.data?.type === 'daily_checkin'
       );
       setDailyCheckInEnabled(hasDailyCheckIn);
+
+      const triggerReminder = notifications.find(
+        (n) => n.content.data?.type === 'trigger_reminder'
+      );
+      const hasTriggerReminder = Boolean(triggerReminder);
+      setTriggerRemindersEnabled(hasTriggerReminder);
+
+      // Hydrate persisted config (fallback for UI + rescheduling)
+      const storedEnabled = (await getPreference(PREF_TRIGGER_REMINDERS_ENABLED)) === '1';
+      const storedTimeRaw = await getPreference(PREF_TRIGGER_REMINDERS_TIME);
+      let storedTime: ReminderTime | null = null;
+      if (storedTimeRaw) {
+        try {
+          const parsed = JSON.parse(storedTimeRaw) as Partial<ReminderTime>;
+          if (typeof parsed.hour === 'number' && typeof parsed.minute === 'number') {
+            storedTime = { hour: parsed.hour, minute: parsed.minute };
+          }
+        } catch {
+          // ignore
+        }
+      }
+
+      // Prefer scheduled time if available, otherwise use stored time, otherwise default.
+      let scheduledTime: ReminderTime | null = null;
+      if (triggerReminder && triggerReminder.trigger && typeof triggerReminder.trigger === 'object') {
+        const t: any = triggerReminder.trigger;
+        if (typeof t.hour === 'number' && typeof t.minute === 'number') {
+          scheduledTime = { hour: t.hour, minute: t.minute };
+        }
+      }
+      const effectiveTime = scheduledTime ?? storedTime ?? { hour: 20, minute: 0 };
+      setTriggerReminderTime(effectiveTime);
+
+      // Keep preference in sync with scheduled state
+      if (hasTriggerReminder && !storedEnabled) {
+        await setPreference(PREF_TRIGGER_REMINDERS_ENABLED, '1');
+      }
+
+      // If user wanted reminders on but nothing is scheduled, try to restore (native only)
+      if (storedEnabled && !hasTriggerReminder && status === 'granted') {
+        const id = await scheduleTriggerReminders(triggers, effectiveTime.hour, effectiveTime.minute);
+        if (id) {
+          setTriggerRemindersEnabled(true);
+          await setPreference(PREF_TRIGGER_REMINDERS_ENABLED, '1');
+        } else {
+          // Fail gracefully (e.g., Expo Go). Keep UI consistent.
+          await setPreference(PREF_TRIGGER_REMINDERS_ENABLED, '0');
+          setTriggerRemindersEnabled(false);
+        }
+      }
     } catch (error) {
       console.error('Error loading notification status:', error);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const chooseTriggerReminderTime = async () => {
+    const options: ReminderTime[] = [
+      { hour: 18, minute: 0 },
+      { hour: 20, minute: 0 },
+      { hour: 22, minute: 0 },
+    ];
+
+    Alert.alert(
+      'Trigger reminder time',
+      'Choose a time for your daily trigger reminder.',
+      [
+        ...options.map((t) => ({
+          text: formatTime(t),
+          onPress: async () => {
+            setTriggerReminderTime(t);
+            await setPreference(PREF_TRIGGER_REMINDERS_TIME, JSON.stringify(t));
+
+            if (triggerRemindersEnabled && hasPermission) {
+              const id = await scheduleTriggerReminders(selectedTriggers, t.hour, t.minute);
+              if (!id) {
+                Alert.alert(
+                  'Not available',
+                  'Notifications require a development build (they do not work in Expo Go).'
+                );
+              }
+            }
+          },
+        })),
+        { text: 'Cancel', style: 'cancel' },
+      ]
+    );
   };
 
   const handleToggleDailyCheckIn = async (enabled: boolean) => {
@@ -70,6 +177,51 @@ export default function NotificationsScreen() {
       }
     } catch (error) {
       console.error('Error toggling daily check-in:', error);
+      Alert.alert('Error', 'Failed to update notification settings');
+    }
+  };
+
+  const handleToggleTriggerReminders = async (enabled: boolean) => {
+    if (!hasPermission) {
+      const granted = await requestNotificationPermissions();
+      if (!granted) {
+        Alert.alert(
+          'Permission Required',
+          'Notifications are needed to send reminders. Please enable them in your device settings.'
+        );
+        return;
+      }
+      setHasPermission(true);
+    }
+
+    try {
+      if (enabled) {
+        const id = await scheduleTriggerReminders(
+          selectedTriggers,
+          triggerReminderTime.hour,
+          triggerReminderTime.minute
+        );
+        if (id) {
+          await setPreference(PREF_TRIGGER_REMINDERS_ENABLED, '1');
+          await setPreference(PREF_TRIGGER_REMINDERS_TIME, JSON.stringify(triggerReminderTime));
+          setTriggerRemindersEnabled(true);
+          Alert.alert('Success', 'Trigger reminders enabled');
+        } else {
+          await setPreference(PREF_TRIGGER_REMINDERS_ENABLED, '0');
+          setTriggerRemindersEnabled(false);
+          Alert.alert(
+            'Not available',
+            'Notifications require a development build (they do not work in Expo Go).'
+          );
+        }
+      } else {
+        await cancelTriggerReminders();
+        await setPreference(PREF_TRIGGER_REMINDERS_ENABLED, '0');
+        setTriggerRemindersEnabled(false);
+        Alert.alert('Success', 'Trigger reminders disabled');
+      }
+    } catch (error) {
+      console.error('Error toggling trigger reminders:', error);
       Alert.alert('Error', 'Failed to update notification settings');
     }
   };
@@ -118,6 +270,45 @@ export default function NotificationsScreen() {
                 <Text style={styles.timeText}>Scheduled for {checkInHour}:00 daily</Text>
               </View>
             )}
+          </View>
+
+          {/* Trigger Reminders */}
+          <View style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <View style={styles.sectionHeaderText}>
+                <Text style={styles.sectionTitle}>Trigger Reminders</Text>
+                <Text style={styles.sectionDescription}>
+                  Get one daily reminder to help you handle cravings (uses your selected triggers when available).
+                </Text>
+              </View>
+              <Switch
+                value={triggerRemindersEnabled && hasPermission}
+                onValueChange={handleToggleTriggerReminders}
+                trackColor={{ false: colors.border.subtle, true: colors.primary }}
+                thumbColor={colors.surface.default}
+                accessibilityRole="switch"
+                accessibilityLabel="Trigger reminders"
+                accessibilityHint="Turns the trigger reminder on or off."
+              />
+            </View>
+
+            <View style={styles.timeInfo}>
+              <Pressable
+                onPress={chooseTriggerReminderTime}
+                accessibilityRole="button"
+                accessibilityLabel="Change trigger reminder time"
+                accessibilityHint="Choose a time for the daily trigger reminder."
+                style={styles.timeRow}>
+                <Text style={styles.timeText}>Time: {formatTime(triggerReminderTime)}</Text>
+                <Text style={styles.changeTimeText}>Change</Text>
+              </Pressable>
+
+              {selectedTriggers.length === 0 && (
+                <Text style={styles.noteText}>
+                  You don&apos;t have any triggers selected. Reminders will use a general message.
+                </Text>
+              )}
+            </View>
           </View>
 
           <View style={styles.infoBox}>
@@ -191,9 +382,26 @@ const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => {
       borderTopWidth: 1,
       borderTopColor: colors.border.subtle,
     } as ViewStyle,
+    timeRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingVertical: spacing.sm,
+    } as ViewStyle,
     timeText: {
       fontSize: 14,
       color: colors.text.secondary,
+    } as TextStyle,
+    changeTimeText: {
+      fontSize: 14,
+      fontWeight: '600' as const,
+      color: colors.primary,
+    } as TextStyle,
+    noteText: {
+      marginTop: spacing.sm,
+      fontSize: 13,
+      color: colors.text.secondary,
+      lineHeight: 18,
     } as TextStyle,
     infoBox: {
       backgroundColor: colors.background.card,
