@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Taper",
+    "name": "Taper!",
     "slug": "Taper",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -52,7 +52,6 @@
           "sounds": []
         }
       ],
-      "@sentry/react-native",
       "expo-font"
     ],
     "experiments": {

@@ -1,6 +1,6 @@
 # Taper
 
-**Taper** is a mobile app that helps people gradually reduce and eventually stop using snus (nicotine pouches) through a calm, supportive, and non‑judgmental approach.
+**Taper** is a mobile app that helps people gradually reduce and eventually stop using snus (nicotine pouches) through a calm, supportive, and non‑judgmental approach. On the App Store the app is listed as **Taper!** (the name "Taper" was already taken).
 
 Instead of quitting cold turkey, Taper focuses on **tapering** — reducing usage step by step, at your own pace.
 
@@ -192,6 +192,17 @@ npx expo run:ios
 ```bash
 npx expo run:android
 ```
+
+---
+
+## 📦 Build & release (iOS)
+
+- **Bundle ID:** `com.iamjarl.taper`
+- **Build:** `npx eas build --profile production --platform ios`
+- **Submit to App Store Connect:** `npx eas submit --platform ios --latest`
+- **EAS project:** Linked to this repo; see [expo.dev](https://expo.dev) for build history and credentials.
+
+No secrets or credentials are stored in this repository. Use EAS Secrets for `EXPO_PUBLIC_SENTRY_DSN` and similar.
 
 ---
 

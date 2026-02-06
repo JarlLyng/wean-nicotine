@@ -8,13 +8,11 @@ Android + iPad kan komme senere.
 ## 🔧 Teknisk Setup
 
 ### EAS Build Konfiguration
-- [ ] Opret `eas.json` med build profiler (iOS):
-  - Development build (til device-testing)
-  - Production build (til TestFlight/App Store)
-- [ ] Log ind i EAS: `eas login`
-- [ ] Konfigurér projektet: `eas build:configure`
-- [ ] Første iOS build: `eas build --profile development --platform ios`
-- [ ] (Når Apple Developer Account er klar) Første TestFlight build: `eas build --profile production --platform ios`
+- [x] Opret `eas.json` med build profiler (iOS): development, preview, production
+- [x] Log ind i EAS: `eas login`
+- [x] Første production iOS build: `eas build --profile production --platform ios`
+- [x] Submit til App Store Connect: `eas submit --platform ios --latest`
+- [ ] (Valgfrit) Første development build: `eas build --profile development --platform ios`
 
 ### Sentry Production Setup
 - [ ] Opret EAS Secret for `EXPO_PUBLIC_SENTRY_DSN`:
@@ -25,13 +23,8 @@ Android + iPad kan komme senere.
 - [ ] Test at Sentry modtager events i en production/TestFlight build (kræver Apple Developer Account)
 
 ### Version & Build Numbers
-- [ ] Opdater `version` i `app.json` (f.eks. "1.0.0")
-- [ ] Tilføj iOS `buildNumber` i `app.json`:
-  ```json
-  "ios": {
-    "buildNumber": "1"
-  }
-  ```
+- [x] Version i `app.json`: "1.0.0"
+- [x] iOS `buildNumber` og `bundleIdentifier` i `app.json` (com.iamjarl.taper)
 
 ---
 
@@ -55,7 +48,8 @@ Android + iPad kan komme senere.
 ## 📝 App Store Metadata
 
 ### iOS App Store Connect
-- [ ] **App Navn**: "Taper" (eller valgfrit navn)
+- [x] **App Navn**: "Taper!" (App Store listing; "Taper" var optaget)
+- [x] App oprettet i App Store Connect med Bundle ID `com.iamjarl.taper`
 - [ ] **Subtitle**: Kort beskrivelse (30 tegn)
 - [ ] **Beskrivelse**: 
   - Hvad er Taper?
@@ -194,9 +188,9 @@ Android + iPad kan komme senere.
 ## 🚀 Submission
 
 ### iOS App Store
-- [ ] Opret app i App Store Connect
-- [ ] Upload build via EAS Submit eller manuelt
-- [ ] Udfyld alle metadata felter
+- [x] Opret app i App Store Connect
+- [x] Upload build via EAS Submit (`eas submit --platform ios --latest`)
+- [ ] Udfyld alle metadata felter (beskrivelse, keywords, screenshots)
 - [ ] Upload screenshots
 - [ ] Konfigurer pricing (gratis)
 - [ ] Submit for review

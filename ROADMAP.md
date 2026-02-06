@@ -4,7 +4,7 @@ This roadmap describes the planned development of **Taper**, from initial founda
 
 The roadmap is **phase-based**, not date-based, to allow calm, iterative development and room for learning.
 
-## Progress tracker (Updated 2026-01-21)
+## Progress tracker (Updated 2026-02)
 
 This section is the “at a glance” view of where the project stands right now.
 
@@ -15,15 +15,15 @@ This section is the “at a glance” view of where the project stands right now
 - [x] Phase 3 — Support & Resilience
 - [x] Phase 4 — Notifications & Polish
 - [x] Phase 4.5 — Design & Visual Polish
-- [ ] Phase 5 — Release Preparation (blocked on Apple Developer Account for TestFlight/App Store)
+- [x] Phase 5 — Release Preparation (first production build done; app on App Store Connect as **Taper!**)
 
-### Phase 4 — what’s done vs pending
-- [x] Optional daily check-in notification
-- [x] Trigger-based reminder notifications (UI + wiring)
-- [x] App icon + launch screen
-- [x] Basic analytics (local only, no tracking)
-- [x] Accessibility pass (VoiceOver + labels)
-- [ ] Sentry production setup (verify in TestFlight/production build)
+### Phase 5 — what’s done vs pending
+- [x] EAS Build configured (`eas.json`); production iOS builds succeed
+- [x] App Store Connect app created (Bundle ID: `com.iamjarl.taper`); listing name: **Taper!**
+- [x] Build submitted to App Store Connect (TestFlight / App Store)
+- [ ] App Store metadata finalised (screenshots, description, keywords)
+- [ ] Submit for App Review when ready
+- [ ] Sentry production setup (optional; verify in TestFlight/production build)
 
 ---
 
