@@ -13,11 +13,12 @@ export function calculateDailyAllowance(
   currentDate: Date = new Date()
 ): number {
   const startDate = new Date(settings.startDate);
-  const weeksSinceStart = getWeeksBetween(startDate, currentDate);
-  
-  // Clamp to non-negative weeks to prevent allowance exceeding baseline
-  // This handles edge cases like timezone issues or device clock being wrong
-  const clampedWeeks = Math.max(0, weeksSinceStart);
+  startDate.setHours(0, 0, 0, 0);
+  const endDate = new Date(currentDate);
+  endDate.setHours(0, 0, 0, 0);
+  const weeksSinceStart = getWeeksBetween(startDate, endDate);
+  // Stepwise weekly reduction: use full weeks only (no fractional week)
+  const clampedWeeks = Math.max(0, Math.floor(weeksSinceStart));
   
   const reductionFactor = Math.pow(
     1 - settings.weeklyReductionPercent / 100,

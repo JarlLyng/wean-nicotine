@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import { Platform, InteractionManager } from 'react-native';
-import { initDatabase } from '@/lib/db';
 import { hasTaperSettings } from '@/lib/db-settings';
 import { captureError } from '@/lib/sentry';
 
@@ -21,14 +20,9 @@ export default function Index() {
         return;
       }
 
-      // Ensure database is initialized before checking settings
-      initDatabase()
-        .then(() => {
-          // Check if user has completed onboarding
-          return hasTaperSettings();
-        })
+      // getDatabase() (used by hasTaperSettings) shares init with root layout; no duplicate init
+      hasTaperSettings()
         .then((hasSettings) => {
-          // Small delay to ensure navigation is ready
           setTimeout(() => {
             if (hasSettings) {
               router.replace('/(tabs)/home');
@@ -39,14 +33,10 @@ export default function Index() {
         })
         .catch((error) => {
           console.error('Error initializing app:', error);
-          // Capture error in Sentry
           if (error instanceof Error) {
             captureError(error, { context: 'app_index_initialization' });
           }
-          // Default to onboarding on error
-          setTimeout(() => {
-            router.replace('/(onboarding)/welcome');
-          }, 100);
+          setTimeout(() => router.replace('/(onboarding)/welcome'), 100);
         });
     });
 

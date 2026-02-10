@@ -13,6 +13,11 @@ import { calculateDailyAllowance } from '@/lib/taper-plan';
 import { createLogEntry , getLogEntriesForDay } from '@/lib/db-log-entries';
 import * as Haptics from 'expo-haptics';
 
+function formatAllowanceDisplay(n: number): string {
+  const rounded = Math.round(n * 10) / 10;
+  return rounded % 1 === 0 ? String(rounded) : rounded.toFixed(1);
+}
+
 export default function HomeScreen() {
   const { colors } = useDesignTokens();
   const devLog = (...args: unknown[]) => {
@@ -119,17 +124,17 @@ export default function HomeScreen() {
       const resistedCount = todayLogs.filter(log => log.type === 'craving_resisted').length;
 
       // Update all state atomically to ensure React re-renders
-      const roundedAllowance = Math.round(allowance);
-      devLog('Home screen: About to update state - dailyAllowance:', roundedAllowance, 'settingsId:', settings.id, 'updatedAt:', settings.updatedAt, 'usedCount:', usedCount, 'resistedCount:', resistedCount);
+      const displayAllowance = Math.round(allowance * 10) / 10;
+      devLog('Home screen: About to update state - dailyAllowance:', displayAllowance, 'settingsId:', settings.id, 'updatedAt:', settings.updatedAt, 'usedCount:', usedCount, 'resistedCount:', resistedCount);
       
       // Update state - React will handle re-rendering automatically
       setSettingsId(settings.id);
       setPouchesUsedToday(usedCount);
       setCravingsResistedToday(resistedCount);
-      setDailyAllowance(roundedAllowance);
+      setDailyAllowance(displayAllowance);
       setBaselinePouchesPerDay(settings.baselinePouchesPerDay);
       
-      devLog('Home screen: State update called - dailyAllowance:', roundedAllowance, 'settingsId:', settings.id, 'updatedAt:', settings.updatedAt);
+      devLog('Home screen: State update called - dailyAllowance:', displayAllowance, 'settingsId:', settings.id, 'updatedAt:', settings.updatedAt);
       } catch (error) {
       console.error('Error loading data:', error);
       setDailyAllowance(null);
@@ -323,7 +328,7 @@ export default function HomeScreen() {
                   showLabel={true}
                   label={
                     dailyAllowance > 0
-                      ? `${pouchesUsedToday}/${Math.round(dailyAllowance)}`
+                      ? `${pouchesUsedToday}/${formatAllowanceDisplay(dailyAllowance)}`
                       : `${pouchesUsedToday}/0`
                   }
                   sublabel="pouches"
@@ -351,7 +356,7 @@ export default function HomeScreen() {
                 <View style={styles.statsRow}>
                   <View style={styles.statItem}>
                     <Text style={styles.statValue}>
-                      {Math.max(0, Math.round(dailyAllowance - pouchesUsedToday))}
+                      {formatAllowanceDisplay(Math.max(0, dailyAllowance - pouchesUsedToday))}
                     </Text>
                     <Text style={styles.statLabel}>Remaining</Text>
                   </View>

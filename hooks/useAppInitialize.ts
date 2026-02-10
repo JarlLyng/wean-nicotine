@@ -7,7 +7,7 @@ import { useEffect } from 'react';
 import { Platform } from 'react-native';
 import { initSentry, captureError } from '@/lib/sentry';
 import { initDatabase } from '@/lib/db';
-import { initAnalytics, logEvent } from '@/lib/analytics';
+import { initAnalytics, logEvent, clearOldAnalytics } from '@/lib/analytics';
 
 export function useAppInitialize() {
   useEffect(() => {
@@ -20,14 +20,11 @@ export function useAppInitialize() {
       return;
     }
 
-    // Initialize database on app start
+    // Initialize database on app start (single init; safe for concurrent callers)
     initDatabase()
+      .then(() => initAnalytics())
+      .then(() => clearOldAnalytics())
       .then(() => {
-        // Initialize analytics after database is ready
-        return initAnalytics();
-      })
-      .then(() => {
-        // Log app launch
         logEvent('app_launched');
       })
       .catch((error) => {

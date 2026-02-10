@@ -17,8 +17,9 @@ export function initSentry(): void {
     return;
   }
 
-  // Get DSN from environment variable or use placeholder
-  // In production, set EXPO_PUBLIC_SENTRY_DSN in your .env file or EAS secrets
+  // Get DSN from environment variable. If set in production, error/crash data is sent to Sentry.
+  // App Store: you must declare this in App Store Connect privacy labels and in your privacy policy.
+  // See docs/PRIVACY_APP_STORE.md.
   const dsn = process.env.EXPO_PUBLIC_SENTRY_DSN;
 
   if (!dsn) {

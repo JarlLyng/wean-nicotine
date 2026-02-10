@@ -32,12 +32,17 @@ function getSQLite(): any {
 }
 
 let db: SQLiteDatabase | null = null;
+let initPromise: Promise<SQLiteDatabase> | null = null;
 
 /**
- * Initialize the database and create tables if they don't exist
+ * Initialize the database and create tables if they don't exist.
+ * Safe to call concurrently: only one init runs, others await the same promise.
  */
 export async function initDatabase(): Promise<SQLiteDatabase> {
-  // Check if running on web
+  if (initPromise) {
+    return initPromise;
+  }
+
   const SQLite = getSQLite();
   if (Platform.OS === 'web' || !SQLite) {
     // On web, return a mock database that allows UI to render
@@ -50,11 +55,10 @@ export async function initDatabase(): Promise<SQLiteDatabase> {
     } as SQLiteDatabase;
   }
 
-  if (db) {
-    return db;
-  }
+  initPromise = (async (): Promise<SQLiteDatabase> => {
+    if (db) return db;
 
-  db = await SQLite.openDatabaseAsync('taper.db') as SQLiteDatabase;
+    db = await SQLite.openDatabaseAsync('taper.db') as SQLiteDatabase;
 
   // Create tables (execAsync can handle multiple statements separated by semicolons)
   await db.execAsync(`
@@ -125,7 +129,10 @@ export async function initDatabase(): Promise<SQLiteDatabase> {
     CREATE INDEX IF NOT EXISTS idx_log_entries_type ON log_entries(type);
   `);
 
-  return db;
+    return db;
+  })();
+
+  return initPromise;
 }
 
 /**

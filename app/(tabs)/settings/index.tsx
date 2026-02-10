@@ -129,6 +129,12 @@ export default function SettingsScreen() {
             {dailyCheckInEnabled && hasPermission && (
               <Text style={styles.notificationInfo}>Scheduled for 20:00 daily</Text>
             )}
+            <Button
+              title="Notification options"
+              onPress={() => router.push('/(tabs)/settings/notifications')}
+              variant="ghost"
+              style={{ marginTop: spacing.sm }}
+            />
           </Card>
 
           {/* Theme Info */}
