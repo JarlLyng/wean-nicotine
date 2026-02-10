@@ -43,24 +43,24 @@ export async function getLogEntries(options?: {
   // On web, return dummy data for UI preview
   if (Platform.OS === 'web') {
     let dummyEntries = getDummyLogEntries();
-    
+
     // Apply filters to dummy data
     if (options?.type) {
       dummyEntries = dummyEntries.filter(entry => entry.type === options.type);
     }
-    
+
     if (options?.startDate) {
       dummyEntries = dummyEntries.filter(entry => entry.timestamp >= options.startDate!);
     }
-    
+
     if (options?.endDate) {
       dummyEntries = dummyEntries.filter(entry => entry.timestamp <= options.endDate!);
     }
-    
+
     if (options?.limit) {
       dummyEntries = dummyEntries.slice(0, options.limit);
     }
-    
+
     return dummyEntries;
   }
 
@@ -122,7 +122,7 @@ export async function getLogEntriesForDay(date: Date): Promise<LogEntry[]> {
     startOfDay.setHours(0, 0, 0, 0);
     const endOfDay = new Date(date);
     endOfDay.setHours(23, 59, 59, 999);
-    
+
     return dummyEntries.filter(entry => {
       const entryDate = new Date(entry.timestamp);
       return entryDate >= startOfDay && entryDate <= endOfDay;
@@ -185,24 +185,26 @@ export async function deleteAllLogEntries(): Promise<void> {
   if (__DEV__) {
     console.log('deleteAllLogEntries: Deleting all log entries...');
   }
-  
+
   // First, count how many entries exist
   const countBefore = await db.getFirstAsync<{ count: number }>('SELECT COUNT(*) as count FROM log_entries');
   if (__DEV__) {
     console.log('deleteAllLogEntries: Entries before deletion:', countBefore?.count || 0);
   }
-  
+
   // Delete all entries
   await db.runAsync('DELETE FROM log_entries');
-  
+
   // Verify deletion
   const countAfter = await db.getFirstAsync<{ count: number }>('SELECT COUNT(*) as count FROM log_entries');
   if (__DEV__) {
     console.log('deleteAllLogEntries: Entries after deletion:', countAfter?.count || 0);
   }
-  
+
   if (countAfter && countAfter.count > 0) {
-    console.error('deleteAllLogEntries: WARNING - Some entries were not deleted!');
+    if (__DEV__) {
+      console.error('deleteAllLogEntries: WARNING - Some entries were not deleted!');
+    }
   } else {
     if (__DEV__) {
       console.log('deleteAllLogEntries: All entries successfully deleted');

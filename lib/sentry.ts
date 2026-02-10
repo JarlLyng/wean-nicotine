@@ -4,8 +4,8 @@
  */
 
 import * as Sentry from '@sentry/react-native';
-import { Platform } from 'react-native';
 import Constants from 'expo-constants';
+import { Platform } from 'react-native';
 
 /**
  * Initialize Sentry
@@ -23,7 +23,9 @@ export function initSentry(): void {
   const dsn = process.env.EXPO_PUBLIC_SENTRY_DSN;
 
   if (!dsn) {
-    console.warn('Sentry DSN not configured. Set EXPO_PUBLIC_SENTRY_DSN environment variable.');
+    if (__DEV__) {
+      console.warn('Sentry DSN not configured. Set EXPO_PUBLIC_SENTRY_DSN environment variable.');
+    }
     return;
   }
 
@@ -114,23 +116,29 @@ export function addBreadcrumb(breadcrumb: {
  */
 export function testSentry(): void {
   if (Platform.OS === 'web') {
-    console.log('Sentry test skipped (web platform)');
+    if (__DEV__) {
+      console.log('Sentry test skipped (web platform)');
+    }
     return;
   }
 
   try {
     // Send a test message
     captureMessage('Sentry test message - integration working!', 'info');
-    
+
     // Send a test error
     const testError = new Error('Sentry test error - this is intentional');
-    captureError(testError, { 
+    captureError(testError, {
       context: 'sentry_test',
       timestamp: Date.now(),
     });
-    
-    console.log('✅ Sentry test completed! Check your Sentry dashboard for the test events.');
+
+    if (__DEV__) {
+      console.log('✅ Sentry test completed! Check your Sentry dashboard for the test events.');
+    }
   } catch (error) {
-    console.error('❌ Sentry test failed:', error);
+    if (__DEV__) {
+      console.error('❌ Sentry test failed:', error);
+    }
   }
 }

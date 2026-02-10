@@ -4,8 +4,8 @@
 
 import { Platform } from 'react-native';
 import { getDatabase } from './db';
-import type { TaperSettings } from './models';
 import { getDummySettings } from './db-web-dummy';
+import type { TaperSettings } from './models';
 
 /**
  * Create or update taper settings
@@ -132,7 +132,9 @@ export async function getTaperSettings(): Promise<TaperSettings | null> {
     try {
       triggers = JSON.parse(result.triggers);
     } catch (error) {
-      console.error('Error parsing triggers JSON:', error);
+      if (__DEV__) {
+        console.error('Error parsing triggers JSON:', error);
+      }
       triggers = undefined;
     }
   }
@@ -143,10 +145,10 @@ export async function getTaperSettings(): Promise<TaperSettings | null> {
     pricePerCan: result.price_per_can || undefined,
     currency:
       result.currency === 'DKK' ||
-      result.currency === 'SEK' ||
-      result.currency === 'NOK' ||
-      result.currency === 'EUR' ||
-      result.currency === 'USD'
+        result.currency === 'SEK' ||
+        result.currency === 'NOK' ||
+        result.currency === 'EUR' ||
+        result.currency === 'USD'
         ? result.currency
         : 'DKK',
     weeklyReductionPercent: result.weekly_reduction_percent,
