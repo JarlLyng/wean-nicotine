@@ -12,7 +12,6 @@
       "supportsTablet": false,
       "bundleIdentifier": "com.iamjarl.taper",
       "buildNumber": "1",
-      "deploymentTarget": "15.1",
       "icon": {
         "light": "./assets/images/ios-light.png",
         "dark": "./assets/images/ios-dark.png",
