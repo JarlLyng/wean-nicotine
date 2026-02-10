@@ -15,11 +15,8 @@ Android + iPad kan komme senere.
 - [ ] (Valgfrit) Første development build: `eas build --profile development --platform ios`
 
 ### Sentry Production Setup
-- [ ] Opret EAS Secret for `EXPO_PUBLIC_SENTRY_DSN`:
-  ```bash
-  eas secret:create --scope project --name EXPO_PUBLIC_SENTRY_DSN --value "https://din-dsn@sentry.io/project-id" --type string
-  ```
-- [ ] Verificer at Sentry ikke sender events i `__DEV__` (kun console logs)
+- [x] Opret EAS Secret for `EXPO_PUBLIC_SENTRY_DSN`
+- [x] Verificer at Sentry ikke sender events i `__DEV__` (kun console logs)
 - [ ] Test at Sentry modtager events i en production/TestFlight build (kræver Apple Developer Account)
 
 ### Version & Build Numbers
@@ -31,10 +28,10 @@ Android + iPad kan komme senere.
 ## 🎨 Assets & Branding
 
 ### App Icon & Splash Screen
-- [ ] Verificer at app icon + assets er korrekte:
-  - `assets/images/icon.png` (1024x1024)
-- [ ] Test splash screen på iOS
-- [ ] Verificer at splash screen farver matcher app tema
+- [x] Verificer at app icon + assets er korrekte:
+  - `assets/images/ios-light.png` osv. (understøtter mørk/tonet)
+- [x] Test splash screen på iOS
+- [x] Verificer at splash screen farver matcher app tema
 
 ### App Store Screenshots
 - [ ] Design og generer screenshots for iPhone (App Store Connect krav):
@@ -153,20 +150,20 @@ Android + iPad kan komme senere.
 ## 🧹 Code Cleanup
 
 ### Console Logs
-- [ ] Fjern eller kommenter ud alle `console.log` statements
-- [ ] Behold kun kritiske error logs
-- [ ] Overvej at bruge Sentry for error logging i stedet
+- [x] Fjern eller kommenter ud alle `console.log` statements (pakket ind i `__DEV__`)
+- [x] Behold kun kritiske error logs
+- [x] Overvej at bruge Sentry for error logging i stedet
 
 ### Code Quality
-- [ ] Kør `npm run lint` og fix alle warnings/errors
-- [ ] Verificer at der ikke er unused imports
-- [ ] Verificer at der ikke er unused variables
-- [ ] Check for TypeScript errors: `npx tsc --noEmit`
+- [x] Kør `npm run lint` og fix alle warnings/errors
+- [x] Verificer at der ikke er unused imports
+- [x] Verificer at der ikke er unused variables
+- [x] Check for TypeScript errors: `npx tsc --noEmit`
 
 ### Documentation
-- [ ] Opdater README.md med release information
-- [ ] Verificer at alle kommentarer i koden er korrekte
-- [ ] Opdater ROADMAP.md med completed phases
+- [x] Opdater README.md med release information
+- [x] Verificer at alle kommentarer i koden er korrekte
+- [x] Opdater ROADMAP.md med completed phases
 
 ---
 

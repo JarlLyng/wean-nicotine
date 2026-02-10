@@ -14,16 +14,16 @@ This section is the “at a glance” view of where the project stands right now
 - [x] Phase 2 — Progress & Motivation
 - [x] Phase 3 — Support & Resilience
 - [x] Phase 4 — Notifications & Polish
-- [x] Phase 4.5 — Design & Visual Polish
-- [x] Phase 5 — Release Preparation (first production build done; app on App Store Connect as **Taper!**)
+- [x] Phase 4.5 — Design & Visual Polish (App icons & splash screens updated)
+- [x] Phase 5 — Release Preparation (first production build initiated; Sentry configured)
 
 ### Phase 5 — what’s done vs pending
 - [x] EAS Build configured (`eas.json`); production iOS builds succeed
 - [x] App Store Connect app created (Bundle ID: `com.iamjarl.taper`); listing name: **Taper!**
-- [x] Build submitted to App Store Connect (TestFlight / App Store)
+- [x] Build submitted to App Store Connect (Production build initiated)
+- [x] Sentry production setup (EAS secrets configured)
 - [ ] App Store metadata finalised (screenshots, description, keywords)
 - [ ] Submit for App Review when ready
-- [ ] Sentry production setup (optional; verify in TestFlight/production build)
 
 ---
 
