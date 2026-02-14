@@ -45,3 +45,4 @@ app-example
 
 # IAMJARL design system snapshots (source of truth is remote)
 docs/iamjarl-v*/
+build-*.ipa

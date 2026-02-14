@@ -83,6 +83,9 @@ Taper helps users:
 **Note:** This app is designed for mobile (iOS/Android) only. SQLite is not available on web browsers.
 Initial release focus is **iPhone**.
 
+**New Architecture:** This app uses React Native's New Architecture (`newArchEnabled: true`), required by `react-native-reanimated` 4.x.
+
+
 ## 🔗 Links
 
 - **Marketing site**: `https://taper.iamjarl.com/`
