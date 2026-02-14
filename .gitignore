@@ -39,6 +39,9 @@ yarn-error.*
 
 app-example
 
+# iOS local Xcode env (machine-specific Node path; do not commit)
+ios/.xcode.env.local
+
 # generated native folders
 /ios
 /android
