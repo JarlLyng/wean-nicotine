@@ -11,7 +11,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.iamjarl.taper",
-      "buildNumber": "2",
+      "buildNumber": "3",
       "icon": {
         "light": "./assets/images/ios-light.png",
         "dark": "./assets/images/ios-dark.png",

@@ -159,28 +159,27 @@ npx expo start
 ### Environment Variables
 
 #### Development (Local)
-Create a `.env` file in the root directory with your Sentry DSN (optional for local development):
+Kopiér `.env.example` til `.env` og udfyld værdierne. Relevant for Sentry:
+
+- **EXPO_PUBLIC_SENTRY_DSN** – DSN fra Sentry (Client Keys). Bruges af appen til at sende fejl.
+- **SENTRY_AUTH_TOKEN** – (valgfrit) Auth token fra Sentry (User settings → Auth Tokens). Bruges af Sentry CLI fx til upload af source maps, så stack traces vises læsbart i Sentry.
+
+Sentry-events sendes **ikke** i development mode – de logges kun i konsollen.
+
+#### Production (EAS Build – lokalt eller sky)
+Ved `eas build` (både `--local` og uden) bruges **EAS Secrets** – ikke `.env`. Opret secret før build:
 
 ```bash
-EXPO_PUBLIC_SENTRY_DSN=https://your-sentry-dsn@sentry.io/project-id
+eas secret:create --name EXPO_PUBLIC_SENTRY_DSN --value "https://din-dsn@xxx.ingest.sentry.io/xxx" --scope project --type string --environment production
 ```
 
-**Note:** Sentry events are **not sent** in development mode - they're only logged to console. The `.env` file is only needed if you want to test Sentry integration locally.
-
-#### Production (EAS Build)
-For production builds, use **EAS Secrets** instead of `.env` files:
-
-```bash
-# Set the secret for your project
-eas secret:create --scope project --name EXPO_PUBLIC_SENTRY_DSN --value "https://your-sentry-dsn@sentry.io/project-id"
-
-# Or for a specific environment
-eas secret:create --scope project --name EXPO_PUBLIC_SENTRY_DSN --value "https://your-sentry-dsn@sentry.io/project-id" --type string --environment production
-```
+Lokal `.env` er til dev og evt. andre værktøjer; EAS injicerer kun variabler fra EAS Secrets under build.
 
 Get your Sentry DSN from [sentry.io](https://sentry.io) → Your Project → Settings → Client Keys (DSN).
 
 **Note:** Sentry is optional. The app will work without it, but errors won't be tracked in production.
+
+The DSN is also embedded via `app.config.js` → `extra.sentryDsn` at build time, so the production build has it at runtime. To verify Sentry in a TestFlight build: open **Settings** and tap **Send test event to Sentry** (Diagnostics section, only visible in production builds), then check your Sentry project for the test message and error.
 
 ### Testing Notifications
 
@@ -200,12 +199,27 @@ npx expo run:android
 
 ## 📦 Build & release (iOS)
 
-- **Bundle ID:** `com.iamjarl.taper`
-- **Build:** `npx eas build --profile production --platform ios`
-- **Submit to App Store Connect:** `npx eas submit --platform ios --latest`
-- **EAS project:** Linked to this repo; see [expo.dev](https://expo.dev) for build history and credentials.
+**Foretrukket workflow:** Lokalt build → IPA-fil → upload via **Transporter** til App Store Connect.
 
-No secrets or credentials are stored in this repository. Use EAS Secrets for `EXPO_PUBLIC_SENTRY_DSN` and similar.
+- **Bundle ID:** `com.iamjarl.taper`
+- **Lokalt build (IPA) – Expo fra terminal:**
+  1. **Build-nummer:** I `app.json` skal `ios.buildNumber` være højere end det sidste build uploadet til App Store Connect (fx 3, 4, 5 …). Version (`version`) er bruger-synlig (1.0.0) og ændres typisk først ved næste app-version.
+  2. **Sentry:** Opret EAS Secret så DSN er med i buildet:  
+     `eas secret:create --name EXPO_PUBLIC_SENTRY_DSN --value "https://din-dsn@xxx.ingest.sentry.io/xxx" --scope project --type string --environment production`
+  3. Fra projektroden:
+     ```bash
+     npx eas build --profile production --platform ios --local
+     ```
+     Buildet kører på din Mac og producerer en IPA (EAS viser stien når det er færdigt).
+  4. Upload IPA til App Store Connect via **Transporter** (Mac App Store).
+
+- **Kun Xcode (hvis du har `ios/` og foretrækker det):** Åbn `ios/Taper.xcworkspace` → **Product → Archive** → **Distribute App** / **Export** → IPA i **Transporter**. Sørg for at build-nummer i Xcode/Info.plist matcher eller overstiger sidst uploadet.
+
+- **Sentry:** Ved EAS Build (både `--local` og sky) injiceres `EXPO_PUBLIC_SENTRY_DSN` fra EAS Secrets. Lokal `.env` bruges ikke af EAS under build – brug derfor EAS Secret for production.
+
+**Alternativ (sky-build):** `npx eas build --profile production --platform ios` (uden `--local`) – bygger i skyen. Samme EAS Secret. Derefter fx `npx eas submit --platform ios --latest` eller download IPA og brug Transporter.
+
+Ingen secrets eller credentials ligger i repoet. Brug EAS Secrets for `EXPO_PUBLIC_SENTRY_DSN` (og evt. andre) til builds.
 
 ---
 

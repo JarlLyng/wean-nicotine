@@ -7,21 +7,23 @@ Android + iPad kan komme senere.
 
 ## 🔧 Teknisk Setup
 
-### EAS Build Konfiguration
-- [x] Opret `eas.json` med build profiler (iOS): development, preview, production
-- [x] Log ind i EAS: `eas login`
-- [x] Første production iOS build: `eas build --profile production --platform ios`
-- [x] Submit til App Store Connect: `eas submit --platform ios --latest`
-- [ ] (Valgfrit) Første development build: `eas build --profile development --platform ios`
+### Build & upload (foretrukket: EAS lokalt build → IPA → Transporter)
+- [ ] **Build-nummer:** I `app.json` skal `ios.buildNumber` være **større** end sidst uploadet til App Store Connect (fx 3, 4, 5 …). Opdater før hvert nyt build.
+- [ ] **EAS Secret (Sentry):** `eas secret:create --name EXPO_PUBLIC_SENTRY_DSN --value "https://..." --scope project --type string --environment production`
+- [ ] **Lokalt build:** Fra projektroden: `npx eas build --profile production --platform ios --local` → IPA produceres på din Mac.
+- [ ] **Upload:** Brug **Transporter** (Mac) til at uploade IPA til App Store Connect.
+
+**Alternativ:** Kun Xcode: åbn `ios/Taper.xcworkspace` → Product → Archive → Export/Upload. Eller EAS sky-build uden `--local`, derefter download IPA og Transporter.
 
 ### Sentry Production Setup
-- [x] Opret EAS Secret for `EXPO_PUBLIC_SENTRY_DSN`
-- [x] Verificer at Sentry ikke sender events i `__DEV__` (kun console logs)
-- [ ] Test at Sentry modtager events i en production/TestFlight build (kræver Apple Developer Account)
+- [ ] Opret EAS Secret for `EXPO_PUBLIC_SENTRY_DSN` (production) – bruges ved både `eas build --local` og sky-build.
+- [x] Sentry sender ikke events i `__DEV__` (kun console logs).
+- [ ] Verificer i TestFlight: Settings → Send test event to Sentry, tjek Sentry-projektet.
 
 ### Version & Build Numbers
-- [x] Version i `app.json`: "1.0.0"
-- [x] iOS `buildNumber` og `bundleIdentifier` i `app.json` (com.iamjarl.taper)
+- [x] Version i `app.json`: "1.0.0" (bruger-synlig; ændres ved ny app-version).
+- [x] `ios.buildNumber` i `app.json` (com.iamjarl.taper) – skal inkrementeres før hvert nyt upload.
+- [x] `eas.json`: `cli.appVersionSource`: "local" (version/build fra app.json).
 
 ---
 
@@ -88,8 +90,8 @@ Android + iPad kan komme senere.
 ## 🧪 Testing
 
 ### TestFlight (iOS)
-- [ ] Byg production build: `eas build --profile production --platform ios`
-- [ ] Upload til TestFlight
+- [ ] Byg production build lokalt (Xcode Archive → IPA) eller via EAS
+- [ ] Upload IPA til App Store Connect via Transporter (eller EAS Submit)
 - [ ] Inviter testers (interne og eksterne)
 - [ ] Test alle flows:
   - [ ] Onboarding (ny bruger)
@@ -186,7 +188,7 @@ Android + iPad kan komme senere.
 
 ### iOS App Store
 - [x] Opret app i App Store Connect
-- [x] Upload build via EAS Submit (`eas submit --platform ios --latest`)
+- [ ] Upload build: IPA via **Transporter** (foretrukket) eller EAS Submit
 - [ ] Udfyld alle metadata felter (beskrivelse, keywords, screenshots)
 - [ ] Upload screenshots
 - [ ] Konfigurer pricing (gratis)

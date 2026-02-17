@@ -18,6 +18,7 @@ import {
   cancelDailyCheckIn,
   getAllScheduledNotifications,
 } from '@/lib/notifications';
+import { testSentry } from '@/lib/sentry';
 
 export default function SettingsScreen() {
   const { colors } = useDesignTokens();
@@ -217,6 +218,30 @@ export default function SettingsScreen() {
               textStyle={{ color: colors.error }}
             />
           </Card>
+
+          {/* Sentry test – only in production so TestFlight/build can verify events reach Sentry */}
+          {!__DEV__ && (
+            <Card variant="elevated" style={styles.section} padding="lg">
+              <View style={styles.sectionTitleRow}>
+                <Text style={styles.sectionTitle}>Diagnostics</Text>
+              </View>
+              <Text style={styles.sectionDescription}>
+                Send a test error and message to Sentry to verify error reporting works.
+              </Text>
+              <Button
+                title="Send test event to Sentry"
+                onPress={() => {
+                  testSentry();
+                  Alert.alert(
+                    'Test sent',
+                    'If Sentry is configured, a test message and error were sent. Check your Sentry project in a few seconds.'
+                  );
+                }}
+                variant="ghost"
+                style={{ marginTop: spacing.sm }}
+              />
+            </Card>
+          )}
         </View>
       </ScrollView>
     </Screen>
