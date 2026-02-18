@@ -170,7 +170,7 @@ Sentry-events sendes **ikke** i development mode – de logges kun i konsollen.
 Ved `eas build` (både `--local` og uden) bruges **EAS Secrets** – ikke `.env`. Opret secret før build:
 
 ```bash
-eas secret:create --name EXPO_PUBLIC_SENTRY_DSN --value "https://din-dsn@xxx.ingest.sentry.io/xxx" --scope project --type string --environment production
+eas env:create --name EXPO_PUBLIC_SENTRY_DSN --value "https://din-dsn@xxx.ingest.sentry.io/xxx" --environment production --visibility plaintext
 ```
 
 Lokal `.env` er til dev og evt. andre værktøjer; EAS injicerer kun variabler fra EAS Secrets under build.
@@ -205,7 +205,7 @@ npx expo run:android
 - **Lokalt build (IPA) – Expo fra terminal:**
   1. **Build-nummer:** I `app.json` skal `ios.buildNumber` være højere end det sidste build uploadet til App Store Connect (fx 3, 4, 5 …). Version (`version`) er bruger-synlig (1.0.0) og ændres typisk først ved næste app-version.
   2. **Sentry:** Opret EAS Secret så DSN er med i buildet:  
-     `eas secret:create --name EXPO_PUBLIC_SENTRY_DSN --value "https://din-dsn@xxx.ingest.sentry.io/xxx" --scope project --type string --environment production`
+     `eas env:create --name EXPO_PUBLIC_SENTRY_DSN --value "https://din-dsn@xxx.ingest.sentry.io/xxx" --environment production --visibility plaintext`
   3. Fra projektroden:
      ```bash
      npx eas build --profile production --platform ios --local

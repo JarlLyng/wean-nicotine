@@ -9,7 +9,7 @@ Android + iPad kan komme senere.
 
 ### Build & upload (foretrukket: EAS lokalt build → IPA → Transporter)
 - [ ] **Build-nummer:** I `app.json` skal `ios.buildNumber` være **større** end sidst uploadet til App Store Connect (fx 3, 4, 5 …). Opdater før hvert nyt build.
-- [ ] **EAS Secret (Sentry):** `eas secret:create --name EXPO_PUBLIC_SENTRY_DSN --value "https://..." --scope project --type string --environment production`
+- [ ] **EAS Secret (Sentry):** `eas env:create --name EXPO_PUBLIC_SENTRY_DSN --value "https://..." --environment production --visibility plaintext`
 - [ ] **Lokalt build:** Fra projektroden: `npx eas build --profile production --platform ios --local` → IPA produceres på din Mac.
 - [ ] **Upload:** Brug **Transporter** (Mac) til at uploade IPA til App Store Connect.
 
