@@ -215,7 +215,7 @@ npx expo run:android
 
 - **Kun Xcode (hvis du har `ios/` og foretrækker det):** Åbn `ios/Taper.xcworkspace` → **Product → Archive** → **Distribute App** / **Export** → IPA i **Transporter**. Sørg for at build-nummer i Xcode/Info.plist matcher eller overstiger sidst uploadet.
 
-- **Sentry:** Ved EAS Build (både `--local` og sky) injiceres `EXPO_PUBLIC_SENTRY_DSN` fra EAS Secrets. Lokal `.env` bruges ikke af EAS under build – brug derfor EAS Secret for production.
+- **Sentry:** Ved EAS Build injiceres `EXPO_PUBLIC_SENTRY_DSN` fra EAS env (production). Hvis der ikke kommer events ind i Sentry: (1) Tjek at variablen findes: `eas env:list`; (2) Byg kun efter variablen er oprettet; (3) I appen (TestFlight): Settings → Send test event to Sentry – vises "Sentry not configured", manglede DSN i den build (ved lokalt build kan du prøve at køre `export EXPO_PUBLIC_SENTRY_DSN="https://..."` i terminalen før `eas build --local`).
 
 **Alternativ (sky-build):** `npx eas build --profile production --platform ios` (uden `--local`) – bygger i skyen. Samme EAS Secret. Derefter fx `npx eas submit --platform ios --latest` eller download IPA og brug Transporter.
 

@@ -7,6 +7,16 @@ import * as Sentry from '@sentry/react-native';
 import Constants from 'expo-constants';
 import { Platform } from 'react-native';
 
+/** True only when we had a DSN and called Sentry.init() – use to show "not configured" in Diagnostics. */
+let sentryInitialized = false;
+
+/**
+ * Whether Sentry was initialized with a DSN in this build (for Diagnostics UI).
+ */
+export function isSentryConfigured(): boolean {
+  return sentryInitialized;
+}
+
 /**
  * Initialize Sentry
  * Call this early in app lifecycle (in app/_layout.tsx or index.tsx)
@@ -18,7 +28,7 @@ export function initSentry(): void {
   }
 
   // DSN: prefer env (Metro inlining), fallback to extra from app.config.js (set at EAS build time).
-  // EAS Secrets are available when app.config.js runs, so extra.sentryDsn is reliable in production builds.
+  // EAS env vars are injected when EAS runs the build; app.config.js reads them and extra is embedded.
   const dsn =
     process.env.EXPO_PUBLIC_SENTRY_DSN ||
     (Constants.expoConfig?.extra as { sentryDsn?: string } | undefined)?.sentryDsn ||
@@ -26,11 +36,12 @@ export function initSentry(): void {
 
   if (!dsn || dsn.trim() === '') {
     if (__DEV__) {
-      console.warn('Sentry DSN not configured. Set EXPO_PUBLIC_SENTRY_DSN (EAS Secret or .env).');
+      console.warn('Sentry DSN not configured. Set EXPO_PUBLIC_SENTRY_DSN (EAS env or .env).');
     }
     return;
   }
 
+  sentryInitialized = true;
   Sentry.init({
     dsn,
     debug: __DEV__, // Enable debug mode in development

@@ -18,7 +18,7 @@ import {
   cancelDailyCheckIn,
   getAllScheduledNotifications,
 } from '@/lib/notifications';
-import { testSentry } from '@/lib/sentry';
+import { testSentry, isSentryConfigured } from '@/lib/sentry';
 
 export default function SettingsScreen() {
   const { colors } = useDesignTokens();
@@ -231,10 +231,17 @@ export default function SettingsScreen() {
               <Button
                 title="Send test event to Sentry"
                 onPress={() => {
+                  if (!isSentryConfigured()) {
+                    Alert.alert(
+                      'Sentry not configured',
+                      'No DSN in this build. Add EXPO_PUBLIC_SENTRY_DSN in EAS (production) and create a new build. See README.'
+                    );
+                    return;
+                  }
                   testSentry();
                   Alert.alert(
                     'Test sent',
-                    'If Sentry is configured, a test message and error were sent. Check your Sentry project in a few seconds.'
+                    'A test message and error were sent. Check your Sentry project in a few seconds.'
                   );
                 }}
                 variant="ghost"
