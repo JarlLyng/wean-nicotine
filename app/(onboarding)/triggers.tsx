@@ -59,25 +59,19 @@ export default function TriggersScreen() {
         return;
       }
 
-      // Ensure we start fresh - delete any existing settings first
-      // This handles the case where user did "Start Over" and is re-doing onboarding
-      devLog('Onboarding complete: Deleting any existing data...');
-      const { deleteTaperSettings } = await import('@/lib/db-settings');
-      const { deleteUserPlan } = await import('@/lib/db-user-plan');
-      const { deleteAllLogEntries } = await import('@/lib/db-log-entries');
-      
-      // Delete in sequence to ensure clean state
-      await deleteTaperSettings();
-      await deleteUserPlan();
-      await deleteAllLogEntries();
-      
-      // Verify deletion
+      // Ensure we start fresh (atomic reset; handles "Start Over" → re-do onboarding)
+      devLog('Onboarding complete: Resetting any existing data...');
+      const { resetAllData } = await import('@/lib/db');
+      const { deleteAllAnalytics } = await import('@/lib/analytics');
+      await resetAllData();
+      await deleteAllAnalytics();
+
       const checkSettings = await getTaperSettings();
       const checkPlan = await getUserPlan();
       if (checkSettings || checkPlan) {
         devWarn('Warning: Data not fully deleted before creating new', { checkSettings, checkPlan });
       } else {
-        devLog('Onboarding complete: Data successfully deleted');
+        devLog('Onboarding complete: Data successfully reset');
       }
 
       // Save taper settings (force create new since we just deleted)
@@ -129,7 +123,7 @@ export default function TriggersScreen() {
       });
       
       if (!verifyPlan || !verifySettings) {
-        console.error('ERROR: Failed to verify saved data!', { verifyPlan, verifySettings });
+        if (__DEV__) console.error('ERROR: Failed to verify saved data!', { verifyPlan, verifySettings });
         throw new Error('Failed to verify saved data');
       }
       
@@ -146,7 +140,7 @@ export default function TriggersScreen() {
       // Navigate directly to home - this replaces onboarding stack with tabs
       router.replace('/(tabs)/home');
     } catch (error) {
-      console.error('Error completing onboarding:', error);
+      if (__DEV__) console.error('Error completing onboarding:', error);
       alert('Something went wrong. Please try again.');
       setIsSaving(false);
     }
@@ -154,7 +148,10 @@ export default function TriggersScreen() {
 
   return (
     <Screen title="Common Triggers">
-      <ScrollView contentContainerStyle={triggersStyles.scrollContent} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerStyle={triggersStyles.scrollContent}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled">
         <View style={triggersStyles.content}>
           <Card variant="flat" style={triggersStyles.card} padding="lg">
             <Text style={triggersStyles.description}>

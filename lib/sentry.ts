@@ -76,7 +76,7 @@ export function initSentry(): void {
  * Log an error to Sentry
  */
 export function captureError(error: Error, context?: Record<string, any>): void {
-  if (Platform.OS === 'web') {
+  if (Platform.OS === 'web' || !sentryInitialized) {
     return;
   }
 
@@ -89,7 +89,7 @@ export function captureError(error: Error, context?: Record<string, any>): void 
  * Log a message to Sentry
  */
 export function captureMessage(message: string, level: Sentry.SeverityLevel = 'info'): void {
-  if (Platform.OS === 'web') {
+  if (Platform.OS === 'web' || !sentryInitialized) {
     return;
   }
 
@@ -100,7 +100,7 @@ export function captureMessage(message: string, level: Sentry.SeverityLevel = 'i
  * Set user context for error tracking
  */
 export function setUser(user: { id?: string; email?: string; username?: string } | null): void {
-  if (Platform.OS === 'web') {
+  if (Platform.OS === 'web' || !sentryInitialized) {
     return;
   }
 
@@ -116,7 +116,7 @@ export function addBreadcrumb(breadcrumb: {
   level?: Sentry.SeverityLevel;
   data?: Record<string, any>;
 }): void {
-  if (Platform.OS === 'web') {
+  if (Platform.OS === 'web' || !sentryInitialized) {
     return;
   }
 
@@ -131,6 +131,12 @@ export function testSentry(): void {
   if (Platform.OS === 'web') {
     if (__DEV__) {
       console.log('Sentry test skipped (web platform)');
+    }
+    return;
+  }
+  if (!sentryInitialized) {
+    if (__DEV__) {
+      console.warn('Sentry test skipped (DSN not configured)');
     }
     return;
   }

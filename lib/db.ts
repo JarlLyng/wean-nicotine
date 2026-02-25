@@ -56,12 +56,12 @@ export async function initDatabase(): Promise<SQLiteDatabase> {
   }
 
   initPromise = (async (): Promise<SQLiteDatabase> => {
-    if (db) return db;
+    try {
+      if (db) return db;
 
-    db = await SQLite.openDatabaseAsync('taper.db') as SQLiteDatabase;
+      db = (await SQLite.openDatabaseAsync('taper.db')) as SQLiteDatabase;
 
-  // Create tables (execAsync can handle multiple statements separated by semicolons)
-  await db.execAsync(`
+      await db.execAsync(`
     CREATE TABLE IF NOT EXISTS log_entries (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       type TEXT NOT NULL CHECK(type IN ('pouch_used', 'craving_resisted')),
@@ -70,7 +70,7 @@ export async function initDatabase(): Promise<SQLiteDatabase> {
     );
   `);
 
-  await db.execAsync(`
+      await db.execAsync(`
     CREATE TABLE IF NOT EXISTS taper_settings (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       baseline_pouches_per_day INTEGER NOT NULL,
@@ -84,32 +84,25 @@ export async function initDatabase(): Promise<SQLiteDatabase> {
     );
   `);
 
-  // Add triggers column if it doesn't exist (migration for existing databases)
-  try {
-    await db.execAsync(`
-      ALTER TABLE taper_settings ADD COLUMN triggers TEXT;
-    `);
-  } catch (error) {
-    // Column already exists, ignore error
-  }
+      try {
+        await db.execAsync(`ALTER TABLE taper_settings ADD COLUMN triggers TEXT;`);
+      } catch {
+        // Column already exists
+      }
+      try {
+        await db.execAsync(`ALTER TABLE taper_settings ADD COLUMN currency TEXT;`);
+      } catch {
+        // Column already exists
+      }
 
-  // Add currency column if it doesn't exist (migration for existing databases)
-  try {
-    await db.execAsync(`
-      ALTER TABLE taper_settings ADD COLUMN currency TEXT;
-    `);
-  } catch (error) {
-    // Column already exists, ignore error
-  }
-
-  await db.execAsync(`
+      await db.execAsync(`
     CREATE TABLE IF NOT EXISTS app_preferences (
       key TEXT PRIMARY KEY,
       value TEXT NOT NULL
     );
   `);
 
-  await db.execAsync(`
+      await db.execAsync(`
     CREATE TABLE IF NOT EXISTS user_plan (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       settings_id INTEGER NOT NULL,
@@ -121,26 +114,51 @@ export async function initDatabase(): Promise<SQLiteDatabase> {
     );
   `);
 
-  await db.execAsync(`
-    CREATE INDEX IF NOT EXISTS idx_log_entries_timestamp ON log_entries(timestamp);
-  `);
+      await db.execAsync(`CREATE INDEX IF NOT EXISTS idx_log_entries_timestamp ON log_entries(timestamp);`);
+      await db.execAsync(`CREATE INDEX IF NOT EXISTS idx_log_entries_type ON log_entries(type);`);
 
-  await db.execAsync(`
-    CREATE INDEX IF NOT EXISTS idx_log_entries_type ON log_entries(type);
-  `);
-
-    return db;
+      return db;
+    } catch (error) {
+      initPromise = null;
+      db = null;
+      throw error;
+    }
   })();
 
   return initPromise;
 }
 
 /**
- * Get the database instance (initializes if needed)
+ * Get the database instance (initializes if needed).
+ * If init previously failed, the next call will retry (initPromise is cleared on failure).
  */
 export async function getDatabase(): Promise<SQLiteDatabase> {
   if (!db) {
     db = await initDatabase();
   }
   return db;
+}
+
+/**
+ * Delete all data from core tables in a single transaction (Start Over).
+ * Does not touch the analytics table – call deleteAllAnalytics() separately.
+ * On failure, transaction is rolled back.
+ */
+export async function resetAllData(): Promise<void> {
+  const database = await getDatabase();
+  try {
+    await database.runAsync('BEGIN');
+    await database.runAsync('DELETE FROM log_entries');
+    await database.runAsync('DELETE FROM taper_settings');
+    await database.runAsync('DELETE FROM user_plan');
+    await database.runAsync('DELETE FROM app_preferences');
+    await database.runAsync('COMMIT');
+  } catch (error) {
+    try {
+      await database.runAsync('ROLLBACK');
+    } catch {
+      // Ignore rollback errors
+    }
+    throw error;
+  }
 }

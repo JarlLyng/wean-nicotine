@@ -4,6 +4,8 @@
 **Status:** Active  
 **Version:** 1.1
 
+**Source of truth:** `lib/design.ts` (IAMJARL tokens) and `lib/theme.ts` (re-exports). Do not rely on this doc for exact pixel values – use the code.
+
 ---
 
 ## 🎨 Design Philosophy
@@ -32,26 +34,17 @@ Praktisk regel:
 
 ## 📐 Spacing Scale
 
-Consistent spacing tokens for padding, margins, and gaps:
+Values come from `lib/design.ts` → `designTokens.spacing`:
 
 ```typescript
-xs: 4px   // Tight spacing
-sm: 8px   // Small spacing
-md: 16px  // Medium spacing (default)
-lg: 24px  // Large spacing
-xl: 32px  // Extra large spacing
-xxl: 48px // Maximum spacing
+xs: 4   sm: 8   md: 12   lg: 16   xl: 20   xxl: 24   xxxl: 32
 ```
 
 ---
 
 ## ✍️ Typography
 
-### Scale
-
-- **Title:** 28px / 36px line height / Bold (700)
-- **Body:** 16px / 24px line height / Regular (400)
-- **Caption:** 14px / 20px line height / Regular (400)
+Scale and line heights come from `lib/design.ts` → `designTokens.typography`. `lib/theme.ts` maps them to React Native (e.g. `typography.title`, `typography.body`, `typography.caption`).
 
 ### Principles
 
@@ -106,9 +99,9 @@ Brug gradient sparsomt – det skal føles roligt, ikke “larmende”.
 
 ### Buttons
 
-- **Primary:** Teal background, white text
-- **Secondary:** Transparent with teal border
-- **Ghost:** Transparent, teal text
+- **Primary:** Primary token background (`colors.primary`), contrasting text (`colors.onPrimary`)
+- **Secondary:** Transparent with primary border
+- **Ghost:** Transparent, primary text
 
 ---
 
@@ -177,9 +170,9 @@ borderRadius: borderRadius.lg
 
 ## 🎨 Design Principles Summary
 
-1. **Gradients:** Subtle background on all screens, primary gradient for visual elements
-2. **Surfaces:** Flat white cards for content areas
-3. **Colors:** Calm teal/green gradient for accents and backgrounds
+1. **Gradients:** Subtle background where used; primary token for accents
+2. **Surfaces:** Flat cards (tokens: `background.card`, `surface.default`)
+3. **Colors:** IAMJARL tokens (light: green primary; dark: lime); see `lib/design.ts`
 4. **Typography:** Clear hierarchy, accessible scaling
 5. **Spacing:** Consistent scale throughout
 6. **Accessibility:** Built-in from the start

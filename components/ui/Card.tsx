@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { StyleProp, ViewStyle } from 'react-native';
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { spacing, borderRadius, shadows, animations } from '@/lib/theme';
@@ -17,8 +17,11 @@ export function Card({ children, variant = 'flat', style, padding = 'md' }: Card
   const { colors } = useDesignTokens();
   const opacity = useSharedValue(0);
   const translateY = useSharedValue(10);
+  const hasAnimated = useRef(false);
 
   useEffect(() => {
+    if (hasAnimated.current) return;
+    hasAnimated.current = true;
     opacity.value = withTiming(1, {
       duration: animations.normal,
       easing: Easing.bezier(0.4, 0, 0.2, 1),

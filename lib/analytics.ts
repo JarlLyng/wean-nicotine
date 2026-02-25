@@ -42,7 +42,7 @@ export async function logEvent(eventType: string, data?: any): Promise<void> {
       [eventType, Date.now(), data ? JSON.stringify(data) : null]
     );
   } catch (error) {
-    console.error('Error logging analytics event:', error);
+    if (__DEV__) console.error('Error logging analytics event:', error);
     // Fail silently - analytics should never break the app
     // But capture in Sentry for monitoring
     if (error instanceof Error) {
@@ -89,7 +89,7 @@ export async function getAnalyticsEvents(
       data: row.data ? JSON.parse(row.data) : undefined,
     }));
   } catch (error) {
-    console.error('Error getting analytics events:', error);
+    if (__DEV__) console.error('Error getting analytics events:', error);
     return [];
   }
 }
@@ -103,6 +103,23 @@ export async function clearOldAnalytics(): Promise<void> {
     const thirtyDaysAgo = Date.now() - 30 * 24 * 60 * 60 * 1000;
     await db.runAsync('DELETE FROM analytics WHERE timestamp < ?', [thirtyDaysAgo]);
   } catch (error) {
-    console.error('Error clearing old analytics:', error);
+    if (__DEV__) console.error('Error clearing old analytics:', error);
+  }
+}
+
+/**
+ * Delete all analytics events (e.g. when user does Start Over).
+ * Keeps the table; only data is removed.
+ */
+export async function deleteAllAnalytics(): Promise<void> {
+  try {
+    const db = await getDatabase();
+    await db.runAsync('DELETE FROM analytics');
+  } catch (error) {
+    if (__DEV__) console.error('Error deleting all analytics:', error);
+    if (error instanceof Error) {
+      captureError(error, { context: 'analytics_delete_all' });
+    }
+    throw error;
   }
 }

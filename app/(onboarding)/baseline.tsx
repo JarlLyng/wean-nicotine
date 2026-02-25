@@ -31,7 +31,10 @@ export default function BaselineScreen() {
 
   return (
     <Screen title="Set Your Baseline">
-      <ScrollView contentContainerStyle={baselineStyles.scrollContent} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerStyle={baselineStyles.scrollContent}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled">
         <View style={baselineStyles.content}>
           <Card variant="flat" style={baselineStyles.card} padding="lg">
             <Text style={baselineStyles.description}>
@@ -53,6 +56,7 @@ export default function BaselineScreen() {
                 placeholderTextColor={colors.text.secondary}
                 keyboardType="number-pad"
                 autoFocus
+                blurOnSubmit={false}
                 accessibilityLabel="Baseline pouches per day"
                 accessibilityHint="Enter how many pouches you typically use per day."
               />

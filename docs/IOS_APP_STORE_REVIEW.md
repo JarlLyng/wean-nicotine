@@ -1,9 +1,11 @@
 # iOS / App Store Review — Taper
 Date: 2026-02-10
 
-## Remediation (2026-02)
+**Current status:** All findings from the 2026-02 review are closed. The table and sections below are kept as historical record.
 
-All 10 findings have been addressed:
+## Remediation (2026-02) — closed
+
+All 10 findings were addressed:
 
 | # | Finding | Fix |
 |---|---------|-----|
@@ -15,17 +17,17 @@ All 10 findings have been addressed:
 | 6 | Analytics retention | `clearOldAnalytics()` called in `useAppInitialize` after `initAnalytics()`. |
 | 7 | Allowance display | Home shows one decimal via `formatAllowanceDisplay()`; state uses 1 decimal. |
 | 8 | iOS min version | `app.json` `ios.deploymentTarget`: `"15.1"`. |
-| 9 | Experimental features | `newArchEnabled`: false, `reactCompiler`: false for v1.0. |
+| 9 | Experimental features | `newArchEnabled`: true (required by react-native-reanimated 4.x), `reactCompiler`: false. |
 | 10 | Notifications link | Settings index: "Notification options" button → `/(tabs)/settings/notifications`. |
 
 Config is applied via `app.config.js` (extends `app.json`, adds the two plugins).
 
 ---
 
-## Summary
-This review focuses on App Store readiness for iOS, release risks, and correctness/performance concerns. I reviewed the config, iOS native project, and core data/notification flows.
+## Summary (2026-02 review)
+This review focused on App Store readiness for iOS, release risks, and correctness/performance concerns. I reviewed the config, iOS native project, and core data/notification flows.
 
-## Findings (ordered by severity)
+## Historical findings (ordered by severity) — all addressed
 
 1. [BLOCKER] Push notification entitlement is set to development
 Location: `ios/Taper/Taper.entitlements:5-6`

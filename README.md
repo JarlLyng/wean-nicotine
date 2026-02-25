@@ -175,11 +175,7 @@ eas env:create --name EXPO_PUBLIC_SENTRY_DSN --value "https://din-dsn@xxx.ingest
 
 Lokal `.env` er til dev og evt. andre værktøjer; EAS injicerer kun variabler fra EAS Secrets under build.
 
-Get your Sentry DSN from [sentry.io](https://sentry.io) → Your Project → Settings → Client Keys (DSN).
-
-**Note:** Sentry is optional. The app will work without it, but errors won't be tracked in production.
-
-The DSN is also embedded via `app.config.js` → `extra.sentryDsn` at build time, so the production build has it at runtime. To verify Sentry in a TestFlight build: open **Settings** and tap **Send test event to Sentry** (Diagnostics section, only visible in production builds), then check your Sentry project for the test message and error.
+**Note:** Sentry is optional. The app will work without it, but errors won't be tracked in production. Konfiguration og verifikation: **`docs/SENTRY.md`**. DSN indlejres ved build via `app.config.js` → `extra.sentryDsn`.
 
 ### Testing Notifications
 
@@ -215,7 +211,7 @@ npx expo run:android
 
 - **Kun Xcode (hvis du har `ios/` og foretrækker det):** Åbn `ios/Taper.xcworkspace` → **Product → Archive** → **Distribute App** / **Export** → IPA i **Transporter**. Sørg for at build-nummer i Xcode/Info.plist matcher eller overstiger sidst uploadet.
 
-- **Sentry:** Ved EAS Build injiceres `EXPO_PUBLIC_SENTRY_DSN` fra EAS env (production). Hvis der ikke kommer events ind i Sentry: (1) Tjek at variablen findes: `eas env:list`; (2) Byg kun efter variablen er oprettet; (3) I appen (TestFlight): Settings → Send test event to Sentry – vises "Sentry not configured", manglede DSN i den build (ved lokalt build kan du prøve at køre `export EXPO_PUBLIC_SENTRY_DSN="https://..."` i terminalen før `eas build --local`).
+- **Sentry:** DSN kommer fra EAS env (production). Ved lokalt build: sæt `export EXPO_PUBLIC_SENTRY_DSN="https://..."` i terminalen før `eas build --local`. Fejlsøgning: `docs/SENTRY.md`.
 
 **Alternativ (sky-build):** `npx eas build --profile production --platform ios` (uden `--local`) – bygger i skyen. Samme EAS Secret. Derefter fx `npx eas submit --platform ios --latest` eller download IPA og brug Transporter.
 
@@ -231,7 +227,7 @@ See `ROADMAP.md` for planned milestones and future ideas.
 
 ## 📄 License
 
-TBD
+License not yet specified. All rights reserved until stated otherwise.
 
 ---
 

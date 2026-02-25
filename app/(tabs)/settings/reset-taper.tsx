@@ -4,9 +4,8 @@ import { useRouter } from 'expo-router';
 import { Screen } from '@/components/Screen';
 import { spacing } from '@/lib/theme';
 import { useDesignTokens } from '@/lib/design';
-import { deleteTaperSettings } from '@/lib/db-settings';
-import { deleteUserPlan } from '@/lib/db-user-plan';
-import { deleteAllPreferences } from '@/lib/db-preferences';
+import { resetAllData } from '@/lib/db';
+import { deleteAllAnalytics } from '@/lib/analytics';
 import { cancelAllNotifications } from '@/lib/notifications';
 
 export default function ResetTaperScreen() {
@@ -33,34 +32,28 @@ export default function ResetTaperScreen() {
           onPress: async () => {
             setIsStartingOver(true);
             try {
-              // Cancel scheduled notifications (daily check-in, trigger reminders, etc.)
+              // Cancel scheduled notifications first (no DB)
               devLog('Starting over: Canceling notifications...');
               await cancelAllNotifications();
 
-              // Delete all settings, plans, and log entries
-              devLog('Starting over: Deleting taper settings...');
-              await deleteTaperSettings();
-              devLog('Starting over: Deleting user plan...');
-              await deleteUserPlan();
-              devLog('Starting over: Deleting all log entries...');
-              const { deleteAllLogEntries } = await import('@/lib/db-log-entries');
-              await deleteAllLogEntries();
-              devLog('Starting over: Deleting app preferences...');
-              await deleteAllPreferences();
-              
+              // Atomic reset: all DB data in one transaction (settings, plan, log entries, preferences, analytics)
+              devLog('Starting over: Resetting all data...');
+              await resetAllData();
+              await deleteAllAnalytics();
+
               // Verify deletion
               const { getTaperSettings } = await import('@/lib/db-settings');
               const { getUserPlan } = await import('@/lib/db-user-plan');
               const verifySettings = await getTaperSettings();
               const verifyPlan = await getUserPlan();
-              
+
               if (verifySettings || verifyPlan) {
-                console.error('ERROR: Data still exists after deletion!', { verifySettings, verifyPlan });
+                if (__DEV__) console.error('ERROR: Data still exists after deletion!', { verifySettings, verifyPlan });
                 Alert.alert('Warning', 'Some data may not have been cleared. Please try again.');
                 setIsStartingOver(false);
                 return;
               }
-              
+
               devLog('Starting over: Data successfully deleted');
 
               Alert.alert('Success', 'All data has been cleared. Returning to onboarding.', [
@@ -96,6 +89,7 @@ export default function ResetTaperScreen() {
               • Your taper settings are deleted{'\n'}
               • Your progress history (logs) is deleted{'\n'}
               • Your plan + allowance are deleted{'\n'}
+              • Local analytics (usage stats) are deleted{'\n'}
               • Scheduled notifications are canceled{'\n'}
               • You&apos;ll return to onboarding
             </Text>

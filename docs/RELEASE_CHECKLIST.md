@@ -16,9 +16,9 @@ Android + iPad kan komme senere.
 **Alternativ:** Kun Xcode: åbn `ios/Taper.xcworkspace` → Product → Archive → Export/Upload. Eller EAS sky-build uden `--local`, derefter download IPA og Transporter.
 
 ### Sentry Production Setup
-- [ ] Opret EAS Secret for `EXPO_PUBLIC_SENTRY_DSN` (production) – bruges ved både `eas build --local` og sky-build.
+- [ ] Opret EAS Secret for `EXPO_PUBLIC_SENTRY_DSN` (production). Ved lokalt build: eksporter DSN i shell før build (se `docs/SENTRY.md`).
 - [x] Sentry sender ikke events i `__DEV__` (kun console logs).
-- [ ] Verificer i TestFlight: Settings → Send test event to Sentry, tjek Sentry-projektet.
+- [ ] Verificer i Sentry-projektet at events ankommer når der sker fejl i appen (TestFlight/production).
 
 ### Version & Build Numbers
 - [x] Version i `app.json`: "1.0.0" (bruger-synlig; ændres ved ny app-version).
@@ -172,9 +172,8 @@ Android + iPad kan komme senere.
 ## 📊 Monitoring & Analytics
 
 ### Sentry Setup
-- [ ] Verificer at Sentry er konfigureret korrekt
-- [ ] Test error tracking (throw en test error)
-- [ ] Verificer at breadcrumbs logges
+- [ ] EAS Secret sat: `EXPO_PUBLIC_SENTRY_DSN` for production (se `docs/SENTRY.md`)
+- [ ] Verificer at events ankommer i Sentry ved fejl i production/TestFlight
 - [ ] Konfigurer alerts i Sentry (valgfrit)
 
 ### App Performance
@@ -219,7 +218,7 @@ Før du submitter, verificer:
 - [ ] Privacy policy er tilgængelig
 - [ ] Sentry er konfigureret
 - [ ] Version numbers er korrekte
-- [ ] Console logs er fjernet
+- [ ] Console kun i __DEV__ (ingen i production)
 - [ ] Code quality er god
 - [ ] App fungerer på iPhone (iOS)
 - [ ] Alle flows er testet

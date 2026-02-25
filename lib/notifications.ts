@@ -71,7 +71,7 @@ export async function scheduleDailyCheckIn(hour: number = 20, minute: number = 0
 
     return notificationId;
   } catch (error) {
-    console.error('Error scheduling daily check-in:', error);
+    if (__DEV__) console.error('Error scheduling daily check-in:', error);
     if (error instanceof Error) {
       captureError(error, { context: 'schedule_daily_checkin' });
     }
@@ -93,7 +93,7 @@ export async function cancelDailyCheckIn(): Promise<void> {
       await Notifications.cancelScheduledNotificationAsync(notification.identifier);
     }
   } catch (error) {
-    console.error('Error canceling daily check-in:', error);
+    if (__DEV__) console.error('Error canceling daily check-in:', error);
     if (error instanceof Error) {
       captureError(error, { context: 'cancel_daily_checkin' });
     }
@@ -125,7 +125,7 @@ export async function scheduleTriggerReminder(
 
     return notificationId;
   } catch (error) {
-    console.error('Error scheduling trigger reminder:', error);
+    if (__DEV__) console.error('Error scheduling trigger reminder:', error);
     if (error instanceof Error) {
       captureError(error, { context: 'schedule_trigger_reminder' });
     }
@@ -177,7 +177,7 @@ export async function scheduleTriggerReminders(
 
     return notificationId;
   } catch (error) {
-    console.error('Error scheduling trigger reminders:', error);
+    if (__DEV__) console.error('Error scheduling trigger reminders:', error);
     if (error instanceof Error) {
       captureError(error, { context: 'schedule_trigger_reminders' });
     }
@@ -199,7 +199,7 @@ export async function cancelTriggerReminders(): Promise<void> {
       await Notifications.cancelScheduledNotificationAsync(notification.identifier);
     }
   } catch (error) {
-    console.error('Error canceling trigger reminders:', error);
+    if (__DEV__) console.error('Error canceling trigger reminders:', error);
     if (error instanceof Error) {
       captureError(error, { context: 'cancel_trigger_reminders' });
     }
@@ -213,7 +213,7 @@ export async function cancelAllNotifications(): Promise<void> {
   try {
     await Notifications.cancelAllScheduledNotificationsAsync();
   } catch (error) {
-    console.error('Error canceling all notifications:', error);
+    if (__DEV__) console.error('Error canceling all notifications:', error);
     if (error instanceof Error) {
       captureError(error, { context: 'cancel_all_notifications' });
     }
@@ -227,7 +227,7 @@ export async function getAllScheduledNotifications(): Promise<Notifications.Noti
   try {
     return await Notifications.getAllScheduledNotificationsAsync();
   } catch (error) {
-    console.error('Error getting scheduled notifications:', error);
+    if (__DEV__) console.error('Error getting scheduled notifications:', error);
     if (error instanceof Error) {
       captureError(error, { context: 'get_all_scheduled_notifications' });
     }
