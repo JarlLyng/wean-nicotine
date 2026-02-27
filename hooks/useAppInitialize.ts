@@ -5,14 +5,13 @@
 
 import { useEffect } from 'react';
 import { Platform } from 'react-native';
-import { initSentry, captureError } from '@/lib/sentry';
+import { captureError } from '@/lib/sentry';
 import { initDatabase } from '@/lib/db';
 import { initAnalytics, logEvent, clearOldAnalytics } from '@/lib/analytics';
 
 export function useAppInitialize() {
   useEffect(() => {
-    // Initialize Sentry first (before any other operations)
-    initSentry();
+    // Sentry is initialized in app/_layout.tsx at module load (before first render)
 
     // Skip database initialization on web
     if (Platform.OS === 'web') {

@@ -5,10 +5,16 @@ import { Platform, View, Text, StyleSheet } from 'react-native';
 import * as Sentry from '@sentry/react-native';
 import 'react-native-reanimated';
 
+import { initSentry } from '@/lib/sentry';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useAppInitialize } from '@/hooks/useAppInitialize';
 import { spacing, typography } from '@/lib/theme';
 import { useDesignTokens } from '@/lib/design';
+
+// Init Sentry before first render so early crashes and ErrorBoundary errors are captured
+if (Platform.OS !== 'web') {
+  initSentry();
+}
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();

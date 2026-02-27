@@ -11,6 +11,7 @@ import { getUserPlan } from '@/lib/db-user-plan';
 import { getTaperSettings } from '@/lib/db-settings';
 import { calculateDailyAllowance } from '@/lib/taper-plan';
 import { createLogEntry , getLogEntriesForDay } from '@/lib/db-log-entries';
+import { captureError } from '@/lib/sentry';
 import * as Haptics from 'expo-haptics';
 
 function formatAllowanceDisplay(n: number): string {
@@ -137,6 +138,7 @@ export default function HomeScreen() {
       devLog('Home screen: State update called - dailyAllowance:', displayAllowance, 'settingsId:', settings.id, 'updatedAt:', settings.updatedAt);
       } catch (error) {
       console.error('Error loading data:', error);
+      captureError(error instanceof Error ? error : new Error(String(error)), { context: 'home_load_data' });
       setDailyAllowance(null);
       setPouchesUsedToday(0);
       setBaselinePouchesPerDay(null);
@@ -207,6 +209,7 @@ export default function HomeScreen() {
       void loadData({ showLoading: false });
     } catch (error) {
       console.error('Error logging pouch:', error);
+      captureError(error instanceof Error ? error : new Error(String(error)), { context: 'home_log_pouch' });
     } finally {
       setIsLogging(false);
     }
@@ -223,6 +226,7 @@ export default function HomeScreen() {
       void loadData({ showLoading: false });
     } catch (error) {
       console.error('Error logging craving resisted:', error);
+      captureError(error instanceof Error ? error : new Error(String(error)), { context: 'home_log_craving_resisted' });
     } finally {
       setIsLogging(false);
     }

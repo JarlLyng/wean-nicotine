@@ -37,8 +37,9 @@ Byg **kun efter** secret er oprettet (`eas env:list` for at tjekke).
 | Sted | Formål |
 |------|--------|
 | `lib/sentry.ts` | Init, `captureError`, `captureMessage`, `testSentry` |
-| `app/_layout.tsx` | `Sentry.ErrorBoundary` (fanger React crashes) |
-| `hooks/useAppInitialize.ts` | `initSentry()` ved app-start |
+| `app/_layout.tsx` | `initSentry()` ved modul-load (før første render), `Sentry.ErrorBoundary` (fanger React crashes) |
+| `hooks/useAppInitialize.ts` | `captureError()` ved init-fejl (Sentry er allerede initieret fra _layout) |
+| `app/(tabs)/home.tsx` | `captureError()` ved load-/log-fejl |
 | `lib/analytics.ts` / `lib/notifications.ts` / `app/index.tsx` | `captureError()` ved fejl |
 
 Alle `capture*`-kald er no-op hvis DSN ikke er sat eller på web.
@@ -67,3 +68,8 @@ Så indlejres DSN i `app.config.js` → `extra.sentryDsn` ved build, og TestFlig
 ## 6. Valgfrit: source maps
 
 For læsbare stack traces i Sentry kan du uploade source maps med **SENTRY_AUTH_TOKEN** (se README og `.env.example`). Appen og error tracking virker også uden.
+
+## 7. Før release – verificering
+
+- **Events i production:** Efter build med DSN (EAS Secret eller `export EXPO_PUBLIC_SENTRY_DSN` ved lokalt build): installer via TestFlight, trigger en fejl (fx via Diagnostics-skærmen hvis `testSentry()` er tilgængelig, eller ved at reproducere en kendt fejl). Tjek på sentry.io at events ankommer.
+- **Source maps:** Hvis du bruger `SENTRY_AUTH_TOKEN` og scriptet `sentry-expo-upload-sourcemaps` (se package.json), kør upload efter build og verificer i Sentry at stack traces viser kildefiler/linjenumre. Uden source maps virker error tracking stadig; traces er bare mindre læsbare.
