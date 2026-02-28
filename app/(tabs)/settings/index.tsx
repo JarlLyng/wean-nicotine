@@ -1,23 +1,23 @@
-import { View, Text, StyleSheet, ScrollView, Switch, Alert, ViewStyle, TextStyle } from 'react-native';
-import { useState, useCallback } from 'react';
-import { useRouter, useFocusEffect } from 'expo-router';
 import { Screen } from '@/components/Screen';
-import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
 import { Icon } from '@/components/ui/Icon';
-import { spacing, typography, borderRadius } from '@/lib/theme';
-import { useDesignTokens } from '@/lib/design';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { setPreferredColorScheme } from '@/lib/color-scheme';
-import { getTaperSettings } from '@/lib/db-settings';
-import type { TaperSettings } from '@/lib/models';
 import { formatMoney } from '@/lib/currency';
+import { getTaperSettings } from '@/lib/db-settings';
+import { useDesignTokens } from '@/lib/design';
+import type { TaperSettings } from '@/lib/models';
 import {
-  requestNotificationPermissions,
-  scheduleDailyCheckIn,
   cancelDailyCheckIn,
   getAllScheduledNotifications,
+  requestNotificationPermissions,
+  scheduleDailyCheckIn,
 } from '@/lib/notifications';
+import { borderRadius, spacing, typography } from '@/lib/theme';
+import { useFocusEffect, useRouter } from 'expo-router';
+import { useCallback, useState } from 'react';
+import { Alert, Linking, ScrollView, StyleSheet, Switch, Text, TextStyle, View, ViewStyle } from 'react-native';
 export default function SettingsScreen() {
   const { colors } = useDesignTokens();
   const colorScheme = useColorScheme();
@@ -62,7 +62,7 @@ export default function SettingsScreen() {
     useCallback(() => {
       loadData();
       loadNotificationStatus();
-      return () => {};
+      return () => { };
     }, [loadData, loadNotificationStatus])
   );
 
@@ -216,6 +216,30 @@ export default function SettingsScreen() {
               textStyle={{ color: colors.error }}
             />
           </Card>
+
+          {/* Links Section */}
+          <Card variant="elevated" style={styles.section} padding="lg">
+            <View style={styles.sectionTitleRow}>
+              <Text style={styles.sectionTitle}>Resources</Text>
+            </View>
+            <Button
+              title="Privacy Policy"
+              onPress={() => Linking.openURL('https://taper.iamjarl.com/privacy/')}
+              variant="ghost"
+              style={styles.linkButton}
+            />
+            <Button
+              title="Support"
+              onPress={() => Linking.openURL('https://taper.iamjarl.com/support')}
+              variant="ghost"
+              style={styles.linkButton}
+            />
+          </Card>
+
+          {/* Version Info */}
+          <View style={styles.versionContainer}>
+            <Text style={styles.versionText}>Taper! v1.0.0 (Build 8)</Text>
+          </View>
         </View>
       </ScrollView>
     </Screen>
@@ -313,6 +337,21 @@ const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => {
       // Match preview: chip text should be black in light mode (and readable in dark mode)
       color: colors.text.primary,
       fontWeight: '500' as const,
+    } as TextStyle,
+    linkButton: {
+      marginTop: spacing.xs,
+      justifyContent: 'flex-start',
+      paddingHorizontal: 0,
+    } as ViewStyle,
+    versionContainer: {
+      marginTop: spacing.xl,
+      marginBottom: spacing.xxl,
+      alignItems: 'center',
+      opacity: 0.5,
+    } as ViewStyle,
+    versionText: {
+      ...typography.caption,
+      color: colors.text.secondary,
     } as TextStyle,
   };
 
