@@ -1,16 +1,18 @@
 import { Screen } from '@/components/Screen';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
-import { useDesignTokens } from '@/lib/design';
+import { useDesignTokens, getColors } from '@/lib/design';
+import { useColorScheme } from '@/hooks/use-color-scheme';
 import { borderRadius, spacing, typography } from '@/lib/theme';
 import type { CurrencyCode } from '@/lib/currency';
 import { CURRENCY_OPTIONS } from '@/lib/currency';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { ScrollView, StyleSheet, Text, TextInput, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native';
 
 export default function PriceScreen() {
   const { colors } = useDesignTokens();
+  const colorScheme = useColorScheme();
   const router = useRouter();
   const params = useLocalSearchParams();
   const baseline = params.baseline ? parseInt(params.baseline as string, 10) : 10;
@@ -18,7 +20,10 @@ export default function PriceScreen() {
   const [price, setPrice] = useState('');
   const [currency, setCurrency] = useState<CurrencyCode>('DKK');
   const [error, setError] = useState('');
-  const priceStyles = createPriceStyles(colors);
+  const priceStyles = useMemo(
+    () => createPriceStyles(getColors(colorScheme === 'dark' ? 'dark' : 'light')),
+    [colorScheme]
+  );
 
   const handleNext = () => {
     const normalizedPrice = price.replace(',', '.');
@@ -47,7 +52,8 @@ export default function PriceScreen() {
       <ScrollView
         contentContainerStyle={priceStyles.scrollContent}
         showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled">
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="none">
         <View style={priceStyles.content}>
           <Card variant="flat" style={priceStyles.card} padding="lg">
             <Text style={priceStyles.description}>
@@ -97,6 +103,7 @@ export default function PriceScreen() {
                 placeholderTextColor={colors.text.secondary}
                 keyboardType="decimal-pad"
                 blurOnSubmit={false}
+                returnKeyType="done"
                 accessibilityLabel={`Price per can (${currency})`}
                 accessibilityHint="Optional. Leave blank if you don't want to track money saved."
               />

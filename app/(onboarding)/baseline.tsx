@@ -1,18 +1,23 @@
 import { Screen } from '@/components/Screen';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
-import { useDesignTokens } from '@/lib/design';
+import { useDesignTokens, getColors } from '@/lib/design';
+import { useColorScheme } from '@/hooks/use-color-scheme';
 import { borderRadius, spacing, typography } from '@/lib/theme';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { ScrollView, StyleSheet, Text, TextInput, TextStyle, View, ViewStyle } from 'react-native';
 
 export default function BaselineScreen() {
   const { colors } = useDesignTokens();
+  const colorScheme = useColorScheme();
   const router = useRouter();
   const [baseline, setBaseline] = useState('');
   const [error, setError] = useState('');
-  const baselineStyles = createBaselineStyles(colors);
+  const baselineStyles = useMemo(
+    () => createBaselineStyles(getColors(colorScheme === 'dark' ? 'dark' : 'light')),
+    [colorScheme]
+  );
 
   const handleNext = () => {
     const value = parseInt(baseline, 10);
@@ -34,7 +39,8 @@ export default function BaselineScreen() {
       <ScrollView
         contentContainerStyle={baselineStyles.scrollContent}
         showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled">
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="none">
         <View style={baselineStyles.content}>
           <Card variant="flat" style={baselineStyles.card} padding="lg">
             <Text style={baselineStyles.description}>
@@ -57,6 +63,7 @@ export default function BaselineScreen() {
                 keyboardType="number-pad"
                 autoFocus
                 blurOnSubmit={false}
+                returnKeyType="done"
                 accessibilityLabel="Baseline pouches per day"
                 accessibilityHint="Enter how many pouches you typically use per day."
               />

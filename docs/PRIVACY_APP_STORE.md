@@ -1,16 +1,43 @@
 # App Store privacy — Sentry & data
 
-If **Sentry is enabled in production** (by setting the EAS secret `EXPO_PUBLIC_SENTRY_DSN`), the app sends error and performance data to Sentry. You must reflect this in:
+Vi bruger **Sentry i production** til at modtage fejl og crashes, så vi kan forbedre appen. Der sendes ingen brugerdata, kun tekniske diagnostics.
 
-1. **App Store Connect — App Privacy**
-   - Declare “Crash Data” and “Performance Data” (or equivalent) as collected.
-   - Purpose: App functionality / analytics as appropriate.
-   - See [App Store privacy labels](https://developer.apple.com/app-store/app-privacy-details/).
+## 1. App Store Connect — App Privacy (skal udfyldes)
 
-2. **Public privacy policy** (`https://taper.iamjarl.com/privacy/`)
-   - State that error/crash data may be sent to Sentry when the app is used in production.
-   - Include link to [Sentry’s privacy policy](https://sentry.io/privacy/) if required.
+Når `EXPO_PUBLIC_SENTRY_DSN` er sat ved build, sender appen data til Sentry. Du **skal** opdatere App Privacy, ellers risikerer du afvisning.
 
-If Sentry is **not** set in production (no `EXPO_PUBLIC_SENTRY_DSN`), the app does not send any data off-device and you can keep a “no data collected” / “local only” stance in App Store and privacy policy.
+### Trin for trin
 
-See `lib/sentry.ts` for runtime behavior (Sentry only initializes when DSN is set).
+1. Gå til **App Store Connect** → din app **Taper!** → **App Privacy**.
+2. Klik **Edit** ved "Data Types".
+3. Vælg **"Data is collected from this app"** (ikke "Data Not Collected").
+4. Klik **"Add Data Type"** (eller "Add new data type").
+5. Vælg kategori **Diagnostics**.
+6. Afkryds **Crash Data**.
+   - **Purpose:** Vælg "App Functionality". Kort beskrivelse fx: *"We collect crash data to fix bugs and improve app stability. No personal data is included."*
+   - **Linked to user identity:** Vælg **No** (vi linker ikke crashes til bruger-ID).
+   - **Used for tracking:** **No**.
+7. (Valgfrit) Hvis du har performance/tracing aktiveret i Sentry, tilføj også **Performance Data** under Diagnostics med samme indstillinger.
+8. Gem og publicer ændringen.
+
+### Reference fra Apple
+
+- [App Privacy details](https://developer.apple.com/app-store/app-privacy-details/)
+- Under "Diagnostics" findes Crash Data og Performance Data.
+
+## 2. Privacy Policy (offentlig side)
+
+Din privacy policy på **https://taper.iamjarl.com/privacy/** bør indeholde:
+
+- At appen primært gemmer data lokalt på enheden.
+- At vi i production builds sender **crash- og fejllogs** til Sentry (tredjepart) udelukkende for at finde og rette fejl. Ingen tracking, ingen reklamer, ingen salg af data.
+- Link til [Sentry's privacy policy](https://sentry.io/privacy/).
+- At brugeren kan nulstille/slette alt appdata via "Start Over" i appen.
+
+Hvis Sentry **ikke** er slået til (ingen DSN i production), kan du beholde "no data collected" i både App Store og privacy policy.
+
+## 3. Teknisk (til reference)
+
+- Sentry init: `lib/sentry.ts` (kun aktiv når DSN er sat).
+- Data som sendes: exception messages, stack traces, device/model, OS version, app version — ingen e-mail, navn eller brugsdata.
+- Se også `docs/SENTRY.md` for DSN-opsætning og TestFlight-verifikation.

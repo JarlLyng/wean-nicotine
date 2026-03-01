@@ -1,12 +1,12 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Platform, ScrollView, StyleSheet, Text, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import Animated, { FadeInDown } from 'react-native-reanimated';
 import { Screen } from '@/components/Screen';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
-import { spacing, typography, borderRadius, animations } from '@/lib/theme';
-import { useDesignTokens } from '@/lib/design';
+import { spacing, typography, borderRadius } from '@/lib/theme';
+import { useDesignTokens, getColors } from '@/lib/design';
+import { useColorScheme } from '@/hooks/use-color-scheme';
 import { saveTaperSettings, getTaperSettings } from '@/lib/db-settings';
 import { saveUserPlan, getUserPlan } from '@/lib/db-user-plan';
 import { generateDefaultTaperPlan, calculateDailyAllowance } from '@/lib/taper-plan';
@@ -24,6 +24,7 @@ const TRIGGERS = [
 
 export default function TriggersScreen() {
   const { colors } = useDesignTokens();
+  const colorScheme = useColorScheme();
   const router = useRouter();
   const params = useLocalSearchParams();
   const baseline = params.baseline ? parseInt(params.baseline as string, 10) : 10;
@@ -38,7 +39,10 @@ export default function TriggersScreen() {
 
   const [selectedTriggers, setSelectedTriggers] = useState<string[]>([]);
   const [isSaving, setIsSaving] = useState(false);
-  const triggersStyles = createTriggersStyles(colors);
+  const triggersStyles = useMemo(
+    () => createTriggersStyles(getColors(colorScheme === 'dark' ? 'dark' : 'light')),
+    [colorScheme]
+  );
 
   const toggleTrigger = (trigger: string) => {
     if (selectedTriggers.includes(trigger)) {
@@ -151,9 +155,11 @@ export default function TriggersScreen() {
       <ScrollView
         contentContainerStyle={triggersStyles.scrollContent}
         showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled">
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="none">
         <View style={triggersStyles.content}>
-          <Card variant="flat" style={triggersStyles.card} padding="lg">
+          <View style={triggersStyles.cardWrapper}>
+            <Card variant="flat" style={triggersStyles.card} padding="lg">
             <Text style={triggersStyles.description}>
               Select situations where you typically use snus. This helps us understand your patterns.
             </Text>
@@ -162,32 +168,30 @@ export default function TriggersScreen() {
             </Text>
 
             <View style={triggersStyles.triggersContainer}>
-              {TRIGGERS.map((trigger, index) => (
-                <Animated.View
+              {TRIGGERS.map((trigger) => (
+                <TouchableOpacity
                   key={trigger}
-                  entering={FadeInDown.delay(index * 50).duration(animations.normal).springify()}>
-                  <TouchableOpacity
+                  style={[
+                    triggersStyles.triggerButton,
+                    selectedTriggers.includes(trigger) && triggersStyles.triggerButtonSelected,
+                  ]}
+                  onPress={() => toggleTrigger(trigger)}
+                  accessibilityRole="button"
+                  accessibilityLabel={trigger}
+                  accessibilityHint="Toggles this trigger on or off."
+                  accessibilityState={{ selected: selectedTriggers.includes(trigger) }}>
+                  <Text
                     style={[
-                      triggersStyles.triggerButton,
-                      selectedTriggers.includes(trigger) && triggersStyles.triggerButtonSelected,
-                    ]}
-                    onPress={() => toggleTrigger(trigger)}
-                    accessibilityRole="button"
-                    accessibilityLabel={trigger}
-                    accessibilityHint="Toggles this trigger on or off."
-                    accessibilityState={{ selected: selectedTriggers.includes(trigger) }}>
-                    <Text
-                      style={[
-                        triggersStyles.triggerText,
-                        selectedTriggers.includes(trigger) && triggersStyles.triggerTextSelected,
-                      ]}>
-                      {trigger}
-                    </Text>
-                  </TouchableOpacity>
-                </Animated.View>
+                      triggersStyles.triggerText,
+                      selectedTriggers.includes(trigger) && triggersStyles.triggerTextSelected,
+                    ]}>
+                    {trigger}
+                  </Text>
+                </TouchableOpacity>
               ))}
             </View>
           </Card>
+          </View>
 
           <Button
             title={isSaving ? 'Setting up...' : 'Complete Setup'}
@@ -214,8 +218,11 @@ const createTriggersStyles = (colors: ReturnType<typeof useDesignTokens>['colors
       paddingHorizontal: 0,
       paddingBottom: spacing.lg,
     } as ViewStyle,
-    card: {
+    cardWrapper: {
       marginBottom: spacing.lg,
+    } as ViewStyle,
+    card: {
+      marginBottom: 0,
     } as ViewStyle,
     description: {
       ...typography.xl,

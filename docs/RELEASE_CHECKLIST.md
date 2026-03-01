@@ -36,7 +36,8 @@ Android + iPad kan komme senere.
 - [x] Verificer at splash screen farver matcher app tema
 
 ### App Store Screenshots
-- [ ] Design og generer screenshots for iPhone (App Store Connect krav):
+- [ ] Design og generer screenshots for **iPhone kun** (appen er iPhone-only, `supportsTablet: false`):
+  - Under "Previews and Screenshots" i App Store Connect udfyld kun **Phone**-fanen (lad iPad og Watch være tomme)
   - 6.7" Display (iPhone 14 Pro Max, etc.)
   - 6.5" Display (iPhone 11 Pro Max, etc.)
   - 5.5" Display (iPhone 8 Plus, etc.)
@@ -49,21 +50,20 @@ Android + iPad kan komme senere.
 ### iOS App Store Connect
 - [x] **App Navn**: "Taper!" (App Store listing; "Taper" var optaget)
 - [x] App oprettet i App Store Connect med Bundle ID `com.iamjarl.taper`
-- [ ] **Subtitle**: Kort beskrivelse (30 tegn)
-- [ ] **Beskrivelse**: 
-  - Hvad er Taper?
-  - Hvem er det for?
-  - Hvordan virker det?
-  - Hvad gør det anderledes?
-- [ ] **Keywords**: snus, nicotine, taper, quit, reduce, pouches, etc.
-- [ ] **Kategori**: Health & Fitness (eller relevant)
+- [ ] **Subtitle**: Kort beskrivelse (30 tegn) — **se `docs/APP_STORE_METADATA.md`** (copy/paste; ikke "Reduce your blood pressure")
+- [ ] **Beskrivelse**: Færdig tekst i `docs/APP_STORE_METADATA.md` (SEO, disclaimer)
+- [ ] **Keywords**: Se `docs/APP_STORE_METADATA.md` (max 100 tegn)
+- [x] **Kategori**: Health & Fitness (Primary), Lifestyle (Secondary)
 - [x] **Privacy Policy URL**: `https://taper.iamjarl.com/privacy/`
-- [ ] **Support URL**: `https://taper.iamjarl.com/support`
-- [ ] **Marketing URL**: `https://taper.iamjarl.com/`
+- [ ] **App Privacy**: Opdater til "Data is collected" + Diagnostics → Crash Data (Sentry) — **se `docs/PRIVACY_APP_STORE.md`**
+- [ ] **Support URL**: `https://taper.iamjarl.com/support` (eller `https://www.taper.dk/support`)
+- [ ] **Marketing URL**: `https://taper.iamjarl.com/` (eller `https://taper.dk`)
 - [ ] **Age Rating**: Konfigurer baseret på indhold
 - [ ] **App Preview Video**: (valgfrit, men anbefalet)
  
 > Android release er ikke i scope for v1.0 (iPhone-only).
+
+**iPad / Watch / Mac / Vision Pro:** Appen er bygget som iPhone-only (`ios.supportsTablet: false`). I App Store Connect vises stadig faner for iPad og Apple Watch under Previews — udfyld kun **Phone**. Hvis du ikke vil tilbyde appen på Apple Silicon Mac eller Apple Vision Pro, kan du under **Pricing and Availability** fravælge "Make this app available" for Mac og Vision Pro.
 
 ---
 
@@ -73,10 +73,9 @@ Android + iPad kan komme senere.
 - [x] Opret privacy policy side/website
 - [ ] Beskriv:
   - Alle data gemmes lokalt på enheden
-  - Ingen data sendes til servere (undtagen Sentry error tracking)
+  - **Sentry:** crash/fejldata sendes i production for at forbedre appen (ingen tracking/salg) — se `docs/PRIVACY_APP_STORE.md`
   - Ingen tracking (evt. lokal statistik tæller kun på device)
-  - Ingen tredjeparts services
-  - Hvordan data kan slettes (via app)
+  - Hvordan data kan slettes (via "Start Over" i appen)
 - [x] Host privacy policy (GitHub Pages, Netlify, eller lignende)
 - [x] Link: `https://taper.iamjarl.com/privacy/`
 - [ ] (Valgfrit) Tilføj link til privacy policy i appen
