@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { useFocusEffect } from 'expo-router';
 import { Screen } from '@/components/Screen';
@@ -14,6 +14,8 @@ import { createLogEntry , getLogEntriesForDay } from '@/lib/db-log-entries';
 import { captureError } from '@/lib/sentry';
 import * as Haptics from 'expo-haptics';
 
+const devLog = (...args: unknown[]) => { if (__DEV__) console.log(...args); };
+
 function formatAllowanceDisplay(n: number): string {
   const rounded = Math.round(n * 10) / 10;
   return rounded % 1 === 0 ? String(rounded) : rounded.toFixed(1);
@@ -21,9 +23,6 @@ function formatAllowanceDisplay(n: number): string {
 
 export default function HomeScreen() {
   const { colors } = useDesignTokens();
-  const devLog = (...args: unknown[]) => {
-    if (__DEV__) console.log(...args);
-  };
   const [dailyAllowance, setDailyAllowance] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [pouchesUsedToday, setPouchesUsedToday] = useState(0);
@@ -236,8 +235,8 @@ export default function HomeScreen() {
   // This ensures we get a completely fresh component instance
   const screenKey = `home-screen-${settingsId || 'no-settings'}`;
   
-  // Create styles inside component to access dynamic colors
-  const styles = StyleSheet.create({
+  // Memoize styles — only recreate when color scheme changes
+  const styles = useMemo(() => StyleSheet.create({
     content: {
       flex: 1,
       paddingTop: spacing.lg,
@@ -302,8 +301,8 @@ export default function HomeScreen() {
       color: colors.text.secondary,
       textAlign: 'center',
     },
-  });
-  
+  }), [colors]);
+
   return (
     <Screen key={screenKey} title="Today">
       <View style={styles.content}>

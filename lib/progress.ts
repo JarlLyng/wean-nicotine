@@ -7,6 +7,12 @@ import { getLogEntries } from './db-log-entries';
 import { calculateDailyAllowance } from './taper-plan';
 import { formatMoney } from './currency';
 
+const POUCHES_PER_CAN = 20;
+
+function toDayKey(date: Date): string {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+}
+
 export interface WeeklyProgress {
   weekStart: Date;
   weekEnd: Date;
@@ -92,36 +98,18 @@ export async function calculateWeeklyProgress(
   const baselineTotal = settings.baselinePouchesPerDay * daysInWeek;
   const pouchesAvoided = Math.max(0, baselineTotal - actualUsed);
   
-  if (__DEV__) {
-    console.log('calculateWeeklyProgress:', {
-      weekStart: weekStart.toISOString(),
-      weekEnd: weekEnd.toISOString(),
-      settingsStartDate: settingsStartDate.toISOString(),
-      effectiveStart: effectiveStart.toISOString(),
-      effectiveEnd: effectiveEnd.toISOString(),
-      daysInWeek,
-      baselineTotal,
-      actualUsed,
-      pouchesAvoided,
-      cravingsResisted,
-    });
-  }
-
   // Calculate money saved (if price is set)
   let moneySaved: number | undefined;
   if (settings.pricePerCan) {
-    // Assuming ~20 pouches per can (adjust if needed)
-    const pouchesPerCan = 20;
-    const cansAvoided = pouchesAvoided / pouchesPerCan;
+    const cansAvoided = pouchesAvoided / POUCHES_PER_CAN;
     moneySaved = Math.round(cansAvoided * settings.pricePerCan);
   }
 
   // Count days under/over limit (only from effective start)
-  // Optimize: Pre-group logs by day to avoid O(n^2) filtering
+  // Pre-group logs by day for O(1) lookup
   const logsByDay = new Map<string, number>();
   for (const log of usedLogs) {
-    const logDate = new Date(log.timestamp);
-    const dayKey = `${logDate.getFullYear()}-${logDate.getMonth()}-${logDate.getDate()}`;
+    const dayKey = toDayKey(new Date(log.timestamp));
     logsByDay.set(dayKey, (logsByDay.get(dayKey) || 0) + 1);
   }
 
@@ -130,7 +118,7 @@ export async function calculateWeeklyProgress(
 
   for (const day of days) {
     const dayAllowance = calculateDailyAllowance(settings, day);
-    const dayKey = `${day.getFullYear()}-${day.getMonth()}-${day.getDate()}`;
+    const dayKey = toDayKey(day);
     const dayUsed = logsByDay.get(dayKey) || 0;
 
     if (dayUsed <= dayAllowance) {
@@ -201,8 +189,7 @@ export async function calculateTotalProgress(
 
   let totalMoneySaved: number | undefined;
   if (settings.pricePerCan) {
-    const pouchesPerCan = 20;
-    const cansAvoided = totalPouchesAvoided / pouchesPerCan;
+    const cansAvoided = totalPouchesAvoided / POUCHES_PER_CAN;
     totalMoneySaved = Math.round(cansAvoided * settings.pricePerCan);
   }
 
@@ -218,7 +205,8 @@ export async function calculateTotalProgress(
 }
 
 /**
- * Detect milestones
+ * Detect milestones achieved since the taper start date.
+ * Uses a single DB query and one pass over days to find exact achievement dates.
  */
 export async function detectMilestones(
   settings: TaperSettings
@@ -233,85 +221,117 @@ export async function detectMilestones(
     endDate: today.getTime(),
   });
 
-  const usedLogs = logs.filter((log) => log.type === 'pouch_used');
+  const usedLogs = logs
+    .filter((log) => log.type === 'pouch_used')
+    .sort((a, b) => a.timestamp - b.timestamp);
+  const resistedLogs = logs
+    .filter((log) => log.type === 'craving_resisted')
+    .sort((a, b) => a.timestamp - b.timestamp);
 
-  // Check for first day under limit
   const days = getDaysInRange(startDate, today);
-  let firstDayUnderLimit: Date | null = null;
 
-  // Pre-group used logs per day to avoid O(n^2) filtering
+  // Group used logs by day for O(1) lookup
   const usedCountsByDay = new Map<string, number>();
   for (const log of usedLogs) {
-    const logDate = new Date(log.timestamp);
-    const dayKey = `${logDate.getFullYear()}-${logDate.getMonth()}-${logDate.getDate()}`;
+    const dayKey = toDayKey(new Date(log.timestamp));
     usedCountsByDay.set(dayKey, (usedCountsByDay.get(dayKey) || 0) + 1);
   }
 
+  // --- First day under limit ---
   for (const day of days) {
     const dayAllowance = calculateDailyAllowance(settings, day);
-    const dayKey = `${day.getFullYear()}-${day.getMonth()}-${day.getDate()}`;
-    const dayUsed = usedCountsByDay.get(dayKey) || 0;
-
-    if (dayUsed <= dayAllowance && dayUsed > 0) {
-      firstDayUnderLimit = day;
+    const dayUsed = usedCountsByDay.get(toDayKey(day)) ?? 0;
+    if (dayUsed > 0 && dayUsed <= dayAllowance) {
+      milestones.push({
+        id: 'first_day_under_limit',
+        type: 'first_day_under_limit',
+        title: 'First Day Under Limit',
+        description: 'You stayed within your daily allowance!',
+        achievedAt: day.getTime(),
+      });
       break;
     }
   }
 
-  if (firstDayUnderLimit) {
-    milestones.push({
-      id: 'first_day_under_limit',
-      type: 'first_day_under_limit',
-      title: 'First Day Under Limit',
-      description: 'You stayed within your daily allowance!',
-      achievedAt: firstDayUnderLimit.getTime(),
-    });
+  // --- One pass: find when pouches avoided and money saved thresholds were crossed ---
+  const pouchThresholds = [100, 500, 1000, 2500, 5000];
+  const moneyThresholds = settings.pricePerCan ? [1000, 5000, 10000, 25000, 50000] : [];
+  const remainingPouchThresholds = new Set(pouchThresholds);
+  const remainingMoneyThresholds = new Set(moneyThresholds);
+  const pouchMilestoneDates = new Map<number, number>(); // threshold → timestamp
+  const moneyMilestoneDates = new Map<number, number>();
+
+  let cumBase = 0;
+  let cumUsed = 0;
+
+  for (const day of days) {
+    if (remainingPouchThresholds.size === 0 && remainingMoneyThresholds.size === 0) break;
+    cumBase += settings.baselinePouchesPerDay;
+    cumUsed += usedCountsByDay.get(toDayKey(day)) ?? 0;
+    const avoided = cumBase - cumUsed;
+
+    for (const t of [...remainingPouchThresholds]) {
+      if (avoided >= t) {
+        pouchMilestoneDates.set(t, day.getTime());
+        remainingPouchThresholds.delete(t);
+      }
+    }
+    if (settings.pricePerCan) {
+      for (const t of [...remainingMoneyThresholds]) {
+        const pouchesNeeded = (t * POUCHES_PER_CAN) / settings.pricePerCan;
+        if (avoided >= pouchesNeeded) {
+          moneyMilestoneDates.set(t, day.getTime());
+          remainingMoneyThresholds.delete(t);
+        }
+      }
+    }
   }
 
-  // Check for pouches avoided milestones (100, 500, 1000)
-  const totalProgress = await calculateTotalProgress(settings);
-  const milestonesThresholds = [100, 500, 1000, 2500, 5000];
-  
-  for (const threshold of milestonesThresholds) {
-    if (totalProgress.totalPouchesAvoided >= threshold) {
+  const totalPouchesAvoided = Math.max(0, cumBase - cumUsed);
+  const totalCravingsResisted = resistedLogs.length;
+
+  // --- Pouches avoided milestones ---
+  for (const threshold of pouchThresholds) {
+    if (totalPouchesAvoided >= threshold) {
       milestones.push({
         id: `pouches_avoided_${threshold}`,
         type: 'pouches_avoided',
         title: `${threshold} Pouches Avoided`,
         description: `You've avoided ${threshold} pouches compared to your baseline!`,
-        achievedAt: today.getTime(),
-        value: totalProgress.totalPouchesAvoided,
+        achievedAt: pouchMilestoneDates.get(threshold) ?? today.getTime(),
+        value: totalPouchesAvoided,
       });
     }
   }
 
-  // Check for resisted cravings milestones (10, 25, 50, 100, 250)
-  const resistedThresholds = [10, 25, 50, 100, 250];
-  for (const threshold of resistedThresholds) {
-    if (totalProgress.totalCravingsResisted >= threshold) {
+  // --- Cravings resisted milestones: achievedAt = timestamp of the Nth craving log ---
+  const cravingThresholds = [10, 25, 50, 100, 250];
+  for (const threshold of cravingThresholds) {
+    if (totalCravingsResisted >= threshold) {
       milestones.push({
         id: `cravings_resisted_${threshold}`,
         type: 'cravings_resisted',
         title: `${threshold} Cravings Resisted`,
         description: `You've resisted ${threshold} cravings. That's real progress.`,
-        achievedAt: today.getTime(),
-        value: totalProgress.totalCravingsResisted,
+        achievedAt: resistedLogs[threshold - 1].timestamp,
+        value: totalCravingsResisted,
       });
     }
   }
 
-  // Check for money saved milestones (if price is set)
-  if (totalProgress.totalMoneySaved) {
-    const moneyMilestones = [1000, 5000, 10000, 25000, 50000]; // in cents
-    for (const threshold of moneyMilestones) {
-      if (totalProgress.totalMoneySaved >= threshold) {
+  // --- Money saved milestones ---
+  if (settings.pricePerCan) {
+    const cansAvoided = totalPouchesAvoided / POUCHES_PER_CAN;
+    const totalMoneySaved = Math.round(cansAvoided * settings.pricePerCan);
+    for (const threshold of moneyThresholds) {
+      if (totalMoneySaved >= threshold) {
         milestones.push({
           id: `money_saved_${threshold}`,
           type: 'money_saved',
           title: `${formatMoney(threshold, settings.currency ?? 'DKK')} Saved`,
           description: `You've saved ${formatMoney(threshold, settings.currency ?? 'DKK')} compared to your baseline!`,
-          achievedAt: today.getTime(),
-          value: totalProgress.totalMoneySaved,
+          achievedAt: moneyMilestoneDates.get(threshold) ?? today.getTime(),
+          value: totalMoneySaved,
         });
       }
     }

@@ -88,10 +88,19 @@ Taper's primary storage needs:
 ## Implementation Notes
 
 - Use `expo-sqlite` for React Native compatibility
-- Create tables: `log_entries`, `taper_settings`, `user_plan`, `app_preferences`
+- Create tables: `log_entries`, `taper_settings`, `user_plan`, `app_preferences`, `schema_version`
 - Index `log_entries.timestamp` and `log_entries.type` for fast queries
 - Database operations organized by domain (`db-log-entries.ts`, `db-settings.ts`, etc.)
 - Web platform detection: SQLite is not available on web, app shows warning message
+
+## Schema Migrations
+
+Schema changes are managed via the `MIGRATIONS` array in `lib/db.ts`. Each entry has a `version` (integer), `sql` (DDL statement), and optional `ignoreError` flag for legacy migrations that may already have run on existing installs. The `schema_version` table tracks which migrations have been applied.
+
+To add a new migration:
+```ts
+{ version: 3, sql: `ALTER TABLE log_entries ADD COLUMN note TEXT` }
+```
 
 ---
 

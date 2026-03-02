@@ -34,6 +34,41 @@ function getSQLite(): any {
 let db: SQLiteDatabase | null = null;
 let initPromise: Promise<SQLiteDatabase> | null = null;
 
+interface Migration {
+  version: number;
+  sql: string;
+  /** True for legacy migrations that may already have run on existing installs */
+  ignoreError?: boolean;
+}
+
+const MIGRATIONS: Migration[] = [
+  { version: 1, sql: `ALTER TABLE taper_settings ADD COLUMN triggers TEXT`, ignoreError: true },
+  { version: 2, sql: `ALTER TABLE taper_settings ADD COLUMN currency TEXT`, ignoreError: true },
+];
+
+async function runMigrations(database: SQLiteDatabase): Promise<void> {
+  await database.execAsync(
+    `CREATE TABLE IF NOT EXISTS schema_version (version INTEGER PRIMARY KEY)`
+  );
+  const row = await database.getFirstAsync<{ version: number }>(
+    'SELECT version FROM schema_version ORDER BY version DESC LIMIT 1'
+  );
+  const currentVersion = row?.version ?? 0;
+
+  for (const migration of MIGRATIONS) {
+    if (migration.version <= currentVersion) continue;
+    try {
+      await database.execAsync(migration.sql);
+    } catch (error) {
+      if (!migration.ignoreError) throw error;
+    }
+    await database.runAsync(
+      'INSERT OR REPLACE INTO schema_version (version) VALUES (?)',
+      [migration.version]
+    );
+  }
+}
+
 /**
  * Initialize the database and create tables if they don't exist.
  * Safe to call concurrently: only one init runs, others await the same promise.
@@ -84,17 +119,6 @@ export async function initDatabase(): Promise<SQLiteDatabase> {
     );
   `);
 
-      try {
-        await db.execAsync(`ALTER TABLE taper_settings ADD COLUMN triggers TEXT;`);
-      } catch {
-        // Column already exists
-      }
-      try {
-        await db.execAsync(`ALTER TABLE taper_settings ADD COLUMN currency TEXT;`);
-      } catch {
-        // Column already exists
-      }
-
       await db.execAsync(`
     CREATE TABLE IF NOT EXISTS app_preferences (
       key TEXT PRIMARY KEY,
@@ -116,6 +140,8 @@ export async function initDatabase(): Promise<SQLiteDatabase> {
 
       await db.execAsync(`CREATE INDEX IF NOT EXISTS idx_log_entries_timestamp ON log_entries(timestamp);`);
       await db.execAsync(`CREATE INDEX IF NOT EXISTS idx_log_entries_type ON log_entries(type);`);
+
+      await runMigrations(db);
 
       return db;
     } catch (error) {
