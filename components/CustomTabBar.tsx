@@ -93,8 +93,7 @@ export function CustomTabBar({ state, descriptors, navigation }: BottomTabBarPro
       style={[
         styles.tabBarOuter,
         {
-          // Match preview: don't let the tabbar safe-area padding be transparent
-          backgroundColor: colors.surface.default,
+          backgroundColor: 'transparent',
           paddingHorizontal: spacing.md,
           paddingBottom: spacing.sm + insets.bottom,
         },

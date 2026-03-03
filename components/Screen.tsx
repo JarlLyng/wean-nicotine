@@ -17,51 +17,43 @@ export function Screen({ children, title, variant = 'plain', style }: ScreenProp
   const styles = createStyles(colors);
   const isGradient = variant === 'gradient';
 
-  const Container = ({ children: containerChildren }: { children: React.ReactNode }) => {
-    if (isGradient) {
-      return (
-        <GradientBackground
-          variant="subtle"
-          style={[styles.container, styles.gradientContainer, style]}>
-          {containerChildren}
-        </GradientBackground>
-      );
-    }
-
-    return <View style={[styles.container, style]}>{containerChildren}</View>;
-  };
-  
-  // On web, use simpler structure to reduce DOM nesting
-  if (Platform.OS === 'web') {
-    return (
-      <Container>
+  // Build inner content once (web vs native)
+  const inner =
+    Platform.OS === 'web' ? (
+      <>
         {title && (
           <Text style={styles.plainTitle} accessibilityRole="header">
             {title}
           </Text>
         )}
-        <View style={styles.content}>
-          {children}
-        </View>
-      </Container>
-    );
-  }
-
-  // Native platforms use SafeAreaView
-  return (
-    <Container>
+        <View style={styles.content}>{children}</View>
+      </>
+    ) : (
       <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
         {title && (
           <Text style={styles.plainTitle} accessibilityRole="header">
             {title}
           </Text>
         )}
-        <View style={styles.content}>
-          {children}
-        </View>
+        <View style={styles.content}>{children}</View>
       </SafeAreaView>
-    </Container>
-  );
+    );
+
+  // Use conditional rendering instead of an inline Container component.
+  // Defining a component inside render creates a new function reference each
+  // render, which React treats as a different component type — unmounting and
+  // remounting the entire subtree (resetting refs, replaying animations, etc.).
+  if (isGradient) {
+    return (
+      <GradientBackground
+        variant="subtle"
+        style={[styles.container, styles.gradientContainer, style]}>
+        {inner}
+      </GradientBackground>
+    );
+  }
+
+  return <View style={[styles.container, style]}>{inner}</View>;
 }
 
 // Styles are created inside component to access colors from hook
