@@ -93,7 +93,6 @@ export function CustomTabBar({ state, descriptors, navigation }: BottomTabBarPro
       style={[
         styles.tabBarOuter,
         {
-          backgroundColor: 'transparent',
           paddingHorizontal: spacing.md,
           paddingBottom: spacing.sm + insets.bottom,
         },
@@ -153,7 +152,10 @@ export function CustomTabBar({ state, descriptors, navigation }: BottomTabBarPro
 // Static styles (colors are applied inline for light/dark mode support)
 const styles = StyleSheet.create({
   tabBarOuter: {
-    // Use padding instead of margins so the tab bar shadow has space and won't be clipped
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
     backgroundColor: 'transparent',
   },
   tabBar: {
