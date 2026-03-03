@@ -75,7 +75,7 @@ export function initSentry(): void {
 /**
  * Log an error to Sentry
  */
-export function captureError(error: Error, context?: Record<string, any>): void {
+export function captureError(error: Error, context?: Record<string, unknown>): void {
   if (Platform.OS === 'web' || !sentryInitialized) {
     return;
   }
@@ -114,7 +114,7 @@ export function addBreadcrumb(breadcrumb: {
   message: string;
   category?: string;
   level?: Sentry.SeverityLevel;
-  data?: Record<string, any>;
+  data?: Record<string, unknown>;
 }): void {
   if (Platform.OS === 'web' || !sentryInitialized) {
     return;

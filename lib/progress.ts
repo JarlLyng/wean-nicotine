@@ -157,78 +157,42 @@ function getDaysInRange(start: Date, end: Date): Date[] {
   return days;
 }
 
-/**
- * Calculate total progress since start
- */
-export async function calculateTotalProgress(
-  settings: TaperSettings
-): Promise<{
+export interface TotalProgress {
   totalPouchesAvoided: number;
   totalCravingsResisted: number;
   totalMoneySaved?: number;
   daysSinceStart: number;
   averageDailyUsage: number;
-}> {
-  const startDate = new Date(settings.startDate);
-  const today = new Date();
-  today.setHours(23, 59, 59, 999);
-
-  const logs = await getLogEntries({
-    startDate: startDate.getTime(),
-    endDate: today.getTime(),
-  });
-
-  const usedLogs = logs.filter((log) => log.type === 'pouch_used');
-  const totalUsed = usedLogs.length;
-  const totalCravingsResisted = logs.filter((log) => log.type === 'craving_resisted').length;
-
-  const rawDaysSinceStart = Math.ceil((today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
-  const daysSinceStart = Math.max(0, rawDaysSinceStart);
-  const baselineTotal = settings.baselinePouchesPerDay * daysSinceStart;
-  const totalPouchesAvoided = Math.max(0, baselineTotal - totalUsed);
-
-  let totalMoneySaved: number | undefined;
-  if (settings.pricePerCan) {
-    const cansAvoided = totalPouchesAvoided / POUCHES_PER_CAN;
-    totalMoneySaved = Math.round(cansAvoided * settings.pricePerCan);
-  }
-
-  const averageDailyUsage = daysSinceStart > 0 ? totalUsed / daysSinceStart : 0;
-
-  return {
-    totalPouchesAvoided,
-    totalCravingsResisted,
-    totalMoneySaved,
-    daysSinceStart,
-    averageDailyUsage,
-  };
 }
 
 /**
- * Detect milestones achieved since the taper start date.
- * Uses a single DB query and one pass over days to find exact achievement dates.
+ * Calculate total progress and detect milestones in a single DB query + single pass.
+ * Previously these were two separate functions each querying the DB independently.
  */
-export async function detectMilestones(
+export async function calculateTotalProgressAndMilestones(
   settings: TaperSettings
-): Promise<Milestone[]> {
-  const milestones: Milestone[] = [];
+): Promise<{ progress: TotalProgress; milestones: Milestone[] }> {
   const startDate = new Date(settings.startDate);
   const today = new Date();
   today.setHours(23, 59, 59, 999);
 
+  // Single DB query for all logs since start
   const logs = await getLogEntries({
     startDate: startDate.getTime(),
     endDate: today.getTime(),
   });
 
-  const usedLogs = logs
-    .filter((log) => log.type === 'pouch_used')
-    .sort((a, b) => a.timestamp - b.timestamp);
-  const resistedLogs = logs
-    .filter((log) => log.type === 'craving_resisted')
-    .sort((a, b) => a.timestamp - b.timestamp);
+  // Partition and sort logs in one pass
+  const usedLogs: LogEntry[] = [];
+  const resistedLogs: LogEntry[] = [];
+  for (const log of logs) {
+    if (log.type === 'pouch_used') usedLogs.push(log);
+    else resistedLogs.push(log);
+  }
+  resistedLogs.sort((a, b) => a.timestamp - b.timestamp);
 
-  const days = getDaysInRange(startDate, today);
+  const totalUsed = usedLogs.length;
+  const totalCravingsResisted = resistedLogs.length;
 
   // Group used logs by day for O(1) lookup
   const usedCountsByDay = new Map<string, number>();
@@ -237,45 +201,54 @@ export async function detectMilestones(
     usedCountsByDay.set(dayKey, (usedCountsByDay.get(dayKey) || 0) + 1);
   }
 
-  // --- First day under limit ---
-  for (const day of days) {
-    const dayAllowance = calculateDailyAllowance(settings, day);
-    const dayUsed = usedCountsByDay.get(toDayKey(day)) ?? 0;
-    if (dayUsed > 0 && dayUsed <= dayAllowance) {
-      milestones.push({
-        id: 'first_day_under_limit',
-        type: 'first_day_under_limit',
-        title: 'First Day Under Limit',
-        description: 'You stayed within your daily allowance!',
-        achievedAt: day.getTime(),
-      });
-      break;
-    }
-  }
+  const days = getDaysInRange(startDate, today);
+  const daysSinceStart = days.length;
 
-  // --- One pass: find when pouches avoided and money saved thresholds were crossed ---
+  // --- Single pass over days: total progress + first-day milestone + threshold milestones ---
+  const milestones: Milestone[] = [];
+  let foundFirstDayUnderLimit = false;
+
   const pouchThresholds = [100, 500, 1000, 2500, 5000];
   const moneyThresholds = settings.pricePerCan ? [1000, 5000, 10000, 25000, 50000] : [];
   const remainingPouchThresholds = new Set(pouchThresholds);
   const remainingMoneyThresholds = new Set(moneyThresholds);
-  const pouchMilestoneDates = new Map<number, number>(); // threshold → timestamp
+  const pouchMilestoneDates = new Map<number, number>();
   const moneyMilestoneDates = new Map<number, number>();
 
   let cumBase = 0;
   let cumUsed = 0;
 
   for (const day of days) {
-    if (remainingPouchThresholds.size === 0 && remainingMoneyThresholds.size === 0) break;
+    const dayKey = toDayKey(day);
+    const dayUsed = usedCountsByDay.get(dayKey) ?? 0;
     cumBase += settings.baselinePouchesPerDay;
-    cumUsed += usedCountsByDay.get(toDayKey(day)) ?? 0;
+    cumUsed += dayUsed;
     const avoided = cumBase - cumUsed;
 
+    // First day under limit
+    if (!foundFirstDayUnderLimit && dayUsed > 0) {
+      const dayAllowance = calculateDailyAllowance(settings, day);
+      if (dayUsed <= dayAllowance) {
+        milestones.push({
+          id: 'first_day_under_limit',
+          type: 'first_day_under_limit',
+          title: 'First Day Under Limit',
+          description: 'You stayed within your daily allowance!',
+          achievedAt: day.getTime(),
+        });
+        foundFirstDayUnderLimit = true;
+      }
+    }
+
+    // Pouch thresholds
     for (const t of [...remainingPouchThresholds]) {
       if (avoided >= t) {
         pouchMilestoneDates.set(t, day.getTime());
         remainingPouchThresholds.delete(t);
       }
     }
+
+    // Money thresholds
     if (settings.pricePerCan) {
       for (const t of [...remainingMoneyThresholds]) {
         const pouchesNeeded = (t * POUCHES_PER_CAN) / settings.pricePerCan;
@@ -288,9 +261,17 @@ export async function detectMilestones(
   }
 
   const totalPouchesAvoided = Math.max(0, cumBase - cumUsed);
-  const totalCravingsResisted = resistedLogs.length;
 
-  // --- Pouches avoided milestones ---
+  // Calculate money saved
+  let totalMoneySaved: number | undefined;
+  if (settings.pricePerCan) {
+    const cansAvoided = totalPouchesAvoided / POUCHES_PER_CAN;
+    totalMoneySaved = Math.round(cansAvoided * settings.pricePerCan);
+  }
+
+  const averageDailyUsage = daysSinceStart > 0 ? totalUsed / daysSinceStart : 0;
+
+  // --- Build milestone list ---
   for (const threshold of pouchThresholds) {
     if (totalPouchesAvoided >= threshold) {
       milestones.push({
@@ -304,7 +285,6 @@ export async function detectMilestones(
     }
   }
 
-  // --- Cravings resisted milestones: achievedAt = timestamp of the Nth craving log ---
   const cravingThresholds = [10, 25, 50, 100, 250];
   for (const threshold of cravingThresholds) {
     if (totalCravingsResisted >= threshold) {
@@ -319,10 +299,7 @@ export async function detectMilestones(
     }
   }
 
-  // --- Money saved milestones ---
-  if (settings.pricePerCan) {
-    const cansAvoided = totalPouchesAvoided / POUCHES_PER_CAN;
-    const totalMoneySaved = Math.round(cansAvoided * settings.pricePerCan);
+  if (settings.pricePerCan && totalMoneySaved !== undefined) {
     for (const threshold of moneyThresholds) {
       if (totalMoneySaved >= threshold) {
         milestones.push({
@@ -337,6 +314,27 @@ export async function detectMilestones(
     }
   }
 
+  return {
+    progress: {
+      totalPouchesAvoided,
+      totalCravingsResisted,
+      totalMoneySaved,
+      daysSinceStart,
+      averageDailyUsage,
+    },
+    milestones,
+  };
+}
+
+/** @deprecated Use calculateTotalProgressAndMilestones instead */
+export async function calculateTotalProgress(settings: TaperSettings): Promise<TotalProgress> {
+  const { progress } = await calculateTotalProgressAndMilestones(settings);
+  return progress;
+}
+
+/** @deprecated Use calculateTotalProgressAndMilestones instead */
+export async function detectMilestones(settings: TaperSettings): Promise<Milestone[]> {
+  const { milestones } = await calculateTotalProgressAndMilestones(settings);
   return milestones;
 }
 

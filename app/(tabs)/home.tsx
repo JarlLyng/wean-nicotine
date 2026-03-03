@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { useState, useRef, useCallback, useMemo } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { useFocusEffect } from 'expo-router';
 import { Screen } from '@/components/Screen';
@@ -10,11 +10,9 @@ import { useDesignTokens } from '@/lib/design';
 import { getUserPlan } from '@/lib/db-user-plan';
 import { getTaperSettings } from '@/lib/db-settings';
 import { calculateDailyAllowance } from '@/lib/taper-plan';
-import { createLogEntry , getLogEntriesForDay } from '@/lib/db-log-entries';
+import { createLogEntry, getLogEntriesForDay } from '@/lib/db-log-entries';
 import { captureError } from '@/lib/sentry';
 import * as Haptics from 'expo-haptics';
-
-const devLog = (...args: unknown[]) => { if (__DEV__) console.log(...args); };
 
 function formatAllowanceDisplay(n: number): string {
   const rounded = Math.round(n * 10) / 10;
@@ -29,32 +27,17 @@ export default function HomeScreen() {
   const [cravingsResistedToday, setCravingsResistedToday] = useState(0);
   const [baselinePouchesPerDay, setBaselinePouchesPerDay] = useState<number | null>(null);
   const [isLogging, setIsLogging] = useState(false);
-  const [settingsId, setSettingsId] = useState<number | null>(null); // Track settings ID for debugging
-  const isLoadingRef = useRef(false); // Prevent multiple simultaneous loads
-  const loadTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null); // Debounce timer
+  const [settingsId, setSettingsId] = useState<number | null>(null);
+  const isLoadingRef = useRef(false);
 
   const loadData = useCallback(async ({ showLoading = true }: { showLoading?: boolean } = {}) => {
-    // Clear any pending loads
-    if (loadTimeoutRef.current) {
-      clearTimeout(loadTimeoutRef.current);
-      loadTimeoutRef.current = null;
-    }
-    
-    // Prevent multiple simultaneous loads
-    if (isLoadingRef.current) {
-      devLog('Home screen: Load already in progress, skipping...');
-      return;
-    }
+    if (isLoadingRef.current) return;
     isLoadingRef.current = true;
     try {
-      devLog('Home screen: Loading data...');
       if (showLoading) setIsLoading(true);
-      // Get settings first (needed to recreate user_plan if missing)
       const settings = await getTaperSettings();
-      devLog('Home screen: Settings:', settings);
-      
-        if (!settings) {
-        devLog('Home screen: No settings found');
+
+      if (!settings) {
         setDailyAllowance(null);
         setPouchesUsedToday(0);
         setCravingsResistedToday(0);
@@ -64,28 +47,23 @@ export default function HomeScreen() {
       }
 
       let userPlan = await getUserPlan();
-      devLog('Home screen: User plan:', userPlan);
-      
+
       // If user_plan is missing but settings exist, recreate it
       if (!userPlan) {
-        devLog('Home screen: No user plan found, recreating from settings...');
         const { saveUserPlan } = await import('@/lib/db-user-plan');
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-        const dailyAllowance = calculateDailyAllowance(settings, today);
-        
-        const planId = await saveUserPlan({
+        const allowance = calculateDailyAllowance(settings, today);
+
+        await saveUserPlan({
           settingsId: settings.id,
-          currentDailyAllowance: dailyAllowance,
+          currentDailyAllowance: allowance,
           lastCalculatedDate: Date.now(),
-        }, true); // forceCreate = true
-        
-        // Reload the plan
+        }, true);
+
         userPlan = await getUserPlan();
-        devLog('Home screen: Recreated user plan with ID:', planId);
-        
+
         if (!userPlan) {
-          console.error('Home screen: Failed to recreate user plan');
           setDailyAllowance(null);
           setPouchesUsedToday(0);
           setCravingsResistedToday(0);
@@ -94,108 +72,39 @@ export default function HomeScreen() {
         }
       }
 
-      // Always recalculate daily allowance from settings to ensure it's up-to-date
-      // This ensures that if settings changed (e.g., after "Start Over"), we use the new values
+      // Recalculate allowance from settings (always fresh, especially after reset/onboarding)
       const today = new Date();
       today.setHours(0, 0, 0, 0);
-      const lastCalculated = new Date(userPlan.lastCalculatedDate);
-      lastCalculated.setHours(0, 0, 0, 0);
-
-      // Recalculate allowance based on current settings and date
-      // This ensures we always show the correct allowance, especially after reset/onboarding
       const calculatedAllowance = calculateDailyAllowance(settings, today);
-      devLog('Home screen: Calculated allowance:', calculatedAllowance, 'from settings:', {
-        baseline: settings.baselinePouchesPerDay,
-        startDate: new Date(settings.startDate).toISOString(),
-        reductionPercent: settings.weeklyReductionPercent,
-        settingsId: settings.id,
-        userPlanAllowance: userPlan.currentDailyAllowance,
-        userPlanSettingsId: userPlan.settingsId,
-      });
 
-      // Use calculated allowance (always fresh from settings)
-      // If userPlan has a different settingsId, it means settings were reset
-      const allowance = calculatedAllowance;
-      
-      
-      // Load pouches used today first
       const todayLogs = await getLogEntriesForDay(today);
       const usedCount = todayLogs.filter(log => log.type === 'pouch_used').length;
       const resistedCount = todayLogs.filter(log => log.type === 'craving_resisted').length;
 
-      // Update all state atomically to ensure React re-renders
-      const displayAllowance = Math.round(allowance * 10) / 10;
-      devLog('Home screen: About to update state - dailyAllowance:', displayAllowance, 'settingsId:', settings.id, 'updatedAt:', settings.updatedAt, 'usedCount:', usedCount, 'resistedCount:', resistedCount);
-      
-      // Update state - React will handle re-rendering automatically
+      const displayAllowance = Math.round(calculatedAllowance * 10) / 10;
       setSettingsId(settings.id);
       setPouchesUsedToday(usedCount);
       setCravingsResistedToday(resistedCount);
       setDailyAllowance(displayAllowance);
       setBaselinePouchesPerDay(settings.baselinePouchesPerDay);
-      
-      devLog('Home screen: State update called - dailyAllowance:', displayAllowance, 'settingsId:', settings.id, 'updatedAt:', settings.updatedAt);
-      } catch (error) {
-      console.error('Error loading data:', error);
+    } catch (error) {
       captureError(error instanceof Error ? error : new Error(String(error)), { context: 'home_load_data' });
       setDailyAllowance(null);
       setPouchesUsedToday(0);
       setBaselinePouchesPerDay(null);
+    } finally {
       setIsLoading(false);
       isLoadingRef.current = false;
-    } finally {
-      // Small delay to ensure state updates are flushed before hiding loading
-      // This ensures React has time to process all state updates
-      setTimeout(() => {
-        setIsLoading(false);
-        isLoadingRef.current = false;
-      }, 50);
     }
   }, []);
-
-  // Reset all state on mount to ensure clean start
-  useEffect(() => {
-    devLog('Home screen: Component mounted - resetting all state');
-    setDailyAllowance(null);
-    setPouchesUsedToday(0);
-    setCravingsResistedToday(0);
-    setBaselinePouchesPerDay(null);
-    setSettingsId(null);
-    setIsLoading(true);
-    isLoadingRef.current = false;
-  }, []); // Only run on mount
 
   // Load data when screen comes into focus
   useFocusEffect(
     useCallback(() => {
-      devLog('Home screen: useFocusEffect triggered');
-      // Clear any pending loads
-      if (loadTimeoutRef.current) {
-        clearTimeout(loadTimeoutRef.current);
-        loadTimeoutRef.current = null;
-      }
-      // Reset loading flag to allow new load
       isLoadingRef.current = false;
-      setIsLoading(true);
-      // Debounce load to prevent multiple rapid calls
-      loadTimeoutRef.current = setTimeout(() => {
-        loadData();
-        loadTimeoutRef.current = null;
-      }, 200);
-      return () => {
-        if (loadTimeoutRef.current) {
-          clearTimeout(loadTimeoutRef.current);
-          loadTimeoutRef.current = null;
-        }
-        isLoadingRef.current = false;
-      };
+      loadData();
     }, [loadData])
   );
-
-  // Log when dailyAllowance changes to debug rendering
-  useEffect(() => {
-    devLog('Home screen: dailyAllowance changed to:', dailyAllowance, 'settingsId:', settingsId);
-  }, [dailyAllowance, settingsId]);
 
   const handleLogPouch = async () => {
     try {
@@ -207,7 +116,6 @@ export default function HomeScreen() {
       // Reconcile in background (no loading state)
       void loadData({ showLoading: false });
     } catch (error) {
-      console.error('Error logging pouch:', error);
       captureError(error instanceof Error ? error : new Error(String(error)), { context: 'home_log_pouch' });
     } finally {
       setIsLogging(false);
@@ -224,7 +132,6 @@ export default function HomeScreen() {
       // Reconcile in background (no loading state)
       void loadData({ showLoading: false });
     } catch (error) {
-      console.error('Error logging craving resisted:', error);
       captureError(error instanceof Error ? error : new Error(String(error)), { context: 'home_log_craving_resisted' });
     } finally {
       setIsLogging(false);

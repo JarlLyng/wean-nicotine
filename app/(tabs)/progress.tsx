@@ -5,12 +5,12 @@ import { getTaperSettings } from '@/lib/db-settings';
 import { useDesignTokens } from '@/lib/design';
 import type { TaperSettings } from '@/lib/models';
 import {
-    calculateTotalProgress,
+    calculateTotalProgressAndMilestones,
     calculateWeeklyProgress,
-    detectMilestones,
     getCurrentWeek,
     getPreviousWeek,
     type Milestone,
+    type TotalProgress,
     type WeeklyProgress,
 } from '@/lib/progress';
 import { animations, borderRadius, spacing, typography } from '@/lib/theme';
@@ -28,14 +28,17 @@ export default function ProgressScreen() {
   const [settingsId, setSettingsId] = useState<number | null>(null);
   const [currentWeek, setCurrentWeek] = useState<WeeklyProgress | null>(null);
   const [previousWeek, setPreviousWeek] = useState<WeeklyProgress | null>(null);
-  const [totalProgress, setTotalProgress] = useState<any>(null);
+  const [totalProgress, setTotalProgress] = useState<TotalProgress | null>(null);
   const [milestones, setMilestones] = useState<Milestone[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showPreviousWeek, setShowPreviousWeek] = useState(false);
   const settingsIdRef = useRef<number | null>(null);
+  const lastLoadedRef = useRef(0);
   const progressStyles = createProgressStyles(colors);
 
-  const loadData = useCallback(async () => {
+  const loadData = useCallback(async (force = false) => {
+    // Skip re-fetch if loaded recently (within 2s) unless forced (e.g. pull-to-refresh)
+    if (!force && Date.now() - lastLoadedRef.current < 2000 && settings) return;
     try {
       setIsLoading(true);
 
@@ -89,26 +92,22 @@ export default function ProgressScreen() {
       );
       setPreviousWeek(previousWeekData);
 
-      // Calculate total progress
-      devLog('Progress screen: Calculating total progress from start date', new Date(currentSettings.startDate).toISOString());
-      const total = await calculateTotalProgress(currentSettings);
-      devLog('Progress screen: Total progress data:', total);
+      // Calculate total progress and milestones in one pass (single DB query)
+      const { progress: total, milestones: detectedMilestones } =
+        await calculateTotalProgressAndMilestones(currentSettings);
       setTotalProgress(total);
-
-      // Detect milestones
-      const detectedMilestones = await detectMilestones(currentSettings);
       setMilestones(detectedMilestones);
+      lastLoadedRef.current = Date.now();
     } catch (error) {
-      console.error('Error loading progress:', error);
+      if (__DEV__) console.error('Error loading progress:', error);
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [settings]);
 
   useFocusEffect(
     useCallback(() => {
       loadData();
-      return () => {};
     }, [loadData])
   );
 
@@ -157,7 +156,7 @@ export default function ProgressScreen() {
       <ScrollView
         contentContainerStyle={progressStyles.scrollContent}
         showsVerticalScrollIndicator={false}
-        refreshControl={<RefreshControl refreshing={isLoading} onRefresh={loadData} />}>
+        refreshControl={<RefreshControl refreshing={isLoading} onRefresh={() => loadData(true)} />}>
         <View style={progressStyles.content}>
           {/* Week Selector */}
           <View style={progressStyles.weekSelector}>

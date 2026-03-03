@@ -34,7 +34,7 @@ export async function initAnalytics(): Promise<void> {
 /**
  * Log an analytics event (local only)
  */
-export async function logEvent(eventType: string, data?: any): Promise<void> {
+export async function logEvent(eventType: string, data?: Record<string, unknown>): Promise<void> {
   try {
     const db = await getDatabase();
     await db.runAsync(
@@ -61,7 +61,7 @@ export async function getAnalyticsEvents(
   try {
     const db = await getDatabase();
     let query = 'SELECT * FROM analytics';
-    const params: any[] = [];
+    const params: (string | number | null)[] = [];
 
     if (eventType) {
       query += ' WHERE event_type = ?';

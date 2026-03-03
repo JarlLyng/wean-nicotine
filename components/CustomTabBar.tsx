@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, TouchableOpacity, StyleSheet, Platform, Text } from 'react-native';
-import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
+import { BottomTabBarProps, BottomTabNavigationOptions } from '@react-navigation/bottom-tabs';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
 import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated';
@@ -12,8 +12,8 @@ import { useDesignTokens } from '@/lib/design';
 const AnimatedText = Animated.createAnimatedComponent(Text);
 
 interface TabItemProps {
-  route: any;
-  options: any;
+  route: { name: string; key: string };
+  options: BottomTabNavigationOptions;
   isFocused: boolean;
   onPress: () => void;
   onLongPress: () => void;
@@ -21,7 +21,8 @@ interface TabItemProps {
 }
 
 function TabItem({ route, options, isFocused, onPress, onLongPress, colors }: TabItemProps) {
-  const label = options.tabBarLabel ?? options.title ?? route.name;
+  const rawLabel = options.tabBarLabel ?? options.title ?? route.name;
+  const label = typeof rawLabel === 'function' ? route.name : rawLabel;
   
   // Get icon name based on route
   const getIconName = () => {
@@ -67,7 +68,7 @@ function TabItem({ route, options, isFocused, onPress, onLongPress, colors }: Ta
       accessibilityState={{ selected: isFocused }}
       accessibilityLabel={options.tabBarAccessibilityLabel ?? String(label)}
       accessibilityHint={`Go to ${String(label)} tab.`}
-      testID={options.tabBarTestID}
+      testID={(options as Record<string, unknown>).tabBarTestID as string | undefined}
       onPress={onPress}
       onLongPress={onLongPress}
       style={styles.tabItem}>

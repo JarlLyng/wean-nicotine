@@ -61,7 +61,7 @@ interface IconProps {
 }
 
 // Mapping of icon names to Phosphor icon components
-const ICON_MAP: Record<IconName, React.ComponentType<any>> = {
+const ICON_MAP: Record<IconName, React.ComponentType<{ size?: number; color?: string; weight?: IconWeight; style?: StyleProp<ViewStyle> }>> = {
   'house': House,
   'chart-line-up': ChartLineUp,
   'heart': Heart,

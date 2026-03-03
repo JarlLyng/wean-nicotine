@@ -7,16 +7,18 @@
 import { Platform } from 'react-native';
 
 // Type for SQLite database (avoiding direct import for web compatibility)
+type SQLiteParam = string | number | null | boolean;
+
 type SQLiteDatabase = {
   execAsync: (sql: string) => Promise<void>;
-  runAsync: (sql: string, params?: any[]) => Promise<{ lastInsertRowId: number }>;
-  getAllAsync: <T = any>(sql: string, params?: any[]) => Promise<T[]>;
-  getFirstAsync: <T = any>(sql: string, params?: any[]) => Promise<T | null>;
+  runAsync: (sql: string, params?: SQLiteParam[]) => Promise<{ lastInsertRowId: number }>;
+  getAllAsync: <T = Record<string, unknown>>(sql: string, params?: SQLiteParam[]) => Promise<T[]>;
+  getFirstAsync: <T = Record<string, unknown>>(sql: string, params?: SQLiteParam[]) => Promise<T | null>;
 };
 
 // Lazy load expo-sqlite only on native platforms to avoid web bundling issues
 // On web, this function returns null immediately to prevent Metro from analyzing expo-sqlite
-function getSQLite(): any {
+function getSQLite(): { openDatabaseAsync: (name: string) => Promise<SQLiteDatabase> } | null {
   if (Platform.OS === 'web') {
     return null;
   }

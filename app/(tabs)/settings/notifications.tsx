@@ -83,7 +83,7 @@ export default function NotificationsScreen() {
       // Prefer scheduled time if available, otherwise use stored time, otherwise default.
       let scheduledTime: ReminderTime | null = null;
       if (triggerReminder && triggerReminder.trigger && typeof triggerReminder.trigger === 'object') {
-        const t: any = triggerReminder.trigger;
+        const t = triggerReminder.trigger as Record<string, unknown>;
         if (typeof t.hour === 'number' && typeof t.minute === 'number') {
           scheduledTime = { hour: t.hour, minute: t.minute };
         }
@@ -109,7 +109,7 @@ export default function NotificationsScreen() {
         }
       }
     } catch (error) {
-      console.error('Error loading notification status:', error);
+      if (__DEV__) console.error('Error loading notification status:', error);
     } finally {
       setIsLoading(false);
     }
@@ -176,7 +176,7 @@ export default function NotificationsScreen() {
         Alert.alert('Success', 'Daily check-in notification disabled');
       }
     } catch (error) {
-      console.error('Error toggling daily check-in:', error);
+      if (__DEV__) console.error('Error toggling daily check-in:', error);
       Alert.alert('Error', 'Failed to update notification settings');
     }
   };
@@ -221,7 +221,7 @@ export default function NotificationsScreen() {
         Alert.alert('Success', 'Trigger reminders disabled');
       }
     } catch (error) {
-      console.error('Error toggling trigger reminders:', error);
+      if (__DEV__) console.error('Error toggling trigger reminders:', error);
       Alert.alert('Error', 'Failed to update notification settings');
     }
   };

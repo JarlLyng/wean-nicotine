@@ -51,7 +51,7 @@ export default function ToolsScreen() {
                   accessibilityRole="button"
                   accessibilityLabel={tool.title}
                   accessibilityHint={tool.description}
-                  onPress={() => router.push(`/(tabs)/tools/${tool.id}` as any)}>
+                  onPress={() => router.push(`/(tabs)/tools/${tool.id}` as `/(tabs)/tools/${string}`)}>
                   <Card variant="elevated" style={toolsStyles.toolCard} padding="lg">
                     <View style={toolsStyles.iconContainer}>
                       <Icon name={tool.icon} size={48} color={colors.primary} weight="duotone" />

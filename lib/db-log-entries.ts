@@ -66,7 +66,7 @@ export async function getLogEntries(options?: {
 
   const db = await getDatabase();
   let query = 'SELECT * FROM log_entries WHERE 1=1';
-  const params: any[] = [];
+  const params: (string | number | null)[] = [];
 
   if (options?.type) {
     query += ' AND type = ?';
@@ -150,7 +150,7 @@ export async function countLogEntriesByType(
 ): Promise<number> {
   const db = await getDatabase();
   let query = 'SELECT COUNT(*) as count FROM log_entries WHERE type = ?';
-  const params: any[] = [type];
+  const params: (string | number | null)[] = [type];
 
   if (startDate) {
     query += ' AND timestamp >= ?';

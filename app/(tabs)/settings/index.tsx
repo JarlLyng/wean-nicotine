@@ -16,7 +16,7 @@ import {
 } from '@/lib/notifications';
 import { borderRadius, spacing, typography } from '@/lib/theme';
 import { useFocusEffect, useRouter } from 'expo-router';
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { Alert, Linking, ScrollView, StyleSheet, Switch, Text, TextStyle, View, ViewStyle } from 'react-native';
 export default function SettingsScreen() {
   const { colors } = useDesignTokens();
@@ -26,16 +26,19 @@ export default function SettingsScreen() {
   const [hasPermission, setHasPermission] = useState(false);
   const [dailyCheckInEnabled, setDailyCheckInEnabled] = useState(false);
   const [isLoadingNotifications, setIsLoadingNotifications] = useState(true);
+  const lastLoadedRef = useRef(0);
   const styles = createStyles(colors);
 
-  const loadData = useCallback(async () => {
+  const loadData = useCallback(async (force = false) => {
+    if (!force && Date.now() - lastLoadedRef.current < 2000 && settings) return;
     try {
       const currentSettings = await getTaperSettings();
       setSettings(currentSettings);
+      lastLoadedRef.current = Date.now();
     } catch (error) {
-      console.error('Error loading data:', error);
+      if (__DEV__) console.error('Error loading data:', error);
     }
-  }, []);
+  }, [settings]);
 
   const loadNotificationStatus = useCallback(async () => {
     setIsLoadingNotifications(true);
@@ -51,7 +54,7 @@ export default function SettingsScreen() {
       );
       setDailyCheckInEnabled(hasDailyCheckIn);
     } catch (error) {
-      console.error('Error loading notification status:', error);
+      if (__DEV__) console.error('Error loading notification status:', error);
     } finally {
       setIsLoadingNotifications(false);
     }
@@ -94,7 +97,7 @@ export default function SettingsScreen() {
         Alert.alert('Success', 'Daily check-in notification disabled');
       }
     } catch (error) {
-      console.error('Error toggling daily check-in:', error);
+      if (__DEV__) console.error('Error toggling daily check-in:', error);
       Alert.alert('Error', 'Failed to update notification settings');
     }
   };

@@ -65,7 +65,7 @@ export default function ResetTaperScreen() {
                 },
               ]);
             } catch (error) {
-              console.error('Error starting over:', error);
+              if (__DEV__) console.error('Error starting over:', error);
               Alert.alert('Error', 'Failed to clear data. Please try again.');
               setIsStartingOver(false);
             }
