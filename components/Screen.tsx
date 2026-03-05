@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, Platform, StyleProp, TextStyle, ViewStyle } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { spacing, typography } from '@/lib/theme';
@@ -14,7 +14,7 @@ interface ScreenProps {
 
 export function Screen({ children, title, variant = 'plain', style }: ScreenProps) {
   const { colors } = useDesignTokens();
-  const styles = createStyles(colors);
+  const styles = useMemo(() => createStyles(colors), [colors]);
   const isGradient = variant === 'gradient';
 
   // Build inner content once (web vs native)

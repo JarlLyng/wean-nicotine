@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
@@ -31,7 +32,7 @@ const TOOLS = [
 export default function ToolsScreen() {
   const { colors } = useDesignTokens();
   const router = useRouter();
-  const toolsStyles = createToolsStyles(colors);
+  const toolsStyles = useMemo(() => createToolsStyles(colors), [colors]);
 
   return (
     <Screen title="Support Tools">

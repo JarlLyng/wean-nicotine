@@ -86,7 +86,7 @@ export const typography = {
     allowFontScaling: true,
   },
   '2xl': {
-    fontSize: designTokens.typography.sizes.xl,
+    fontSize: designTokens.typography.sizes.xl, // Kept at xl (24) for backward compat — used in inputs
     lineHeight: designTokens.typography.lineHeights.normal,
     fontWeight: `${designTokens.typography.weights.semibold}`,
     allowFontScaling: true,

@@ -145,11 +145,9 @@ export async function scheduleTriggerReminders(
   minute: number = 0
 ): Promise<string | null> {
   try {
-    // Snapshot existing reminders so we can avoid losing them if scheduling fails.
-    const allNotifications = await Notifications.getAllScheduledNotificationsAsync();
-    const existingTriggerReminders = allNotifications.filter(
-      (n) => n.content.data?.type === 'trigger_reminder'
-    );
+    // Cancel existing trigger reminders first, then schedule a new one.
+    // This avoids the race condition of snapshot + schedule + cancel.
+    await cancelTriggerReminders();
 
     const exampleTrigger = triggers && triggers.length > 0 ? triggers[0] : null;
     const body = exampleTrigger
@@ -169,11 +167,6 @@ export async function scheduleTriggerReminders(
         minute,
       } as DailyTriggerInput,
     });
-
-    // Now that the new one is scheduled, remove older ones to keep it to 1/day.
-    for (const notification of existingTriggerReminders) {
-      await Notifications.cancelScheduledNotificationAsync(notification.identifier);
-    }
 
     return notificationId;
   } catch (error) {

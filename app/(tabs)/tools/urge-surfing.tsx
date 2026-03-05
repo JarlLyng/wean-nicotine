@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { Screen } from '@/components/Screen';
 import { spacing } from '@/lib/theme';
@@ -5,10 +6,10 @@ import { useDesignTokens } from '@/lib/design';
 
 export default function UrgeSurfingScreen() {
   const { colors } = useDesignTokens();
-  const urgeStyles = createUrgeStyles(colors);
+  const urgeStyles = useMemo(() => createUrgeStyles(colors), [colors]);
   
   return (
-    <Screen>
+    <Screen title="Urge Surfing">
       <ScrollView contentContainerStyle={urgeStyles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={urgeStyles.content}>
           <Text style={urgeStyles.subtitle}>

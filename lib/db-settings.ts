@@ -63,7 +63,7 @@ export async function saveTaperSettings(
        WHERE id = ?`,
       [
         settings.baselinePouchesPerDay,
-        settings.pricePerCan || null,
+        settings.pricePerCan ?? null,
         currencyValue,
         settings.weeklyReductionPercent,
         settings.startDate,
@@ -84,7 +84,7 @@ export async function saveTaperSettings(
        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         settings.baselinePouchesPerDay,
-        settings.pricePerCan || null,
+        settings.pricePerCan ?? null,
         currencyValue,
         settings.weeklyReductionPercent,
         settings.startDate,
@@ -142,7 +142,7 @@ export async function getTaperSettings(): Promise<TaperSettings | null> {
   return {
     id: result.id,
     baselinePouchesPerDay: result.baseline_pouches_per_day,
-    pricePerCan: result.price_per_can || undefined,
+    pricePerCan: result.price_per_can ?? undefined,
     currency:
       result.currency === 'DKK' ||
         result.currency === 'SEK' ||

@@ -42,7 +42,10 @@ export function StatCard({ value, label, variant = 'default', style }: StatCardP
   };
 
   return (
-    <View style={[styles.container, style]}>
+    <View
+      style={[styles.container, style]}
+      accessibilityLabel={`${value} ${label}`}
+      accessibilityRole="text">
       <Animated.View style={animatedStyle}>
         <Text style={[styles.value, { color: getValueColor() }]}>{value}</Text>
       </Animated.View>

@@ -53,7 +53,7 @@ export default function PriceScreen() {
         contentContainerStyle={priceStyles.scrollContent}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
-        keyboardDismissMode="none">
+        keyboardDismissMode="on-drag">
         <View style={priceStyles.content}>
           <Card variant="flat" style={priceStyles.card} padding="lg">
             <Text style={priceStyles.description}>
@@ -102,8 +102,9 @@ export default function PriceScreen() {
                 placeholder="e.g., 50.00"
                 placeholderTextColor={colors.text.secondary}
                 keyboardType="decimal-pad"
-                blurOnSubmit={false}
+                blurOnSubmit
                 returnKeyType="done"
+                onSubmitEditing={handleNext}
                 accessibilityLabel={`Price per can (${currency})`}
                 accessibilityHint="Optional. Leave blank if you don't want to track money saved."
               />

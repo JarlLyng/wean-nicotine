@@ -187,7 +187,7 @@ export async function calculateTotalProgressAndMilestones(
   const resistedLogs: LogEntry[] = [];
   for (const log of logs) {
     if (log.type === 'pouch_used') usedLogs.push(log);
-    else resistedLogs.push(log);
+    else if (log.type === 'craving_resisted') resistedLogs.push(log);
   }
   resistedLogs.sort((a, b) => a.timestamp - b.timestamp);
 

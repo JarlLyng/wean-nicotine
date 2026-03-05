@@ -1,5 +1,6 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import Animated, { useSharedValue, useAnimatedStyle, withTiming, Easing } from 'react-native-reanimated';
 import { Screen } from '@/components/Screen';
 import { spacing } from '@/lib/theme';
 import { useDesignTokens } from '@/lib/design';
@@ -17,32 +18,40 @@ export default function BreathingExercise() {
   const [isRunning, setIsRunning] = useState(false);
   const [currentCycle, setCurrentCycle] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState(BREATHING_CYCLES[0].duration);
-  const scaleAnim = useRef(new Animated.Value(1)).current;
+  const scaleAnim = useSharedValue(1);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const breathingStyles = createBreathingStyles(colors);
+  const phaseHandledRef = useRef(false);
+  const breathingStyles = useMemo(() => createBreathingStyles(colors), [colors]);
 
-  const startBreathingCycle = useCallback(() => {
-    const cycle = BREATHING_CYCLES[currentCycle];
+  const clearTimer = useCallback(() => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+  }, []);
+
+  const startBreathingCycle = useCallback((cycleIndex: number) => {
+    clearTimer();
+    phaseHandledRef.current = false;
+    const cycle = BREATHING_CYCLES[cycleIndex];
     setTimeRemaining(cycle.duration);
 
-    // Animate scale based on phase
+    // Animate scale based on phase using Reanimated (runs on UI thread)
     if (cycle.phase === 'Breathe In') {
-      Animated.timing(scaleAnim, {
-        toValue: 1.2,
+      scaleAnim.value = withTiming(1.2, {
         duration: cycle.duration,
-        useNativeDriver: true,
-      }).start();
+        easing: Easing.inOut(Easing.ease),
+      });
     } else if (cycle.phase === 'Breathe Out') {
-      Animated.timing(scaleAnim, {
-        toValue: 1,
+      scaleAnim.value = withTiming(1, {
         duration: cycle.duration,
-        useNativeDriver: true,
-      }).start();
+        easing: Easing.inOut(Easing.ease),
+      });
     }
 
     // Haptic feedback
     if (cycle.phase === 'Breathe In' || cycle.phase === 'Breathe Out') {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
     }
 
     let elapsed = 0;
@@ -51,50 +60,44 @@ export default function BreathingExercise() {
       const remaining = Math.max(0, cycle.duration - elapsed);
       setTimeRemaining(remaining);
 
-      if (remaining === 0) {
-        if (timerRef.current) {
-          clearInterval(timerRef.current);
-        }
-        // Move to next cycle
-        const nextCycle = (currentCycle + 1) % BREATHING_CYCLES.length;
+      if (remaining === 0 && !phaseHandledRef.current) {
+        phaseHandledRef.current = true;
+        clearTimer();
+        const nextCycle = (cycleIndex + 1) % BREATHING_CYCLES.length;
         setCurrentCycle(nextCycle);
       }
     }, 100);
-  }, [currentCycle, scaleAnim]);
+  }, [scaleAnim, clearTimer]);
 
   useEffect(() => {
     if (isRunning) {
-      startBreathingCycle();
-    } else {
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-      }
-      scaleAnim.setValue(1);
+      startBreathingCycle(currentCycle);
     }
-
-    return () => {
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-      }
-    };
-  }, [isRunning, currentCycle, startBreathingCycle, scaleAnim]);
+    return clearTimer;
+  }, [isRunning, currentCycle, startBreathingCycle, clearTimer]);
 
   const handleStart = () => {
-    setIsRunning(true);
     setCurrentCycle(0);
+    setIsRunning(true);
   };
 
   const handleStop = () => {
+    clearTimer();
     setIsRunning(false);
     setCurrentCycle(0);
     setTimeRemaining(BREATHING_CYCLES[0].duration);
+    scaleAnim.value = withTiming(1, { duration: 200 });
   };
+
+  const animatedCircleStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scaleAnim.value }],
+  }));
 
   const currentPhase = BREATHING_CYCLES[currentCycle];
   const secondsRemaining = Math.ceil(timeRemaining / 1000);
 
   return (
-    <Screen>
+    <Screen title="Breathing Exercise">
       <View style={breathingStyles.container}>
         <Text style={breathingStyles.subtitle}>
           Take a moment to center yourself. This exercise can help reduce cravings.
@@ -104,9 +107,7 @@ export default function BreathingExercise() {
           <Animated.View
             style={[
               breathingStyles.circle,
-              {
-                transform: [{ scale: scaleAnim }],
-              },
+              animatedCircleStyle,
             ]}>
             <Text style={breathingStyles.phaseText}>{currentPhase.phase}</Text>
             {isRunning && (
@@ -154,7 +155,6 @@ const createBreathingStyles = (colors: ReturnType<typeof useDesignTokens>['color
   container: {
     flex: 1,
     paddingTop: spacing.md,
-    // Screen-komponenten giver allerede horizontal padding
     paddingHorizontal: 0,
     paddingBottom: spacing.lg,
   },

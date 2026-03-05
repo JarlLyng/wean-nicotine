@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Screen } from '@/components/Screen';
 import { spacing } from '@/lib/theme';
@@ -47,7 +47,7 @@ export default function ReflectionScreen() {
   const { colors } = useDesignTokens();
   const [currentPromptIndex, setCurrentPromptIndex] = useState(0);
   const [showFollowUp, setShowFollowUp] = useState(false);
-  const reflectionStyles = createReflectionStyles(colors);
+  const reflectionStyles = useMemo(() => createReflectionStyles(colors), [colors]);
 
   const currentPrompt = REFLECTION_PROMPTS[currentPromptIndex];
 
@@ -66,7 +66,7 @@ export default function ReflectionScreen() {
   const buttonTextStyle = showFollowUp ? reflectionStyles.nextButtonText : reflectionStyles.buttonText;
 
   return (
-    <Screen>
+    <Screen title="Reflection">
       <ScrollView contentContainerStyle={reflectionStyles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={reflectionStyles.content}>
           <Text style={reflectionStyles.subtitle}>

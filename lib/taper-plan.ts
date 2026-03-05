@@ -20,8 +20,9 @@ export function calculateDailyAllowance(
   // Stepwise weekly reduction: use full weeks only (no fractional week)
   const clampedWeeks = Math.max(0, Math.floor(weeksSinceStart));
   
+  const clampedPercent = Math.max(0, Math.min(100, settings.weeklyReductionPercent));
   const reductionFactor = Math.pow(
-    1 - settings.weeklyReductionPercent / 100,
+    1 - clampedPercent / 100,
     clampedWeeks
   );
   

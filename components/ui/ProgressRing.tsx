@@ -1,9 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Svg, { Circle, Defs, LinearGradient, Stop } from 'react-native-svg';
 import Animated, { useSharedValue, useAnimatedProps, withTiming, Easing } from 'react-native-reanimated';
 import { typography, spacing, animations } from '@/lib/theme';
 import { useDesignTokens } from '@/lib/design';
+
+let nextGradientId = 0;
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
@@ -66,11 +68,18 @@ export function ProgressRing({
   // Guard against NaN/Infinity in label calculation
   const safeProgress = Number.isFinite(progress) && !isNaN(progress) ? progress : 0;
   const displayLabel = label !== undefined ? label : `${Math.round(safeProgress * 100)}%`;
-  const gradientId = 'progressGradient';
-  const styles = createStyles(colors);
+  const gradientIdRef = useRef(`progressGradient_${nextGradientId++}`);
+  const gradientId = gradientIdRef.current;
+  const styles = useMemo(() => createStyles(colors), [colors]);
+
+  const progressPercent = Math.round(safeProgress * 100);
 
   return (
-    <View style={styles.container}>
+    <View
+      style={styles.container}
+      accessibilityRole="progressbar"
+      accessibilityValue={{ min: 0, max: 100, now: progressPercent }}
+      accessibilityLabel={sublabel ? `${displayLabel} ${sublabel}` : `Progress: ${progressPercent}%`}>
       <View style={[styles.ringContainer, { width: size, height: size }]}>
         <Svg width={size} height={size}>
           <Defs>

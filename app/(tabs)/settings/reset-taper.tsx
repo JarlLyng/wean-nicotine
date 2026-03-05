@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Screen } from '@/components/Screen';
@@ -11,7 +11,7 @@ import { cancelAllNotifications } from '@/lib/notifications';
 export default function ResetTaperScreen() {
   const router = useRouter();
   const { colors } = useDesignTokens();
-  const styles = createStyles(colors);
+  const styles = useMemo(() => createStyles(colors), [colors]);
   const [isStartingOver, setIsStartingOver] = useState(false);
   const devLog = (...args: unknown[]) => {
     if (__DEV__) console.log(...args);
@@ -67,6 +67,7 @@ export default function ResetTaperScreen() {
             } catch (error) {
               if (__DEV__) console.error('Error starting over:', error);
               Alert.alert('Error', 'Failed to clear data. Please try again.');
+            } finally {
               setIsStartingOver(false);
             }
           },

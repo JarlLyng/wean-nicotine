@@ -15,7 +15,7 @@ import {
 } from '@/lib/progress';
 import { animations, borderRadius, spacing, typography } from '@/lib/theme';
 import { useFocusEffect } from 'expo-router';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Animated, { FadeInRight } from 'react-native-reanimated';
 
@@ -34,11 +34,11 @@ export default function ProgressScreen() {
   const [showPreviousWeek, setShowPreviousWeek] = useState(false);
   const settingsIdRef = useRef<number | null>(null);
   const lastLoadedRef = useRef(0);
-  const progressStyles = createProgressStyles(colors);
+  const progressStyles = useMemo(() => createProgressStyles(colors), [colors]);
 
   const loadData = useCallback(async (force = false) => {
     // Skip re-fetch if loaded recently (within 2s) unless forced (e.g. pull-to-refresh)
-    if (!force && Date.now() - lastLoadedRef.current < 2000 && settings) return;
+    if (!force && Date.now() - lastLoadedRef.current < 2000) return;
     try {
       setIsLoading(true);
 
@@ -103,7 +103,7 @@ export default function ProgressScreen() {
     } finally {
       setIsLoading(false);
     }
-  }, [settings]);
+  }, []);
 
   useFocusEffect(
     useCallback(() => {

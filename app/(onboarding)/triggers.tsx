@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Platform, ScrollView, StyleSheet, Text, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { Alert, Platform, ScrollView, StyleSheet, Text, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Screen } from '@/components/Screen';
 import { Button } from '@/components/ui/Button';
@@ -23,7 +23,7 @@ const TRIGGERS = [
 ];
 
 export default function TriggersScreen() {
-  const { colors } = useDesignTokens();
+  useDesignTokens(); // ensure tokens are loaded
   const colorScheme = useColorScheme();
   const router = useRouter();
   const params = useLocalSearchParams();
@@ -145,7 +145,8 @@ export default function TriggersScreen() {
       router.replace('/(tabs)/home');
     } catch (error) {
       if (__DEV__) console.error('Error completing onboarding:', error);
-      alert('Something went wrong. Please try again.');
+      Alert.alert('Error', 'Something went wrong. Please try again.');
+    } finally {
       setIsSaving(false);
     }
   };

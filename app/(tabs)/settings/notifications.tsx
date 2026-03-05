@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { View, Text, StyleSheet, ScrollView, Switch, Alert, Pressable, TextStyle, ViewStyle } from 'react-native';
 import { Screen } from '@/components/Screen';
 import { spacing } from '@/lib/theme';
@@ -29,7 +29,7 @@ function formatTime(t: ReminderTime) {
 
 export default function NotificationsScreen() {
   const { colors } = useDesignTokens();
-  const styles = createStyles(colors);
+  const styles = useMemo(() => createStyles(colors), [colors]);
   const [hasPermission, setHasPermission] = useState(false);
   const [dailyCheckInEnabled, setDailyCheckInEnabled] = useState(false);
   const [checkInHour] = useState(20);

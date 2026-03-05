@@ -8,6 +8,7 @@ import { formatMoney } from '@/lib/currency';
 import { getTaperSettings } from '@/lib/db-settings';
 import { useDesignTokens } from '@/lib/design';
 import type { TaperSettings } from '@/lib/models';
+import Constants from 'expo-constants';
 import {
   cancelDailyCheckIn,
   getAllScheduledNotifications,
@@ -16,7 +17,7 @@ import {
 } from '@/lib/notifications';
 import { borderRadius, spacing, typography } from '@/lib/theme';
 import { useFocusEffect, useRouter } from 'expo-router';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { Alert, Linking, ScrollView, StyleSheet, Switch, Text, TextStyle, View, ViewStyle } from 'react-native';
 export default function SettingsScreen() {
   const { colors } = useDesignTokens();
@@ -27,10 +28,10 @@ export default function SettingsScreen() {
   const [dailyCheckInEnabled, setDailyCheckInEnabled] = useState(false);
   const [isLoadingNotifications, setIsLoadingNotifications] = useState(true);
   const lastLoadedRef = useRef(0);
-  const styles = createStyles(colors);
+  const styles = useMemo(() => createStyles(colors), [colors]);
 
   const loadData = useCallback(async (force = false) => {
-    if (!force && Date.now() - lastLoadedRef.current < 2000 && settings) return;
+    if (!force && Date.now() - lastLoadedRef.current < 2000) return;
     try {
       const currentSettings = await getTaperSettings();
       setSettings(currentSettings);
@@ -38,7 +39,7 @@ export default function SettingsScreen() {
     } catch (error) {
       if (__DEV__) console.error('Error loading data:', error);
     }
-  }, [settings]);
+  }, []);
 
   const loadNotificationStatus = useCallback(async () => {
     setIsLoadingNotifications(true);
@@ -241,7 +242,7 @@ export default function SettingsScreen() {
 
           {/* Version Info */}
           <View style={styles.versionContainer}>
-            <Text style={styles.versionText}>Taper! v1.0.0 (Build 8)</Text>
+            <Text style={styles.versionText}>Taper! v{Constants.expoConfig?.version ?? '1.0.0'} (Build {Constants.expoConfig?.ios?.buildNumber ?? '?'})</Text>
           </View>
         </View>
       </ScrollView>

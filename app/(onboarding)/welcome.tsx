@@ -4,12 +4,13 @@ import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { useDesignTokens } from '@/lib/design';
 import { spacing, typography } from '@/lib/theme';
+import { useMemo } from 'react';
 import { ScrollView, StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native';
 
 export default function WelcomeScreen() {
   const router = useRouter();
   const { colors } = useDesignTokens();
-  const styles = createStyles(colors);
+  const styles = useMemo(() => createStyles(colors), [colors]);
 
   return (
     <Screen title="Welcome">

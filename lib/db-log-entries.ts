@@ -21,7 +21,7 @@ export async function createLogEntry(
 
   const db = await getDatabase();
   const now = Date.now();
-  const entryTimestamp = timestamp || now;
+  const entryTimestamp = timestamp ?? now;
 
   const result = await db.runAsync(
     `INSERT INTO log_entries (type, timestamp, created_at) VALUES (?, ?, ?)`,
@@ -107,7 +107,7 @@ export async function getLogEntries(options?: {
     id: row.id,
     type: row.type as LogEntryType,
     timestamp: row.timestamp,
-    createdAt: row.created_at || row.createdAt || row.timestamp, // Handle both snake_case and camelCase
+    createdAt: row.created_at ?? row.createdAt ?? row.timestamp, // Handle both snake_case and camelCase
   }));
 }
 

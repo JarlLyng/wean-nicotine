@@ -86,7 +86,7 @@ export async function getAnalyticsEvents(
       id: row.id,
       eventType: row.event_type,
       timestamp: row.timestamp,
-      data: row.data ? JSON.parse(row.data) : undefined,
+      data: row.data ? (() => { try { return JSON.parse(row.data); } catch { return undefined; } })() : undefined,
     }));
   } catch (error) {
     if (__DEV__) console.error('Error getting analytics events:', error);

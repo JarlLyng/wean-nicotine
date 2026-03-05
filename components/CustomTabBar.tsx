@@ -118,10 +118,9 @@ export function CustomTabBar({ state, descriptors, navigation }: BottomTabBarPro
 
             if (!isFocused && !event.defaultPrevented) {
               navigation.navigate(route.name);
-            }
-
-            if (Platform.OS === 'ios') {
-              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              if (Platform.OS === 'ios') {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+              }
             }
           };
 
