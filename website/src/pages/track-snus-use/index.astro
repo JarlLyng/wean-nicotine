@@ -1,0 +1,191 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Button from '../../components/Button.astro';
+import Card from '../../components/Card.astro';
+import Section from '../../components/Section.astro';
+import { APP_STORE_URL, isAppStoreUrlKnown, SITE_NAME } from '../../lib/site';
+
+const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
+const appStoreCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming soon on the App Store';
+---
+
+<Layout
+	title="Track Snus Use — Daily Pouch Tracker App"
+	description="Track your daily snus use with Taper. Log each pouch in one tap, see weekly trends, and follow a gradual reduction plan on your iPhone."
+	canonicalPath="/track-snus-use/"
+>
+	<section class="hero">
+		<div class="container">
+			<h1>Track your snus use — one tap at a time</h1>
+			<p class="lede">
+				Taper makes it easy to log every snus pouch you use throughout the day.
+				See your daily count, weekly trends, and how your use changes over time as you follow a gradual reduction plan.
+			</p>
+			<div class="cta">
+				<Button variant="primary" href={APP_STORE_URL} disabled={!appStoreKnown} external={true}>
+					{appStoreCtaLabel}
+				</Button>
+				<Button variant="secondary" href="/">Learn more about Taper</Button>
+			</div>
+		</div>
+	</section>
+
+	<Section id="who" title="Who snus tracking is for" lede="Tracking your use is the first step toward reducing it.">
+		<div class="grid-2">
+			<Card as="article">
+				<h3>You are not sure how much snus you actually use</h3>
+				<p>Most people underestimate their daily pouch count. Tracking gives you an honest baseline to work from.</p>
+			</Card>
+			<Card as="article">
+				<h3>You want to see your patterns</h3>
+				<p>When do you use the most? Mornings, after meals, during work? Tracking reveals your habits so you can plan around them.</p>
+			</Card>
+			<Card as="article">
+				<h3>You are trying to cut down</h3>
+				<p>A daily allowance only works if you know how many pouches you have used. Tracking keeps you honest and on target.</p>
+			</Card>
+			<Card as="article">
+				<h3>You want to see progress over time</h3>
+				<p>When you can look back and see that you went from 14 pouches a day to 7, the effort feels worth it. Tracking makes that visible.</p>
+			</Card>
+		</div>
+	</Section>
+
+	<Section id="what" title="What you can track with Taper" lede="Simple tracking that takes less than a second per pouch.">
+		<div class="grid-3">
+			<Card as="article">
+				<h3>Daily pouch count</h3>
+				<p>Tap once each time you use a snus pouch. Taper shows how many you have used today and how many are left in your daily allowance.</p>
+			</Card>
+			<Card as="article">
+				<h3>Weekly progress</h3>
+				<p>See your total for each week, how it compares to previous weeks, and whether you stayed within your allowance.</p>
+			</Card>
+			<Card as="article">
+				<h3>Money saved</h3>
+				<p>Optionally enter the price per can. Taper calculates how much you have saved by using fewer pouches over time.</p>
+			</Card>
+		</div>
+	</Section>
+
+	<Section id="why" title="Why tracking snus use works" lede="Awareness is one of the most effective tools for behavior change.">
+		<div class="grid-2">
+			<Card as="article">
+				<h3>It creates awareness</h3>
+				<p>Simply knowing you are tracking changes your behavior. You become more intentional about each pouch instead of using them on autopilot.</p>
+			</Card>
+			<Card as="article">
+				<h3>It keeps you accountable</h3>
+				<p>A daily number gives you something concrete to measure against. No more guessing whether you are making progress.</p>
+			</Card>
+			<Card as="article">
+				<h3>It shows trends you cannot see otherwise</h3>
+				<p>Day to day the changes feel small. But over weeks you can see a clear downward trend in your snus use.</p>
+			</Card>
+			<Card as="article">
+				<h3>It is completely private</h3>
+				<p>Taper stores all tracking data on your device. No accounts, no cloud, no one else can see your numbers. Learn more about <a href="/private-quit-nicotine-app/">privacy in Taper</a>.</p>
+			</Card>
+		</div>
+	</Section>
+
+	<Section id="faq" title="Frequently asked questions about snus tracking">
+		<div class="grid-2">
+			<Card as="article">
+				<h3>Do I have to track every single pouch?</h3>
+				<p>For the best results, yes. But Taper does not punish you for missing a log. Track as consistently as you can.</p>
+			</Card>
+			<Card as="article">
+				<h3>Can I just track without a reduction plan?</h3>
+				<p>Yes. You can use Taper to understand your current use before committing to cutting down. Awareness alone is valuable.</p>
+			</Card>
+			<Card as="article">
+				<h3>How is this different from a notes app or spreadsheet?</h3>
+				<p>Taper is purpose-built. One tap to log, automatic weekly summaries, built-in <a href="/how-to-handle-nicotine-cravings/">craving support tools</a>, and a reduction plan that adjusts over time.</p>
+			</Card>
+			<Card as="article">
+				<h3>Can I track snus and nicotine pouches?</h3>
+				<p>Yes. Taper works for any pouch-based nicotine product. You can also <a href="/track-nicotine-pouches/">track nicotine pouches</a> specifically.</p>
+			</Card>
+		</div>
+	</Section>
+
+	<section class="bottom-cta">
+		<div class="container">
+			<h2>Start tracking your snus use today</h2>
+			<p>One tap per pouch. See your daily count, weekly trends, and long-term progress.</p>
+			<Button variant="primary" href={APP_STORE_URL} disabled={!appStoreKnown} external={true}>
+				{appStoreCtaLabel}
+			</Button>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.hero {
+		padding: clamp(54px, 7vw, 96px) 0;
+		border-bottom: 1px solid var(--border-subtle);
+	}
+
+	h1 {
+		margin: 0 0 var(--space-lg);
+		font-size: clamp(36px, 5vw, 48px);
+		line-height: 1.1;
+		letter-spacing: -0.03em;
+	}
+
+	.lede {
+		margin: 0 0 var(--space-xl);
+		color: var(--text-secondary);
+		max-width: 62ch;
+		font-size: 18px;
+		line-height: 28px;
+	}
+
+	.cta {
+		display: flex;
+		gap: var(--space-md);
+		flex-wrap: wrap;
+	}
+
+	.grid-2, .grid-3 {
+		display: grid;
+		gap: var(--space-lg);
+	}
+
+	.grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+	.grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+	h3 {
+		margin: 0 0 var(--space-sm);
+		font-size: 18px;
+		letter-spacing: -0.01em;
+	}
+
+	p { margin: 0; color: var(--text-secondary); }
+
+	.bottom-cta {
+		padding: clamp(44px, 6vw, 84px) 0;
+		text-align: center;
+		border-top: 1px solid var(--border-subtle);
+	}
+
+	.bottom-cta h2 {
+		margin: 0 0 var(--space-md);
+		font-size: clamp(28px, 3.2vw, 36px);
+		letter-spacing: -0.02em;
+	}
+
+	.bottom-cta p {
+		margin: 0 0 var(--space-xl);
+		color: var(--text-secondary);
+	}
+
+	@media (max-width: 960px) {
+		.grid-3 { grid-template-columns: 1fr; }
+	}
+
+	@media (max-width: 700px) {
+		.grid-2 { grid-template-columns: 1fr; }
+	}
+</style>

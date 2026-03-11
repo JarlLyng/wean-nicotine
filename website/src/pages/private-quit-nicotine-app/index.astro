@@ -1,0 +1,191 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Button from '../../components/Button.astro';
+import Card from '../../components/Card.astro';
+import Section from '../../components/Section.astro';
+import { APP_STORE_URL, isAppStoreUrlKnown, SITE_NAME } from '../../lib/site';
+
+const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
+const appStoreCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming soon on the App Store';
+---
+
+<Layout
+	title="Private Quit Nicotine App — No Accounts, No Cloud"
+	description="Taper is a private, local-first nicotine reduction app. No accounts, no cloud sync, no tracking. Your snus and nicotine pouch data stays on your device."
+	canonicalPath="/private-quit-nicotine-app/"
+>
+	<section class="hero">
+		<div class="container">
+			<h1>A private app for reducing nicotine — no accounts, no cloud</h1>
+			<p class="lede">
+				Taper keeps all your data on your device. No sign-up, no login, no cloud sync, no analytics tracking.
+				Your nicotine reduction journey is yours alone.
+			</p>
+			<div class="cta">
+				<Button variant="primary" href={APP_STORE_URL} disabled={!appStoreKnown} external={true}>
+					{appStoreCtaLabel}
+				</Button>
+				<Button variant="secondary" href="/">Learn more about Taper</Button>
+			</div>
+		</div>
+	</section>
+
+	<Section id="who" title="Who a private nicotine app is for" lede="Not everyone wants their health data in the cloud or tied to an account.">
+		<div class="grid-2">
+			<Card as="article">
+				<h3>You do not want to create yet another account</h3>
+				<p>Taper has no registration, no email verification, no password. Open the app and start using it immediately.</p>
+			</Card>
+			<Card as="article">
+				<h3>You prefer your health data to stay local</h3>
+				<p>Your nicotine use is personal information. Taper never sends it anywhere. Everything is stored on your iPhone.</p>
+			</Card>
+			<Card as="article">
+				<h3>You are tired of apps that track you</h3>
+				<p>Taper has no ad tracking, no analytics cookies, and no third-party data sharing. The app does not phone home.</p>
+			</Card>
+			<Card as="article">
+				<h3>You want something that works offline</h3>
+				<p>Because everything is local, Taper works without an internet connection. On a plane, in the countryside, or with Wi-Fi turned off.</p>
+			</Card>
+		</div>
+	</Section>
+
+	<Section id="how" title="How Taper keeps your data private" lede="Privacy is not a setting in Taper. It is how the app is built.">
+		<div class="grid-3">
+			<Card as="article">
+				<h3>Local storage only</h3>
+				<p>All data, including your daily logs, allowance settings, and progress history, is stored on your device using local storage. Nothing is sent to a server.</p>
+			</Card>
+			<Card as="article">
+				<h3>No account required</h3>
+				<p>There is no sign-up flow. No email, no password, no social login. You open the app and start tracking immediately.</p>
+			</Card>
+			<Card as="article">
+				<h3>No third-party analytics</h3>
+				<p>Taper does not include ad trackers, behavioral analytics, or third-party SDKs that collect user data. Crash reports are anonymized.</p>
+			</Card>
+		</div>
+	</Section>
+
+	<Section id="why" title="Why privacy matters for nicotine reduction" lede="When you are tracking a personal habit, trust in the tool matters.">
+		<div class="grid-2">
+			<Card as="article">
+				<h3>No judgment from others</h3>
+				<p>Your nicotine data does not appear in a social feed, a shared dashboard, or someone else's analytics platform. It is just for you.</p>
+			</Card>
+			<Card as="article">
+				<h3>Honest tracking</h3>
+				<p>People track more honestly when they know the data is private. If you go over your allowance, only you know. That honesty makes the tool more useful.</p>
+			</Card>
+			<Card as="article">
+				<h3>No risk of data leaks</h3>
+				<p>If your data is not on a server, it cannot be part of a data breach. Your nicotine reduction history never leaves your phone.</p>
+			</Card>
+			<Card as="article">
+				<h3>You control your data completely</h3>
+				<p>Want to start over? Reset the app. Want to stop? Delete it. There is no account to close, no data deletion request to file.</p>
+			</Card>
+		</div>
+	</Section>
+
+	<Section id="faq" title="Frequently asked questions about privacy in Taper">
+		<div class="grid-2">
+			<Card as="article">
+				<h3>Does Taper collect any data at all?</h3>
+				<p>Taper uses anonymized crash reports to fix bugs. These contain no personal information, no usage data, and no identifying details.</p>
+			</Card>
+			<Card as="article">
+				<h3>Can I sync my data between devices?</h3>
+				<p>Not currently. Because Taper is local-first, your data stays on the device where you use the app. This is a deliberate privacy choice.</p>
+			</Card>
+			<Card as="article">
+				<h3>What happens if I delete the app?</h3>
+				<p>All your data is deleted with it. There is no backup on a server. If you want to keep your progress, keep the app installed.</p>
+			</Card>
+			<Card as="article">
+				<h3>Can I use Taper to reduce snus or nicotine pouches privately?</h3>
+				<p>Yes. Taper is built for <a href="/snus-reduction-app/">snus reduction</a> and <a href="/nicotine-pouch-reduction-app/">nicotine pouch reduction</a> with full privacy. Track your use, follow a <a href="/taper-nicotine/">gradual taper plan</a>, and handle <a href="/how-to-handle-nicotine-cravings/">cravings</a> without anyone else knowing.</p>
+			</Card>
+		</div>
+	</Section>
+
+	<section class="bottom-cta">
+		<div class="container">
+			<h2>Reduce nicotine privately</h2>
+			<p>No accounts, no cloud, no tracking. Just a calm app that helps you cut down step by step.</p>
+			<Button variant="primary" href={APP_STORE_URL} disabled={!appStoreKnown} external={true}>
+				{appStoreCtaLabel}
+			</Button>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.hero {
+		padding: clamp(54px, 7vw, 96px) 0;
+		border-bottom: 1px solid var(--border-subtle);
+	}
+
+	h1 {
+		margin: 0 0 var(--space-lg);
+		font-size: clamp(36px, 5vw, 48px);
+		line-height: 1.1;
+		letter-spacing: -0.03em;
+	}
+
+	.lede {
+		margin: 0 0 var(--space-xl);
+		color: var(--text-secondary);
+		max-width: 62ch;
+		font-size: 18px;
+		line-height: 28px;
+	}
+
+	.cta {
+		display: flex;
+		gap: var(--space-md);
+		flex-wrap: wrap;
+	}
+
+	.grid-2, .grid-3 {
+		display: grid;
+		gap: var(--space-lg);
+	}
+
+	.grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+	.grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+	h3 {
+		margin: 0 0 var(--space-sm);
+		font-size: 18px;
+		letter-spacing: -0.01em;
+	}
+
+	p { margin: 0; color: var(--text-secondary); }
+
+	.bottom-cta {
+		padding: clamp(44px, 6vw, 84px) 0;
+		text-align: center;
+		border-top: 1px solid var(--border-subtle);
+	}
+
+	.bottom-cta h2 {
+		margin: 0 0 var(--space-md);
+		font-size: clamp(28px, 3.2vw, 36px);
+		letter-spacing: -0.02em;
+	}
+
+	.bottom-cta p {
+		margin: 0 0 var(--space-xl);
+		color: var(--text-secondary);
+	}
+
+	@media (max-width: 960px) {
+		.grid-3 { grid-template-columns: 1fr; }
+	}
+
+	@media (max-width: 700px) {
+		.grid-2 { grid-template-columns: 1fr; }
+	}
+</style>

@@ -1,0 +1,191 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Button from '../../components/Button.astro';
+import Card from '../../components/Card.astro';
+import Section from '../../components/Section.astro';
+import { APP_STORE_URL, isAppStoreUrlKnown, SITE_NAME } from '../../lib/site';
+
+const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
+const appStoreCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming soon on the App Store';
+---
+
+<Layout
+	title="Taper Nicotine Gradually — Calm Reduction App"
+	description="Taper helps you reduce nicotine gradually with a daily allowance that decreases week by week. Track your use, handle cravings, and see progress over time."
+	canonicalPath="/taper-nicotine/"
+>
+	<section class="hero">
+		<div class="container">
+			<h1>Taper nicotine gradually with a calm, private app</h1>
+			<p class="lede">
+				Instead of quitting cold turkey, Taper lets you reduce your nicotine intake step by step.
+				Set a daily allowance, track each pouch with one tap, and lower your use at a pace that works for you.
+			</p>
+			<div class="cta">
+				<Button variant="primary" href={APP_STORE_URL} disabled={!appStoreKnown} external={true}>
+					{appStoreCtaLabel}
+				</Button>
+				<Button variant="secondary" href="/">Learn more about Taper</Button>
+			</div>
+		</div>
+	</section>
+
+	<Section id="who" title="Who nicotine tapering is for" lede="Gradual reduction works well for people who find cold turkey too abrupt.">
+		<div class="grid-2">
+			<Card as="article">
+				<h3>You want to cut down, not stop all at once</h3>
+				<p>Tapering means reducing your daily use over weeks. It is gentler on your body and easier to stick with than an abrupt stop.</p>
+			</Card>
+			<Card as="article">
+				<h3>You use snus or nicotine pouches daily</h3>
+				<p>Whether you use snus, ZYN, VELO, or other nicotine pouches, Taper works with any daily pouch routine. Just set your starting number.</p>
+			</Card>
+			<Card as="article">
+				<h3>Cold turkey has not worked for you</h3>
+				<p>Many people try to quit overnight and end up back at their old level within days. A gradual approach gives your body time to adjust.</p>
+			</Card>
+			<Card as="article">
+				<h3>You want a clear plan</h3>
+				<p>Taper gives you a specific daily number instead of a vague goal. You always know exactly how many pouches you have left today.</p>
+			</Card>
+		</div>
+	</Section>
+
+	<Section id="how" title="How nicotine tapering works in Taper" lede="A simple three-step process that adjusts automatically.">
+		<div class="grid-3">
+			<Card as="article">
+				<h3>1) Enter your current use</h3>
+				<p>Tell Taper how many pouches you use per day. This is your starting point. No judgment, just an honest number.</p>
+			</Card>
+			<Card as="article">
+				<h3>2) Follow a decreasing allowance</h3>
+				<p>Each week your daily allowance goes down by a percentage you choose. Log each pouch with one tap throughout the day.</p>
+			</Card>
+			<Card as="article">
+				<h3>3) Use support tools when cravings hit</h3>
+				<p>Breathing exercises, urge surfing, and reflection prompts are built in. They help you get through the moments when you want to reach for a pouch.</p>
+			</Card>
+		</div>
+	</Section>
+
+	<Section id="why" title="Why gradual nicotine tapering works" lede="Research and experience suggest that reducing gradually can be more sustainable than stopping abruptly.">
+		<div class="grid-2">
+			<Card as="article">
+				<h3>Milder withdrawal</h3>
+				<p>By reducing slowly, your body adjusts to lower nicotine levels without the intense withdrawal symptoms that come from quitting all at once.</p>
+			</Card>
+			<Card as="article">
+				<h3>Builds lasting habits</h3>
+				<p>Each week at a lower level reinforces new patterns. Over time, using fewer pouches becomes your new normal.</p>
+			</Card>
+			<Card as="article">
+				<h3>Less risk of relapse</h3>
+				<p>People who reduce gradually are less likely to bounce back to their original use compared to those who quit abruptly and then restart.</p>
+			</Card>
+			<Card as="article">
+				<h3>You stay in control</h3>
+				<p>You choose the pace. If a week feels too aggressive, you can adjust. The goal is steady progress, not perfection.</p>
+			</Card>
+		</div>
+	</Section>
+
+	<Section id="faq" title="Frequently asked questions about nicotine tapering">
+		<div class="grid-2">
+			<Card as="article">
+				<h3>How fast should I taper nicotine?</h3>
+				<p>Most people reduce by 5 to 15 percent per week. Taper lets you set your own pace during onboarding. You can adjust it anytime.</p>
+			</Card>
+			<Card as="article">
+				<h3>Does Taper work for all nicotine products?</h3>
+				<p>Taper is built for snus and nicotine pouches. If you use pouches daily and want to cut down, it is designed for you. Learn more about <a href="/snus-reduction-app/">snus reduction</a> or <a href="/nicotine-pouch-reduction-app/">nicotine pouch reduction</a>.</p>
+			</Card>
+			<Card as="article">
+				<h3>What if I have a bad day?</h3>
+				<p>Going over your allowance does not reset your progress. Taper tracks what happened and moves forward. One bad day is not failure.</p>
+			</Card>
+			<Card as="article">
+				<h3>Is my data private?</h3>
+				<p>Yes. Taper stores everything on your device. No accounts, no cloud sync, no tracking. Read more about <a href="/private-quit-nicotine-app/">how Taper protects your privacy</a>.</p>
+			</Card>
+		</div>
+	</Section>
+
+	<section class="bottom-cta">
+		<div class="container">
+			<h2>Ready to taper your nicotine use?</h2>
+			<p>Start with your current daily amount and let Taper guide you down gradually.</p>
+			<Button variant="primary" href={APP_STORE_URL} disabled={!appStoreKnown} external={true}>
+				{appStoreCtaLabel}
+			</Button>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.hero {
+		padding: clamp(54px, 7vw, 96px) 0;
+		border-bottom: 1px solid var(--border-subtle);
+	}
+
+	h1 {
+		margin: 0 0 var(--space-lg);
+		font-size: clamp(36px, 5vw, 48px);
+		line-height: 1.1;
+		letter-spacing: -0.03em;
+	}
+
+	.lede {
+		margin: 0 0 var(--space-xl);
+		color: var(--text-secondary);
+		max-width: 62ch;
+		font-size: 18px;
+		line-height: 28px;
+	}
+
+	.cta {
+		display: flex;
+		gap: var(--space-md);
+		flex-wrap: wrap;
+	}
+
+	.grid-2, .grid-3 {
+		display: grid;
+		gap: var(--space-lg);
+	}
+
+	.grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+	.grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+	h3 {
+		margin: 0 0 var(--space-sm);
+		font-size: 18px;
+		letter-spacing: -0.01em;
+	}
+
+	p { margin: 0; color: var(--text-secondary); }
+
+	.bottom-cta {
+		padding: clamp(44px, 6vw, 84px) 0;
+		text-align: center;
+		border-top: 1px solid var(--border-subtle);
+	}
+
+	.bottom-cta h2 {
+		margin: 0 0 var(--space-md);
+		font-size: clamp(28px, 3.2vw, 36px);
+		letter-spacing: -0.02em;
+	}
+
+	.bottom-cta p {
+		margin: 0 0 var(--space-xl);
+		color: var(--text-secondary);
+	}
+
+	@media (max-width: 960px) {
+		.grid-3 { grid-template-columns: 1fr; }
+	}
+
+	@media (max-width: 700px) {
+		.grid-2 { grid-template-columns: 1fr; }
+	}
+</style>

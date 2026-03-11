@@ -1,0 +1,191 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Button from '../../components/Button.astro';
+import Card from '../../components/Card.astro';
+import Section from '../../components/Section.astro';
+import { APP_STORE_URL, isAppStoreUrlKnown, SITE_NAME } from '../../lib/site';
+
+const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
+const appStoreCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming soon on the App Store';
+---
+
+<Layout
+	title="Track Nicotine Pouches — Simple Pouch Tracker App"
+	description="Track your nicotine pouch use with Taper. Log ZYN, VELO, On! or any pouch brand in one tap, see weekly trends, and follow a gradual reduction plan."
+	canonicalPath="/track-nicotine-pouches/"
+>
+	<section class="hero">
+		<div class="container">
+			<h1>Track your nicotine pouch use simply and privately</h1>
+			<p class="lede">
+				Whether you use ZYN, VELO, On! or another brand, Taper helps you track every pouch and see how your use changes over time.
+				Log each pouch in one tap and get a clear picture of your daily and weekly patterns.
+			</p>
+			<div class="cta">
+				<Button variant="primary" href={APP_STORE_URL} disabled={!appStoreKnown} external={true}>
+					{appStoreCtaLabel}
+				</Button>
+				<Button variant="secondary" href="/">Learn more about Taper</Button>
+			</div>
+		</div>
+	</section>
+
+	<Section id="who" title="Who nicotine pouch tracking is for" lede="If you use nicotine pouches daily and want more awareness or control, tracking is the place to start.">
+		<div class="grid-2">
+			<Card as="article">
+				<h3>You go through cans faster than expected</h3>
+				<p>It is easy to lose count. Tracking every pouch helps you see exactly how many you use and where the money goes.</p>
+			</Card>
+			<Card as="article">
+				<h3>You want to cut down from your current level</h3>
+				<p>Before you can reduce, you need to know your baseline. Tracking gives you an honest starting point for a <a href="/taper-nicotine/">gradual nicotine taper</a>.</p>
+			</Card>
+			<Card as="article">
+				<h3>You have tried other trackers but they are too generic</h3>
+				<p>Taper is built specifically for pouch-based nicotine products. No adapting a habit tracker to fit your needs.</p>
+			</Card>
+			<Card as="article">
+				<h3>You value your privacy</h3>
+				<p>Taper does not require an account, does not sync to the cloud, and does not share your data. Everything stays on your phone.</p>
+			</Card>
+		</div>
+	</Section>
+
+	<Section id="what" title="What Taper tracks for you" lede="Focused tracking built for nicotine pouches, not general habits.">
+		<div class="grid-3">
+			<Card as="article">
+				<h3>Pouches per day</h3>
+				<p>One tap each time you use a pouch. See your daily total and how many are left in your allowance at any point.</p>
+			</Card>
+			<Card as="article">
+				<h3>Weekly summaries</h3>
+				<p>Compare weeks side by side. See total pouches, days within allowance, and overall trend direction.</p>
+			</Card>
+			<Card as="article">
+				<h3>Cost savings</h3>
+				<p>Enter your can price and Taper shows how much money you save as you reduce. It adds up faster than you think.</p>
+			</Card>
+		</div>
+	</Section>
+
+	<Section id="why" title="Why a dedicated pouch tracker makes a difference" lede="Generic habit trackers were not designed for nicotine reduction.">
+		<div class="grid-2">
+			<Card as="article">
+				<h3>One-tap logging</h3>
+				<p>No forms to fill in, no categories to select. Open the app, tap once, done. It takes less than a second.</p>
+			</Card>
+			<Card as="article">
+				<h3>Built-in reduction plan</h3>
+				<p>Taper does not just count. It gives you a daily allowance that decreases over time, turning tracking into active reduction.</p>
+			</Card>
+			<Card as="article">
+				<h3>Craving support when you need it</h3>
+				<p>Reached your daily limit? Taper includes <a href="/how-to-handle-nicotine-cravings/">breathing exercises and urge surfing tools</a> to help you get through the moment.</p>
+			</Card>
+			<Card as="article">
+				<h3>Completely offline and private</h3>
+				<p>No account, no internet required, no data leaving your device. <a href="/private-quit-nicotine-app/">Your nicotine data stays yours</a>.</p>
+			</Card>
+		</div>
+	</Section>
+
+	<Section id="faq" title="Frequently asked questions about nicotine pouch tracking">
+		<div class="grid-2">
+			<Card as="article">
+				<h3>Does Taper work with ZYN, VELO, and other brands?</h3>
+				<p>Yes. Taper tracks pouches regardless of brand. Whether you use ZYN, VELO, On!, Loop, or snus, the tracking works the same way.</p>
+			</Card>
+			<Card as="article">
+				<h3>Can I track without reducing?</h3>
+				<p>Absolutely. You can use Taper just to understand your current use. Many people start by tracking for a week before setting a reduction goal.</p>
+			</Card>
+			<Card as="article">
+				<h3>Is there a difference between tracking snus and nicotine pouches?</h3>
+				<p>In Taper, no. Both are tracked the same way: one tap per pouch. You can also <a href="/track-snus-use/">track snus use</a> with the same app.</p>
+			</Card>
+			<Card as="article">
+				<h3>Does Taper cost anything?</h3>
+				<p>No. Taper is free to download and use with all features included.</p>
+			</Card>
+		</div>
+	</Section>
+
+	<section class="bottom-cta">
+		<div class="container">
+			<h2>Start tracking your nicotine pouch use</h2>
+			<p>One tap per pouch. See your patterns, track your progress, and take control.</p>
+			<Button variant="primary" href={APP_STORE_URL} disabled={!appStoreKnown} external={true}>
+				{appStoreCtaLabel}
+			</Button>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.hero {
+		padding: clamp(54px, 7vw, 96px) 0;
+		border-bottom: 1px solid var(--border-subtle);
+	}
+
+	h1 {
+		margin: 0 0 var(--space-lg);
+		font-size: clamp(36px, 5vw, 48px);
+		line-height: 1.1;
+		letter-spacing: -0.03em;
+	}
+
+	.lede {
+		margin: 0 0 var(--space-xl);
+		color: var(--text-secondary);
+		max-width: 62ch;
+		font-size: 18px;
+		line-height: 28px;
+	}
+
+	.cta {
+		display: flex;
+		gap: var(--space-md);
+		flex-wrap: wrap;
+	}
+
+	.grid-2, .grid-3 {
+		display: grid;
+		gap: var(--space-lg);
+	}
+
+	.grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+	.grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+	h3 {
+		margin: 0 0 var(--space-sm);
+		font-size: 18px;
+		letter-spacing: -0.01em;
+	}
+
+	p { margin: 0; color: var(--text-secondary); }
+
+	.bottom-cta {
+		padding: clamp(44px, 6vw, 84px) 0;
+		text-align: center;
+		border-top: 1px solid var(--border-subtle);
+	}
+
+	.bottom-cta h2 {
+		margin: 0 0 var(--space-md);
+		font-size: clamp(28px, 3.2vw, 36px);
+		letter-spacing: -0.02em;
+	}
+
+	.bottom-cta p {
+		margin: 0 0 var(--space-xl);
+		color: var(--text-secondary);
+	}
+
+	@media (max-width: 960px) {
+		.grid-3 { grid-template-columns: 1fr; }
+	}
+
+	@media (max-width: 700px) {
+		.grid-2 { grid-template-columns: 1fr; }
+	}
+</style>

@@ -1,0 +1,220 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Button from '../../components/Button.astro';
+import Card from '../../components/Card.astro';
+import Section from '../../components/Section.astro';
+import { APP_STORE_URL, isAppStoreUrlKnown, SITE_NAME } from '../../lib/site';
+
+const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
+const appStoreCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming soon on the App Store';
+---
+
+<Layout
+	title="How to Handle Nicotine Cravings — Practical Tips"
+	description="Learn practical ways to handle nicotine cravings when reducing snus or nicotine pouches. Breathing techniques, urge surfing, and strategies that help in the moment."
+	canonicalPath="/how-to-handle-nicotine-cravings/"
+>
+	<article class="guide">
+		<div class="container">
+			<header class="guide__header">
+				<h1>How to handle nicotine cravings</h1>
+				<p class="lede">
+					Cravings are the hardest part of reducing nicotine. But most cravings only last a few minutes. Having practical techniques ready can help you get through those moments without reaching for a pouch.
+				</p>
+			</header>
+
+			<section class="guide__section">
+				<h2>Why nicotine cravings happen</h2>
+				<p>
+					When you reduce your nicotine intake, your brain notices the change. It has adapted to a certain level of nicotine and responds with cravings when that level drops. This is normal and temporary.
+				</p>
+				<p>
+					Cravings are also triggered by habits and associations. If you always use a pouch after coffee, your brain starts expecting nicotine at that moment. Understanding your triggers makes them easier to manage.
+				</p>
+			</section>
+
+			<section class="guide__section">
+				<h2>Six practical techniques for handling cravings</h2>
+				<div class="grid-1">
+					<Card as="article">
+						<h3>1. Breathe through it</h3>
+						<p>Take slow, deep breaths for one to two minutes. Inhale for four seconds, hold for four, exhale for six. This activates your body's calm response and reduces the urgency of the craving.</p>
+					</Card>
+					<Card as="article">
+						<h3>2. Try urge surfing</h3>
+						<p>Instead of fighting the craving, observe it. Notice where you feel it in your body. Watch it rise, peak, and fade. Most cravings pass within three to five minutes if you do not act on them.</p>
+					</Card>
+					<Card as="article">
+						<h3>3. Change your environment</h3>
+						<p>Step outside, move to a different room, or go for a short walk. Breaking the physical context of the craving often weakens it.</p>
+					</Card>
+					<Card as="article">
+						<h3>4. Delay for five minutes</h3>
+						<p>Tell yourself you will wait five minutes before deciding. By the time those five minutes are up, the intensity of the craving has usually dropped significantly.</p>
+					</Card>
+					<Card as="article">
+						<h3>5. Use a replacement activity</h3>
+						<p>Drink a glass of water, chew gum, eat a piece of fruit, or do something with your hands. Giving your body a different input can redirect the craving.</p>
+					</Card>
+					<Card as="article">
+						<h3>6. Reflect on your reason</h3>
+						<p>Why are you reducing? Better health, saving money, feeling more in control? Reminding yourself of your motivation in the moment can strengthen your resolve.</p>
+					</Card>
+				</div>
+			</section>
+
+			<section class="guide__section">
+				<h2>When cravings are hardest</h2>
+				<div class="grid-2">
+					<Card as="article">
+						<h3>Right after meals</h3>
+						<p>For many people, the post-meal craving is the strongest one. Try replacing it with a short walk, brushing your teeth, or a glass of water.</p>
+					</Card>
+					<Card as="article">
+						<h3>During stress</h3>
+						<p>Stress makes cravings more intense. Having a breathing technique ready is especially useful in these moments.</p>
+					</Card>
+					<Card as="article">
+						<h3>In social situations</h3>
+						<p>Seeing others use nicotine products can trigger strong cravings. Knowing your daily number and having a plan helps you stay on track.</p>
+					</Card>
+					<Card as="article">
+						<h3>During the first week of reduction</h3>
+						<p>The first few days at a new lower level are usually the hardest. Cravings ease as your body adjusts, typically within a week.</p>
+					</Card>
+				</div>
+			</section>
+
+			<section class="guide__section">
+				<h2>When having tools ready helps</h2>
+				<p>
+					In the moment of a craving, it is hard to think clearly. That is why having support tools ready on your phone can make a real difference. You do not have to remember what to do. You just open the app.
+				</p>
+				<p>
+					<a href="/">Taper</a> includes built-in craving support tools: breathing exercises, urge surfing guidance, and reflection prompts. They are designed for the exact moment when you have reached your daily limit and a craving hits.
+				</p>
+			</section>
+		</div>
+	</article>
+
+	<Section id="faq" title="Frequently asked questions about nicotine cravings">
+		<div class="grid-2">
+			<Card as="article">
+				<h3>How long do nicotine cravings last?</h3>
+				<p>An individual craving typically lasts three to five minutes. The frequency and intensity of cravings decrease over time as your body adjusts to lower nicotine levels.</p>
+			</Card>
+			<Card as="article">
+				<h3>Do cravings ever go away completely?</h3>
+				<p>For most people, cravings become much less frequent and weaker over weeks. Occasional mild cravings can happen for a while, but they become easy to manage.</p>
+			</Card>
+			<Card as="article">
+				<h3>Should I use nicotine replacement therapy?</h3>
+				<p>That is a decision to make with your doctor. Some people combine gradual reduction with NRT. Taper is a self-help tracking tool, not medical advice.</p>
+			</Card>
+			<Card as="article">
+				<h3>Can Taper help me with cravings?</h3>
+				<p>Yes. Taper includes breathing exercises, urge surfing, and reflection prompts. These are available right when you need them. Learn more about <a href="/snus-reduction-app/">reducing snus</a> or <a href="/nicotine-pouch-reduction-app/">nicotine pouches</a> with Taper.</p>
+			</Card>
+		</div>
+	</Section>
+
+	<section class="bottom-cta">
+		<div class="container">
+			<h2>Get craving support when you need it</h2>
+			<p>Taper includes breathing exercises, urge surfing, and reflection tools built right into the app.</p>
+			<Button variant="primary" href={APP_STORE_URL} disabled={!appStoreKnown} external={true}>
+				{appStoreCtaLabel}
+			</Button>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.guide {
+		padding: clamp(54px, 7vw, 96px) 0;
+	}
+
+	.guide__header {
+		margin-bottom: var(--space-xxl);
+		border-bottom: 1px solid var(--border-subtle);
+		padding-bottom: var(--space-xxl);
+	}
+
+	h1 {
+		margin: 0 0 var(--space-lg);
+		font-size: clamp(36px, 5vw, 48px);
+		line-height: 1.1;
+		letter-spacing: -0.03em;
+	}
+
+	.lede {
+		margin: 0;
+		color: var(--text-secondary);
+		max-width: 62ch;
+		font-size: 18px;
+		line-height: 28px;
+	}
+
+	.guide__section {
+		margin-bottom: var(--space-xxl);
+	}
+
+	.guide__section h2 {
+		margin: 0 0 var(--space-lg);
+		font-size: clamp(24px, 3vw, 32px);
+		letter-spacing: -0.02em;
+	}
+
+	.guide__section p {
+		margin: 0 0 var(--space-md);
+		color: var(--text-secondary);
+		max-width: 62ch;
+		line-height: 1.7;
+	}
+
+	.guide__section a {
+		color: var(--primary);
+	}
+
+	.grid-1 {
+		display: grid;
+		gap: var(--space-lg);
+		grid-template-columns: 1fr;
+		max-width: 700px;
+	}
+
+	.grid-2 {
+		display: grid;
+		gap: var(--space-lg);
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	h3 {
+		margin: 0 0 var(--space-sm);
+		font-size: 18px;
+		letter-spacing: -0.01em;
+	}
+
+	.grid-2 p, .grid-1 p { margin: 0; color: var(--text-secondary); }
+
+	.bottom-cta {
+		padding: clamp(44px, 6vw, 84px) 0;
+		text-align: center;
+		border-top: 1px solid var(--border-subtle);
+	}
+
+	.bottom-cta h2 {
+		margin: 0 0 var(--space-md);
+		font-size: clamp(28px, 3.2vw, 36px);
+		letter-spacing: -0.02em;
+	}
+
+	.bottom-cta p {
+		margin: 0 0 var(--space-xl);
+		color: var(--text-secondary);
+	}
+
+	@media (max-width: 700px) {
+		.grid-2 { grid-template-columns: 1fr; }
+	}
+</style>
