@@ -1,0 +1,476 @@
+{
+  "modifiedAt" : "2026-03-06T19:21:55Z",
+  "appContext" : {
+    "tagline" : "",
+    "description" : "",
+    "languageStyle" : "Neutral",
+    "name" : "",
+    "category" : "Productivity",
+    "doNotTranslateTerms" : "",
+    "appStoreURL" : ""
+  },
+  "languages" : {
+    "en-US" : {
+      "screenshots" : [
+        {
+          "imageSize" : [
+            1179,
+            2556
+          ],
+          "detectedDisplayClass" : "6.5",
+          "imagePath" : "screenshots\/originals\/en-US-page1-AE65FF74-6DF2-4A7B-A998-B3D7604E0130.png",
+          "selectedSuggestionIndex" : 0,
+          "originalFileName" : "7E13A92D-9E33-4712-A338-E47440ACD15A_Simulator Screenshot - iPhone 16 - 2026-03-05 at 22.10.44.png",
+          "title" : "",
+          "id" : "8540DC4A-50DE-4D51-B35B-BF46412CB627",
+          "uploadedAt" : "2026-03-06T19:22:59Z",
+          "pageName" : "Page 1"
+        },
+        {
+          "imageSize" : [
+            1179,
+            2556
+          ],
+          "detectedDisplayClass" : "6.5",
+          "imagePath" : "screenshots\/originals\/en-US-page2-197C20E1-107E-42E2-97BE-DC0584679DA7.png",
+          "selectedSuggestionIndex" : 0,
+          "originalFileName" : "7F7018E3-B341-443E-8952-246692A42617_Simulator Screenshot - iPhone 16 - 2026-03-05 at 22.10.59.png",
+          "title" : "",
+          "id" : "67F1603E-FAE6-4787-AEC0-5CE5EDF255C8",
+          "uploadedAt" : "2026-03-06T19:23:12Z",
+          "pageName" : "Page 2"
+        },
+        {
+          "imageSize" : [
+            1179,
+            2556
+          ],
+          "detectedDisplayClass" : "6.5",
+          "imagePath" : "screenshots\/originals\/en-US-page3-9A8BA7A6-5980-43CE-87C3-BBB359290398.png",
+          "selectedSuggestionIndex" : 0,
+          "originalFileName" : "B084A841-DFF2-4CB5-B78B-2396ED22BAE3_Simulator Screenshot - iPhone 16 - 2026-03-05 at 22.11.16.png",
+          "title" : "",
+          "id" : "6F8CD98F-CEF9-4B4F-A7B7-9A91EC100F95",
+          "uploadedAt" : "2026-03-06T19:23:20Z",
+          "pageName" : "Page 3"
+        },
+        {
+          "imageSize" : [
+            1179,
+            2556
+          ],
+          "detectedDisplayClass" : "6.5",
+          "imagePath" : "screenshots\/originals\/en-US-page4-788B2D9B-DDF6-4A45-86F0-DBF02FFFE6CC.png",
+          "selectedSuggestionIndex" : 0,
+          "originalFileName" : "0BED18BB-9B26-46FF-A4BC-93B8829B36D5_Simulator Screenshot - iPhone 16 - 2026-03-05 at 22.11.28.png",
+          "title" : "",
+          "id" : "A5844DFD-C67E-404C-92DD-970D2F1DA215",
+          "uploadedAt" : "2026-03-06T19:23:26Z",
+          "pageName" : "Page 4"
+        },
+        {
+          "imageSize" : [
+            1179,
+            2556
+          ],
+          "detectedDisplayClass" : "6.5",
+          "imagePath" : "screenshots\/originals\/en-US-page5-98057680-A9FE-4AF5-889F-6FA4E7AF8BFF.png",
+          "selectedSuggestionIndex" : 0,
+          "originalFileName" : "FA38FE4E-EE3B-4168-800C-7BFB8993EC6B_Simulator Screenshot - iPhone 16 - 2026-03-05 at 22.11.35.png",
+          "title" : "",
+          "id" : "5ED7BFA9-E35E-4C44-8C2C-D7FB3880CF6A",
+          "uploadedAt" : "2026-03-06T19:23:32Z",
+          "pageName" : "Page 5"
+        },
+        {
+          "imageSize" : [
+            1179,
+            2556
+          ],
+          "detectedDisplayClass" : "6.5",
+          "imagePath" : "screenshots\/originals\/en-US-page6-D27F25AC-C1A1-43B8-A263-064491FE3889.png",
+          "selectedSuggestionIndex" : 0,
+          "originalFileName" : "583ADD8E-D32F-4610-9258-8D1FF0501E75_Simulator Screenshot - iPhone 16 - 2026-03-05 at 22.11.44.png",
+          "title" : "",
+          "id" : "94F57F43-E655-4B77-9795-2FFE9FDA6508",
+          "uploadedAt" : "2026-03-06T19:23:37Z",
+          "pageName" : "Page 6"
+        },
+        {
+          "imageSize" : [
+            1179,
+            2556
+          ],
+          "detectedDisplayClass" : "6.5",
+          "imagePath" : "screenshots\/originals\/en-US-page7-B52270BB-1EFC-4E49-B82F-D64A9773E963.png",
+          "selectedSuggestionIndex" : 0,
+          "originalFileName" : "0795E156-8BBA-479A-8560-57BD4D2D2CAB_Simulator Screenshot - iPhone 16 - 2026-03-05 at 22.10.12.png",
+          "title" : "",
+          "id" : "508DE805-968B-449B-B0F5-049BB686DDA2",
+          "uploadedAt" : "2026-03-06T19:23:49Z",
+          "pageName" : "Page 7"
+        },
+        {
+          "imageSize" : [
+            1179,
+            2556
+          ],
+          "detectedDisplayClass" : "6.5",
+          "imagePath" : "screenshots\/originals\/en-US-page8-142A3B2C-3181-4E90-A6C5-6AEF41F75930.png",
+          "selectedSuggestionIndex" : 0,
+          "originalFileName" : "3824202B-3EFF-49B5-8AB7-1973F1BDB181_Simulator Screenshot - iPhone 16 - 2026-03-05 at 22.10.27.png",
+          "title" : "",
+          "id" : "8A540BF6-59D7-4352-9291-AE984414904D",
+          "uploadedAt" : "2026-03-06T19:23:56Z",
+          "pageName" : "Page 8"
+        }
+      ],
+      "usesMasterDesign" : true
+    }
+  },
+  "version" : "1.0",
+  "primaryLanguage" : "en-US",
+  "targetDisplay" : "6.5",
+  "hasLockedTarget" : true,
+  "master" : {
+    "pages" : [
+      {
+        "id" : "641CFD5A-015A-4DCD-88EC-738DAE664F7A",
+        "pageName" : "Page 1",
+        "screenshot" : {
+          "pageName" : "",
+          "id" : "54592646-66D3-4FEF-8295-909219014CCF",
+          "title" : "",
+          "selectedSuggestionIndex" : 0
+        },
+        "title" : "Your Headline",
+        "design" : {
+          "gradientColor1" : "#FF9230",
+          "iconLayers" : [
+
+          ],
+          "showGradient" : false,
+          "deviceColor" : "Black Titanium",
+          "gradientType" : "Linear",
+          "strokeOpacity" : 0.85,
+          "gradientColor3" : "#592CAA",
+          "frameStyle" : "Stroke",
+          "margin" : "Medium",
+          "textAlignment" : "Center",
+          "showTitle" : true,
+          "textColor" : "#000000",
+          "shadowDirection" : "Down",
+          "strokeWidth" : 15,
+          "gradientColor4" : "#1E0C47",
+          "titleFont" : "SF Pro",
+          "titleWeight" : "Bold",
+          "gradientColor2" : "#DB34F2",
+          "strokeColor" : "#000000",
+          "titleSize" : "100",
+          "deviceAlignment" : "Bottom",
+          "backgroundColor" : "#FFFFFF",
+          "textOpacity" : 1,
+          "gradientPosition" : "Bottom",
+          "deviceRotation" : 0,
+          "shadowIntensity" : 0.5,
+          "devicePosition" : 100
+        }
+      },
+      {
+        "id" : "AB0A59C5-F5CA-4254-873C-AE74EBAC2B5D",
+        "pageName" : "Page 2",
+        "screenshot" : {
+          "title" : "",
+          "pageName" : "",
+          "selectedSuggestionIndex" : 0,
+          "id" : "695B4F3C-ADA3-48EA-95F9-F3918BBD3995"
+        },
+        "title" : "Your Headline",
+        "design" : {
+          "gradientColor1" : "#FF9230",
+          "iconLayers" : [
+
+          ],
+          "showGradient" : false,
+          "deviceColor" : "Black Titanium",
+          "gradientType" : "Linear",
+          "strokeOpacity" : 0.85,
+          "gradientColor3" : "#592CAA",
+          "frameStyle" : "Stroke",
+          "margin" : "Medium",
+          "textAlignment" : "Center",
+          "showTitle" : true,
+          "textColor" : "#000000",
+          "shadowDirection" : "Down",
+          "strokeWidth" : 15,
+          "gradientColor4" : "#1E0C47",
+          "titleFont" : "SF Pro",
+          "titleWeight" : "Bold",
+          "gradientColor2" : "#DB34F2",
+          "strokeColor" : "#000000",
+          "titleSize" : "100",
+          "deviceAlignment" : "Bottom",
+          "backgroundColor" : "#FFFFFF",
+          "textOpacity" : 1,
+          "gradientPosition" : "Bottom",
+          "deviceRotation" : 0,
+          "shadowIntensity" : 0.5,
+          "devicePosition" : 100
+        }
+      },
+      {
+        "design" : {
+          "gradientColor1" : "#FF9230",
+          "iconLayers" : [
+
+          ],
+          "showGradient" : false,
+          "deviceColor" : "Black Titanium",
+          "gradientType" : "Linear",
+          "strokeOpacity" : 0.85,
+          "gradientColor3" : "#592CAA",
+          "frameStyle" : "Stroke",
+          "margin" : "Medium",
+          "textAlignment" : "Center",
+          "showTitle" : true,
+          "textColor" : "#000000",
+          "shadowDirection" : "Down",
+          "strokeWidth" : 15,
+          "gradientColor4" : "#1E0C47",
+          "titleFont" : "SF Pro",
+          "titleWeight" : "Bold",
+          "gradientColor2" : "#DB34F2",
+          "strokeColor" : "#000000",
+          "titleSize" : "100",
+          "deviceAlignment" : "Bottom",
+          "backgroundColor" : "#FFFFFF",
+          "textOpacity" : 1,
+          "gradientPosition" : "Bottom",
+          "deviceRotation" : 0,
+          "shadowIntensity" : 0.5,
+          "devicePosition" : 100
+        },
+        "screenshot" : {
+          "id" : "7135A8A5-205D-4EE1-9377-5CD6902A7BBD",
+          "pageName" : "",
+          "title" : "",
+          "selectedSuggestionIndex" : 0
+        },
+        "title" : "Your Headline",
+        "id" : "AD4D4C93-2909-4456-BF68-EF1839E7E1E7",
+        "pageName" : "Page 3"
+      },
+      {
+        "design" : {
+          "gradientColor1" : "#FF9230",
+          "iconLayers" : [
+
+          ],
+          "showGradient" : false,
+          "deviceColor" : "Black Titanium",
+          "gradientType" : "Linear",
+          "strokeOpacity" : 0.85,
+          "gradientColor3" : "#592CAA",
+          "frameStyle" : "Stroke",
+          "margin" : "Medium",
+          "textAlignment" : "Center",
+          "showTitle" : true,
+          "textColor" : "#000000",
+          "shadowDirection" : "Down",
+          "strokeWidth" : 15,
+          "gradientColor4" : "#1E0C47",
+          "titleFont" : "SF Pro",
+          "titleWeight" : "Bold",
+          "gradientColor2" : "#DB34F2",
+          "strokeColor" : "#000000",
+          "titleSize" : "100",
+          "deviceAlignment" : "Bottom",
+          "backgroundColor" : "#FFFFFF",
+          "textOpacity" : 1,
+          "gradientPosition" : "Bottom",
+          "deviceRotation" : 0,
+          "shadowIntensity" : 0.5,
+          "devicePosition" : 100
+        },
+        "screenshot" : {
+          "id" : "C98AE7B9-EB7B-4FA6-906B-6540310CF4CB",
+          "pageName" : "",
+          "title" : "",
+          "selectedSuggestionIndex" : 0
+        },
+        "title" : "Your Headline",
+        "id" : "76696AFF-E202-453F-BE8F-60F24D1313D0",
+        "pageName" : "Page 4"
+      },
+      {
+        "design" : {
+          "gradientColor1" : "#FF9230",
+          "iconLayers" : [
+
+          ],
+          "showGradient" : false,
+          "deviceColor" : "Black Titanium",
+          "gradientType" : "Linear",
+          "strokeOpacity" : 0.85,
+          "gradientColor3" : "#592CAA",
+          "frameStyle" : "Stroke",
+          "margin" : "Medium",
+          "textAlignment" : "Center",
+          "showTitle" : true,
+          "textColor" : "#000000",
+          "shadowDirection" : "Down",
+          "strokeWidth" : 15,
+          "gradientColor4" : "#1E0C47",
+          "titleFont" : "SF Pro",
+          "titleWeight" : "Bold",
+          "gradientColor2" : "#DB34F2",
+          "strokeColor" : "#000000",
+          "titleSize" : "100",
+          "deviceAlignment" : "Bottom",
+          "backgroundColor" : "#FFFFFF",
+          "textOpacity" : 1,
+          "gradientPosition" : "Bottom",
+          "deviceRotation" : 0,
+          "shadowIntensity" : 0.5,
+          "devicePosition" : 100
+        },
+        "screenshot" : {
+          "id" : "8A417952-78AA-4090-8DF2-1CD6D7FA9253",
+          "pageName" : "",
+          "selectedSuggestionIndex" : 0,
+          "title" : ""
+        },
+        "title" : "Your Headline",
+        "id" : "BE857B8A-D068-4F6F-83D6-AF1338264628",
+        "pageName" : "Page 5"
+      },
+      {
+        "design" : {
+          "shadowIntensity" : 0.5,
+          "strokeColor" : "#000000",
+          "gradientPosition" : "Bottom",
+          "deviceAlignment" : "Bottom",
+          "gradientColor1" : "#FF9230",
+          "devicePosition" : 100,
+          "margin" : "Medium",
+          "deviceRotation" : 0,
+          "gradientColor3" : "#592CAA",
+          "gradientColor4" : "#1E0C47",
+          "backgroundColor" : "#FFFFFF",
+          "titleFont" : "SF Pro",
+          "frameStyle" : "Stroke",
+          "shadowDirection" : "Down",
+          "strokeWidth" : 15,
+          "textColor" : "#000000",
+          "gradientColor2" : "#DB34F2",
+          "iconLayers" : [
+
+          ],
+          "titleSize" : "100",
+          "gradientType" : "Linear",
+          "showGradient" : false,
+          "titleWeight" : "Bold",
+          "textAlignment" : "Center",
+          "showTitle" : true,
+          "textOpacity" : 1,
+          "deviceColor" : "Black Titanium",
+          "strokeOpacity" : 0.85
+        },
+        "screenshot" : {
+          "title" : "",
+          "selectedSuggestionIndex" : 0,
+          "id" : "12100CA3-A959-4662-9E52-02A4CF77C4A3",
+          "pageName" : ""
+        },
+        "title" : "Your Headline",
+        "id" : "1BDA89F2-718C-45C5-A3AD-38F85D09D164",
+        "pageName" : "Page 6"
+      },
+      {
+        "design" : {
+          "shadowIntensity" : 0.5,
+          "strokeColor" : "#000000",
+          "gradientPosition" : "Bottom",
+          "deviceAlignment" : "Bottom",
+          "gradientColor1" : "#FF9230",
+          "devicePosition" : 100,
+          "margin" : "Medium",
+          "deviceRotation" : 0,
+          "gradientColor3" : "#592CAA",
+          "gradientColor4" : "#1E0C47",
+          "backgroundColor" : "#FFFFFF",
+          "titleFont" : "SF Pro",
+          "frameStyle" : "Stroke",
+          "shadowDirection" : "Down",
+          "strokeWidth" : 15,
+          "textColor" : "#000000",
+          "gradientColor2" : "#DB34F2",
+          "iconLayers" : [
+
+          ],
+          "titleSize" : "100",
+          "gradientType" : "Linear",
+          "showGradient" : false,
+          "titleWeight" : "Bold",
+          "textAlignment" : "Center",
+          "showTitle" : true,
+          "textOpacity" : 1,
+          "deviceColor" : "Black Titanium",
+          "strokeOpacity" : 0.85
+        },
+        "screenshot" : {
+          "pageName" : "",
+          "selectedSuggestionIndex" : 0,
+          "title" : "",
+          "id" : "6EB04CEE-6710-4BE5-8D9C-D4FCA7DBDCBD"
+        },
+        "title" : "Your Headline",
+        "id" : "CF063DF1-8A00-4BBE-A65D-14995ACA9B85",
+        "pageName" : "Page 7"
+      },
+      {
+        "design" : {
+          "shadowIntensity" : 0.5,
+          "strokeColor" : "#000000",
+          "gradientPosition" : "Bottom",
+          "deviceAlignment" : "Bottom",
+          "gradientColor1" : "#FF9230",
+          "devicePosition" : 100,
+          "margin" : "Medium",
+          "deviceRotation" : 0,
+          "gradientColor3" : "#592CAA",
+          "gradientColor4" : "#1E0C47",
+          "backgroundColor" : "#FFFFFF",
+          "titleFont" : "SF Pro",
+          "frameStyle" : "Stroke",
+          "shadowDirection" : "Down",
+          "strokeWidth" : 15,
+          "textColor" : "#000000",
+          "gradientColor2" : "#DB34F2",
+          "iconLayers" : [
+
+          ],
+          "titleSize" : "100",
+          "gradientType" : "Linear",
+          "showGradient" : false,
+          "titleWeight" : "Bold",
+          "textAlignment" : "Center",
+          "showTitle" : true,
+          "textOpacity" : 1,
+          "deviceColor" : "Black Titanium",
+          "strokeOpacity" : 0.85
+        },
+        "screenshot" : {
+          "selectedSuggestionIndex" : 0,
+          "title" : "",
+          "id" : "FE163A6A-CC70-450A-BFFC-EBB03F40E1B2",
+          "pageName" : ""
+        },
+        "title" : "Your Headline",
+        "id" : "741E7160-A8BE-4B1E-ADFD-90DD47C0D4B5",
+        "pageName" : "Page 8"
+      }
+    ]
+  },
+  "createdAt" : "2026-03-06T19:21:55Z"
+}

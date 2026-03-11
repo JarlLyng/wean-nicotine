@@ -1,0 +1,717 @@
+# SEO Strategy — Taper
+
+Site: https://taper.iamjarl.com/
+Product: A calm, privacy-first app that helps people reduce snus and nicotine pouches gradually with a daily allowance, one-tap tracking, weekly progress, optional reminders, and support tools when cravings hit.
+
+---
+
+## 1. What Taper actually is
+
+Taper is **not** an audio tool.
+
+Based on the live site, Taper is positioned as a **nicotine reduction app for snus and nicotine pouches**. The homepage messaging focuses on:
+
+- reducing snus and nicotine pouches step by step
+- daily allowance and one-tap tracking
+- weekly progress and totals
+- support tools for cravings
+- privacy-first, local-first usage
+- no accounts, no cloud sync, and no ad tracking
+
+That means the SEO strategy must target people searching for help with:
+
+- reducing snus
+- quitting nicotine pouches
+- tapering nicotine gradually
+- tracking pouch use
+- craving support
+- private quitting / reduction apps
+
+---
+
+## 2. Core SEO positioning
+
+### Primary positioning
+
+**Taper is the calm, private app for reducing snus and nicotine pouches gradually.**
+
+### Secondary positioning
+
+- A nicotine pouch reduction tracker
+- A gradual quit / taper companion
+- A private, local-first alternative to generic habit trackers
+- A focused tool for people who want to cut down without shame, noise, or accounts
+
+### What makes Taper distinct
+
+The live site already gives Taper a differentiated angle. That angle should be the center of SEO:
+
+- built specifically for **snus and nicotine pouches**
+- focused on **reduction**, not just all-or-nothing quitting
+- **daily allowance** instead of vague goal setting
+- **one-tap tracking**
+- **support tools for cravings**
+- **privacy-first / local-first**
+
+This is a much better SEO wedge than trying to rank broadly for generic “quit smoking app” terms right away.
+
+---
+
+## 3. Best keyword strategy for Taper
+
+The strongest opportunity is **high-intent long-tail SEO**, not broad head terms.
+
+Broad keywords like these will be competitive and often medically dominated:
+
+- quit nicotine
+- quit snus
+- stop nicotine
+- nicotine addiction help
+
+Instead, Taper should begin with keyword clusters where product intent is clearer and competition is more realistic.
+
+### Cluster A — Snus reduction
+
+Primary targets:
+
+- reduce snus
+- how to reduce snus
+- app to reduce snus
+- snus reduction app
+- taper snus use
+- cut down on snus
+- track snus use
+- snus habit tracker
+
+### Cluster B — Nicotine pouch reduction
+
+Primary targets:
+
+- reduce nicotine pouches
+- quit nicotine pouches
+- nicotine pouch reduction app
+- app to quit nicotine pouches
+- taper nicotine pouches
+- cut down nicotine pouches
+- track nicotine pouch use
+- nicotine pouch habit tracker
+
+### Cluster C — Tapering / gradual quitting
+
+Primary targets:
+
+- taper nicotine
+- nicotine taper app
+- gradual nicotine reduction
+- gradual quit nicotine app
+- reduce nicotine gradually
+- taper off nicotine pouches
+- taper off snus
+
+### Cluster D — Tracking and support
+
+Primary targets:
+
+- nicotine tracker app
+- pouch tracker app
+- app for cravings
+- quit nicotine tracker
+- track nicotine intake app
+- craving support app
+
+### Cluster E — Privacy and calm UX angle
+
+These are lower-volume but strategically valuable because they match your actual product:
+
+- private quit nicotine app
+- no account habit tracker
+- offline nicotine tracker
+- local first habit tracker
+- no tracking quit app
+
+---
+
+## 4. Keyword priorities: what to target first
+
+These are the terms most aligned with the product and most realistic to build around first:
+
+### Tier 1 — Highest relevance
+
+- snus reduction app
+- reduce snus app
+- nicotine pouch reduction app
+- app to quit nicotine pouches
+- taper nicotine app
+- track nicotine pouch use
+- track snus use
+- cut down nicotine pouches
+
+### Tier 2 — Informational + conversion-friendly
+
+- how to reduce snus
+- how to quit nicotine pouches
+- how to taper nicotine
+- how to reduce nicotine gradually
+- how to stop using snus gradually
+- how to cut down nicotine pouches
+
+### Tier 3 — Differentiation / brand-fit
+
+- private habit tracker app
+- offline nicotine tracker
+- local first quit app
+- no account quit nicotine app
+
+---
+
+## 5. Homepage SEO strategy
+
+The homepage should target the main commercial-intent cluster around **snus reduction app**, **nicotine pouch reduction app**, and **taper nicotine gradually**.
+
+### Recommended homepage title tag
+
+Taper — Snus & Nicotine Pouch Reduction App
+
+Alternative title options:
+
+- Taper — Reduce Snus and Nicotine Pouches Step by Step
+- Taper — Private App to Cut Down on Nicotine Pouches
+- Taper — Calm Snus Reduction and Nicotine Taper App
+
+### Recommended meta description
+
+Reduce snus and nicotine pouches gradually with a calm, private app. Track daily allowance, log use in one tap, handle cravings, and see progress over time.
+
+### Recommended H1
+
+Reduce snus and nicotine pouches — step by step
+
+This is already close to what the site uses and should stay.
+
+### Recommended H2 structure
+
+- What Taper helps you do
+- How to reduce snus or nicotine pouches gradually
+- Why a tapering approach can feel more manageable
+- Track progress privately on your device
+- Tools for cravings and daily check-ins
+- FAQ about snus and nicotine pouch reduction
+
+### Homepage copy improvements for SEO
+
+Right now the homepage communicates the product well, but it should mention the target terms more explicitly and naturally.
+
+Add copy that clearly states:
+
+- Taper is a **snus reduction app**
+- Taper is also for **nicotine pouches**
+- It helps users **cut down gradually**
+- It works as a **tracker** and a **taper plan companion**
+- It is **private**, **local-first**, and **does not require an account**
+
+Important: do this naturally. Do not keyword-stuff.
+
+---
+
+## 6. Best content model for Taper
+
+Taper should not rely only on the homepage.
+
+The best SEO model is:
+
+1. a strong conversion-focused homepage
+2. several high-intent landing pages
+3. educational articles for informational search
+4. comparison pages versus generic habit trackers or quitting methods
+5. a small FAQ/content hub designed for AI search and long-tail discovery
+
+---
+
+## 7. Recommended page architecture
+
+### Core commercial pages
+
+These pages should be created first because they map directly to product-intent queries.
+
+- `/snus-reduction-app/`
+- `/nicotine-pouch-reduction-app/`
+- `/taper-nicotine/`
+- `/track-snus-use/`
+- `/track-nicotine-pouches/`
+- `/private-quit-nicotine-app/`
+
+### Informational pages
+
+These pages are likely to attract search traffic from people earlier in the journey.
+
+- `/how-to-reduce-snus/`
+- `/how-to-quit-nicotine-pouches/`
+- `/how-to-taper-nicotine/`
+- `/how-to-cut-down-on-snus/`
+- `/how-to-reduce-nicotine-gradually/`
+- `/how-to-handle-nicotine-cravings/`
+
+### Problem / use-case pages
+
+These capture specific pains that can convert well.
+
+- `/nicotine-pouch-cravings/`
+- `/daily-nicotine-tracker/`
+- `/reduce-snus-without-counting-manually/`
+- `/offline-habit-tracker-for-nicotine/`
+- `/quit-nicotine-without-sharing-data/`
+
+### Comparison pages
+
+These are useful once the first core pages exist.
+
+- `/taper-vs-habit-tracker/`
+- `/taper-vs-notes-app-for-tracking/`
+- `/taper-vs-spreadsheet-tracking/`
+- `/gradual-reduction-vs-cold-turkey/`
+
+Be careful with medical framing on the last one. Keep it non-clinical and experience-based.
+
+---
+
+## 8. Page templates that fit Taper
+
+### Template A — Commercial landing page
+
+Best for:
+
+- snus reduction app
+- nicotine pouch reduction app
+- private quit nicotine app
+
+Structure:
+
+1. clear H1 with target keyword
+2. 2–3 sentence summary
+3. “Who this is for” section
+4. “How it works” section
+5. “Why people choose this over generic habit trackers” section
+6. privacy/local-first section
+7. FAQ
+8. CTA to App Store / waitlist / homepage
+
+### Template B — Informational guide
+
+Best for:
+
+- how to reduce snus
+- how to taper nicotine
+- how to handle cravings
+
+Structure:
+
+1. direct answer in first paragraph
+2. step-by-step guide
+3. common mistakes / common challenges
+4. when tracking helps
+5. gentle CTA to Taper
+6. FAQ
+
+### Template C — Comparison page
+
+Best for:
+
+- Taper vs habit tracker
+- gradual reduction vs cold turkey
+
+Structure:
+
+1. what each option is
+2. who each option is best for
+3. limitations
+4. when privacy/local-first matters
+5. CTA
+
+---
+
+## 9. AI search / answer engine optimization (2026)
+
+The articles should be built to perform well in AI-generated summaries and answer engines.
+
+That means each important page should include:
+
+### A direct answer near the top
+
+Example:
+
+> A gradual reduction approach can help some people cut down on snus or nicotine pouches by setting a daily allowance, tracking progress, and reducing use over time.
+
+### Strong scannability
+
+Use:
+
+- short paragraphs
+- clear headings
+- bullets where useful
+- short definitions
+- practical steps
+
+### FAQ blocks
+
+Examples:
+
+- How do you reduce snus gradually?
+- What is a nicotine taper?
+- Can I track nicotine pouches without an account?
+- Is Taper private?
+- Does Taper work offline?
+
+### Experience-based framing
+
+The current site already has a calm, shame-free tone. Keep that. It is a strength.
+
+The content should sound practical and supportive, not clinical or sensational.
+
+---
+
+## 10. Important content boundaries
+
+Because this is in a health-adjacent area, the content must avoid overclaiming.
+
+Do not position Taper as:
+
+- medical treatment
+- therapy
+- clinical cessation program
+- guaranteed way to quit nicotine
+
+Do use language like:
+
+- self-help tool
+- tracking tool
+- gradual reduction support
+- calm, private companion
+- helps you cut down step by step
+
+This matches the live FAQ and privacy messaging and reduces risk.
+
+---
+
+## 11. Content clusters to build topical authority
+
+### Cluster 1 — Reduce snus
+
+Hub page:
+
+- `/snus-reduction-app/`
+
+Supporting pages:
+
+- `/how-to-reduce-snus/`
+- `/how-to-cut-down-on-snus/`
+- `/track-snus-use/`
+- `/snus-cravings/`
+
+### Cluster 2 — Reduce nicotine pouches
+
+Hub page:
+
+- `/nicotine-pouch-reduction-app/`
+
+Supporting pages:
+
+- `/how-to-quit-nicotine-pouches/`
+- `/cut-down-nicotine-pouches/`
+- `/track-nicotine-pouches/`
+- `/nicotine-pouch-cravings/`
+
+### Cluster 3 — Nicotine tapering
+
+Hub page:
+
+- `/taper-nicotine/`
+
+Supporting pages:
+
+- `/how-to-taper-nicotine/`
+- `/reduce-nicotine-gradually/`
+- `/gradual-reduction-vs-cold-turkey/`
+
+### Cluster 4 — Privacy / local-first angle
+
+Hub page:
+
+- `/private-quit-nicotine-app/`
+
+Supporting pages:
+
+- `/offline-nicotine-tracker/`
+- `/no-account-habit-tracker/`
+- `/local-first-habit-tracker/`
+
+---
+
+## 12. Internal linking strategy
+
+Each page should link to:
+
+- the homepage
+- one core commercial page
+- two related supporting pages
+
+Examples:
+
+From `/how-to-reduce-snus/` link to:
+
+- `/snus-reduction-app/`
+- `/track-snus-use/`
+- `/how-to-handle-nicotine-cravings/`
+
+From `/private-quit-nicotine-app/` link to:
+
+- homepage
+- `/nicotine-pouch-reduction-app/`
+- `/offline-nicotine-tracker/`
+
+Anchor text should be natural, such as:
+
+- snus reduction app
+- track nicotine pouch use
+- reduce nicotine gradually
+- private nicotine tracker
+
+---
+
+## 13. Metadata recommendations
+
+### Homepage
+
+Title:
+Taper — Snus & Nicotine Pouch Reduction App
+
+Description:
+Reduce snus and nicotine pouches gradually with a calm, private app. Track your daily allowance, log use in one tap, and get support when cravings hit.
+
+### `/snus-reduction-app/`
+
+Title:
+Snus Reduction App — Cut Down Step by Step | Taper
+
+Description:
+Looking for a snus reduction app? Taper helps you cut down gradually with a daily allowance, one-tap tracking, private progress, and craving support tools.
+
+### `/nicotine-pouch-reduction-app/`
+
+Title:
+Nicotine Pouch Reduction App — Track and Cut Down | Taper
+
+Description:
+Taper helps you reduce nicotine pouches gradually with simple daily tracking, progress over time, and a calm, private experience.
+
+### `/how-to-reduce-snus/`
+
+Title:
+How to Reduce Snus Gradually — A Practical Guide | Taper
+
+Description:
+Learn how to reduce snus gradually with a simple daily approach, better tracking, and practical ways to handle cravings.
+
+---
+
+## 14. Structured data to add
+
+For SEO and AI search visibility, add:
+
+### Essential
+
+- `SoftwareApplication` schema on the homepage
+- `FAQPage` schema on FAQ-heavy pages
+- `BreadcrumbList` on subpages
+
+### Suggested homepage schema properties
+
+- name: Taper
+- applicationCategory: HealthApplication or UtilitiesApplication
+- operatingSystem: iOS
+- description: app for reducing snus and nicotine pouches gradually
+- offers: if/when pricing exists
+
+Be careful to keep descriptions factual and non-medical.
+
+---
+
+## 15. Technical SEO checklist
+
+- clean semantic HTML
+- one clear H1 per page
+- unique title + meta description on every page
+- Open Graph tags
+- Twitter/X card tags
+- canonical tags on all pages
+- sitemap.xml
+- robots.txt
+- fast mobile performance
+- image compression for screenshots
+- descriptive alt text for screenshots
+- internal links in body copy, not only nav/footer
+
+Because this is a static site, technical SEO should be relatively easy to keep clean.
+
+---
+
+## 16. App Store SEO (ASO) matters here too
+
+Because the site says “Coming soon on the App Store,” Taper should align site SEO with App Store naming and description.
+
+Keep naming consistent across:
+
+- website title tags
+- H1s
+- App Store title/subtitle
+- App Store keyword field
+- screenshots / captions
+
+Recommended recurring phrases across web + App Store:
+
+- reduce snus
+- nicotine pouch tracker
+- taper nicotine
+- private progress tracking
+- cravings support
+
+This helps both brand clarity and search consistency.
+
+---
+
+## 17. Content ideas with the best ROI
+
+These are the pages I would build first.
+
+### Priority 1 — Must-have
+
+1. Homepage improvements
+2. `/snus-reduction-app/`
+3. `/nicotine-pouch-reduction-app/`
+4. `/how-to-reduce-snus/`
+5. `/how-to-quit-nicotine-pouches/`
+
+### Priority 2 — Strong supporting cluster
+
+6. `/taper-nicotine/`
+7. `/track-snus-use/`
+8. `/track-nicotine-pouches/`
+9. `/how-to-handle-nicotine-cravings/`
+10. `/private-quit-nicotine-app/`
+
+### Priority 3 — Expansion
+
+11. `/offline-nicotine-tracker/`
+12. `/gradual-reduction-vs-cold-turkey/`
+13. `/reduce-nicotine-gradually/`
+14. `/snus-cravings/`
+15. `/nicotine-pouch-cravings/`
+
+---
+
+## 18. Recommended 90-day roadmap
+
+### Month 1
+
+- fix homepage messaging and metadata
+- add schema
+- create 3 core landing pages
+- submit sitemap to Google Search Console
+- set up Bing Webmaster Tools too
+
+### Month 2
+
+- publish 3–4 informational pages
+- add FAQ schema to the best pages
+- improve internal linking
+- add App Store page when live
+
+### Month 3
+
+- publish 3 comparison / privacy-focused pages
+- refine pages based on Search Console queries
+- expand pages that start getting impressions
+- test screenshot alt text and CTA copy improvements
+
+---
+
+## 19. Backlink strategy that actually fits Taper
+
+Do not chase generic backlink campaigns first.
+
+Instead, focus on relevant mentions from places where people discuss:
+
+- snus
+- nicotine pouches
+- quitting nicotine
+- habit tracking
+- calm/productive iPhone apps
+- privacy-first apps
+
+Potential channels:
+
+- Reddit communities where nicotine reduction is discussed
+- quitting / reduction forums
+- indie app directories
+- privacy-focused product roundups
+- Product Hunt
+- your own IAMJARL site and GitHub presence
+
+The goal is relevance, not volume.
+
+---
+
+## 20. Measurement plan
+
+Track in Google Search Console:
+
+### Primary metrics
+
+- impressions
+- clicks
+- CTR
+- average position
+
+### Secondary metrics
+
+- clicks to App Store
+- branded searches for “Taper app”
+- landing page performance by topic cluster
+
+### What success looks like early
+
+In the first phase, success is not huge traffic.
+
+Success is:
+
+- getting impressions on long-tail queries
+- finding which wording people actually use (snus vs nicotine pouches vs quit nicotine)
+- identifying which pages convert best
+
+---
+
+## 21. Final recommendation
+
+Taper’s SEO opportunity is **not** broad “quit smoking” SEO.
+
+It is the more specific intersection of:
+
+- snus reduction
+- nicotine pouch reduction
+- gradual tapering
+- private tracking
+- calm self-help support
+
+That is where the product is genuinely differentiated.
+
+If you build around that position, the site can attract more qualified traffic than a generic quitting app strategy would.
+
+---
+
+## 22. Suggested first rewrite of the homepage positioning
+
+A tighter homepage positioning could be:
+
+**Reduce snus and nicotine pouches gradually.**
+Taper is a calm, private app that helps you cut down step by step with a daily allowance, one-tap tracking, craving support tools, and local-first progress tracking.
+
+That is much closer to what people may actually search for and still fits the current brand tone.
