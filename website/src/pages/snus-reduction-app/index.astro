@@ -1,0 +1,191 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Button from '../../components/Button.astro';
+import Card from '../../components/Card.astro';
+import Section from '../../components/Section.astro';
+import { APP_STORE_URL, isAppStoreUrlKnown, SITE_NAME } from '../../lib/site';
+
+const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
+const appStoreCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming soon on the App Store';
+---
+
+<Layout
+	title="Snus Reduction App — Cut Down Step by Step"
+	description="Looking for a snus reduction app? Taper helps you cut down gradually with a daily allowance, one-tap tracking, private progress, and craving support tools."
+	canonicalPath="/snus-reduction-app/"
+>
+	<section class="hero">
+		<div class="container">
+			<h1>Snus reduction app — cut down step by step</h1>
+			<p class="lede">
+				Taper is a calm, private iPhone app built specifically for people who want to reduce their snus use gradually.
+				Instead of quitting cold turkey, you set a daily allowance that decreases week by week.
+			</p>
+			<div class="cta">
+				<Button variant="primary" href={APP_STORE_URL} disabled={!appStoreKnown} external={true}>
+					{appStoreCtaLabel}
+				</Button>
+				<Button variant="secondary" href="/">Learn more about Taper</Button>
+			</div>
+		</div>
+	</section>
+
+	<Section id="who" title="Who this is for" lede="Taper is designed for people who use snus and want to cut down at their own pace.">
+		<div class="grid-2">
+			<Card as="article">
+				<h3>You want to reduce, not necessarily quit overnight</h3>
+				<p>Maybe you want to use fewer pouches per day, spend less money, or just feel more in control. Taper supports gradual reduction without pressure.</p>
+			</Card>
+			<Card as="article">
+				<h3>You have tried before but lost track</h3>
+				<p>Without a clear daily number it is easy to slip back. Taper gives you a specific allowance each day and tracks whether you stay within it.</p>
+			</Card>
+			<Card as="article">
+				<h3>You prefer privacy over social features</h3>
+				<p>Taper has no accounts, no cloud sync, and no sharing. Your progress stays on your device.</p>
+			</Card>
+			<Card as="article">
+				<h3>You want something simple</h3>
+				<p>No complicated settings or long onboarding. Tell Taper how many pouches you use, and it creates a weekly reduction plan for you.</p>
+			</Card>
+		</div>
+	</Section>
+
+	<Section id="how" title="How Taper helps you reduce snus" lede="A straightforward process that works week by week.">
+		<div class="grid-3">
+			<Card as="article">
+				<h3>1) Set your baseline</h3>
+				<p>Tell Taper how many snus pouches you use per day. This becomes your starting point.</p>
+			</Card>
+			<Card as="article">
+				<h3>2) Follow your daily allowance</h3>
+				<p>Each day you get a clear number. Log each pouch with one tap. The allowance decreases gradually each week.</p>
+			</Card>
+			<Card as="article">
+				<h3>3) Track progress and handle cravings</h3>
+				<p>See weekly trends, total pouches avoided, and optional money saved. Use breathing and urge surfing tools when cravings hit.</p>
+			</Card>
+		</div>
+	</Section>
+
+	<Section id="why" title="Why a dedicated snus reduction app" lede="Generic habit trackers are not built for nicotine reduction.">
+		<div class="grid-2">
+			<Card as="article">
+				<h3>Built around daily allowance</h3>
+				<p>Most habit trackers count streaks or habits. Taper gives you a specific number of pouches per day and adjusts it over time.</p>
+			</Card>
+			<Card as="article">
+				<h3>Craving support tools included</h3>
+				<p>Breathing exercises, urge surfing, and reflection prompts are built in for the moments when you want to reach for a pouch.</p>
+			</Card>
+			<Card as="article">
+				<h3>No accounts or cloud sync</h3>
+				<p>Your snus tracking data stays on your device. No sign-up, no login, no data leaving your phone.</p>
+			</Card>
+			<Card as="article">
+				<h3>Works offline</h3>
+				<p>Because everything is stored locally, Taper works without an internet connection.</p>
+			</Card>
+		</div>
+	</Section>
+
+	<Section id="faq" title="Frequently asked questions about snus reduction">
+		<div class="grid-2">
+			<Card as="article">
+				<h3>How fast does Taper reduce my snus allowance?</h3>
+				<p>You choose the pace. Taper decreases your daily allowance by a percentage each week that you set during onboarding.</p>
+			</Card>
+			<Card as="article">
+				<h3>Can I track the cost of my snus use?</h3>
+				<p>Yes. Optionally enter the price per can and Taper calculates how much money you have saved over time.</p>
+			</Card>
+			<Card as="article">
+				<h3>What if I go over my allowance?</h3>
+				<p>Taper does not punish you. It tracks what happened and keeps your plan going. The goal is progress, not perfection.</p>
+			</Card>
+			<Card as="article">
+				<h3>Is Taper free?</h3>
+				<p>Yes. Taper is free to download and use.</p>
+			</Card>
+		</div>
+	</Section>
+
+	<section class="bottom-cta">
+		<div class="container">
+			<h2>Ready to reduce your snus use?</h2>
+			<p>Start with your current daily amount and let Taper guide you down step by step.</p>
+			<Button variant="primary" href={APP_STORE_URL} disabled={!appStoreKnown} external={true}>
+				{appStoreCtaLabel}
+			</Button>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.hero {
+		padding: clamp(54px, 7vw, 96px) 0;
+		border-bottom: 1px solid var(--border-subtle);
+	}
+
+	h1 {
+		margin: 0 0 var(--space-lg);
+		font-size: clamp(36px, 5vw, 48px);
+		line-height: 1.1;
+		letter-spacing: -0.03em;
+	}
+
+	.lede {
+		margin: 0 0 var(--space-xl);
+		color: var(--text-secondary);
+		max-width: 62ch;
+		font-size: 18px;
+		line-height: 28px;
+	}
+
+	.cta {
+		display: flex;
+		gap: var(--space-md);
+		flex-wrap: wrap;
+	}
+
+	.grid-2, .grid-3 {
+		display: grid;
+		gap: var(--space-lg);
+	}
+
+	.grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+	.grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+	h3 {
+		margin: 0 0 var(--space-sm);
+		font-size: 18px;
+		letter-spacing: -0.01em;
+	}
+
+	p { margin: 0; color: var(--text-secondary); }
+
+	.bottom-cta {
+		padding: clamp(44px, 6vw, 84px) 0;
+		text-align: center;
+		border-top: 1px solid var(--border-subtle);
+	}
+
+	.bottom-cta h2 {
+		margin: 0 0 var(--space-md);
+		font-size: clamp(28px, 3.2vw, 36px);
+		letter-spacing: -0.02em;
+	}
+
+	.bottom-cta p {
+		margin: 0 0 var(--space-xl);
+		color: var(--text-secondary);
+	}
+
+	@media (max-width: 960px) {
+		.grid-3 { grid-template-columns: 1fr; }
+	}
+
+	@media (max-width: 700px) {
+		.grid-2 { grid-template-columns: 1fr; }
+	}
+</style>

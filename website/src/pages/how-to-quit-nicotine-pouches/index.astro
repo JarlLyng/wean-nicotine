@@ -1,0 +1,220 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Button from '../../components/Button.astro';
+import Card from '../../components/Card.astro';
+import Section from '../../components/Section.astro';
+import { APP_STORE_URL, isAppStoreUrlKnown, SITE_NAME } from '../../lib/site';
+
+const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
+const appStoreCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming soon on the App Store';
+---
+
+<Layout
+	title="How to Quit Nicotine Pouches — A Gradual Approach"
+	description="Learn how to quit nicotine pouches by gradually reducing your daily use. A practical guide to tapering off nicotine pouches step by step."
+	canonicalPath="/how-to-quit-nicotine-pouches/"
+>
+	<article class="guide">
+		<div class="container">
+			<header class="guide__header">
+				<h1>How to quit nicotine pouches</h1>
+				<p class="lede">
+					Quitting nicotine pouches does not have to mean stopping all at once. A gradual approach lets you reduce your daily use over time, making withdrawal more manageable and the change more sustainable.
+				</p>
+			</header>
+
+			<section class="guide__section">
+				<h2>Why quitting cold turkey is hard</h2>
+				<p>
+					Nicotine pouches deliver nicotine quickly, and your body adjusts to a regular intake. When you stop suddenly, withdrawal symptoms like irritability, restlessness, difficulty concentrating, and strong cravings can make it very difficult to stick with the decision.
+				</p>
+				<p>
+					That is why many people who try to quit cold turkey end up going back within days or weeks. A gradual reduction approach lowers the intensity of withdrawal and gives you more control over the process.
+				</p>
+			</section>
+
+			<section class="guide__section">
+				<h2>How to quit nicotine pouches gradually</h2>
+				<div class="grid-1">
+					<Card as="article">
+						<h3>1. Count your current daily use</h3>
+						<p>For a few days, count how many nicotine pouches you actually use. This is your baseline. Most people underestimate their usage until they track it.</p>
+					</Card>
+					<Card as="article">
+						<h3>2. Set a daily limit</h3>
+						<p>Start with your baseline number as your allowed daily amount. Having a specific number to follow is more effective than simply trying to "use less."</p>
+					</Card>
+					<Card as="article">
+						<h3>3. Reduce a little each week</h3>
+						<p>Lower your daily limit by a small amount every week. For example, if you start at 10 per day, try 9 the next week, then 8. A reduction of 1 to 2 pouches per week works well for many people.</p>
+					</Card>
+					<Card as="article">
+						<h3>4. Track every pouch</h3>
+						<p>Log each nicotine pouch you use. This keeps you honest and aware. It also helps you notice patterns, like times of day when you use more.</p>
+					</Card>
+					<Card as="article">
+						<h3>5. Prepare for cravings</h3>
+						<p>Cravings typically last 3 to 5 minutes. Having a strategy ready helps: take a few deep breaths, drink water, go for a short walk, or use an urge surfing technique.</p>
+					</Card>
+					<Card as="article">
+						<h3>6. Be patient with yourself</h3>
+						<p>Some weeks you will meet your target, some weeks you will not. Progress is not always linear. What matters is the overall trend over time.</p>
+					</Card>
+				</div>
+			</section>
+
+			<section class="guide__section">
+				<h2>Tips for managing nicotine pouch cravings</h2>
+				<div class="grid-2">
+					<Card as="article">
+						<h3>Breathing exercises</h3>
+						<p>Slow, deep breathing activates your parasympathetic nervous system and can reduce the intensity of a craving. Try breathing in for 4 seconds, holding for 4, and exhaling for 6.</p>
+					</Card>
+					<Card as="article">
+						<h3>Urge surfing</h3>
+						<p>Instead of fighting a craving, observe it. Notice where you feel it in your body, how intense it is, and how it changes. Most cravings peak and then fade within minutes.</p>
+					</Card>
+					<Card as="article">
+						<h3>Identify your triggers</h3>
+						<p>Do you reach for a pouch after coffee, during meetings, or when bored? Knowing your triggers lets you plan alternatives for those specific moments.</p>
+					</Card>
+					<Card as="article">
+						<h3>Replace the habit</h3>
+						<p>Sometimes the hand-to-mouth motion or the ritual matters as much as the nicotine. Find a replacement that works for you, whether it is gum, a drink, or a short break.</p>
+					</Card>
+				</div>
+			</section>
+
+			<section class="guide__section">
+				<h2>Using an app to track your nicotine pouch reduction</h2>
+				<p>
+					Tracking your daily use makes the reduction process concrete. Instead of guessing whether you are using less, you can see the numbers.
+				</p>
+				<p>
+					<a href="/">Taper</a> is a free iPhone app designed for this. It creates a gradual reduction plan based on your current daily use, tracks each pouch with one tap, and includes craving support tools like breathing and urge surfing. All data stays on your device.
+				</p>
+			</section>
+		</div>
+	</article>
+
+	<Section id="faq" title="Frequently asked questions">
+		<div class="grid-2">
+			<Card as="article">
+				<h3>How long does it take to quit nicotine pouches?</h3>
+				<p>It varies. Some people taper over 4 to 6 weeks, others take 3 months or more. The right pace is the one you can sustain.</p>
+			</Card>
+			<Card as="article">
+				<h3>Will I have withdrawal symptoms?</h3>
+				<p>Gradual reduction typically produces milder withdrawal than stopping suddenly. You may still notice some irritability or cravings, but they should be more manageable.</p>
+			</Card>
+			<Card as="article">
+				<h3>What if I slip up?</h3>
+				<p>A slip is not a failure. It is a normal part of the process. Return to your daily allowance the next day and keep going.</p>
+			</Card>
+			<Card as="article">
+				<h3>Is there an app for quitting nicotine pouches?</h3>
+				<p>Yes. <a href="/nicotine-pouch-reduction-app/">Taper is built for nicotine pouch reduction</a> with daily tracking, a gradual taper plan, and craving support tools.</p>
+			</Card>
+		</div>
+	</Section>
+
+	<section class="bottom-cta">
+		<div class="container">
+			<h2>Ready to start reducing nicotine pouches?</h2>
+			<p>Taper gives you a daily allowance, one-tap tracking, and tools for when cravings hit.</p>
+			<Button variant="primary" href={APP_STORE_URL} disabled={!appStoreKnown} external={true}>
+				{appStoreCtaLabel}
+			</Button>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.guide {
+		padding: clamp(54px, 7vw, 96px) 0;
+	}
+
+	.guide__header {
+		margin-bottom: var(--space-xxl);
+		border-bottom: 1px solid var(--border-subtle);
+		padding-bottom: var(--space-xxl);
+	}
+
+	h1 {
+		margin: 0 0 var(--space-lg);
+		font-size: clamp(36px, 5vw, 48px);
+		line-height: 1.1;
+		letter-spacing: -0.03em;
+	}
+
+	.lede {
+		margin: 0;
+		color: var(--text-secondary);
+		max-width: 62ch;
+		font-size: 18px;
+		line-height: 28px;
+	}
+
+	.guide__section {
+		margin-bottom: var(--space-xxl);
+	}
+
+	.guide__section h2 {
+		margin: 0 0 var(--space-lg);
+		font-size: clamp(24px, 3vw, 32px);
+		letter-spacing: -0.02em;
+	}
+
+	.guide__section p {
+		margin: 0 0 var(--space-md);
+		color: var(--text-secondary);
+		max-width: 62ch;
+		line-height: 1.7;
+	}
+
+	.guide__section a {
+		color: var(--primary);
+	}
+
+	.grid-1 {
+		display: grid;
+		gap: var(--space-lg);
+		grid-template-columns: 1fr;
+		max-width: 700px;
+	}
+
+	.grid-2 {
+		display: grid;
+		gap: var(--space-lg);
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	h3 {
+		margin: 0 0 var(--space-sm);
+		font-size: 18px;
+		letter-spacing: -0.01em;
+	}
+
+	.grid-2 p, .grid-1 p { margin: 0; color: var(--text-secondary); }
+
+	.bottom-cta {
+		padding: clamp(44px, 6vw, 84px) 0;
+		text-align: center;
+		border-top: 1px solid var(--border-subtle);
+	}
+
+	.bottom-cta h2 {
+		margin: 0 0 var(--space-md);
+		font-size: clamp(28px, 3.2vw, 36px);
+		letter-spacing: -0.02em;
+	}
+
+	.bottom-cta p {
+		margin: 0 0 var(--space-xl);
+		color: var(--text-secondary);
+	}
+
+	@media (max-width: 700px) {
+		.grid-2 { grid-template-columns: 1fr; }
+	}
+</style>

@@ -1,0 +1,220 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Button from '../../components/Button.astro';
+import Card from '../../components/Card.astro';
+import Section from '../../components/Section.astro';
+import { APP_STORE_URL, isAppStoreUrlKnown, SITE_NAME } from '../../lib/site';
+
+const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
+const appStoreCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming soon on the App Store';
+---
+
+<Layout
+	title="How to Reduce Snus Gradually — A Practical Guide"
+	description="Learn how to reduce snus gradually with a simple daily approach, better tracking, and practical ways to handle cravings."
+	canonicalPath="/how-to-reduce-snus/"
+>
+	<article class="guide">
+		<div class="container">
+			<header class="guide__header">
+				<h1>How to reduce snus gradually</h1>
+				<p class="lede">
+					A gradual reduction approach can help you cut down on snus by setting a daily allowance, tracking your use, and reducing it step by step over time. Here is a practical guide to getting started.
+				</p>
+			</header>
+
+			<section class="guide__section">
+				<h2>Why gradual reduction works for many people</h2>
+				<p>
+					Quitting snus cold turkey can feel overwhelming. Nicotine withdrawal symptoms like irritability, trouble concentrating, and strong cravings can make it hard to stick with an all-or-nothing approach.
+				</p>
+				<p>
+					Gradual reduction gives your body time to adjust. By lowering your daily intake slowly, the withdrawal effects are milder and the process feels more manageable.
+				</p>
+			</section>
+
+			<section class="guide__section">
+				<h2>Step-by-step: how to cut down on snus</h2>
+				<div class="grid-1">
+					<Card as="article">
+						<h3>1. Know your starting point</h3>
+						<p>Count how many snus pouches you use on a normal day. Be honest. This number is your baseline, and everything builds from it.</p>
+					</Card>
+					<Card as="article">
+						<h3>2. Set a daily allowance</h3>
+						<p>Based on your baseline, set a specific number of pouches per day. Having a clear limit is more effective than a vague goal like "use less."</p>
+					</Card>
+					<Card as="article">
+						<h3>3. Track every pouch</h3>
+						<p>Each time you use a snus pouch, log it. Tracking makes you more aware of your patterns and helps you stay within your daily limit.</p>
+					</Card>
+					<Card as="article">
+						<h3>4. Reduce weekly</h3>
+						<p>Lower your daily allowance by a small amount each week. A reduction of 5 to 15 percent per week is a common range. Find a pace that works for you.</p>
+					</Card>
+					<Card as="article">
+						<h3>5. Handle cravings actively</h3>
+						<p>When a craving hits and you have reached your daily limit, try a breathing exercise, go for a walk, or use an urge surfing technique. The craving usually passes within a few minutes.</p>
+					</Card>
+					<Card as="article">
+						<h3>6. Review your progress weekly</h3>
+						<p>Look at how many pouches you used compared to your allowance. Celebrate what went well. If you went over, adjust your plan rather than giving up.</p>
+					</Card>
+				</div>
+			</section>
+
+			<section class="guide__section">
+				<h2>Common challenges when reducing snus</h2>
+				<div class="grid-2">
+					<Card as="article">
+						<h3>Triggers and habits</h3>
+						<p>Many people reach for snus at specific times: after meals, during breaks, or when stressed. Identifying your triggers helps you plan ahead for those moments.</p>
+					</Card>
+					<Card as="article">
+						<h3>Social situations</h3>
+						<p>If people around you use snus, it can be harder to stick to your limit. Having a clear daily number to follow can help you say no more easily.</p>
+					</Card>
+					<Card as="article">
+						<h3>Bad days</h3>
+						<p>Some days you will go over your allowance. That is normal. One bad day does not erase your progress. Just return to your plan the next day.</p>
+					</Card>
+					<Card as="article">
+						<h3>Losing motivation</h3>
+						<p>Tracking your progress over weeks helps. When you can see that you went from 12 pouches a day to 6, the effort feels worth it.</p>
+					</Card>
+				</div>
+			</section>
+
+			<section class="guide__section">
+				<h2>When tracking helps</h2>
+				<p>
+					A reduction plan works best when you actually track your use. Without tracking, it is easy to underestimate how many pouches you use and to gradually slip back to your old baseline.
+				</p>
+				<p>
+					An app like <a href="/">Taper</a> makes tracking simple: one tap per pouch, a clear daily allowance, and weekly progress. It also includes craving support tools like breathing exercises and urge surfing.
+				</p>
+			</section>
+		</div>
+	</article>
+
+	<Section id="faq" title="Frequently asked questions">
+		<div class="grid-2">
+			<Card as="article">
+				<h3>How long does it take to reduce snus use?</h3>
+				<p>It depends on your starting point and pace. Many people find that reducing over 6 to 12 weeks feels manageable. There is no single right timeline.</p>
+			</Card>
+			<Card as="article">
+				<h3>Should I talk to a doctor?</h3>
+				<p>If you have health concerns or use a lot of snus, it is a good idea to talk to a healthcare professional. Taper is a self-help tool, not medical advice.</p>
+			</Card>
+			<Card as="article">
+				<h3>What about nicotine replacement therapy?</h3>
+				<p>Some people combine gradual reduction with NRT like gum or patches. That is a decision to make with your doctor.</p>
+			</Card>
+			<Card as="article">
+				<h3>Can I use Taper to reduce snus?</h3>
+				<p>Yes. <a href="/snus-reduction-app/">Taper is built for snus and nicotine pouch reduction</a>, with daily allowance tracking, craving tools, and private progress.</p>
+			</Card>
+		</div>
+	</Section>
+
+	<section class="bottom-cta">
+		<div class="container">
+			<h2>Start reducing your snus use today</h2>
+			<p>Taper makes it simple with a daily allowance, one-tap tracking, and craving support.</p>
+			<Button variant="primary" href={APP_STORE_URL} disabled={!appStoreKnown} external={true}>
+				{appStoreCtaLabel}
+			</Button>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.guide {
+		padding: clamp(54px, 7vw, 96px) 0;
+	}
+
+	.guide__header {
+		margin-bottom: var(--space-xxl);
+		border-bottom: 1px solid var(--border-subtle);
+		padding-bottom: var(--space-xxl);
+	}
+
+	h1 {
+		margin: 0 0 var(--space-lg);
+		font-size: clamp(36px, 5vw, 48px);
+		line-height: 1.1;
+		letter-spacing: -0.03em;
+	}
+
+	.lede {
+		margin: 0;
+		color: var(--text-secondary);
+		max-width: 62ch;
+		font-size: 18px;
+		line-height: 28px;
+	}
+
+	.guide__section {
+		margin-bottom: var(--space-xxl);
+	}
+
+	.guide__section h2 {
+		margin: 0 0 var(--space-lg);
+		font-size: clamp(24px, 3vw, 32px);
+		letter-spacing: -0.02em;
+	}
+
+	.guide__section p {
+		margin: 0 0 var(--space-md);
+		color: var(--text-secondary);
+		max-width: 62ch;
+		line-height: 1.7;
+	}
+
+	.guide__section a {
+		color: var(--primary);
+	}
+
+	.grid-1 {
+		display: grid;
+		gap: var(--space-lg);
+		grid-template-columns: 1fr;
+		max-width: 700px;
+	}
+
+	.grid-2 {
+		display: grid;
+		gap: var(--space-lg);
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	h3 {
+		margin: 0 0 var(--space-sm);
+		font-size: 18px;
+		letter-spacing: -0.01em;
+	}
+
+	.grid-2 p, .grid-1 p { margin: 0; color: var(--text-secondary); }
+
+	.bottom-cta {
+		padding: clamp(44px, 6vw, 84px) 0;
+		text-align: center;
+		border-top: 1px solid var(--border-subtle);
+	}
+
+	.bottom-cta h2 {
+		margin: 0 0 var(--space-md);
+		font-size: clamp(28px, 3.2vw, 36px);
+		letter-spacing: -0.02em;
+	}
+
+	.bottom-cta p {
+		margin: 0 0 var(--space-xl);
+		color: var(--text-secondary);
+	}
+
+	@media (max-width: 700px) {
+		.grid-2 { grid-template-columns: 1fr; }
+	}
+</style>
