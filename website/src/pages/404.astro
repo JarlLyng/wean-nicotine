@@ -1,0 +1,44 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Button from '../components/Button.astro';
+import Section from '../components/Section.astro';
+---
+
+<Layout
+	title="Page not found"
+	description="The page you're looking for doesn't exist."
+	canonicalPath="/404"
+	noindex={true}
+>
+	<Section
+		id="404"
+		title="404"
+		lede="The page you're looking for doesn't exist."
+	>
+		<div class="not-found">
+			<p>This page might have been moved or deleted.</p>
+			<div class="not-found__cta">
+				<Button variant="primary" href="/">Go to homepage</Button>
+			</div>
+		</div>
+	</Section>
+</Layout>
+
+<style>
+	.not-found {
+		text-align: center;
+		max-width: 600px;
+		margin: 0 auto;
+	}
+
+	.not-found p {
+		margin: 0 0 var(--space-xl);
+		color: var(--text-secondary);
+		font-size: 18px;
+	}
+
+	.not-found__cta {
+		display: flex;
+		justify-content: center;
+	}
+</style>

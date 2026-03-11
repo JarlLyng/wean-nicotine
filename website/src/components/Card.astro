@@ -1,0 +1,22 @@
+---
+export interface Props {
+	as?: 'div' | 'article';
+}
+
+const { as = 'div' } = Astro.props;
+const Tag = as;
+---
+
+<Tag class="card">
+	<slot />
+</Tag>
+
+<style>
+	.card {
+		background: var(--bg-card);
+		border: 1px solid var(--border-subtle);
+		border-radius: var(--radius-lg);
+		padding: var(--space-xl);
+	}
+</style>
+

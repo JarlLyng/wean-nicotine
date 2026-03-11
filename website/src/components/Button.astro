@@ -1,0 +1,86 @@
+---
+type Variant = 'primary' | 'secondary' | 'ghost';
+
+export interface Props {
+	href?: string;
+	variant?: Variant;
+	disabled?: boolean;
+	external?: boolean;
+	ariaLabel?: string;
+}
+
+const {
+	href,
+	variant = 'primary',
+	disabled = false,
+	external = false,
+	ariaLabel,
+} = Astro.props;
+
+const target = external ? '_blank' : undefined;
+const rel = external ? 'noopener noreferrer' : undefined;
+---
+
+<a
+	class:list={['btn', `btn--${variant}`, disabled && 'is-disabled']}
+	href={disabled ? undefined : href}
+	target={disabled ? undefined : target}
+	rel={disabled ? undefined : rel}
+	aria-disabled={disabled ? 'true' : undefined}
+	aria-label={ariaLabel}
+	tabindex={disabled ? -1 : undefined}
+>
+	<slot />
+</a>
+
+<style>
+	.btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 10px;
+		padding: 12px 14px;
+		border-radius: var(--radius-full);
+		border: 1px solid var(--border-default);
+		background: var(--surface-raised);
+		color: var(--text-primary);
+		font-weight: 600;
+		letter-spacing: -0.01em;
+		line-height: 1;
+		text-decoration: none;
+		transition:
+			transform 120ms ease,
+			background 120ms ease,
+			border-color 120ms ease,
+			opacity 120ms ease;
+		will-change: transform;
+	}
+
+	.btn:hover {
+		transform: translateY(-1px);
+		text-decoration: none;
+	}
+
+	.btn--primary {
+		background: var(--primary);
+		color: var(--on-primary);
+		border-color: color-mix(in oklab, var(--primary), black 10%);
+	}
+
+	.btn--secondary {
+		background: transparent;
+		border-color: var(--border-default);
+	}
+
+	.btn--ghost {
+		background: transparent;
+		border-color: transparent;
+	}
+
+	.is-disabled {
+		opacity: 0.55;
+		pointer-events: none;
+		transform: none;
+	}
+</style>
+

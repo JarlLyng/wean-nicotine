@@ -49,3 +49,6 @@ ios/.xcode.env.local
 # IAMJARL design system snapshots (source of truth is remote)
 docs/iamjarl-v*/
 build-*.ipa
+
+# Marketing site (Astro)
+website/.astro/

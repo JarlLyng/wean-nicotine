@@ -1,0 +1,218 @@
+---
+import '../styles/global.css';
+import Button from '../components/Button.astro';
+import { APP_STORE_URL, COMPANY_NAME, isAppStoreUrlKnown, SITE_NAME, SUPPORT_EMAIL } from '../lib/site';
+
+export interface Props {
+	title?: string;
+	description?: string;
+	canonicalPath?: string;
+	noindex?: boolean;
+}
+
+const { title, description, canonicalPath, noindex = false } = Astro.props;
+
+const pageTitle = title ? `${title} — ${SITE_NAME}` : `${SITE_NAME} — Reduce snus step by step`;
+const pageDescription =
+	description ??
+	'A calm, private iPhone app for gradual reduction, daily tracking, and supportive tools for snus and nicotine pouches.';
+
+const canonicalUrl = new URL(canonicalPath ?? Astro.url.pathname, Astro.site).toString();
+const ogImageUrl = new URL('/og-image.svg', Astro.site).toString();
+
+const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
+const appStoreCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming soon on the App Store';
+
+const structuredData: Record<string, unknown> = {
+	'@context': 'https://schema.org',
+	'@type': 'MobileApplication',
+	name: SITE_NAME,
+	operatingSystem: 'iOS',
+	applicationCategory: 'HealthApplication',
+	url: canonicalUrl,
+	...(appStoreKnown ? { downloadUrl: APP_STORE_URL } : {}),
+};
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+		<title>{pageTitle}</title>
+		<meta name="description" content={pageDescription} />
+		<link rel="canonical" href={canonicalUrl} />
+
+		{noindex ? (
+			<meta name="robots" content="noindex,nofollow" />
+		) : (
+			<meta name="robots" content="index,follow" />
+		)}
+
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content={SITE_NAME} />
+		<meta property="og:title" content={pageTitle} />
+		<meta property="og:description" content={pageDescription} />
+		<meta property="og:url" content={canonicalUrl} />
+		<meta property="og:image" content={ogImageUrl} />
+
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={pageTitle} />
+		<meta name="twitter:description" content={pageDescription} />
+		<meta name="twitter:image" content={ogImageUrl} />
+
+		<meta name="generator" content={Astro.generator} />
+		<script type="application/ld+json">{JSON.stringify(structuredData)}</script>
+	</head>
+
+	<body>
+		<a class="skip-link" href="#main">Skip to content</a>
+
+		<header class="site-header">
+			<div class="container site-header__inner">
+				<a class="brand" href="/" aria-label={`${SITE_NAME} home`}>
+					<span class="brand__dot" aria-hidden="true"></span>
+					<span class="brand__name">{SITE_NAME}</span>
+				</a>
+
+				<nav class="nav" aria-label="Primary">
+					<a class="nav__link" href="/privacy">Privacy</a>
+					<a class="nav__link" href="/support">Support</a>
+					<Button
+						variant="primary"
+						href={APP_STORE_URL}
+						disabled={!appStoreKnown}
+						external={true}
+						ariaLabel={appStoreCtaLabel}
+					>
+						{appStoreCtaLabel}
+					</Button>
+				</nav>
+			</div>
+		</header>
+
+		<main id="main">
+			<slot />
+		</main>
+
+		<footer class="site-footer">
+			<div class="container site-footer__inner">
+				<div class="site-footer__left">
+					<p class="fineprint">
+						© {new Date().getFullYear()} {COMPANY_NAME}. All rights reserved.
+					</p>
+				</div>
+				<div class="site-footer__right">
+					{appStoreKnown ? (
+						<a href={APP_STORE_URL} target="_blank" rel="noopener noreferrer">App Store</a>
+					) : (
+						<span class="disabled-link" aria-disabled="true">App Store (coming soon)</span>
+					)}
+					<a href="/privacy">Privacy Policy</a>
+					<a href="/support">Support</a>
+					<a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>
+				</div>
+			</div>
+		</footer>
+	</body>
+</html>
+
+<style>
+	.site-header {
+		position: sticky;
+		top: 0;
+		z-index: 50;
+		background: color-mix(in oklab, var(--bg-app), transparent 12%);
+		backdrop-filter: blur(14px);
+		border-bottom: 1px solid var(--border-subtle);
+	}
+
+	.site-header__inner {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--space-lg);
+		padding-top: var(--space-lg);
+		padding-bottom: var(--space-lg);
+	}
+
+	.brand {
+		display: inline-flex;
+		align-items: center;
+		gap: 10px;
+		text-decoration: none;
+	}
+
+	.brand__dot {
+		width: 12px;
+		height: 12px;
+		border-radius: var(--radius-full);
+		background: var(--primary);
+		box-shadow: 0 0 0 6px color-mix(in oklab, var(--primary), transparent 75%);
+	}
+
+	.brand__name {
+		font-weight: 700;
+		letter-spacing: -0.02em;
+	}
+
+	.nav {
+		display: flex;
+		align-items: center;
+		gap: var(--space-lg);
+		flex-wrap: wrap;
+		justify-content: flex-end;
+	}
+
+	.nav__link {
+		color: var(--text-secondary);
+		font-weight: 600;
+	}
+
+	.nav__link:hover {
+		color: var(--text-primary);
+		text-decoration: none;
+	}
+
+	main {
+		min-height: calc(100vh - 120px);
+	}
+
+	.site-footer {
+		border-top: 1px solid var(--border-subtle);
+		padding: var(--space-xxl) 0;
+	}
+
+	.site-footer__inner {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--space-lg);
+		flex-wrap: wrap;
+	}
+
+	.fineprint {
+		margin: 0;
+		color: var(--text-tertiary);
+		font-size: 14px;
+	}
+
+	.site-footer__right {
+		display: flex;
+		align-items: center;
+		gap: var(--space-lg);
+		flex-wrap: wrap;
+		color: var(--text-secondary);
+	}
+
+	.site-footer__right a:hover {
+		color: var(--text-primary);
+		text-decoration: none;
+	}
+
+	.disabled-link {
+		color: var(--text-tertiary);
+	}
+</style>

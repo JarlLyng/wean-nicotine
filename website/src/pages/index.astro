@@ -1,0 +1,338 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Button from '../components/Button.astro';
+import Card from '../components/Card.astro';
+import Section from '../components/Section.astro';
+import ScreenshotGallery from '../components/ScreenshotGallery.astro';
+import { APP_STORE_URL, isAppStoreUrlKnown, SITE_NAME } from '../lib/site';
+
+const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
+const appStoreCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming soon on the App Store';
+
+const screenshots = [
+	{
+		src: '/screenshots/01-onboarding.svg',
+		alt: 'Onboarding screen: set baseline pouches per day and optional price.',
+		width: 1290,
+		height: 2796,
+	},
+	{
+		src: '/screenshots/02-today.svg',
+		alt: 'Today screen: daily allowance with one-tap logging for used pouches and resisted cravings.',
+		width: 1290,
+		height: 2796,
+	},
+	{
+		src: '/screenshots/03-progress.svg',
+		alt: 'Progress screen: weekly trend and totals like pouches avoided and money saved (optional).',
+		width: 1290,
+		height: 2796,
+	},
+	{
+		src: '/screenshots/04-tools.svg',
+		alt: 'Support tools: breathing and urge surfing for cravings.',
+		width: 1290,
+		height: 2796,
+	},
+	{
+		src: '/screenshots/05-start-over.svg',
+		alt: 'Start Over: clear local data and restart onboarding.',
+		width: 1290,
+		height: 2796,
+	},
+];
+---
+
+<Layout
+	description="Taper is a calm, private iPhone app to gradually reduce snus and nicotine pouches—daily allowance, one‑tap tracking, progress, and supportive tools."
+	canonicalPath="/"
+>
+	<section class="hero">
+		<div class="container hero__inner">
+			<div class="hero__copy">
+				<p class="hero__kicker">Calm. Private. No shame.</p>
+				<h1>Reduce snus and nicotine pouches — step by step.</h1>
+				<p class="hero__subline">
+					{SITE_NAME} helps you taper gradually with a daily allowance, one‑tap tracking, and supportive
+					tools when cravings hit.
+				</p>
+
+				<div class="hero__cta">
+					<Button variant="primary" href={APP_STORE_URL} disabled={!appStoreKnown} external={true}>
+						{appStoreCtaLabel}
+					</Button>
+					<Button variant="secondary" href="/privacy">Read privacy policy</Button>
+				</div>
+
+				<p class="hero__fineprint">
+					No accounts. No tracking. Data stays on your device.
+				</p>
+			</div>
+
+			<div class="hero__visual" aria-hidden="true">
+				<div class="hero__blob"></div>
+				<div class="hero__frame">
+					<img
+						src="/screenshots/Hero.png"
+						alt=""
+						width="448"
+						height="972"
+						loading="eager"
+						decoding="async"
+						fetchpriority="high"
+					/>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<Section id="how" title="How it works" lede="A simple, gentle process you can stick with.">
+		<div class="grid-3">
+			<Card as="article">
+				<h3>1) Set your baseline</h3>
+				<p>Tell Taper how many pouches you use per day. Optionally add price per can.</p>
+			</Card>
+			<Card as="article">
+				<h3>2) Follow your daily allowance</h3>
+				<p>Get a clear daily number and check in with one tap: “Used a pouch” or “Resisted craving”.</p>
+			</Card>
+			<Card as="article">
+				<h3>3) Track progress + use tools</h3>
+				<p>See weekly and total progress, and use breathing, urge surfing, and reflection prompts.</p>
+			</Card>
+		</div>
+	</Section>
+
+	<Section id="screenshots" title="Screenshots" lede="A peek at the core flows.">
+		<ScreenshotGallery items={screenshots} />
+	</Section>
+
+	<Section
+		id="features"
+		title="Features"
+		lede="Everything you need to reduce gradually—without accounts, shame, or noise."
+	>
+		<div class="grid-2">
+			<Card as="article">
+				<h3>Today</h3>
+				<p>Daily allowance, quick logging, and a calm check‑in flow.</p>
+			</Card>
+			<Card as="article">
+				<h3>Progress</h3>
+				<p>Weekly trends and totals like pouches avoided and (optional) money saved.</p>
+			</Card>
+			<Card as="article">
+				<h3>Support tools</h3>
+				<p>Breathing, urge surfing, and reflection prompts when cravings hit.</p>
+			</Card>
+			<Card as="article">
+				<h3>Notifications (optional)</h3>
+				<p>Daily check‑ins and trigger reminders if you enable them.</p>
+			</Card>
+			<Card as="article">
+				<h3>Start Over</h3>
+				<p>Delete local data and return to onboarding anytime.</p>
+			</Card>
+			<Card as="article">
+				<h3>Local‑first</h3>
+				<p>Your data is stored on your device. No accounts. No cloud sync.</p>
+			</Card>
+		</div>
+	</Section>
+
+	<Section
+		id="privacy"
+		title="Privacy-first by design"
+		lede="The app is built to be calm and private—your progress is yours."
+	>
+		<div class="grid-2">
+			<Card as="article">
+				<h3>What stays on your device</h3>
+				<ul>
+					<li>Usage logs (used a pouch / resisted craving + timestamps)</li>
+					<li>Settings (baseline, plan parameters, optional triggers, optional price)</li>
+					<li>Preferences (theme, notification settings)</li>
+				</ul>
+			</Card>
+			<Card as="article">
+				<h3>What we don’t do</h3>
+				<ul>
+					<li>No accounts or login</li>
+					<li>No ad tracking</li>
+					<li>No selling personal data</li>
+					<li>No medical advice or clinical claims</li>
+				</ul>
+			</Card>
+			<Card as="article">
+				<h3>Delete everything</h3>
+				<p>
+					“Start Over” deletes local data inside the app and returns you to onboarding.
+				</p>
+			</Card>
+			<Card as="article">
+				<h3>Crash reporting (optional)</h3>
+				<p>
+					If enabled in the build, Sentry may be used only for crash/error reporting to improve stability.
+				</p>
+			</Card>
+		</div>
+	</Section>
+
+	<Section id="faq" title="FAQ" lede="Short, clear answers.">
+		<div class="grid-2">
+			<Card as="article">
+				<h3>Is this medical advice?</h3>
+				<p>No. Taper is a self‑help tool and does not provide medical advice.</p>
+			</Card>
+			<Card as="article">
+				<h3>Where is my data stored?</h3>
+				<p>On your device. The app does not require accounts and does not sync to the cloud.</p>
+			</Card>
+			<Card as="article">
+				<h3>Can I delete everything?</h3>
+				<p>Yes. Use “Start Over” inside the app, or delete the app.</p>
+			</Card>
+			<Card as="article">
+				<h3>Does it work offline?</h3>
+				<p>Yes. Because it’s local‑first, core features work without an internet connection.</p>
+			</Card>
+		</div>
+	</Section>
+</Layout>
+
+<style>
+	.hero {
+		padding: clamp(54px, 7vw, 96px) 0;
+		border-bottom: 1px solid var(--border-subtle);
+	}
+
+	.hero__inner {
+		display: grid;
+		gap: clamp(24px, 4vw, 48px);
+		grid-template-columns: 1.2fr 0.8fr;
+		align-items: center;
+	}
+
+	.hero__kicker {
+		margin: 0 0 var(--space-md);
+		color: var(--text-tertiary);
+		font-weight: 600;
+		letter-spacing: -0.01em;
+	}
+
+	h1 {
+		margin: 0 0 var(--space-lg);
+		font-size: clamp(42px, 6vw, 56px);
+		line-height: 1.03;
+		letter-spacing: -0.03em;
+	}
+
+	.hero__subline {
+		margin: 0 0 var(--space-xl);
+		color: var(--text-secondary);
+		max-width: 62ch;
+		font-size: 18px;
+		line-height: 28px;
+	}
+
+	.hero__cta {
+		display: flex;
+		gap: var(--space-md);
+		flex-wrap: wrap;
+		align-items: center;
+	}
+
+	.hero__fineprint {
+		margin: var(--space-lg) 0 0;
+		color: var(--text-tertiary);
+		font-size: 14px;
+	}
+
+	.hero__visual {
+		position: relative;
+		display: grid;
+		place-items: center;
+	}
+
+	.hero__blob {
+		position: absolute;
+		inset: -40px;
+		background: radial-gradient(
+			circle at 30% 20%,
+			color-mix(in oklab, var(--primary), transparent 50%),
+			transparent 55%
+		);
+		filter: blur(10px);
+	}
+
+	.hero__frame {
+		position: relative;
+		border-radius: 28px;
+		border: 1px solid var(--border-subtle);
+		background: var(--surface-raised);
+		overflow: hidden;
+		box-shadow: 0 24px 80px color-mix(in oklab, var(--text-primary), transparent 88%);
+		max-width: 320px;
+	}
+
+	.hero__frame img {
+		display: block;
+		width: 100%;
+		height: auto;
+	}
+
+	.grid-2,
+	.grid-3 {
+		display: grid;
+		gap: var(--space-lg);
+	}
+
+	.grid-2 {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.grid-3 {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+
+	h3 {
+		margin: 0 0 var(--space-sm);
+		font-size: 18px;
+		letter-spacing: -0.01em;
+	}
+
+	p {
+		margin: 0;
+		color: var(--text-secondary);
+	}
+
+	ul {
+		margin: var(--space-sm) 0 0;
+		padding-left: 18px;
+		color: var(--text-secondary);
+	}
+
+	li {
+		margin: 6px 0;
+	}
+
+	@media (max-width: 960px) {
+		.hero__inner {
+			grid-template-columns: 1fr;
+		}
+
+		.hero__frame {
+			max-width: 360px;
+		}
+
+		.grid-3 {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	@media (max-width: 700px) {
+		.grid-2 {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

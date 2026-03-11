@@ -1,0 +1,79 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Card from '../components/Card.astro';
+import Section from '../components/Section.astro';
+import { SUPPORT_EMAIL } from '../lib/site';
+---
+
+<Layout
+	title="Support"
+	description="Support for the Taper iOS app."
+	canonicalPath="/support"
+>
+	<Section
+		id="support"
+		title="Support"
+		lede="Need help or want to share feedback? We read every email."
+	>
+		<div class="grid">
+			<Card as="article">
+				<h3>Contact</h3>
+				<p>
+					Email us at <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>.
+				</p>
+			</Card>
+
+			<Card as="article">
+				<h3>Troubleshooting</h3>
+				<ul>
+					<li>If notifications aren’t working, check iOS notification permissions for Taper.</li>
+					<li>If your plan feels too aggressive, adjust your baseline and reduction settings in the app.</li>
+					<li>To clear local data, use “Start Over” inside the app.</li>
+				</ul>
+			</Card>
+
+			<Card as="article">
+				<h3>Privacy</h3>
+				<p>
+					Your data is stored on your device. Read the <a href="/privacy">Privacy Policy</a>.
+				</p>
+			</Card>
+		</div>
+	</Section>
+</Layout>
+
+<style>
+	.grid {
+		display: grid;
+		gap: var(--space-lg);
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+
+	h3 {
+		margin: 0 0 var(--space-sm);
+		font-size: 18px;
+		letter-spacing: -0.01em;
+	}
+
+	p {
+		margin: 0;
+		color: var(--text-secondary);
+	}
+
+	ul {
+		margin: var(--space-sm) 0 0;
+		padding-left: 18px;
+		color: var(--text-secondary);
+	}
+
+	li {
+		margin: 6px 0;
+	}
+
+	@media (max-width: 900px) {
+		.grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>
+

@@ -1,0 +1,47 @@
+---
+export interface Props {
+	id?: string;
+	title?: string;
+	lede?: string;
+}
+
+const { id, title, lede } = Astro.props;
+---
+
+<section id={id} class="section">
+	<div class="container">
+		{title && (
+			<header class="section__header">
+				<h2 class="section__title">{title}</h2>
+				{lede && <p class="section__lede">{lede}</p>}
+			</header>
+		)}
+		<div class="section__content">
+			<slot />
+		</div>
+	</div>
+</section>
+
+<style>
+	.section {
+		padding: clamp(44px, 6vw, 84px) 0;
+	}
+
+	.section__header {
+		margin-bottom: var(--space-xxl);
+	}
+
+	.section__title {
+		margin: 0 0 var(--space-md);
+		font-size: clamp(28px, 3.2vw, 36px);
+		line-height: 1.15;
+		letter-spacing: -0.02em;
+	}
+
+	.section__lede {
+		margin: 0;
+		color: var(--text-secondary);
+		max-width: 70ch;
+	}
+</style>
+

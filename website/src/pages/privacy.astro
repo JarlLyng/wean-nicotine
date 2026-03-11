@@ -1,0 +1,123 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { COMPANY_NAME, SITE_URL, SUPPORT_EMAIL } from '../lib/site';
+
+const lastUpdated = '2026-01-21';
+---
+
+<Layout
+	title="Privacy Policy"
+	description="Privacy Policy for the Taper iOS app."
+	canonicalPath="/privacy"
+>
+	<section class="page">
+		<div class="container prose">
+			<h1>Privacy Policy</h1>
+			<p class="muted">Last updated: {lastUpdated}</p>
+
+			<h2>Who we are</h2>
+			<p>
+				This Privacy Policy applies to the Taper iOS app (“Taper”, “the app”). The data controller is
+				<strong>{COMPANY_NAME}</strong>.
+			</p>
+			<ul>
+				<li>Website: <a href={SITE_URL}>{SITE_URL}</a></li>
+				<li>
+					Contact: <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>
+				</li>
+			</ul>
+
+			<h2>Data stored on your device</h2>
+			<p>
+				Taper is local‑first. The app stores your information on your iPhone (and does not require an
+				account).
+			</p>
+			<ul>
+				<li>Usage logs (e.g., “Used a pouch”, “Resisted craving”, with timestamps)</li>
+				<li>
+					Settings (baseline pouches/day, reduction plan parameters, optional triggers, optional price and
+					currency)
+				</li>
+				<li>Preferences (theme, notification toggles and times)</li>
+			</ul>
+
+			<h2>What we do not do</h2>
+			<ul>
+				<li>No accounts or login</li>
+				<li>No ad tracking</li>
+				<li>No selling personal data</li>
+			</ul>
+
+			<h2>Notifications</h2>
+			<p>
+				If you enable notifications, Taper uses local notifications on your device (subject to your iOS
+				permissions) for features like daily check‑ins and reminders.
+			</p>
+
+			<h2>Third‑party services</h2>
+			<p>
+				If enabled in the build, Taper may use <strong>Sentry</strong> for crash/error reporting to help us
+				improve app stability. If used, Sentry may receive error events and basic device/app context
+				necessary to diagnose issues (for example: app version, device model, OS version, and a crash stack
+				trace). We do not use Sentry for advertising.
+			</p>
+
+			<h2>Data retention</h2>
+			<p>
+				Your data stays on your device unless you delete the app or use “Start Over” inside the app to
+				delete local data and return to onboarding.
+			</p>
+
+			<h2>Your choices</h2>
+			<ul>
+				<li>Delete data: use “Start Over” inside the app, or delete the app.</li>
+				<li>
+					Contact us: email <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>.
+				</li>
+			</ul>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.page {
+		padding: clamp(44px, 6vw, 84px) 0;
+	}
+
+	.prose {
+		max-width: 76ch;
+	}
+
+	h1 {
+		margin: 0 0 var(--space-sm);
+		font-size: clamp(34px, 5vw, 44px);
+		line-height: 1.1;
+		letter-spacing: -0.03em;
+	}
+
+	h2 {
+		margin: var(--space-xxl) 0 var(--space-sm);
+		font-size: 20px;
+		letter-spacing: -0.01em;
+	}
+
+	p,
+	li {
+		color: var(--text-secondary);
+	}
+
+	.muted {
+		margin: 0 0 var(--space-xl);
+		color: var(--text-tertiary);
+	}
+
+	ul {
+		margin: var(--space-sm) 0 0;
+		padding-left: 18px;
+	}
+
+	li {
+		margin: 6px 0;
+	}
+</style>
+

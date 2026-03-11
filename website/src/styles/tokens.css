@@ -1,0 +1,55 @@
+:root {
+	/* spacing */
+	--space-xs: 4px;
+	--space-sm: 8px;
+	--space-md: 12px;
+	--space-lg: 16px;
+	--space-xl: 20px;
+	--space-xxl: 24px;
+	--space-xxxl: 32px;
+
+	/* radii */
+	--radius-sm: 8px;
+	--radius-md: 12px;
+	--radius-lg: 16px;
+	--radius-full: 9999px;
+}
+
+:root[data-theme='light'] {
+	--primary: #00ff7b;
+	--on-primary: #000000;
+	--bg-app: #ffffff;
+	--bg-muted: rgba(0, 0, 0, 0.04);
+	--bg-card: rgba(0, 0, 0, 0.04);
+	--surface: #ffffff;
+	--surface-raised: rgba(0, 0, 0, 0.02);
+	--text-primary: #000000;
+	--text-secondary: rgba(0, 0, 0, 0.7);
+	--text-tertiary: rgba(0, 0, 0, 0.55);
+	--border-subtle: rgba(0, 0, 0, 0.1);
+	--border-default: rgba(0, 0, 0, 0.16);
+
+	--success: #4caf50;
+	--warning: #ff6b35;
+	--error: #ff3b30;
+}
+
+:root[data-theme='dark'] {
+	--primary: #d0ff00;
+	--on-primary: #000000;
+	--bg-app: #000000;
+	--bg-muted: rgba(255, 255, 255, 0.05);
+	--bg-card: rgba(255, 255, 255, 0.05);
+	--surface: #000000;
+	--surface-raised: rgba(255, 255, 255, 0.03);
+	--text-primary: #ffffff;
+	--text-secondary: rgba(255, 255, 255, 0.75);
+	--text-tertiary: rgba(255, 255, 255, 0.6);
+	--border-subtle: rgba(255, 255, 255, 0.12);
+	--border-default: rgba(255, 255, 255, 0.18);
+
+	--success: #4caf50;
+	--warning: #ff6b35;
+	--error: #ff3b30;
+}
+

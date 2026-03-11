@@ -1,0 +1,64 @@
+---
+export interface ScreenshotItem {
+	src: string;
+	alt: string;
+	width?: number;
+	height?: number;
+}
+
+export interface Props {
+	items: ScreenshotItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<div class="gallery" role="list">
+	{items.map((item) => (
+		<div class="gallery__item" role="listitem">
+			<img
+				src={item.src}
+				alt={item.alt}
+				loading="lazy"
+				decoding="async"
+				width={item.width}
+				height={item.height}
+			/>
+		</div>
+	))}
+</div>
+
+<style>
+	.gallery {
+		display: grid;
+		gap: var(--space-lg);
+		grid-template-columns: repeat(12, 1fr);
+	}
+
+	.gallery__item {
+		grid-column: span 3;
+		border-radius: var(--radius-lg);
+		border: 1px solid var(--border-subtle);
+		background: color-mix(in oklab, var(--bg-card), transparent 30%);
+		overflow: hidden;
+	}
+
+	img {
+		width: 100%;
+		height: auto;
+		display: block;
+	}
+
+	@media (max-width: 960px) {
+		.gallery__item {
+			grid-column: span 6;
+		}
+	}
+
+	@media (max-width: 560px) {
+		.gallery__item {
+			grid-column: span 12;
+		}
+	}
+</style>
+
