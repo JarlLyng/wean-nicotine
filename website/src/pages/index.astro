@@ -9,6 +9,54 @@ import { APP_STORE_URL, isAppStoreUrlKnown, SITE_NAME } from '../lib/site';
 const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
 const appStoreCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming soon on the App Store';
 
+const faqItems = [
+	{
+		question: 'How does Taper help me reduce snus?',
+		answer: 'Taper creates a gradual reduction plan based on your current daily use. Each week your daily allowance decreases slightly, so you cut down step by step instead of quitting cold turkey.',
+	},
+	{
+		question: 'Does Taper work for nicotine pouches too?',
+		answer: 'Yes. Taper works for both snus and nicotine pouches. The tapering approach is the same regardless of which product you use.',
+	},
+	{
+		question: 'Is this medical advice?',
+		answer: 'No. Taper is a self-help tracking tool for gradual nicotine reduction. It does not provide medical advice or clinical treatment.',
+	},
+	{
+		question: 'Where is my data stored?',
+		answer: 'All data stays on your device. Taper does not require an account and does not sync to the cloud.',
+	},
+	{
+		question: 'Can I delete everything?',
+		answer: 'Yes. Use "Start Over" inside the app to delete all local data and return to onboarding, or simply delete the app.',
+	},
+	{
+		question: 'Does Taper work offline?',
+		answer: 'Yes. Because Taper is local-first, all core features work without an internet connection.',
+	},
+	{
+		question: 'Can I track nicotine pouches without creating an account?',
+		answer: 'Yes. Taper requires no accounts, no login, and no sign-up. You can start tracking immediately.',
+	},
+	{
+		question: 'Is Taper free?',
+		answer: 'Yes. Taper is free to download and use.',
+	},
+];
+
+const faqSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'FAQPage',
+	mainEntity: faqItems.map((item) => ({
+		'@type': 'Question',
+		name: item.question,
+		acceptedAnswer: {
+			'@type': 'Answer',
+			text: item.answer,
+		},
+	})),
+};
+
 const screenshots = [
 	{
 		src: '/screenshots/01-onboarding.svg',
@@ -44,9 +92,10 @@ const screenshots = [
 ---
 
 <Layout
-	description="Taper is a calm, private iPhone app to gradually reduce snus and nicotine pouches—daily allowance, one‑tap tracking, progress, and supportive tools."
+	description="Reduce snus and nicotine pouches gradually with a calm, private app. Track your daily allowance, log use in one tap, and get support when cravings hit."
 	canonicalPath="/"
 >
+	<script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 	<section class="hero">
 		<div class="container hero__inner">
 			<div class="hero__copy">
@@ -86,7 +135,7 @@ const screenshots = [
 		</div>
 	</section>
 
-	<Section id="how" title="How it works" lede="A simple, gentle process you can stick with.">
+	<Section id="how" title="How to reduce snus or nicotine pouches gradually" lede="A simple, gentle process you can stick with.">
 		<div class="grid-3">
 			<Card as="article">
 				<h3>1) Set your baseline</h3>
@@ -109,8 +158,8 @@ const screenshots = [
 
 	<Section
 		id="features"
-		title="Features"
-		lede="Everything you need to reduce gradually—without accounts, shame, or noise."
+		title="Track progress privately on your device"
+		lede="Everything you need to reduce gradually — without accounts, shame, or noise."
 	>
 		<div class="grid-2">
 			<Card as="article">
@@ -143,7 +192,7 @@ const screenshots = [
 	<Section
 		id="privacy"
 		title="Privacy-first by design"
-		lede="The app is built to be calm and private—your progress is yours."
+		lede="A private nicotine tracker that keeps your progress on your device — no accounts, no cloud sync."
 	>
 		<div class="grid-2">
 			<Card as="article">
@@ -178,24 +227,14 @@ const screenshots = [
 		</div>
 	</Section>
 
-	<Section id="faq" title="FAQ" lede="Short, clear answers.">
-		<div class="grid-2">
-			<Card as="article">
-				<h3>Is this medical advice?</h3>
-				<p>No. Taper is a self‑help tool and does not provide medical advice.</p>
-			</Card>
-			<Card as="article">
-				<h3>Where is my data stored?</h3>
-				<p>On your device. The app does not require accounts and does not sync to the cloud.</p>
-			</Card>
-			<Card as="article">
-				<h3>Can I delete everything?</h3>
-				<p>Yes. Use “Start Over” inside the app, or delete the app.</p>
-			</Card>
-			<Card as="article">
-				<h3>Does it work offline?</h3>
-				<p>Yes. Because it’s local‑first, core features work without an internet connection.</p>
-			</Card>
+	<Section id=”faq” title=”Frequently asked questions” lede=”Common questions about snus reduction and nicotine pouch tracking.”>
+		<div class=”grid-2”>
+			{faqItems.map((item) => (
+				<Card as=”article”>
+					<h3>{item.question}</h3>
+					<p>{item.answer}</p>
+				</Card>
+			))}
 		</div>
 	</Section>
 </Layout>

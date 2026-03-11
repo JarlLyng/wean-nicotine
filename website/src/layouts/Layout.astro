@@ -12,10 +12,10 @@ export interface Props {
 
 const { title, description, canonicalPath, noindex = false } = Astro.props;
 
-const pageTitle = title ? `${title} — ${SITE_NAME}` : `${SITE_NAME} — Reduce snus step by step`;
+const pageTitle = title ? `${title} | ${SITE_NAME}` : `${SITE_NAME} — Snus & Nicotine Pouch Reduction App`;
 const pageDescription =
 	description ??
-	'A calm, private iPhone app for gradual reduction, daily tracking, and supportive tools for snus and nicotine pouches.';
+	'Reduce snus and nicotine pouches gradually with a calm, private app. Track daily allowance, log use in one tap, handle cravings, and see progress over time.';
 
 const canonicalUrl = new URL(canonicalPath ?? Astro.url.pathname, Astro.site).toString();
 const ogImageUrl = new URL('/og-image.svg', Astro.site).toString();
@@ -29,8 +29,10 @@ const structuredData: Record<string, unknown> = {
 	name: SITE_NAME,
 	operatingSystem: 'iOS',
 	applicationCategory: 'HealthApplication',
-	url: canonicalUrl,
-	...(appStoreKnown ? { downloadUrl: APP_STORE_URL } : {}),
+	description: 'A calm, private app for reducing snus and nicotine pouches gradually with daily tracking, craving support tools, and weekly progress.',
+	url: new URL('/', Astro.site).toString(),
+	offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+	...(appStoreKnown ? { downloadUrl: APP_STORE_URL, installUrl: APP_STORE_URL } : {}),
 };
 ---
 
@@ -64,7 +66,7 @@ const structuredData: Record<string, unknown> = {
 		<meta name="twitter:image" content={ogImageUrl} />
 
 		<meta name="generator" content={Astro.generator} />
-		<script type="application/ld+json">{JSON.stringify(structuredData)}</script>
+		<script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
 	</head>
 
 	<body>
