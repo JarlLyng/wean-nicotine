@@ -143,7 +143,7 @@ const screenshots = [
 			</Card>
 			<Card as="article">
 				<h3>2) Follow your daily allowance</h3>
-				<p>Get a clear daily number and check in with one tap: “Used a pouch” or “Resisted craving”.</p>
+				<p>Get a clear daily number and check in with one tap: "Used a pouch" or "Resisted craving".</p>
 			</Card>
 			<Card as="article">
 				<h3>3) Track progress + use tools</h3>
@@ -215,7 +215,7 @@ const screenshots = [
 			<Card as="article">
 				<h3>Delete everything</h3>
 				<p>
-					“Start Over” deletes local data inside the app and returns you to onboarding.
+					"Start Over" deletes local data inside the app and returns you to onboarding.
 				</p>
 			</Card>
 			<Card as="article">
@@ -227,14 +227,16 @@ const screenshots = [
 		</div>
 	</Section>
 
-	<Section id=”faq” title=”Frequently asked questions” lede=”Common questions about snus reduction and nicotine pouch tracking.”>
-		<div class=”grid-2”>
-			{faqItems.map((item) => (
-				<Card as=”article”>
-					<h3>{item.question}</h3>
-					<p>{item.answer}</p>
-				</Card>
-			))}
+	<Section id="faq" title="Frequently asked questions" lede="Common questions about snus reduction and nicotine pouch tracking.">
+		<div class="grid-2">
+			<Card as="article"><h3>{faqItems[0].question}</h3><p>{faqItems[0].answer}</p></Card>
+			<Card as="article"><h3>{faqItems[1].question}</h3><p>{faqItems[1].answer}</p></Card>
+			<Card as="article"><h3>{faqItems[2].question}</h3><p>{faqItems[2].answer}</p></Card>
+			<Card as="article"><h3>{faqItems[3].question}</h3><p>{faqItems[3].answer}</p></Card>
+			<Card as="article"><h3>{faqItems[4].question}</h3><p>{faqItems[4].answer}</p></Card>
+			<Card as="article"><h3>{faqItems[5].question}</h3><p>{faqItems[5].answer}</p></Card>
+			<Card as="article"><h3>{faqItems[6].question}</h3><p>{faqItems[6].answer}</p></Card>
+			<Card as="article"><h3>{faqItems[7].question}</h3><p>{faqItems[7].answer}</p></Card>
 		</div>
 	</Section>
 </Layout>
