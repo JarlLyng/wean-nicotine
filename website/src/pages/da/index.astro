@@ -1,0 +1,379 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Button from '../../components/Button.astro';
+import Card from '../../components/Card.astro';
+import Section from '../../components/Section.astro';
+import ScreenshotGallery from '../../components/ScreenshotGallery.astro';
+import { APP_STORE_URL, isAppStoreUrlKnown, SITE_NAME } from '../../lib/site';
+
+const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
+const appStoreCtaLabel = appStoreKnown ? 'Hent i App Store' : 'Kommer snart i App Store';
+
+const faqItems = [
+	{
+		question: 'Hvordan hjælper Taper mig med at skære ned på snus?',
+		answer: 'Taper skaber en gradvis nedtrapningsplan baseret på dit nuværende daglige forbrug. Hver uge sænkes din daglige kvote en smule, så du skærer ned skridt for skridt i stedet for den kolde tyrker.',
+	},
+	{
+		question: 'Fungerer Taper også for nikotinposer?',
+		answer: 'Ja. Taper fungerer både for snus og nikotinposer. Nedtrapningsmetoden er den samme uanset, hvilket produkt du bruger.',
+	},
+	{
+		question: 'Er dette medicinsk rådgivning?',
+		answer: 'Nej. Taper er et selvhjælpsredskab til sporing og gradvis nikotinnedtrapning. Det yder ikke medicinsk rådgivning eller klinisk behandling.',
+	},
+	{
+		question: 'Hvor er mine data gemt?',
+		answer: 'Alle data forbliver på din enhed. Taper kræver ikke en konto og synkroniserer ikke til skyen.',
+	},
+	{
+		question: 'Kan jeg slette alt?',
+		answer: 'Ja. Brug "Start forfra" i appen til at slette alle lokale data, eller slet blot appen.',
+	},
+	{
+		question: 'Fungerer Taper offline?',
+		answer: 'Ja. Da Taper gemmer lokalt først, fungerer alle core features uden internetforbindelse.',
+	},
+	{
+		question: 'Kan jeg spore nikotinposer uden at oprette en konto?',
+		answer: 'Ja. Taper kræver ingen konto, intet login og ingen tilmelding. Du kan begynde med det samme.',
+	},
+	{
+		question: 'Er Taper gratis?',
+		answer: 'Ja. Taper er gratis at downloade og bruge.',
+	},
+];
+
+const faqSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'FAQPage',
+	mainEntity: faqItems.map((item) => ({
+		'@type': 'Question',
+		name: item.question,
+		acceptedAnswer: {
+			'@type': 'Answer',
+			text: item.answer,
+		},
+	})),
+};
+
+const screenshots = [
+	{
+		src: '/screenshots/01-onboarding.png',
+		alt: 'Startskærm: vælg overvejende triggers som stress, efter maden eller sociale situationer.',
+		width: 590,
+		height: 1278,
+	},
+	{
+		src: '/screenshots/02-today.png',
+		alt: 'I dag: daglig kvote på 6 ud af 12 poser med enkel sporing af brugte poser eller modstået trang.',
+		width: 590,
+		height: 1278,
+	},
+	{
+		src: '/screenshots/03-progress.png',
+		alt: 'Fremskridt: ugentlig statistik over undgåede poser, dage under grænsen, modstået trang og sparede penge.',
+		width: 590,
+		height: 1278,
+	},
+	{
+		src: '/screenshots/04-tools.png',
+		alt: 'Støtteværktøjer: vejrtrækningsøvelser, refleksion og hjælp til at håndtere behovet.',
+		width: 590,
+		height: 1278,
+	},
+	{
+		src: '/screenshots/05-price-setup.png',
+		alt: 'Pris opsætning: valgfri opfølgning på sparede penge med valg af valuta.',
+		width: 590,
+		height: 1278,
+	},
+];
+---
+
+<Layout
+	title="Nedtrapning af Snus & Nikotinposer App"
+	description="Skær gradvist ned for snus og nikotinposer med en rolig, privat app. Følg din daglige kvote, registrer forbrug med ét tryk, og få støtte, når trangen melder sig."
+	canonicalPath="/da/"
+>
+	<script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+	<section class="hero">
+		<div class="container hero__inner">
+			<div class="hero__copy">
+				<p class="hero__kicker">Rolig. Privat. Ingen skam.</p>
+				<h1>Skær ned på snus og nikotinposer – skridt for skridt.</h1>
+				<p class="hero__subline">
+					{SITE_NAME} hjælper dig med at trappe ned gradvist med en daglig kvote, hurtig registrering og støttende værktøjer mod trang.
+				</p>
+
+				<div class="hero__cta">
+					<Button variant="primary" href={APP_STORE_URL} disabled={!appStoreKnown} external={true}>
+						{appStoreCtaLabel}
+					</Button>
+					<Button variant="secondary" href="/da/privacy">Læs privatlivspolitik</Button>
+				</div>
+
+				<p class="hero__fineprint">
+					Ingen konto. Ingen sporing. Data bliver på din enhed.
+				</p>
+			</div>
+
+			<div class="hero__visual" aria-hidden="true">
+				<div class="hero__blob"></div>
+				<div class="hero__frame">
+					<img
+						src="/screenshots/Hero.png"
+						alt="Taper app, der viser det daglige kvoteoverblik"
+						width="780"
+						height="1691"
+						loading="eager"
+						decoding="async"
+						fetchpriority="high"
+					/>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<Section id="how" title="Sådan trapper du ned for snus eller nikotinposer gradvist" lede="En enkel, rolig proces, du kan holde fast i.">
+		<div class="grid-3">
+			<Card as="article">
+				<h3>1) Sæt dit udgangspunkt</h3>
+				<p>Fortæl Taper, hvor mange nikotinposer du bruger om dagen. Tilføj eventuelt pris pr. dåse.</p>
+			</Card>
+			<Card as="article">
+				<h3>2) Følg din daglige kvote</h3>
+				<p>Få et tydeligt dagligt tal og tjek ind med ét tryk: 'Brugte en pose' eller 'Modstod trang'.</p>
+			</Card>
+			<Card as="article">
+				<h3>3) Følg fremskridt + brug værktøjer</h3>
+				<p>Se ugentlige fremskridt, og brug vejrtrækningsøvelser samt refleksionsværktøjer bedst muligt.</p>
+			</Card>
+		</div>
+	</Section>
+
+	<Section id="screenshots" title="Skærmbilleder" lede="Et kig på appens primære funktioner.">
+		<ScreenshotGallery items={screenshots} />
+	</Section>
+
+	<Section
+		id="features"
+		title="Følg fremskridt privat på din enhed"
+		lede="Alt hvad du behøver for at skære gradvist ned – uden konti, skam eller støj."
+	>
+		<div class="grid-2">
+			<Card as="article">
+				<h3>I dag</h3>
+				<p>Daglig kvote, hurtig registrering og et roligt tjek-ind-flow.</p>
+			</Card>
+			<Card as="article">
+				<h3>Fremskridt</h3>
+				<p>Ugentlige tendenser og samlede tal som undgåede poser og sparede penge.</p>
+			</Card>
+			<Card as="article">
+				<h3>Støtteværktøjer</h3>
+				<p>Vejrtrækning, opfordringer til refleksion og støtte, når trangen melder sig.</p>
+			</Card>
+			<Card as="article">
+				<h3>Notifikationer (valgfrit)</h3>
+				<p>Daglige tjek-ind og påmindelser, hvis du aktiverer dem.</p>
+			</Card>
+			<Card as="article">
+				<h3>Start forfra</h3>
+				<p>Slet lokale data og vend tilbage til startsiden når som helst.</p>
+			</Card>
+			<Card as="article">
+				<h3>Lokal først</h3>
+				<p>Dine data gemmes på din enhed. Ingen konti. Ingen skysynkronisering.</p>
+			</Card>
+		</div>
+	</Section>
+
+	<Section
+		id="privacy"
+		title="Privatliv som standard"
+		lede="En privat nikotin-tracker, der gemmer dine fremskridt på din enhed – ingen konti, ingen skysynkronisering."
+	>
+		<div class="grid-2">
+			<Card as="article">
+				<h3>Hvad der bliver på din enhed</h3>
+				<ul>
+					<li>Brugslogfiler (brugte en pose / modstod trang + tidsstempler)</li>
+					<li>Indstillinger (udgangspunkt, ugeplan, valgfrie triggere og pris)</li>
+					<li>Præferencer (tema, notifikationsindstillinger)</li>
+				</ul>
+			</Card>
+			<Card as="article">
+				<h3>Hvad vi ikke gør</h3>
+				<ul>
+					<li>Ingen konti eller login</li>
+					<li>Ingen annoncesporing</li>
+					<li>Ingen salg af personlige data</li>
+					<li>Ingen medicinsk rådgivning eller kliniske påstande</li>
+				</ul>
+			</Card>
+			<Card as="article">
+				<h3>Slet alt</h3>
+				<p>
+					"Start forfra" sletter alle lokale data i appen og lader dig starte forfra.
+				</p>
+			</Card>
+			<Card as="article">
+				<h3>Fejlrapportering (valgfrit)</h3>
+				<p>
+					Sentry anvendes udelukkende til fejlrapportering for at forbedre stabiliteten, hvis det er aktiveret.
+				</p>
+			</Card>
+		</div>
+	</Section>
+
+	<Section id="faq" title="Ofte stillede spørgsmål" lede="Typiske spørgsmål om nedtrapning og sporing af snus og nikotinposer.">
+		<div class="grid-2">
+			<Card as="article"><h3>{faqItems[0].question}</h3><p>{faqItems[0].answer}</p></Card>
+			<Card as="article"><h3>{faqItems[1].question}</h3><p>{faqItems[1].answer}</p></Card>
+			<Card as="article"><h3>{faqItems[2].question}</h3><p>{faqItems[2].answer}</p></Card>
+			<Card as="article"><h3>{faqItems[3].question}</h3><p>{faqItems[3].answer}</p></Card>
+			<Card as="article"><h3>{faqItems[4].question}</h3><p>{faqItems[4].answer}</p></Card>
+			<Card as="article"><h3>{faqItems[5].question}</h3><p>{faqItems[5].answer}</p></Card>
+			<Card as="article"><h3>{faqItems[6].question}</h3><p>{faqItems[6].answer}</p></Card>
+			<Card as="article"><h3>{faqItems[7].question}</h3><p>{faqItems[7].answer}</p></Card>
+		</div>
+	</Section>
+</Layout>
+
+<style>
+	.hero {
+		padding: clamp(54px, 7vw, 96px) 0;
+		border-bottom: 1px solid var(--border-subtle);
+	}
+
+	.hero__inner {
+		display: grid;
+		gap: clamp(24px, 4vw, 48px);
+		grid-template-columns: 1.2fr 0.8fr;
+		align-items: center;
+	}
+
+	.hero__kicker {
+		margin: 0 0 var(--space-md);
+		color: var(--text-tertiary);
+		font-weight: 600;
+		letter-spacing: -0.01em;
+	}
+
+	h1 {
+		margin: 0 0 var(--space-lg);
+		font-size: clamp(42px, 6vw, 56px);
+		line-height: 1.03;
+		letter-spacing: -0.03em;
+	}
+
+	.hero__subline {
+		margin: 0 0 var(--space-xl);
+		color: var(--text-secondary);
+		max-width: 62ch;
+		font-size: 18px;
+		line-height: 28px;
+	}
+
+	.hero__cta {
+		display: flex;
+		gap: var(--space-md);
+		flex-wrap: wrap;
+		align-items: center;
+	}
+
+	.hero__fineprint {
+		margin: var(--space-lg) 0 0;
+		color: var(--text-tertiary);
+		font-size: 14px;
+	}
+
+	.hero__visual {
+		position: relative;
+		display: grid;
+		place-items: center;
+	}
+
+	.hero__blob {
+		position: absolute;
+		inset: -40px;
+		background: radial-gradient(
+			circle at 30% 20%,
+			color-mix(in oklab, var(--primary), transparent 50%),
+			transparent 55%
+		);
+		filter: blur(10px);
+	}
+
+	.hero__frame {
+		position: relative;
+		border-radius: 28px;
+		border: 1px solid var(--border-subtle);
+		background: var(--surface-raised);
+		overflow: hidden;
+		box-shadow: 0 24px 80px color-mix(in oklab, var(--text-primary), transparent 88%);
+		max-width: 320px;
+	}
+
+	.hero__frame img {
+		display: block;
+		width: 100%;
+		height: auto;
+	}
+
+	.grid-2,
+	.grid-3 {
+		display: grid;
+		gap: var(--space-lg);
+	}
+
+	.grid-2 {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.grid-3 {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+
+	h3 {
+		margin: 0 0 var(--space-sm);
+		font-size: 18px;
+		letter-spacing: -0.01em;
+	}
+
+	p {
+		margin: 0;
+		color: var(--text-secondary);
+	}
+
+	ul {
+		margin: var(--space-sm) 0 0;
+		padding-left: 18px;
+		color: var(--text-secondary);
+	}
+
+	li {
+		margin: 6px 0;
+	}
+
+	@media (max-width: 960px) {
+		.hero__inner {
+			grid-template-columns: 1fr;
+		}
+
+		.hero__frame {
+			max-width: 360px;
+		}
+
+		.grid-3 {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	@media (max-width: 700px) {
+		.grid-2 {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

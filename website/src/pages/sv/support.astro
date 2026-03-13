@@ -1,0 +1,78 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Card from '../../components/Card.astro';
+import Section from '../../components/Section.astro';
+import { SUPPORT_EMAIL } from '../../lib/site';
+---
+
+<Layout
+	title="Support"
+	description="Support för iOS-appen Taper."
+	canonicalPath="/sv/support/"
+>
+	<Section
+		id="support"
+		title="Support"
+		lede="Behöver du hjälp eller vill du dela feedback? Vi läser alla mejl."
+	>
+		<div class="grid">
+			<Card as="article">
+				<h3>Kontakt</h3>
+				<p>
+					Mejla oss på <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>.
+				</p>
+			</Card>
+
+			<Card as="article">
+				<h3>Felsökning</h3>
+				<ul>
+					<li>Om notiser inte fungerar, kontrollera iOS-inställningarna och tillåtelser för Taper.</li>
+					<li>Om nedtrappningsplanen känns för aggressiv, justera dina baslinjeinställningar i appen.</li>
+					<li>För att rensa din lokala data, använd "Start Over" (Börja om) inuti appen.</li>
+				</ul>
+			</Card>
+
+			<Card as="article">
+				<h3>Integritet</h3>
+				<p>
+					Din data lagras på din egen enhet. Läs vår <a href="/sv/privacy">Integritetspolicy</a>.
+				</p>
+			</Card>
+		</div>
+	</Section>
+</Layout>
+
+<style>
+	.grid {
+		display: grid;
+		gap: var(--space-lg);
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+
+	h3 {
+		margin: 0 0 var(--space-sm);
+		font-size: 18px;
+		letter-spacing: -0.01em;
+	}
+
+	p {
+		margin: 0;
+		color: var(--text-secondary);
+	}
+
+	ul {
+		margin: var(--space-sm) 0 0;
+		padding-left: 18px;
+		color: var(--text-secondary);
+	}
+
+	li {
+		margin: 6px 0;
+	}
+
+	@media (max-width: 900px) {
+		.grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

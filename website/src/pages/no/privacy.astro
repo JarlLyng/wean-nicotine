@@ -1,0 +1,122 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { COMPANY_NAME, SITE_URL, SUPPORT_EMAIL } from '../../lib/site';
+
+const lastUpdated = '2026-01-21';
+---
+
+<Layout
+	title="Personvernerklæring"
+	description="Personvernerklæring for iOS-appen Taper."
+	canonicalPath="/no/privacy/"
+>
+	<section class="page">
+		<div class="container prose">
+			<h1>Personvernerklæring</h1>
+			<p class="muted">Sist oppdatert: {lastUpdated}</p>
+
+			<h2>Hvem vi er</h2>
+			<p>
+				Denne personvernerklæringen gjelder for iOS-appen Taper ("Taper", "appen"). Databehandlingsansvarlig er
+				<strong>{COMPANY_NAME}</strong>.
+			</p>
+			<ul>
+				<li>Nettsted: <a href={SITE_URL}>{SITE_URL}</a></li>
+				<li>
+					Kontakt: <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>
+				</li>
+			</ul>
+
+			<h2>Data lagret på enheten din</h2>
+			<p>
+				Taper er lokal-først. Appen lagrer opplysningene dine på iPhonen din (og krever ikke en
+				konto).
+			</p>
+			<ul>
+				<li>Brukslogger (for eksempel "Brukte en pose", "Stod imot suget", med tidsstempler)</li>
+				<li>
+					Innstillinger (grunnleggende snus/dag, parametere for nedtrappingsplan, valgfrie utløsere, valgfri pris og
+					valuta)
+				</li>
+				<li>Preferanser (tema, varslingsinnstillinger og tider)</li>
+			</ul>
+
+			<h2>Hva vi ikke gjør</h2>
+			<ul>
+				<li>Ingen kontoer eller pålogging</li>
+				<li>Ingen annonsesporing</li>
+				<li>Inget salg av personopplysninger</li>
+			</ul>
+
+			<h2>Varsler</h2>
+			<p>
+				Hvis du aktiverer varsler, bruker Taper lokale varsler på enheten din (avhengig av iOS-tillatelsene
+				dine) for funksjoner som daglige innsjekkinger og påminnelser.
+			</p>
+
+			<h2>Tredjepartstjenester</h2>
+			<p>
+				Hvis aktivert i utgivelsen, kan Taper bruke <strong>Sentry</strong> for rapportering av feil/krasj for å hjelpe
+				oss med å forbedre appstabiliteten. Hvis den brukes, kan Sentry motta feilhendelser og grunnleggende enhets-/appkontekst
+				som er nødvendig for å diagnostisere problemer (for eksempel: appversjon, enhetsmodell, OS-versjon og sporing av krasj).
+				Vi bruker ikke Sentry for annonsering.
+			</p>
+
+			<h2>Datalagring</h2>
+			<p>
+				Dataene dine blir på enheten med mindre du sletter appen eller bruker "Start på nytt" i appen for å
+				slette lokale data og gå tilbake til registreringsskjermen.
+			</p>
+
+			<h2>Dine valg</h2>
+			<ul>
+				<li>Slett data: bruk "Start på nytt" inne i appen, eller slett selve appen.</li>
+				<li>
+					Kontakt oss: send e-post til <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>.
+				</li>
+			</ul>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.page {
+		padding: clamp(44px, 6vw, 84px) 0;
+	}
+
+	.prose {
+		max-width: 76ch;
+	}
+
+	h1 {
+		margin: 0 0 var(--space-sm);
+		font-size: clamp(34px, 5vw, 44px);
+		line-height: 1.1;
+		letter-spacing: -0.03em;
+	}
+
+	h2 {
+		margin: var(--space-xxl) 0 var(--space-sm);
+		font-size: 20px;
+		letter-spacing: -0.01em;
+	}
+
+	p,
+	li {
+		color: var(--text-secondary);
+	}
+
+	.muted {
+		margin: 0 0 var(--space-xl);
+		color: var(--text-tertiary);
+	}
+
+	ul {
+		margin: var(--space-sm) 0 0;
+		padding-left: 18px;
+	}
+
+	li {
+		margin: 6px 0;
+	}
+</style>

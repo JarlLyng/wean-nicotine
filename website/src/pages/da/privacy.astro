@@ -1,0 +1,115 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { COMPANY_NAME, SITE_URL, SUPPORT_EMAIL } from '../../lib/site';
+
+const lastUpdated = '2026-01-21';
+---
+
+<Layout
+	title="Privatlivspolitik"
+	description="Privatlivspolitik for Taper iOS-appen."
+	canonicalPath="/da/privacy/"
+>
+	<section class="page">
+		<div class="container prose">
+			<h1>Privatlivspolitik</h1>
+			<p class="muted">Senest opdateret: {lastUpdated}</p>
+
+			<h2>Hvem vi er</h2>
+			<p>
+				Denne privatlivspolitik gælder for Taper iOS-appen (“Taper”, “appen”). Dataansvarlig er
+				<strong>{COMPANY_NAME}</strong>.
+			</p>
+			<ul>
+				<li>Webside: <a href={SITE_URL}>{SITE_URL}</a></li>
+				<li>
+					Kontakt: <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>
+				</li>
+			</ul>
+
+			<h2>Data der gemmes på din enhed</h2>
+			<p>
+				Taper er lokal-først. Appen gemmer dine oplysninger på din iPhone (og kræver ikke en konto).
+			</p>
+			<ul>
+				<li>Brugslogfiler (f.eks. “Brugte en pose”, “Modstod trang” med tidsstempler)</li>
+				<li>
+					Indstillinger (basisforbrug poser/dag, nedtrapningsplan, valgfrie triggere, valgfri pris og valuta)
+				</li>
+				<li>Præferencer (tema, notifikationsindstillinger og tidspunkter)</li>
+			</ul>
+
+			<h2>Hvad vi ikke gør</h2>
+			<ul>
+				<li>Ingen konto eller login</li>
+				<li>Ingen annoncesporing</li>
+				<li>Intet salg af personlige data</li>
+			</ul>
+
+			<h2>Notifikationer</h2>
+			<p>
+				Hvis du aktiverer notifikationer, bruger Taper lokale notifikationer på din enhed (afhængigt af dine iOS-tilladelser) til funktioner som daglige tjek-ind og påmindelser.
+			</p>
+
+			<h2>Tredjepartstjenester</h2>
+			<p>
+				Hvis det er aktiveret i systemet, kan Taper bruge <strong>Sentry</strong> til fejlrapportering for at hjælpe os med at forbedre appens stabilitet. Sentry kan modtage fejldata og grundlæggende oplysninger for at diagnosticere problemer (f.eks. app-version, enhedsmodel, operativsystem og et fejlspor). Vi bruger aldrig Sentry til reklame.
+			</p>
+
+			<h2>Datalagringstid</h2>
+			<p>
+				Dine data forbliver på din enhed, medmindre du sletter appen eller bruger “Start forfra” i appen for at slette alt lokalt og vende tilbage til starten.
+			</p>
+
+			<h2>Dine valg</h2>
+			<ul>
+				<li>Slet data: brug “Start forfra” i appen, eller slet appen fuldstændig.</li>
+				<li>
+					Kontakt os: send en e-mail til <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>.
+				</li>
+			</ul>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.page {
+		padding: clamp(44px, 6vw, 84px) 0;
+	}
+
+	.prose {
+		max-width: 76ch;
+	}
+
+	h1 {
+		margin: 0 0 var(--space-sm);
+		font-size: clamp(34px, 5vw, 44px);
+		line-height: 1.1;
+		letter-spacing: -0.03em;
+	}
+
+	h2 {
+		margin: var(--space-xxl) 0 var(--space-sm);
+		font-size: 20px;
+		letter-spacing: -0.01em;
+	}
+
+	p,
+	li {
+		color: var(--text-secondary);
+	}
+
+	.muted {
+		margin: 0 0 var(--space-xl);
+		color: var(--text-tertiary);
+	}
+
+	ul {
+		margin: var(--space-sm) 0 0;
+		padding-left: 18px;
+	}
+
+	li {
+		margin: 6px 0;
+	}
+</style>

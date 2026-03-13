@@ -1,0 +1,220 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import Button from '../../../components/Button.astro';
+import Card from '../../../components/Card.astro';
+import Section from '../../../components/Section.astro';
+import { APP_STORE_URL, isAppStoreUrlKnown, SITE_NAME } from '../../../lib/site';
+
+const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
+const appStoreCtaLabel = appStoreKnown ? 'Hämta i App Store' : 'Kommer snart i App Store';
+---
+
+<Layout
+	title="Hur man minskar snusandet gradvis — en praktisk guide"
+	description="Lär dig hur du gradvis kan dra ner på snus med ett enkelt dagligt upplägg, tillförlitlig spårning och praktiska sätt att hantera suget."
+	canonicalPath="/sv/how-to-reduce-snus/"
+>
+	<article class="guide">
+		<div class="container">
+			<header class="guide__header">
+				<h1>Hur man minskar snusandet gradvis</h1>
+				<p class="lede">
+					En gradvis nedtrappningsmetod kan underlätta avsevärt genom att du har en daglig ranson, loggar konsumtionen och sakta skalar bort prillor. Här är en praktisk guide.
+				</p>
+			</header>
+
+			<section class="guide__section">
+				<h2>Varför en gradvis nedtrappning fungerar ypperligt för många</h2>
+				<p>
+					Att sluta med snus tvärt (”cold turkey”) kan kännas oöverstigligt. Abstinensbesvären är ofta påtagliga: humörsvängningar, hjärndimma och ett enormt sug kan sätta käppar i hjulet för en "allt eller inget"-inställning.
+				</p>
+				<p>
+					Gradvis minskning låter kroppen kalibrera om sig i ett rimligt tempo. Genom att stegvis pressa ner det dagliga nikotinintaget undviks extremabstinens, och vägen framåt upplevs rimlig.
+				</p>
+			</section>
+
+			<section class="guide__section">
+				<h2>Steg för steg: hur du drar ner på snuset</h2>
+				<div class="grid-1">
+					<Card as="article">
+						<h3>1. Hitta din utgångspunkt</h3>
+						<p>Räkna dina snusprillor en vanlig dag. Var helt uppriktig. Siffran utgör din baslinje som alt bygger vidare på.</p>
+					</Card>
+					<Card as="article">
+						<h3>2. Sätt upp din dygnsranson</h3>
+						<p>Baserat på startpunkten sätter du din gräns för imorgon. En solklar siffra trumfar ett svamligt mål om att "använda mindre".</p>
+					</Card>
+					<Card as="article">
+						<h3>3. Bokför varje snus</h3>
+						<p>Logga slaviskt varenda snus/påse du tar. Det synliggör ditt ständiga flöde och hindrar dig från glidningar över din ranson.</p>
+					</Card>
+					<Card as="article">
+						<h3>4. Kalibrera minskningen per vecka</h3>
+						<p>Ta ner kvoten veckosvis med mellan ungefär 5 till 15 procent. En sådan justeringstrappa är stabil. Hitta ditt flöde.</p>
+					</Card>
+					<Card as="article">
+						<h3>5. Aktivt handlande vid mörka sug</h3>
+						<p>Om tröskeln redan är överstigen för idag börjar uthållighetsarbetet. Testa en inbyggd urfärjningsmetod (urge surfing), promenad eller andning.</p>
+					</Card>
+					<Card as="article">
+						<h3>6. Revidera din plan</h3>
+						<p>Jämför dina utfall mot tidigare kvoter. Varje undviken dosa är en framgång. Ramlade du dit en dag – revidera taktiken snarare än att kapitulera.</p>
+					</Card>
+				</div>
+			</section>
+
+			<section class="guide__section">
+				<h2>Bekanta fallgropar och hur man löser dem</h2>
+				<div class="grid-2">
+					<Card as="article">
+						<h3>Tydliga vanemönster</h3>
+						<p>Snusen åker ofta upp spontant: direkt efter disken, bilresan eller under press i ett zoom-samtal. Genom att uppfatta reflexerna ligger man steget före.</p>
+					</Card>
+					<Card as="article">
+						<h3>Gänget, fikarummet, sällskapet</h3>
+						<p>Snusets tillgänglighet och sällskap försvårar det. Att i sin plånbok ha ett inbyggt och helgjutet dagmål i telefonen bygger dock motståndskraft.</p>
+					</Card>
+					<Card as="article">
+						<h3>Kassa dagar för målsättningen</h3>
+						<p>Det händer oss alla. Gränsen bryts och allt kan kännas platt inuti lördagsnatten. Men en tabbe undergräver inte alla tjugo dagar innan – på det imorgon igen.</p>
+					</Card>
+					<Card as="article">
+						<h3>Trötthet, apati och drivet avtar</h3>
+						<p>Grafisk uppföljning räddar dig då. Det slår högt att upptäcka att man fallit från en svindyr helbox till ett minimum av vita påsar över helgen.</p>
+					</Card>
+				</div>
+			</section>
+
+			<section class="guide__section">
+				<h2>När loggandet verkligen är botemedlet</h2>
+				<p>
+					Ett nedtrappningssystem saknar fundament ifall man struntar blankt i siffrorna. Genom slarv har man snabbt nått tjugo prillor om dagen obemärkt.
+				</p>
+				<p>
+					Ett hjälpmedel likt <a href="/sv/">Taper</a> paketerar lösningen optimalt: avtryck med minimal resistans, solklar ranson – med en svit nikotinbekämpande tilläggsfunktioner.
+				</p>
+			</section>
+		</div>
+	</article>
+
+	<Section id="faq" title="Vanliga frågor om guiden">
+		<div class="grid-2">
+			<Card as="article">
+				<h3>När är processen att skära ner slutförd?</h3>
+				<p>En typisk användare behöver ungefär 6 till 12 lugna veckor, beroende på baslinjen. Takten avgör ingen utom du.</p>
+			</Card>
+			<Card as="article">
+				<h3>Bör man träffa vården för sin snus-nedtrappning?</h3>
+				<p>Om det finns hälsokomplikationer bör du höra dig för kliniskt. Taper fungerar endast som ett habit- och självhjälpsverktyg.</p>
+			</Card>
+			<Card as="article">
+				<h3>Vilken roll spelar nikotinsubstitut eller andra tuggummin?</h3>
+				<p>Processen kan eventuellt överlappa med NRT (NikotinErsättning), vilket är en fråga väl lämpad för sin vårdgivare.</p>
+			</Card>
+			<Card as="article">
+				<h3>Använder jag då Taper för detta uttalade syfte?</h3>
+				<p>Precis så. <a href="/sv/snus-reduction-app/">Appen Taper tillhandahåller dedikerad snus- och portionsportionsreducering</a> på ett tätt och tystlåtet vis.</p>
+			</Card>
+		</div>
+	</Section>
+
+	<section class="bottom-cta">
+		<div class="container">
+			<h2>Börja jobba dig nedåt idag</h2>
+			<p>Låt Taper minska på stressen genom att ordna upp ransonsmålen snabbt.</p>
+			<Button variant="primary" href={APP_STORE_URL} disabled={!appStoreKnown} external={true}>
+				{appStoreCtaLabel}
+			</Button>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.guide {
+		padding: clamp(54px, 7vw, 96px) 0;
+	}
+
+	.guide__header {
+		margin-bottom: var(--space-xxl);
+		border-bottom: 1px solid var(--border-subtle);
+		padding-bottom: var(--space-xxl);
+	}
+
+	h1 {
+		margin: 0 0 var(--space-lg);
+		font-size: clamp(36px, 5vw, 48px);
+		line-height: 1.1;
+		letter-spacing: -0.03em;
+	}
+
+	.lede {
+		margin: 0;
+		color: var(--text-secondary);
+		max-width: 62ch;
+		font-size: 18px;
+		line-height: 28px;
+	}
+
+	.guide__section {
+		margin-bottom: var(--space-xxl);
+	}
+
+	.guide__section h2 {
+		margin: 0 0 var(--space-lg);
+		font-size: clamp(24px, 3vw, 32px);
+		letter-spacing: -0.02em;
+	}
+
+	.guide__section p {
+		margin: 0 0 var(--space-md);
+		color: var(--text-secondary);
+		max-width: 62ch;
+		line-height: 1.7;
+	}
+
+	.guide__section a {
+		color: var(--primary);
+	}
+
+	.grid-1 {
+		display: grid;
+		gap: var(--space-lg);
+		grid-template-columns: 1fr;
+		max-width: 700px;
+	}
+
+	.grid-2 {
+		display: grid;
+		gap: var(--space-lg);
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	h3 {
+		margin: 0 0 var(--space-sm);
+		font-size: 18px;
+		letter-spacing: -0.01em;
+	}
+
+	.grid-2 p, .grid-1 p { margin: 0; color: var(--text-secondary); }
+
+	.bottom-cta {
+		padding: clamp(44px, 6vw, 84px) 0;
+		text-align: center;
+		border-top: 1px solid var(--border-subtle);
+	}
+
+	.bottom-cta h2 {
+		margin: 0 0 var(--space-md);
+		font-size: clamp(28px, 3.2vw, 36px);
+		letter-spacing: -0.02em;
+	}
+
+	.bottom-cta p {
+		margin: 0 0 var(--space-xl);
+		color: var(--text-secondary);
+	}
+
+	@media (max-width: 700px) {
+		.grid-2 { grid-template-columns: 1fr; }
+	}
+</style>

@@ -8,7 +8,7 @@ Do **not** assume access to any private repositories.
 - The site is a **static** Astro build hosted on **GitHub Pages**.
 - Primary CTA is **“Download on the App Store”** (links to the App Store listing).
 - The site must include an App Store-ready **Privacy Policy** page to use as the App Store Connect “Privacy Policy URL”.
-- **Language**: **English only** (all user-facing copy).
+- **Language**: **English (default), Danish (da), Swedish (sv), Norwegian (no)** (using Astro i18n).
 - **No TestFlight mentions** anywhere.
 - Canonical domain: **`https://taper.iamjarl.com`**
 
@@ -22,9 +22,10 @@ Do **not** assume access to any private repositories.
 - Enable “Enforce HTTPS” in GitHub Pages once DNS has propagated.
 
 ## 3) Required routes
-- `/` (landing one-pager)
-- `/privacy` (Privacy Policy for App Store Connect)
-- `/support` (optional but recommended)
+- `/`, `/da/`, `/sv/`, `/no/` (landing one-pager)
+- `/privacy`, `/da/privacy`, etc. (Privacy Policy for App Store Connect)
+- `/support`, `/da/support`, etc. (optional but recommended)
+- Key SEO Hub pages (e.g. `/snus-reduction-app/`, `/how-to-reduce-snus/` and localized versions)
 
 ## 4) App summary (truthful capabilities only)
 Taper is an iPhone app that helps users gradually reduce snus / nicotine pouches in a calm, private, non-judgmental way.
@@ -221,11 +222,20 @@ Implement all of the following:
 ```
 taper-site/
   src/
-    layouts/BaseLayout.astro
+    layouts/Layout.astro
+    i18n/
+      ui.ts
+      utils.ts
     pages/
       index.astro
       privacy.astro
       support.astro
+      da/
+        index.astro
+        privacy.astro
+        ...
+      sv/
+      no/
     components/
       Button.astro
       Card.astro

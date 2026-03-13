@@ -1,0 +1,122 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { COMPANY_NAME, SITE_URL, SUPPORT_EMAIL } from '../../lib/site';
+
+const lastUpdated = '2026-01-21';
+---
+
+<Layout
+	title="Integritetspolicy"
+	description="Integritetspolicy för iOS-appen Taper."
+	canonicalPath="/sv/privacy/"
+>
+	<section class="page">
+		<div class="container prose">
+			<h1>Integritetspolicy</h1>
+			<p class="muted">Senast uppdaterad: {lastUpdated}</p>
+
+			<h2>Vilka vi är</h2>
+			<p>
+				Denna integritetspolicy gäller för iOS-appen Taper (”Taper”, ”appen”). Personuppgiftsansvarig är
+				<strong>{COMPANY_NAME}</strong>.
+			</p>
+			<ul>
+				<li>Webbplats: <a href={SITE_URL}>{SITE_URL}</a></li>
+				<li>
+					Kontakt: <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>
+				</li>
+			</ul>
+
+			<h2>Data som lagras på din enhet</h2>
+			<p>
+				Taper utgår från lokal lagring (local‑first). Appen sparar din information på din iPhone (och kräver inget
+				konto).
+			</p>
+			<ul>
+				<li>Användningshistorik (t.ex. ”Använde en påse”, ”Stod emot suget”, med tidsstämplar)</li>
+				<li>
+					Inställningar (baslinje påsar/dag, nedtrappningsplan, valfria triggers, valfritt pris och
+					valuta)
+				</li>
+				<li>Dina egna val (tema, notisinställningar och tider)</li>
+			</ul>
+
+			<h2>Vad vi inte gör</h2>
+			<ul>
+				<li>Inga konton eller inloggningar</li>
+				<li>Ingen spårning (ad tracking)</li>
+				<li>Ingen försäljning av personlig data</li>
+			</ul>
+
+			<h2>Notiser</h2>
+			<p>
+				Om du aktiverar notiser använder Taper lokala notiser på din enhet (under förutsättning att iOS
+				tillåter det) för funktioner som dagliga påminnelser.
+			</p>
+
+			<h2>Tredjepartstjänster</h2>
+			<p>
+				Om det är aktiverat i builden kan Taper möjligen använda <strong>Sentry</strong> för krasch-/felrapportering 
+				för att hjälpa oss förbättra appens stabilitet. I så fall kan Sentry ta emot felhändelser och enhetsdata som 
+				behövs för att diagnostisera problem (t.ex. appversion, enhetsmodell, iOS-version och kraschkod). Vi använder 
+				inte Sentry för reklam.
+			</p>
+
+			<h2>Datalagringstid</h2>
+			<p>
+				Din data stannar på din enhet om du inte raderar appen eller använder ”Start Over” inuti appen 
+				för att radera lokala data och börja om helt.
+			</p>
+
+			<h2>Dina val</h2>
+			<ul>
+				<li>Radera data: använd ”Start Over” inuti appen, eller ta bort appen från telefonen.</li>
+				<li>
+					Kontakta oss: mejla till <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>.
+				</li>
+			</ul>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.page {
+		padding: clamp(44px, 6vw, 84px) 0;
+	}
+
+	.prose {
+		max-width: 76ch;
+	}
+
+	h1 {
+		margin: 0 0 var(--space-sm);
+		font-size: clamp(34px, 5vw, 44px);
+		line-height: 1.1;
+		letter-spacing: -0.03em;
+	}
+
+	h2 {
+		margin: var(--space-xxl) 0 var(--space-sm);
+		font-size: 20px;
+		letter-spacing: -0.01em;
+	}
+
+	p,
+	li {
+		color: var(--text-secondary);
+	}
+
+	.muted {
+		margin: 0 0 var(--space-xl);
+		color: var(--text-tertiary);
+	}
+
+	ul {
+		margin: var(--space-sm) 0 0;
+		padding-left: 18px;
+	}
+
+	li {
+		margin: 6px 0;
+	}
+</style>

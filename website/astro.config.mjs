@@ -6,4 +6,11 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
 	site: 'https://taper.iamjarl.com',
 	integrations: [sitemap()],
+	i18n: {
+		defaultLocale: 'en',
+		locales: ['en', 'da', 'sv', 'no'],
+		routing: {
+			prefixDefaultLocale: false,
+		},
+	},
 });

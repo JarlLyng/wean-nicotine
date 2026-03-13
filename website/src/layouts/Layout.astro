@@ -2,6 +2,8 @@
 import '../styles/global.css';
 import Button from '../components/Button.astro';
 import { APP_STORE_URL, COMPANY_NAME, isAppStoreUrlKnown, SITE_NAME, SUPPORT_EMAIL } from '../lib/site';
+import { getLangFromUrl, useTranslations, useTranslatedPath } from '../i18n/utils';
+import { languages } from '../i18n/ui';
 
 export interface Props {
 	title?: string;
@@ -12,6 +14,10 @@ export interface Props {
 
 const { title, description, canonicalPath, noindex = false } = Astro.props;
 
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const translatePath = useTranslatedPath(lang);
+
 const pageTitle = title ? `${title} | ${SITE_NAME}` : `${SITE_NAME} — Snus & Nicotine Pouch Reduction App`;
 const pageDescription =
 	description ??
@@ -21,7 +27,7 @@ const canonicalUrl = new URL(canonicalPath ?? Astro.url.pathname, Astro.site).to
 const ogImageUrl = new URL('/og-image.svg', Astro.site).toString();
 
 const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
-const appStoreCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming soon on the App Store';
+const appStoreCtaLabel = appStoreKnown ? t('cta.appstore') : t('cta.comingsoon');
 
 const structuredData: Record<string, unknown> = {
 	'@context': 'https://schema.org',
@@ -37,7 +43,7 @@ const structuredData: Record<string, unknown> = {
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -46,6 +52,19 @@ const structuredData: Record<string, unknown> = {
 		<title>{pageTitle}</title>
 		<meta name="description" content={pageDescription} />
 		<link rel="canonical" href={canonicalUrl} />
+		
+		{Object.entries(languages).map(([abbr]) => (
+			<link
+				rel="alternate"
+				hreflang={abbr}
+				href={new URL(translatePath(Astro.url.pathname, abbr as keyof typeof languages), Astro.site).toString()}
+			/>
+		))}
+		<link
+			rel="alternate"
+			hreflang="x-default"
+			href={new URL(translatePath(Astro.url.pathname, 'en'), Astro.site).toString()}
+		/>
 
 		{noindex ? (
 			<meta name="robots" content="noindex,nofollow" />
@@ -74,14 +93,14 @@ const structuredData: Record<string, unknown> = {
 
 		<header class="site-header">
 			<div class="container site-header__inner">
-				<a class="brand" href="/" aria-label={`${SITE_NAME} home`}>
+				<a class="brand" href={translatePath('/')} aria-label={`${SITE_NAME} home`}>
 					<span class="brand__dot" aria-hidden="true"></span>
 					<span class="brand__name">{SITE_NAME}</span>
 				</a>
 
 				<nav class="nav" aria-label="Primary">
-					<a class="nav__link" href="/privacy">Privacy</a>
-					<a class="nav__link" href="/support">Support</a>
+					<a class="nav__link" href={translatePath('/privacy')}>{t('nav.privacy')}</a>
+					<a class="nav__link" href={translatePath('/support')}>{t('nav.support')}</a>
 					<Button
 						variant="primary"
 						href={APP_STORE_URL}
@@ -103,7 +122,7 @@ const structuredData: Record<string, unknown> = {
 			<div class="container site-footer__inner">
 				<div class="site-footer__left">
 					<p class="fineprint">
-						© {new Date().getFullYear()} {COMPANY_NAME}. All rights reserved.
+						© {new Date().getFullYear()} {COMPANY_NAME}. All rights reserved. {t('footer.tagline')}
 					</p>
 				</div>
 				<div class="site-footer__right">
@@ -112,8 +131,8 @@ const structuredData: Record<string, unknown> = {
 					) : (
 						<span class="disabled-link" aria-disabled="true">App Store (coming soon)</span>
 					)}
-					<a href="/privacy">Privacy Policy</a>
-					<a href="/support">Support</a>
+					<a href={translatePath('/privacy')}>{t('nav.privacy')}</a>
+					<a href={translatePath('/support')}>{t('nav.support')}</a>
 					<a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>
 				</div>
 			</div>
