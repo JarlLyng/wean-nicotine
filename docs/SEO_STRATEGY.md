@@ -3,6 +3,28 @@
 Site: https://taper.iamjarl.com/
 Product: A calm, privacy-first app that helps people reduce snus and nicotine pouches gradually with a daily allowance, one-tap tracking, weekly progress, optional reminders, and support tools when cravings hit.
 
+Purpose:
+- Strategy document for website positioning and content planning
+
+Audience:
+- Maintainers working on the marketing site, content, and SEO pages
+- LLMs generating or revising landing-page copy
+
+Source of truth:
+- This document is strategic guidance only
+- Use [`AI_CONTEXT.md`](./AI_CONTEXT.md), `website/src/`, and code for canonical product structure and behavior
+
+Related files:
+- [`website/src/pages/index.astro`](../website/src/pages/index.astro)
+- [`website/src/pages`](../website/src/pages)
+- [`website/src/lib/site.ts`](../website/src/lib/site.ts)
+- [`docs/APP_STORE_METADATA.md`](./APP_STORE_METADATA.md)
+
+Update when:
+- Product positioning changes
+- The site information architecture changes
+- New landing-page clusters or locales are added
+
 ---
 
 ## 1. What Taper actually is

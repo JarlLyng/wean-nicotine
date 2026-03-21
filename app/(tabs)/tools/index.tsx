@@ -35,7 +35,7 @@ export default function ToolsScreen() {
   const toolsStyles = useMemo(() => createToolsStyles(colors), [colors]);
 
   return (
-    <Screen title="Support Tools">
+    <Screen>
       <ScrollView contentContainerStyle={toolsStyles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={toolsStyles.content}>
           <Text style={toolsStyles.subtitle}>
@@ -52,7 +52,7 @@ export default function ToolsScreen() {
                   accessibilityRole="button"
                   accessibilityLabel={tool.title}
                   accessibilityHint={tool.description}
-                  onPress={() => router.push(`/(tabs)/tools/${tool.id}` as `/(tabs)/tools/${string}`)}>
+                  onPress={() => router.push(`/(tabs)/tools/${tool.id}` as any)}>
                   <Card variant="elevated" style={toolsStyles.toolCard} padding="lg">
                     <View style={toolsStyles.iconContainer}>
                       <Icon name={tool.icon} size={48} color={colors.primary} weight="duotone" />

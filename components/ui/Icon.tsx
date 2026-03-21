@@ -26,6 +26,10 @@ import {
   Calendar,
   CurrencyDollar,
   Coins,
+  Medal,
+  Trophy,
+  Lightning,
+  Star,
 } from 'phosphor-react-native';
 
 export type IconName = 
@@ -48,7 +52,11 @@ export type IconName =
   | 'arrow-clockwise'
   | 'calendar'
   | 'currency-dollar'
-  | 'coins';
+  | 'coins'
+  | 'medal'
+  | 'trophy'
+  | 'lightning'
+  | 'star';
 
 export type IconWeight = 'thin' | 'light' | 'regular' | 'bold' | 'fill' | 'duotone';
 
@@ -82,6 +90,10 @@ const ICON_MAP: Record<IconName, React.ComponentType<{ size?: number; color?: st
   'calendar': Calendar,
   'currency-dollar': CurrencyDollar,
   'coins': Coins,
+  'medal': Medal,
+  'trophy': Trophy,
+  'lightning': Lightning,
+  'star': Star,
 };
 
 export function Icon({ name, size = 24, color, weight = 'regular', style }: IconProps) {

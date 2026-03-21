@@ -90,6 +90,7 @@ export async function getAnalyticsEvents(
     }));
   } catch (error) {
     if (__DEV__) console.error('Error getting analytics events:', error);
+    if (error instanceof Error) captureError(error, { context: 'analytics_get_events' });
     return [];
   }
 }
@@ -104,6 +105,7 @@ export async function clearOldAnalytics(): Promise<void> {
     await db.runAsync('DELETE FROM analytics WHERE timestamp < ?', [thirtyDaysAgo]);
   } catch (error) {
     if (__DEV__) console.error('Error clearing old analytics:', error);
+    if (error instanceof Error) captureError(error, { context: 'analytics_clear_old' });
   }
 }
 

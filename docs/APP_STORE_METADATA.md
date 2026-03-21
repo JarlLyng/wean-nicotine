@@ -1,5 +1,26 @@
 # App Store metadata — Taper! (copy/paste)
 
+Purpose:
+- Canonical copy bank for App Store Connect metadata fields
+
+Audience:
+- Maintainers preparing App Store submissions
+- LLMs helping with release or metadata workflows
+
+Source of truth:
+- App Store Connect is the final published state
+- Product positioning should stay aligned with [`AI_CONTEXT.md`](./AI_CONTEXT.md) and [`SEO_STRATEGY.md`](./SEO_STRATEGY.md)
+
+Related files:
+- [`docs/RELEASE_CHECKLIST.md`](./RELEASE_CHECKLIST.md)
+- [`docs/PRIVACY_APP_STORE.md`](./PRIVACY_APP_STORE.md)
+- [`website/src/lib/site.ts`](../website/src/lib/site.ts)
+
+Update when:
+- App Store positioning changes
+- Support, marketing, or privacy URLs change
+- Apple metadata requirements change
+
 Brug felterne nedenfor i App Store Connect. Screenshots tilføjer du selv under **Previews and Screenshots** → **Phone** (kun iPhone; appen er iPhone-only).
 
 ---
@@ -17,12 +38,23 @@ Alternativer:
 
 ---
 
-## iOS App Version 1.0 — Distribution
+## iOS App Version 1.1 — Distribution
 
 ### Promotional Text (valgfrit, max 170 tegn)
 Kan ændres uden ny version:
 ```
 Track your daily nicotine use, set a taper plan, and build lasting habits. No shame—just progress. Data stays on your device.
+```
+
+### What's New (v1.1)
+```
+• Completely redesigned Progress screen with daily usage chart and trend tracking
+• Native iOS navigation with tab bar and headers
+• Redesigned onboarding flow with step indicators
+• Improved Settings with cleaner layout and icons
+• Milestones with visual badges for your achievements
+• Haptic feedback throughout the app
+• Better error tracking for faster bug fixes
 ```
 
 ### Description (fuld beskrivelse, SEO-optimeret)
@@ -35,8 +67,16 @@ Taper helps you reduce nicotine use step by step—whether you use snus, pouches
 HOW IT WORKS
 • Set a baseline and weekly reduction goal
 • Log pouches used and cravings resisted each day
-• Track progress with a simple weekly view and milestones
+• See your daily usage in a weekly bar chart with trend tracking
+• Earn milestone badges as you hit new goals
 • Use built-in tools: breathing exercises, urge surfing, and reflection prompts
+
+WHAT'S NEW IN 1.1
+• Visual daily usage chart — see your week at a glance
+• Trend indicator — fewer or more pouches vs. last week
+• Milestone badges with icons for each achievement type
+• Redesigned onboarding with step-by-step guidance
+• Native iOS look and feel with smooth navigation
 
 FOR YOU
 Taper is for anyone who wants to cut down gradually without judgment. You choose the speed. The app keeps you honest and motivated with clear numbers and optional daily check-ins.
@@ -90,4 +130,4 @@ Appen er kun til iPhone (`ios.supportsTablet: false`). Udfyld kun "Phone" med iP
 
 ## App Privacy
 
-Se `docs/PRIVACY_APP_STORE.md` for trin-for-trin opsætning af Sentry crash data i App Store Connect.
+Se [`docs/PRIVACY_APP_STORE.md`](./PRIVACY_APP_STORE.md) for trin-for-trin opsætning af Sentry crash data i App Store Connect.

@@ -1,15 +1,15 @@
 import { useMemo } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { Screen } from '@/components/Screen';
-import { spacing } from '@/lib/theme';
-import { useDesignTokens } from '@/lib/design';
+import { spacing, borderRadius } from '@/lib/theme';
+import { useDesignTokens, typography } from '@/lib/design';
 
 export default function UrgeSurfingScreen() {
   const { colors } = useDesignTokens();
   const urgeStyles = useMemo(() => createUrgeStyles(colors), [colors]);
   
   return (
-    <Screen title="Urge Surfing">
+    <Screen>
       <ScrollView contentContainerStyle={urgeStyles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={urgeStyles.content}>
           <Text style={urgeStyles.subtitle}>
@@ -100,24 +100,24 @@ const createUrgeStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) 
     paddingBottom: spacing.lg,
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: typography.sizes.base,
     color: colors.text.secondary,
     marginBottom: spacing.xl,
-    lineHeight: 24,
+    lineHeight: typography.lineHeights.normal,
     textAlign: 'center',
   },
   section: {
     marginBottom: spacing.xl,
   },
   heading: {
-    fontSize: 20,
-    fontWeight: '600',
+    fontSize: typography.sizes.xl,
+    fontWeight: `${typography.weights.semibold}`,
     marginBottom: spacing.md,
     color: colors.text.primary,
   },
   text: {
-    fontSize: 16,
-    lineHeight: 24,
+    fontSize: typography.sizes.base,
+    lineHeight: typography.lineHeights.normal,
     color: colors.text.primary,
     marginBottom: spacing.sm,
   },
@@ -126,33 +126,32 @@ const createUrgeStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) 
     marginBottom: spacing.md,
   },
   stepNumber: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: typography.sizes.xl,
+    fontWeight: `${typography.weights.bold}`,
     color: colors.primary,
     width: 40,
     marginRight: spacing.md,
   },
   stepText: {
     flex: 1,
-    fontSize: 16,
-    lineHeight: 24,
+    fontSize: typography.sizes.base,
+    lineHeight: typography.lineHeights.normal,
     color: colors.text.primary,
   },
   stepTitle: {
-    fontWeight: '600',
+    fontWeight: `${typography.weights.semibold}`,
     color: colors.primary,
   },
   encouragementBox: {
     backgroundColor: colors.background.card,
-    borderRadius: 8,
+    borderRadius: borderRadius.sm,
     padding: spacing.md,
     marginTop: spacing.lg,
   },
   encouragementText: {
-    fontSize: 16,
-    // Avoid low-contrast semantic green as body text.
+    fontSize: typography.sizes.base,
     color: colors.text.secondary,
-    lineHeight: 24,
+    lineHeight: typography.lineHeights.normal,
     textAlign: 'center',
     fontWeight: '500',
   },

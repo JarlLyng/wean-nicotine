@@ -3,6 +3,7 @@ import { useRouter } from 'expo-router';
 import { Platform } from 'react-native';
 import { initDatabase } from '@/lib/db';
 import { hasTaperSettings } from '@/lib/db-settings';
+import { captureError } from '@/lib/sentry';
 
 export default function OnboardingIndex() {
   const router = useRouter();
@@ -30,7 +31,8 @@ export default function OnboardingIndex() {
         }
       })
       .catch((error) => {
-        console.error('Error checking onboarding status:', error);
+        if (__DEV__) console.error('Error checking onboarding status:', error);
+        if (error instanceof Error) captureError(error, { context: 'onboarding_routing' });
         // Default to welcome screen on error
         router.replace('/(onboarding)/welcome');
       });

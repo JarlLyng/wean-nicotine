@@ -1,14 +1,29 @@
 /**
  * Sentry error tracking and monitoring
  * Configured for React Native/Expo
+ *
+ * Setup:
+ * - Early init in app/_layout.tsx (before first render)
+ * - Root component wrapped with Sentry.wrap() for native crash capture
+ * - Sentry.ErrorBoundary wraps the React tree for JS error fallback
+ * - captureError() called in every production catch-block
  */
 
 import * as Sentry from '@sentry/react-native';
+import { reactNavigationIntegration } from '@sentry/react-native';
 import Constants from 'expo-constants';
 import { Platform } from 'react-native';
 
 /** True only when we had a DSN and called Sentry.init() – use to show "not configured" in Diagnostics. */
 let sentryInitialized = false;
+
+/**
+ * React Navigation integration instance — created once so the root layout can call
+ * `registerNavigationContainer()` on it after the navigation ref is ready.
+ */
+export const navigationIntegration = Platform.OS !== 'web'
+  ? reactNavigationIntegration({ enableTimeToInitialDisplay: true })
+  : undefined;
 
 /**
  * Whether Sentry was initialized with a DSN in this build (for Diagnostics UI).
@@ -19,7 +34,7 @@ export function isSentryConfigured(): boolean {
 
 /**
  * Initialize Sentry
- * Call this early in app lifecycle (in app/_layout.tsx or index.tsx)
+ * Call this early in app lifecycle (in app/_layout.tsx before first render)
  */
 export function initSentry(): void {
   // Skip Sentry initialization on web (Sentry React Native doesn't support web)
@@ -44,32 +59,26 @@ export function initSentry(): void {
   sentryInitialized = true;
   Sentry.init({
     dsn,
-    debug: __DEV__, // Enable debug mode in development
+    debug: __DEV__,
     environment: __DEV__ ? 'development' : 'production',
     enableAutoSessionTracking: true,
-    sessionTrackingIntervalMillis: 30000, // 30 seconds
-    tracesSampleRate: __DEV__ ? 1.0 : 0.1, // 100% in dev, 10% in production
+    sessionTrackingIntervalMillis: 30000,
+    tracesSampleRate: __DEV__ ? 1.0 : 0.2, // 20% of transactions in production (was 10%)
     // Attach app version and build info
     release: Constants.expoConfig?.version || '1.0.0',
     dist: Constants.expoConfig?.ios?.buildNumber || Constants.expoConfig?.android?.versionCode?.toString() || undefined,
-    // Filter out common non-critical errors
-    beforeSend(event, hint) {
-      // Only send events in production builds
-      // In development, we log to console instead
+    beforeSend(event) {
+      // In development, log but don't send
       if (__DEV__) {
-        console.log('Sentry event (dev mode - not sent):', event);
-        return null; // Don't send events in development
+        console.log('Sentry event (dev mode - not sent):', event.exception?.values?.[0]?.value ?? event.message);
+        return null;
       }
       return event;
     },
-    // Configure integrations
-    // Note: ReactNativeTracing is not available in @sentry/react-native v7
-    // Basic error tracking works without it
-    integrations: [],
+    // Default integrations (ANR detection, app start, native crashes, screenshots)
+    // are included automatically. We add React Navigation tracking on top.
+    integrations: navigationIntegration ? [navigationIntegration] : [],
   });
-
-  // Set user context if available (optional)
-  // Sentry.setUser({ id: 'user-id', email: 'user@example.com' });
 }
 
 /**

@@ -4,6 +4,14 @@
 
 Instead of quitting cold turkey, Taper focuses on **tapering** — reducing usage step by step, at your own pace.
 
+## Documentation
+
+If you need to understand the repository quickly:
+
+- Start with [`docs/README.md`](./docs/README.md) for the documentation map.
+- Read [`docs/AI_CONTEXT.md`](./docs/AI_CONTEXT.md) for the canonical architecture and domain summary.
+- Use code as source of truth for exact behavior.
+
 ---
 
 ## ✨ Core idea
@@ -83,7 +91,7 @@ Taper helps users:
 **Note:** This app is designed for mobile (iOS/Android) only. SQLite is not available on web browsers.
 Initial release focus is **iPhone**.
 
-**New Architecture:** This app uses React Native's New Architecture (`newArchEnabled: true`), required by `react-native-reanimated` 4.x.
+**New Architecture:** This app runs on React Native's New Architecture by default in Expo SDK 55, which is required by `react-native-reanimated` 4.x.
 
 
 ## 🔗 Links
@@ -120,7 +128,7 @@ lib/                    # Business logic & utilities
 docs/                   # Documentation
 ```
 
-See `docs/decisions/storage.md` for storage architecture details.
+See [`docs/README.md`](./docs/README.md) for the documentation index and [`docs/decisions/storage.md`](./docs/decisions/storage.md) for storage architecture details.
 
 ---
 

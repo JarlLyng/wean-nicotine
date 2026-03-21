@@ -1,10 +1,29 @@
 # Taper — Roadmap
 
+Purpose:
+- Describe the planned evolution of the product across phases
+
+Audience:
+- Maintainers prioritizing future work
+- LLMs helping with planning or scoping
+
+Source of truth:
+- This document is forward-looking planning, not a guarantee of implemented behavior
+- Current behavior is defined by code and summarized in [`docs/AI_CONTEXT.md`](./docs/AI_CONTEXT.md)
+
+Related files:
+- [`README.md`](./README.md)
+- [`docs/AI_CONTEXT.md`](./docs/AI_CONTEXT.md)
+- [`docs/RELEASE_CHECKLIST.md`](./docs/RELEASE_CHECKLIST.md)
+
+Update when:
+- A roadmap phase is completed, added, removed, or reprioritized
+
 This roadmap describes the planned development of **Taper**, from initial foundation to a polished MVP and beyond.
 
 The roadmap is **phase-based**, not date-based, to allow calm, iterative development and room for learning.
 
-## Progress tracker (Updated 2026-02)
+## Progress tracker (Updated 2026-03-21)
 
 This section is the “at a glance” view of where the project stands right now.
 

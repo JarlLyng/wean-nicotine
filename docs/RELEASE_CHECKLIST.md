@@ -1,6 +1,28 @@
-# Release Checklist — Taper (iPhone / iOS v1.0)
+# Release Checklist — Taper (iPhone / iOS v1.1)
 
-Dette dokument er en praktisk checklist til **første iOS release (iPhone-only)**.
+Purpose:
+- Operational release checklist for shipping the iOS app
+
+Audience:
+- Maintainers preparing TestFlight or App Store releases
+- LLMs assisting with release coordination
+
+Source of truth:
+- Build configuration in `app.json`, `app.config.js`, `eas.json`, and App Store Connect
+- Product/runtime behavior in code, not this checklist
+
+Related files:
+- [`README.md`](../README.md)
+- [`docs/SENTRY.md`](./SENTRY.md)
+- [`docs/APP_STORE_METADATA.md`](./APP_STORE_METADATA.md)
+- [`docs/PRIVACY_APP_STORE.md`](./PRIVACY_APP_STORE.md)
+
+Update when:
+- Build or submission workflow changes
+- Apple submission requirements change
+- Release dependencies or operational steps change
+
+Dette dokument er en praktisk checklist til **iOS release v1.1 (iPhone-only)**.
 Android + iPad kan komme senere.
 
 ---
@@ -21,8 +43,8 @@ Android + iPad kan komme senere.
 - [ ] Verificer i Sentry-projektet at events ankommer når der sker fejl i appen (TestFlight/production).
 
 ### Version & Build Numbers
-- [x] Version i `app.json`: "1.0.0" (bruger-synlig; ændres ved ny app-version).
-- [x] `ios.buildNumber` i `app.json` (com.iamjarl.taper) – skal inkrementeres før hvert nyt upload.
+- [x] Version i `app.json`: "1.1.0" (bruger-synlig; opdateret fra 1.0.0).
+- [x] `ios.buildNumber` i `app.json`: "11" (com.iamjarl.taper) – skal inkrementeres før hvert nyt upload.
 - [x] `eas.json`: `cli.appVersionSource`: "local" (version/build fra app.json).
 
 ---
@@ -50,12 +72,12 @@ Android + iPad kan komme senere.
 ### iOS App Store Connect
 - [x] **App Navn**: "Taper!" (App Store listing; "Taper" var optaget)
 - [x] App oprettet i App Store Connect med Bundle ID `com.iamjarl.taper`
-- [ ] **Subtitle**: Kort beskrivelse (30 tegn) — **se `docs/APP_STORE_METADATA.md`** (copy/paste; ikke "Reduce your blood pressure")
-- [ ] **Beskrivelse**: Færdig tekst i `docs/APP_STORE_METADATA.md` (SEO, disclaimer)
-- [ ] **Keywords**: Se `docs/APP_STORE_METADATA.md` (max 100 tegn)
+- [ ] **Subtitle**: Kort beskrivelse (30 tegn) — **se [`docs/APP_STORE_METADATA.md`](./APP_STORE_METADATA.md)** (copy/paste; ikke "Reduce your blood pressure")
+- [ ] **Beskrivelse**: Færdig tekst i [`docs/APP_STORE_METADATA.md`](./APP_STORE_METADATA.md) (SEO, disclaimer)
+- [ ] **Keywords**: Se [`docs/APP_STORE_METADATA.md`](./APP_STORE_METADATA.md) (max 100 tegn)
 - [x] **Kategori**: Health & Fitness (Primary), Lifestyle (Secondary)
 - [x] **Privacy Policy URL**: `https://taper.iamjarl.com/privacy/`
-- [ ] **App Privacy**: Opdater til "Data is collected" + Diagnostics → Crash Data (Sentry) — **se `docs/PRIVACY_APP_STORE.md`**
+- [ ] **App Privacy**: Opdater til "Data is collected" + Diagnostics → Crash Data (Sentry) — **se [`docs/PRIVACY_APP_STORE.md`](./PRIVACY_APP_STORE.md)**
 - [ ] **Support URL**: `https://taper.iamjarl.com/support` (eller `https://www.taper.dk/support`)
 - [ ] **Marketing URL**: `https://taper.iamjarl.com/` (eller `https://taper.dk`)
 - [ ] **Age Rating**: Konfigurer baseret på indhold
@@ -73,7 +95,7 @@ Android + iPad kan komme senere.
 - [x] Opret privacy policy side/website
 - [ ] Beskriv:
   - Alle data gemmes lokalt på enheden
-  - **Sentry:** crash/fejldata sendes i production for at forbedre appen (ingen tracking/salg) — se `docs/PRIVACY_APP_STORE.md`
+  - **Sentry:** crash/fejldata sendes i production for at forbedre appen (ingen tracking/salg) — se [`docs/PRIVACY_APP_STORE.md`](./PRIVACY_APP_STORE.md)
   - Ingen tracking (evt. lokal statistik tæller kun på device)
   - Hvordan data kan slettes (via "Start Over" i appen)
 - [x] Host privacy policy (GitHub Pages, Netlify, eller lignende)
@@ -171,7 +193,7 @@ Android + iPad kan komme senere.
 ## 📊 Monitoring & Analytics
 
 ### Sentry Setup
-- [ ] EAS Secret sat: `EXPO_PUBLIC_SENTRY_DSN` for production (se `docs/SENTRY.md`)
+- [ ] EAS Secret sat: `EXPO_PUBLIC_SENTRY_DSN` for production (se [`docs/SENTRY.md`](./SENTRY.md))
 - [ ] Verificer at events ankommer i Sentry ved fejl i production/TestFlight
 - [ ] Konfigurer alerts i Sentry (valgfrit)
 

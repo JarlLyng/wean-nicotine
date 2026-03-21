@@ -1,5 +1,26 @@
 # App Store privacy — Sentry & data
 
+Purpose:
+- Explain how App Store privacy answers should be filled when Sentry is enabled
+
+Audience:
+- Maintainers handling App Store Connect privacy disclosures
+- LLMs assisting with compliance or release tasks
+
+Source of truth:
+- Actual runtime behavior in [`lib/sentry.ts`](../lib/sentry.ts)
+- Final disclosure state in App Store Connect
+
+Related files:
+- [`docs/SENTRY.md`](./SENTRY.md)
+- [`docs/APP_STORE_METADATA.md`](./APP_STORE_METADATA.md)
+- [`website/src/pages/privacy.astro`](../website/src/pages/privacy.astro)
+
+Update when:
+- Sentry behavior changes
+- Privacy policy wording changes
+- Apple privacy categories or requirements change
+
 Vi bruger **Sentry i production** til at modtage fejl og crashes, så vi kan forbedre appen. Der sendes ingen brugerdata, kun tekniske diagnostics.
 
 ## 1. App Store Connect — App Privacy (skal udfyldes)
@@ -40,4 +61,4 @@ Hvis Sentry **ikke** er slået til (ingen DSN i production), kan du beholde "no 
 
 - Sentry init: `lib/sentry.ts` (kun aktiv når DSN er sat).
 - Data som sendes: exception messages, stack traces, device/model, OS version, app version — ingen e-mail, navn eller brugsdata.
-- Se også `docs/SENTRY.md` for DSN-opsætning og TestFlight-verifikation.
+- Se også [`docs/SENTRY.md`](./SENTRY.md) for DSN-opsætning og TestFlight-verifikation.

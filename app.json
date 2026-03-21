@@ -2,16 +2,15 @@
   "expo": {
     "name": "Taper!",
     "slug": "Taper",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/images/ios-light.png",
     "scheme": "taper",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.iamjarl.taper",
-      "buildNumber": "10",
+      "buildNumber": "11",
       "icon": {
         "light": "./assets/images/ios-light.png",
         "dark": "./assets/images/ios-dark.png",
@@ -23,7 +22,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#000000",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
@@ -54,7 +53,7 @@
         "expo-notifications",
         {
           "icon": "./assets/images/ios-light.png",
-          "color": "#0a7ea4",
+          "color": "#CE63FF",
           "sounds": []
         }
       ],
@@ -62,7 +61,7 @@
     ],
     "experiments": {
       "typedRoutes": true,
-      "reactCompiler": false
+      "reactCompiler": true
     },
     "extra": {
       "router": {},

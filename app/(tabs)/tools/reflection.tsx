@@ -1,8 +1,8 @@
 import { useState, useMemo } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Screen } from '@/components/Screen';
-import { spacing } from '@/lib/theme';
-import { useDesignTokens } from '@/lib/design';
+import { spacing, borderRadius } from '@/lib/theme';
+import { useDesignTokens, typography } from '@/lib/design';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
 const REFLECTION_PROMPTS = [
@@ -66,7 +66,7 @@ export default function ReflectionScreen() {
   const buttonTextStyle = showFollowUp ? reflectionStyles.nextButtonText : reflectionStyles.buttonText;
 
   return (
-    <Screen title="Reflection">
+    <Screen>
       <ScrollView contentContainerStyle={reflectionStyles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={reflectionStyles.content}>
           <Text style={reflectionStyles.subtitle}>
@@ -124,46 +124,46 @@ const createReflectionStyles = (colors: ReturnType<typeof useDesignTokens>['colo
     paddingBottom: spacing.lg,
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: typography.sizes.base,
     color: colors.text.secondary,
     marginBottom: spacing.xl,
-    lineHeight: 24,
+    lineHeight: typography.lineHeights.normal,
     textAlign: 'center',
   },
   promptContainer: {
     backgroundColor: colors.background.muted,
-    borderRadius: 12,
+    borderRadius: borderRadius.md,
     padding: spacing.xl,
     marginBottom: spacing.lg,
     minHeight: 150,
     justifyContent: 'center',
   },
   promptText: {
-    fontSize: 20,
+    fontSize: typography.sizes.xl,
     fontWeight: '500',
     color: colors.text.primary,
     textAlign: 'center',
-    lineHeight: 28,
+    lineHeight: typography.lineHeights.relaxed,
   },
   button: {
     backgroundColor: colors.primary,
     padding: spacing.md,
-    borderRadius: 8,
+    borderRadius: borderRadius.sm,
     alignItems: 'center',
     marginBottom: spacing.md,
   },
   buttonText: {
     color: colors.onPrimary,
-    fontSize: 18,
-    fontWeight: '600',
+    fontSize: typography.sizes.lg,
+    fontWeight: `${typography.weights.semibold}`,
   },
   followUpContainer: {
     marginBottom: spacing.md,
   },
   followUpText: {
-    fontSize: 16,
+    fontSize: typography.sizes.base,
     color: colors.text.secondary,
-    lineHeight: 24,
+    lineHeight: typography.lineHeights.normal,
     marginBottom: spacing.md,
     textAlign: 'center',
     fontStyle: 'italic',
@@ -171,25 +171,24 @@ const createReflectionStyles = (colors: ReturnType<typeof useDesignTokens>['colo
   nextButton: {
     backgroundColor: colors.primary,
     padding: spacing.md,
-    borderRadius: 8,
+    borderRadius: borderRadius.sm,
     alignItems: 'center',
   },
   nextButtonText: {
     color: colors.onPrimary,
-    fontSize: 18,
-    fontWeight: '600',
+    fontSize: typography.sizes.lg,
+    fontWeight: `${typography.weights.semibold}`,
   },
   infoBox: {
     backgroundColor: colors.background.card,
-    borderRadius: 8,
+    borderRadius: borderRadius.sm,
     padding: spacing.md,
     marginTop: spacing.lg,
   },
   infoText: {
-    fontSize: 14,
-    // Avoid low-contrast semantic green as body text.
+    fontSize: typography.sizes.sm,
     color: colors.text.secondary,
-    lineHeight: 20,
+    lineHeight: typography.lineHeights.tight,
     textAlign: 'center',
   },
 });

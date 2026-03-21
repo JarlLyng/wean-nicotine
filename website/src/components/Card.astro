@@ -13,10 +13,21 @@ const Tag = as;
 
 <style>
 	.card {
-		background: var(--bg-card);
-		border: 1px solid var(--border-subtle);
+		background: color-mix(in oklab, var(--bg-card), transparent 40%);
+		backdrop-filter: blur(12px);
+		-webkit-backdrop-filter: blur(12px);
+		border: 1px solid color-mix(in oklab, var(--border-subtle), transparent 30%);
 		border-radius: var(--radius-lg);
 		padding: var(--space-xl);
+		box-shadow: 0 4px 24px color-mix(in oklab, var(--text-primary), transparent 97%);
+		transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+		will-change: transform;
+	}
+
+	.card:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 8px 32px color-mix(in oklab, var(--text-primary), transparent 93%);
+		border-color: color-mix(in oklab, var(--border-default), transparent 20%);
 	}
 </style>
 

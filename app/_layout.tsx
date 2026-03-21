@@ -1,11 +1,11 @@
 import { DarkTheme, DefaultTheme, ThemeProvider, type Theme } from '@react-navigation/native';
-import { Stack } from 'expo-router';
+import { Stack, useNavigationContainerRef } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { Platform, View, Text, StyleSheet } from 'react-native';
 import * as Sentry from '@sentry/react-native';
 import 'react-native-reanimated';
 
-import { initSentry } from '@/lib/sentry';
+import { initSentry, navigationIntegration } from '@/lib/sentry';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useAppInitialize } from '@/hooks/useAppInitialize';
 import { spacing, typography } from '@/lib/theme';
@@ -37,9 +37,15 @@ if (Platform.OS !== 'web') {
   initSentry();
 }
 
-export default function RootLayout() {
+function RootLayout() {
   const colorScheme = useColorScheme();
-  
+
+  // Wire Sentry navigation tracking to the Expo Router navigation container
+  const navigationRef = useNavigationContainerRef();
+  if (Platform.OS !== 'web' && navigationIntegration && navigationRef) {
+    navigationIntegration.registerNavigationContainer(navigationRef);
+  }
+
   // Initialize app (database, analytics)
   useAppInitialize();
 
@@ -90,6 +96,10 @@ export default function RootLayout() {
     </Sentry.ErrorBoundary>
   );
 }
+
+// Sentry.wrap() instruments the root component for native crash reporting and
+// automatic breadcrumbs. On web (where Sentry RN is not supported) we skip it.
+export default Platform.OS === 'web' ? RootLayout : Sentry.wrap(RootLayout);
 
 const createErrorStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => StyleSheet.create({
   errorContainer: {

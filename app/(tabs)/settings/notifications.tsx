@@ -1,8 +1,11 @@
 import { useState, useEffect, useMemo } from 'react';
 import { View, Text, StyleSheet, ScrollView, Switch, Alert, Pressable, TextStyle, ViewStyle } from 'react-native';
 import { Screen } from '@/components/Screen';
-import { spacing } from '@/lib/theme';
-import { useDesignTokens } from '@/lib/design';
+import { Card } from '@/components/ui/Card';
+import { Icon } from '@/components/ui/Icon';
+import { spacing, borderRadius } from '@/lib/theme';
+import { useDesignTokens, typography } from '@/lib/design';
+import { captureError } from '@/lib/sentry';
 import { getTaperSettings } from '@/lib/db-settings';
 import { getPreference, setPreference } from '@/lib/db-preferences';
 import {
@@ -15,7 +18,7 @@ import {
 } from '@/lib/notifications';
 
 const PREF_TRIGGER_REMINDERS_ENABLED = 'triggerRemindersEnabled';
-const PREF_TRIGGER_REMINDERS_TIME = 'triggerRemindersTime'; // JSON: { hour: number, minute: number }
+const PREF_TRIGGER_REMINDERS_TIME = 'triggerRemindersTime';
 
 type ReminderTime = { hour: number; minute: number };
 
@@ -29,7 +32,7 @@ function formatTime(t: ReminderTime) {
 
 export default function NotificationsScreen() {
   const { colors } = useDesignTokens();
-  const styles = useMemo(() => createStyles(colors), [colors]);
+  const s = useMemo(() => createStyles(colors), [colors]);
   const [hasPermission, setHasPermission] = useState(false);
   const [dailyCheckInEnabled, setDailyCheckInEnabled] = useState(false);
   const [checkInHour] = useState(20);
@@ -44,7 +47,6 @@ export default function NotificationsScreen() {
 
   const loadNotificationStatus = async () => {
     try {
-      // Only check permission status, don't request it
       const { getPermissionsAsync } = await import('expo-notifications');
       const { status } = await getPermissionsAsync();
       setHasPermission(status === 'granted');
@@ -65,7 +67,6 @@ export default function NotificationsScreen() {
       const hasTriggerReminder = Boolean(triggerReminder);
       setTriggerRemindersEnabled(hasTriggerReminder);
 
-      // Hydrate persisted config (fallback for UI + rescheduling)
       const storedEnabled = (await getPreference(PREF_TRIGGER_REMINDERS_ENABLED)) === '1';
       const storedTimeRaw = await getPreference(PREF_TRIGGER_REMINDERS_TIME);
       let storedTime: ReminderTime | null = null;
@@ -75,12 +76,9 @@ export default function NotificationsScreen() {
           if (typeof parsed.hour === 'number' && typeof parsed.minute === 'number') {
             storedTime = { hour: parsed.hour, minute: parsed.minute };
           }
-        } catch {
-          // ignore
-        }
+        } catch { /* ignore */ }
       }
 
-      // Prefer scheduled time if available, otherwise use stored time, otherwise default.
       let scheduledTime: ReminderTime | null = null;
       if (triggerReminder && triggerReminder.trigger && typeof triggerReminder.trigger === 'object') {
         const t = triggerReminder.trigger as Record<string, unknown>;
@@ -91,25 +89,23 @@ export default function NotificationsScreen() {
       const effectiveTime = scheduledTime ?? storedTime ?? { hour: 20, minute: 0 };
       setTriggerReminderTime(effectiveTime);
 
-      // Keep preference in sync with scheduled state
       if (hasTriggerReminder && !storedEnabled) {
         await setPreference(PREF_TRIGGER_REMINDERS_ENABLED, '1');
       }
 
-      // If user wanted reminders on but nothing is scheduled, try to restore (native only)
       if (storedEnabled && !hasTriggerReminder && status === 'granted') {
         const id = await scheduleTriggerReminders(triggers, effectiveTime.hour, effectiveTime.minute);
         if (id) {
           setTriggerRemindersEnabled(true);
           await setPreference(PREF_TRIGGER_REMINDERS_ENABLED, '1');
         } else {
-          // Fail gracefully (e.g., Expo Go). Keep UI consistent.
           await setPreference(PREF_TRIGGER_REMINDERS_ENABLED, '0');
           setTriggerRemindersEnabled(false);
         }
       }
     } catch (error) {
       if (__DEV__) console.error('Error loading notification status:', error);
+      if (error instanceof Error) captureError(error, { context: 'notifications_load_status' });
     } finally {
       setIsLoading(false);
     }
@@ -131,14 +127,10 @@ export default function NotificationsScreen() {
           onPress: async () => {
             setTriggerReminderTime(t);
             await setPreference(PREF_TRIGGER_REMINDERS_TIME, JSON.stringify(t));
-
             if (triggerRemindersEnabled && hasPermission) {
               const id = await scheduleTriggerReminders(selectedTriggers, t.hour, t.minute);
               if (!id) {
-                Alert.alert(
-                  'Not available',
-                  'Notifications require a development build (they do not work in Expo Go).'
-                );
+                Alert.alert('Not available', 'Notifications require a development build (they do not work in Expo Go).');
               }
             }
           },
@@ -152,31 +144,26 @@ export default function NotificationsScreen() {
     if (!hasPermission) {
       const granted = await requestNotificationPermissions();
       if (!granted) {
-        Alert.alert(
-          'Permission Required',
-          'Notifications are needed to send daily check-ins. Please enable them in your device settings.'
-        );
+        Alert.alert('Permission Required', 'Enable notifications in your device settings.');
         return;
       }
       setHasPermission(true);
     }
-
     try {
       if (enabled) {
         const id = await scheduleDailyCheckIn(checkInHour, 0);
         if (id) {
           setDailyCheckInEnabled(true);
-          Alert.alert('Success', 'Daily check-in notification enabled');
         } else {
           Alert.alert('Error', 'Failed to enable daily check-in');
         }
       } else {
         await cancelDailyCheckIn();
         setDailyCheckInEnabled(false);
-        Alert.alert('Success', 'Daily check-in notification disabled');
       }
     } catch (error) {
       if (__DEV__) console.error('Error toggling daily check-in:', error);
+      if (error instanceof Error) captureError(error, { context: 'notifications_toggle_checkin' });
       Alert.alert('Error', 'Failed to update notification settings');
     }
   };
@@ -185,72 +172,59 @@ export default function NotificationsScreen() {
     if (!hasPermission) {
       const granted = await requestNotificationPermissions();
       if (!granted) {
-        Alert.alert(
-          'Permission Required',
-          'Notifications are needed to send reminders. Please enable them in your device settings.'
-        );
+        Alert.alert('Permission Required', 'Enable notifications in your device settings.');
         return;
       }
       setHasPermission(true);
     }
-
     try {
       if (enabled) {
-        const id = await scheduleTriggerReminders(
-          selectedTriggers,
-          triggerReminderTime.hour,
-          triggerReminderTime.minute
-        );
+        const id = await scheduleTriggerReminders(selectedTriggers, triggerReminderTime.hour, triggerReminderTime.minute);
         if (id) {
           await setPreference(PREF_TRIGGER_REMINDERS_ENABLED, '1');
           await setPreference(PREF_TRIGGER_REMINDERS_TIME, JSON.stringify(triggerReminderTime));
           setTriggerRemindersEnabled(true);
-          Alert.alert('Success', 'Trigger reminders enabled');
         } else {
           await setPreference(PREF_TRIGGER_REMINDERS_ENABLED, '0');
           setTriggerRemindersEnabled(false);
-          Alert.alert(
-            'Not available',
-            'Notifications require a development build (they do not work in Expo Go).'
-          );
+          Alert.alert('Not available', 'Notifications require a development build.');
         }
       } else {
         await cancelTriggerReminders();
         await setPreference(PREF_TRIGGER_REMINDERS_ENABLED, '0');
         setTriggerRemindersEnabled(false);
-        Alert.alert('Success', 'Trigger reminders disabled');
       }
     } catch (error) {
       if (__DEV__) console.error('Error toggling trigger reminders:', error);
+      if (error instanceof Error) captureError(error, { context: 'notifications_toggle_trigger_reminders' });
       Alert.alert('Error', 'Failed to update notification settings');
     }
   };
 
   if (isLoading) {
     return (
-      <Screen title="Notifications">
-        <View style={styles.loadingContainer}>
-          <Text style={styles.loadingText}>Loading...</Text>
+      <Screen>
+        <View style={s.loadingContainer}>
+          <Text style={s.loadingText}>Loading...</Text>
         </View>
       </Screen>
     );
   }
 
   return (
-    <Screen title="Notifications">
-      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        <View style={styles.content}>
-          <Text style={styles.subtitle}>
-            Manage your daily check-in reminder.
-          </Text>
-
+    <Screen>
+      <ScrollView contentContainerStyle={s.scrollContent} showsVerticalScrollIndicator={false}>
+        <View style={s.content}>
           {/* Daily Check-In */}
-          <View style={styles.section}>
-            <View style={styles.sectionHeader}>
-              <View style={styles.sectionHeaderText}>
-                <Text style={styles.sectionTitle}>Daily Check-In</Text>
-                <Text style={styles.sectionDescription}>
-                  Receive a gentle reminder each day to log your progress
+          <Card variant="elevated" padding="lg" style={s.card}>
+            <View style={s.cardHeader}>
+              <View style={[s.iconWrap, { backgroundColor: colors.primary + '14' }]}>
+                <Icon name="bell" size={20} color={colors.primary} weight="regular" />
+              </View>
+              <View style={s.cardHeaderText}>
+                <Text style={s.cardTitle}>Daily Check-In</Text>
+                <Text style={s.cardDescription}>
+                  A gentle reminder each evening to log your progress
                 </Text>
               </View>
               <Switch
@@ -260,24 +234,23 @@ export default function NotificationsScreen() {
                 thumbColor={colors.surface.default}
                 accessibilityRole="switch"
                 accessibilityLabel="Daily check-in"
-                accessibilityHint="Turns the daily reminder on or off."
               />
             </View>
-
             {dailyCheckInEnabled && hasPermission && (
-              <View style={styles.timeInfo}>
-                <Text style={styles.timeText}>Scheduled for {checkInHour}:00 daily</Text>
-              </View>
+              <Text style={s.timeDetail}>Scheduled for {checkInHour}:00 daily</Text>
             )}
-          </View>
+          </Card>
 
           {/* Trigger Reminders */}
-          <View style={styles.section}>
-            <View style={styles.sectionHeader}>
-              <View style={styles.sectionHeaderText}>
-                <Text style={styles.sectionTitle}>Trigger Reminders</Text>
-                <Text style={styles.sectionDescription}>
-                  Get one daily reminder to help you handle cravings (uses your selected triggers when available).
+          <Card variant="elevated" padding="lg" style={s.card}>
+            <View style={s.cardHeader}>
+              <View style={[s.iconWrap, { backgroundColor: colors.warning + '18' }]}>
+                <Icon name="lightning" size={20} color={colors.warning} weight="regular" />
+              </View>
+              <View style={s.cardHeaderText}>
+                <Text style={s.cardTitle}>Trigger Reminders</Text>
+                <Text style={s.cardDescription}>
+                  Daily reminder to help you handle cravings
                 </Text>
               </View>
               <Switch
@@ -287,49 +260,46 @@ export default function NotificationsScreen() {
                 thumbColor={colors.surface.default}
                 accessibilityRole="switch"
                 accessibilityLabel="Trigger reminders"
-                accessibilityHint="Turns the trigger reminder on or off."
               />
             </View>
 
-            <View style={styles.timeInfo}>
+            <View style={s.timeRow}>
+              <Text style={s.timeLabel}>Time</Text>
               <Pressable
                 onPress={chooseTriggerReminderTime}
                 accessibilityRole="button"
                 accessibilityLabel="Change trigger reminder time"
-                accessibilityHint="Choose a time for the daily trigger reminder."
-                style={styles.timeRow}>
-                <Text style={styles.timeText}>Time: {formatTime(triggerReminderTime)}</Text>
-                <Text style={styles.changeTimeText}>Change</Text>
+                style={s.timeButton}>
+                <Text style={s.timeValue}>{formatTime(triggerReminderTime)}</Text>
+                <Text style={s.changeText}>Change</Text>
               </Pressable>
-
-              {selectedTriggers.length === 0 && (
-                <Text style={styles.noteText}>
-                  You don&apos;t have any triggers selected. Reminders will use a general message.
-                </Text>
-              )}
             </View>
-          </View>
 
-          <View style={styles.infoBox}>
-            <Text style={styles.infoText}>
-              Notifications are designed to be helpful, not annoying. You can turn them off anytime.
-            </Text>
-          </View>
+            {selectedTriggers.length === 0 && (
+              <Text style={s.noteText}>
+                No triggers selected — reminders will use a general message.
+              </Text>
+            )}
+          </Card>
+
+          {/* Info */}
+          <Text style={s.infoText}>
+            Notifications are designed to be helpful, not annoying. You can turn them off anytime.
+          </Text>
         </View>
       </ScrollView>
     </Screen>
   );
 }
 
-const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => {
-  const styles = {
+const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) =>
+  StyleSheet.create({
     scrollContent: {
       flexGrow: 1,
     } as ViewStyle,
     content: {
       flex: 1,
       paddingTop: spacing.lg,
-      // Screen-komponenten giver allerede horizontal padding
       paddingHorizontal: 0,
       paddingBottom: spacing.lg,
     } as ViewStyle,
@@ -339,84 +309,93 @@ const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => {
       alignItems: 'center',
     } as ViewStyle,
     loadingText: {
-      fontSize: 14,
+      fontSize: typography.sizes.sm,
       color: colors.text.secondary,
     } as TextStyle,
-    subtitle: {
-      fontSize: 16,
-      color: colors.text.secondary,
-      marginBottom: spacing.xl,
-      lineHeight: 24,
-      textAlign: 'center' as const,
-    } as TextStyle,
-    section: {
-      backgroundColor: colors.background.muted,
-      borderRadius: 12,
-      padding: spacing.md,
+
+    // Cards
+    card: {
       marginBottom: spacing.md,
-      borderWidth: 1,
-      borderColor: colors.border.subtle,
     } as ViewStyle,
-    sectionHeader: {
+    cardHeader: {
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      gap: spacing.md,
+    } as ViewStyle,
+    iconWrap: {
+      width: 36,
+      height: 36,
+      borderRadius: 18,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginTop: 2,
+    } as ViewStyle,
+    cardHeaderText: {
+      flex: 1,
+    } as ViewStyle,
+    cardTitle: {
+      fontSize: typography.sizes.base,
+      fontWeight: `${typography.weights.semibold}` as const,
+      color: colors.text.primary,
+      marginBottom: 2,
+    } as TextStyle,
+    cardDescription: {
+      fontSize: typography.sizes.sm,
+      color: colors.text.secondary,
+      lineHeight: typography.lineHeights.tight,
+    } as TextStyle,
+
+    // Time
+    timeDetail: {
+      fontSize: typography.sizes.sm,
+      color: colors.text.tertiary,
+      marginTop: spacing.md,
+      paddingTop: spacing.md,
+      borderTopWidth: 1,
+      borderTopColor: colors.border.subtle,
+    } as TextStyle,
+    timeRow: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      alignItems: 'flex-start',
-    } as ViewStyle,
-    sectionHeaderText: {
-      flex: 1,
-      marginRight: spacing.md,
-    } as ViewStyle,
-    sectionTitle: {
-      fontSize: 18,
-      fontWeight: '600' as const,
-      color: colors.text.primary,
-      marginBottom: spacing.xs,
-    } as TextStyle,
-    sectionDescription: {
-      fontSize: 14,
-      color: colors.text.secondary,
-      lineHeight: 20,
-    } as TextStyle,
-    timeInfo: {
+      alignItems: 'center',
       marginTop: spacing.md,
       paddingTop: spacing.md,
       borderTopWidth: 1,
       borderTopColor: colors.border.subtle,
     } as ViewStyle,
-    timeRow: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      paddingVertical: spacing.sm,
-    } as ViewStyle,
-    timeText: {
-      fontSize: 14,
+    timeLabel: {
+      fontSize: typography.sizes.sm,
       color: colors.text.secondary,
     } as TextStyle,
-    changeTimeText: {
-      fontSize: 14,
-      fontWeight: '600' as const,
+    timeButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing.sm,
+    } as ViewStyle,
+    timeValue: {
+      fontSize: typography.sizes.sm,
+      fontWeight: `${typography.weights.semibold}` as const,
+      color: colors.text.primary,
+    } as TextStyle,
+    changeText: {
+      fontSize: typography.sizes.sm,
+      fontWeight: `${typography.weights.semibold}` as const,
       color: colors.primary,
     } as TextStyle,
     noteText: {
       marginTop: spacing.sm,
-      fontSize: 13,
-      color: colors.text.secondary,
-      lineHeight: 18,
+      fontSize: typography.sizes.xs,
+      color: colors.text.tertiary,
+      lineHeight: typography.lineHeights.sm,
     } as TextStyle,
-    infoBox: {
-      backgroundColor: colors.background.card,
-      borderRadius: 8,
-      padding: spacing.md,
-      marginTop: spacing.lg,
-    } as ViewStyle,
-    infoText: {
-      fontSize: 14,
-      color: colors.text.primary,
-      lineHeight: 20,
-      textAlign: 'center' as const,
-    } as TextStyle,
-  };
 
-  return StyleSheet.create(styles);
-};
+    // Info
+    infoText: {
+      fontSize: typography.sizes.sm,
+      color: colors.text.tertiary,
+      lineHeight: typography.lineHeights.tight,
+      textAlign: 'center' as const,
+      marginTop: spacing.lg,
+      paddingHorizontal: spacing.lg,
+    } as TextStyle,
+  });

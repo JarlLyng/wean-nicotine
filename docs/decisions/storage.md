@@ -1,5 +1,26 @@
 # Storage Decision: SQLite vs MMKV
 
+Purpose:
+- Record why SQLite was chosen over MMKV for local persistence
+
+Audience:
+- Maintainers and LLMs evaluating storage-related changes
+
+Source of truth:
+- Current implementation in [`lib/db.ts`](../../lib/db.ts) and `lib/db-*.ts`
+- This document explains the decision, not every runtime detail
+
+Related files:
+- [`docs/AI_CONTEXT.md`](../AI_CONTEXT.md)
+- [`lib/db.ts`](../../lib/db.ts)
+- [`lib/db-log-entries.ts`](../../lib/db-log-entries.ts)
+- [`lib/db-settings.ts`](../../lib/db-settings.ts)
+
+Update when:
+- Storage technology changes
+- Migration strategy changes materially
+- The reasons for the decision are no longer accurate
+
 **Date:** 2024-12-19  
 **Status:** Decided  
 **Decision:** SQLite

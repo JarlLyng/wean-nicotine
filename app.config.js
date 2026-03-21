@@ -9,6 +9,20 @@
  */
 const base = require('./app.json');
 
+const requiredSdk55Plugins = [
+  '@sentry/react-native',
+  'expo-image',
+  'expo-sqlite',
+  'expo-web-browser',
+];
+
+const plugins = [
+  ...(base.expo?.plugins ?? []),
+  ...requiredSdk55Plugins,
+  './plugins/withProductionPushEntitlements.js',
+  './plugins/withPrivacyManifest.js',
+];
+
 module.exports = {
   ...base,
   expo: {
@@ -18,10 +32,6 @@ module.exports = {
       // Inlined at build time when EAS sets EXPO_PUBLIC_SENTRY_DSN; guarantees DSN in production build
       sentryDsn: process.env.EXPO_PUBLIC_SENTRY_DSN ?? '',
     },
-    plugins: [
-      ...base.expo.plugins,
-      './plugins/withProductionPushEntitlements.js',
-      './plugins/withPrivacyManifest.js',
-    ],
+    plugins: [...new Set(plugins)],
   },
 };

@@ -15,7 +15,7 @@
 import { useColorScheme } from '@/hooks/use-color-scheme';
 
 // IAMJARL Design Tokens (from tokens.json)
-// Version: v0.1.1 (source of truth: https://jarllyng.github.io/iamjarl-design/tokens.json)
+// Version: v0.1.3 (source of truth: https://jarllyng.github.io/iamjarl-design/tokens.json)
 export const designTokens = {
   radius: {
     sm: 8,
@@ -72,7 +72,7 @@ export const designTokens = {
     },
     modes: {
       light: {
-        primary: '#00FF7B',
+        primary: '#CE63FF',
         onPrimary: '#000000',
         text: {
           primary: '#000000',

@@ -1,50 +1,99 @@
 # Design System Documentation
 
-**Date:** 2026-01-21  
-**Status:** Active  
-**Version:** 1.1
+**Date:** 2026-03-21
+**Status:** Active
+**Version:** 1.2 (IAMJARL Design System v0.1.3)
 
-**Source of truth:** `lib/design.ts` (IAMJARL tokens) and `lib/theme.ts` (re-exports). Do not rely on this doc for exact pixel values – use the code.
+Purpose:
+- Summarize the app's design system and usage patterns
+
+Audience:
+- Maintainers and LLMs working on app UI
+
+Source of truth:
+- `lib/design.ts` (IAMJARL tokens) and `lib/theme.ts` (re-exports)
+- Do not rely on this doc for exact pixel values; use the code
+
+Related files:
+- [`AI_CONTEXT.md`](./AI_CONTEXT.md)
+- [`lib/design.ts`](../lib/design.ts)
+- [`lib/theme.ts`](../lib/theme.ts)
+- [`components/Screen.tsx`](../components/Screen.tsx)
+- [`components/ui/Card.tsx`](../components/ui/Card.tsx)
+- [`components/ui/Button.tsx`](../components/ui/Button.tsx)
+
+Update when:
+- Tokens change
+- Component usage patterns change
+- Design principles change
 
 ---
 
-## 🎨 Design Philosophy
+## Design Philosophy
 
 Taper's design is built around three core principles:
 
 1. **Calm and supportive** — Not clinical or judgmental
 2. **Clear visual hierarchy** — Easy to scan and understand
-3. **Accessible contrast ratios** — Readable for everyone
+3. **Non-judgmental tone** — Never frame slips as failure (Gentler Streak pattern)
 
 ---
 
-## 🌈 Color System
+## Color System
 
-Design tokens live in `lib/design.ts` / `lib/theme.ts` and are consumed via `useDesignTokens()`.
+Design tokens live in `lib/design.ts` and are consumed via `useDesignTokens()`.
 
-Praktisk regel:
-- **Background**: app-level background (calm, low contrast)
-- **Surface/Card**: cards og “content surfaces”
-- **Text**: primary/secondary/tertiary
-- **Semantic**: success/warning/error
+### Mode Colors
 
-> Undgå hard-coded hex i UI-kode – brug tokens, så light/dark mode holder.
+| Token | Light | Dark |
+|-------|-------|------|
+| `primary` | `#CE63FF` (neon purple) | `#D0FF00` (neon lime) |
+| `onPrimary` | `#000000` | `#000000` |
+| `background.app` | `#FFFFFF` | `#000000` |
+| `background.card` | `rgba(0,0,0,0.04)` | `rgba(255,255,255,0.05)` |
+| `text.primary` | `#000000` | `#FFFFFF` |
+| `text.secondary` | `rgba(0,0,0,0.70)` | `rgba(255,255,255,0.75)` |
+
+### Shared Semantic Colors
+
+| Token | Value |
+|-------|-------|
+| `success` | `#4CAF50` |
+| `warning` | `#FF6B35` |
+| `error` | `#FF3B30` |
+
+**Rules:**
+- Never use primary color for destructive actions
+- Never hardcode hex in UI code — use tokens
+- Always support light + dark mode
 
 ---
 
-## 📐 Spacing Scale
+## Spacing Scale
 
-Values come from `lib/design.ts` → `designTokens.spacing`:
+Values from `designTokens.spacing`:
 
-```typescript
+```
 xs: 4   sm: 8   md: 12   lg: 16   xl: 20   xxl: 24   xxxl: 32
 ```
 
 ---
 
-## ✍️ Typography
+## Typography
 
-Scale and line heights come from `lib/design.ts` → `designTokens.typography`. `lib/theme.ts` maps them to React Native (e.g. `typography.title`, `typography.body`, `typography.caption`).
+Scale from `designTokens.typography`. `lib/theme.ts` maps them to React Native (e.g. `typography.title`, `typography.body`).
+
+### Sizes
+
+```
+xs: 12   sm: 14   base: 16   lg: 18   xl: 24   xxl: 36
+```
+
+### Weights
+
+```
+regular: 400   semibold: 600   bold: 700
+```
 
 ### Principles
 
@@ -54,129 +103,83 @@ Scale and line heights come from `lib/design.ts` → `designTokens.typography`. 
 
 ---
 
-## 🎭 Backgrounds (Plain vs Gradient)
+## Border Radius
 
-`Screen` kan rendere plain eller (subtil) gradient background via `GradientBackground`.
-Brug gradient sparsomt – det skal føles roligt, ikke “larmende”.
+```
+sm: 8   md: 12   lg: 16
+```
 
----
-
-## 🎴 Surface Usage
-
-### Flat Surfaces
-
-- **Cards:** White (`surface`) with elevation shadows
-- **Content Areas:** White or light neutral backgrounds
-- **Text Backgrounds:** Always high contrast
-
-### Why Flat Surfaces?
-
-- Better readability
-- Calmer visual feel
-- Easier to scan content
-- Maintains focus on content, not decoration
+**Rules:**
+- Primary buttons: `radius.md` (12px)
+- Cards: `borderRadius.lg` (16px)
+- Pill/chip shapes: `borderRadius.full` (9999)
 
 ---
 
-## 🎯 Component Patterns
+## Navigation
+
+The app uses **native iOS navigation** exclusively:
+
+- **Tab bar**: Native iOS tab bar with SF Symbols (via `IconSymbol` component)
+- **Headers**: Native Expo Router Stack/Tabs headers
+- **Large Title**: Tools and Settings index screens use `headerLargeTitle: true`
+- **Screen component**: Content wrapper only (no title rendering, no SafeAreaView)
+
+---
+
+## Component Patterns
 
 ### Screen Layout
 
-**All Screens:**
-- Brug `Screen` som wrapper (safe areas + title)
-- Undgå dobbelt padding (Screen giver allerede horizontal padding)
-- Brug `Card` til grupperet indhold og rolig hierarchy
-
-**Screen Variants:**
-- **Plain**: default
-- **Gradient**: kun hvor det giver en rolig “hero” effekt
+- Use `Screen` as wrapper (background color + horizontal padding)
+- Screen does NOT render titles or safe areas — native headers handle that
+- Use `Card` for grouped content
 
 ### Cards
 
-- **Elevated:** White card with shadow
-- **Flat:** Light gray background
-- **Outlined:** White card with border
+- **Elevated:** Card background with shadow (primary content cards)
+- **Flat:** Card background without shadow (less prominent)
+- **Outlined:** Card background with border
 
 ### Buttons
 
-- **Primary:** Primary token background (`colors.primary`), contrasting text (`colors.onPrimary`)
-- **Secondary:** Transparent with primary border
+- **Primary:** `colors.primary` background, `colors.onPrimary` text, `radius.md`
+- **Secondary:** `background.card` background, `border.default` border
 - **Ghost:** Transparent, primary text
+- All buttons have haptic feedback on iOS
+
+### Icons
+
+- Library: Phosphor Icons (`phosphor-react-native`)
+- Default weight: `regular`
+- Tabs use SF Symbols via `IconSymbol`
+- Available in Icon component: house, chart-line-up, heart, gear, wind, waves, brain, check-circle, x-circle, arrow-left, arrow-right, plus, minus, trash, bell, bell-slash, arrow-clockwise, calendar, currency-dollar, coins, medal, trophy, lightning, star
 
 ---
 
-## 📱 Visual Hierarchy
-
-1. **Background:** Subtle gradient provides calming base
-2. **Primary Content:** Large, bold numbers/values on white cards
-3. **Secondary Content:** Body text in secondary color
-4. **Actions:** Prominent buttons with clear labels, positioned at bottom
-
----
-
-## ♿ Accessibility
+## Accessibility
 
 - All text supports font scaling
-- High contrast ratios (WCAG AA compliant)
-- Clear touch targets (minimum 48px)
-- Semantic HTML/React Native components
-- Accessibility labels and hints
+- WCAG AA contrast ratios
+- Clear touch targets (minimum 44px)
+- Semantic accessibility roles and labels
+- Haptic feedback on interactive elements (iOS)
 
 ---
 
-## 🔧 Implementation
-
-Tokens + helpers:
+## Implementation
 
 ```typescript
+// Design tokens (source of truth)
+import { useDesignTokens, typography, spacing, radius } from '@/lib/design';
+
+// Theme helpers (backward-compatible re-exports)
 import { spacing, typography, borderRadius, shadows } from '@/lib/theme';
-import { useDesignTokens } from '@/lib/design';
-```
 
-### Usage Examples
-
-```typescript
-// Colors (via hook)
+// Colors via hook (automatic light/dark)
 const { colors } = useDesignTokens();
-backgroundColor: colors.background.card
-color: colors.text.primary
-
-// Spacing
-padding: spacing.md
-marginTop: spacing.lg
-
-// Typography
-...typography.title
-...typography.body
-
-// Shadows
-...shadows.md
-
-// Border Radius
-borderRadius: borderRadius.lg
 ```
 
 ---
 
-## 📚 Related Files
-
-- `lib/theme.ts` — All design tokens
-- `components/Screen.tsx` — Screen wrapper with gradient support
-- `components/GradientBackground.tsx` — Gradient component
-- `components/ui/Card.tsx` — Card component
-- `components/ui/Button.tsx` — Button component
-
----
-
-## 🎨 Design Principles Summary
-
-1. **Gradients:** Subtle background where used; primary token for accents
-2. **Surfaces:** Flat cards (tokens: `background.card`, `surface.default`)
-3. **Colors:** IAMJARL tokens (light: green primary; dark: lime); see `lib/design.ts`
-4. **Typography:** Clear hierarchy, accessible scaling
-5. **Spacing:** Consistent scale throughout
-6. **Accessibility:** Built-in from the start
-
----
-
-*Last updated: 2026-01-21*
+*Last updated: 2026-03-21*

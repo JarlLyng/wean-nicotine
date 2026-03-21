@@ -135,22 +135,37 @@ const screenshots = [
 		</div>
 	</section>
 
-	<Section id="how" title="How to reduce snus or nicotine pouches gradually" lede="A simple, gentle process you can stick with.">
-		<div class="grid-3">
-			<Card as="article">
-				<h3>1) Set your baseline</h3>
-				<p>Tell Taper how many pouches you use per day. Optionally add price per can.</p>
-			</Card>
-			<Card as="article">
-				<h3>2) Follow your daily allowance</h3>
-				<p>Get a clear daily number and check in with one tap: "Used a pouch" or "Resisted craving".</p>
-			</Card>
-			<Card as="article">
-				<h3>3) Track progress + use tools</h3>
-				<p>See weekly and total progress, and use breathing, urge surfing, and reflection prompts.</p>
-			</Card>
+	<div class="bg-section">
+		<div class="bg-section__image">
+			<img src="/images/bg_how.png" alt="" aria-hidden="true" loading="lazy" />
 		</div>
-	</Section>
+		<div class="bg-section__overlay"></div>
+		<div class="bg-section__content">
+			<Section id="how" title="How to reduce snus or nicotine pouches gradually" lede="A simple, gentle process you can stick with.">
+				<div class="features-split">
+					<div class="features-split__content">
+						<Card as="article">
+							<h3>1) Set your baseline</h3>
+							<p>Tell Taper how many pouches you use per day. Optionally add price per can.</p>
+						</Card>
+						<Card as="article">
+							<h3>2) Follow your daily allowance</h3>
+							<p>Get a clear daily number and check in with one tap: "Used a pouch" or "Resisted craving".</p>
+						</Card>
+						<Card as="article">
+							<h3>3) Track progress + use tools</h3>
+							<p>See weekly and total progress, and use breathing, urge surfing, and reflection prompts.</p>
+						</Card>
+					</div>
+					<div class="features-split__image app-floating-image">
+						<div class="glass-panel screenshot-wrapper">
+							<img src="/screenshots/02-today.png" alt="Taper Today screen showing daily allowance and tracking" width="590" height="1278" loading="lazy" />
+						</div>
+					</div>
+				</div>
+			</Section>
+		</div>
+	</div>
 
 	<Section id="screenshots" title="Screenshots" lede="A peek at the core flows.">
 		<ScreenshotGallery items={screenshots} />
@@ -189,43 +204,41 @@ const screenshots = [
 		</div>
 	</Section>
 
-	<Section
-		id="privacy"
-		title="Privacy-first by design"
-		lede="A private nicotine tracker that keeps your progress on your device — no accounts, no cloud sync."
-	>
-		<div class="grid-2">
-			<Card as="article">
-				<h3>What stays on your device</h3>
-				<ul>
-					<li>Usage logs (used a pouch / resisted craving + timestamps)</li>
-					<li>Settings (baseline, plan parameters, optional triggers, optional price)</li>
-					<li>Preferences (theme, notification settings)</li>
-				</ul>
-			</Card>
-			<Card as="article">
-				<h3>What we don’t do</h3>
-				<ul>
-					<li>No accounts or login</li>
-					<li>No ad tracking</li>
-					<li>No selling personal data</li>
-					<li>No medical advice or clinical claims</li>
-				</ul>
-			</Card>
-			<Card as="article">
-				<h3>Delete everything</h3>
-				<p>
-					"Start Over" deletes local data inside the app and returns you to onboarding.
-				</p>
-			</Card>
-			<Card as="article">
-				<h3>Crash reporting (optional)</h3>
-				<p>
-					If enabled in the build, Sentry may be used only for crash/error reporting to improve stability.
-				</p>
-			</Card>
+	<div class="bg-section">
+		<div class="bg-section__image">
+			<img src="/images/bg_privacy.png" alt="" aria-hidden="true" loading="lazy" />
 		</div>
-	</Section>
+		<div class="bg-section__overlay"></div>
+		<div class="bg-section__content">
+			<Section
+				id="privacy"
+				title="Privacy-first by design"
+				lede="A private nicotine tracker that keeps your progress on your device — no accounts, no cloud sync."
+			>
+				<div class="features-split features-split--reverse">
+					<div class="features-split__image app-floating-image">
+						<div class="glass-panel screenshot-wrapper">
+							<img src="/screenshots/04-tools.png" alt="Taper support tools including breathing exercises and urge surfing" width="590" height="1278" loading="lazy" />
+						</div>
+					</div>
+					<div class="features-split__content">
+						<Card as="article">
+							<h3>What stays on your device</h3>
+							<p>Usage logs, settings, and preferences never leave your phone.</p>
+						</Card>
+						<Card as="article">
+							<h3>What we don't do</h3>
+							<p>No accounts or login. No ad tracking. No selling data.</p>
+						</Card>
+						<Card as="article">
+							<h3>Complete control</h3>
+							<p>"Start Over" instantly wipes local data and returns you to onboarding.</p>
+						</Card>
+					</div>
+				</div>
+			</Section>
+		</div>
+	</div>
 
 	<Section id="faq" title="Frequently asked questions" lede="Common questions about snus reduction and nicotine pouch tracking.">
 		<div class="grid-2">
@@ -295,25 +308,39 @@ const screenshots = [
 		place-items: center;
 	}
 
+	@keyframes pulseBlob {
+		0%, 100% { transform: scale(1) translate(0, 0); opacity: 0.8; }
+		33% { transform: scale(1.1) translate(2% , 3%); opacity: 1; }
+		66% { transform: scale(0.9) translate(-2%, -2%); opacity: 0.9; }
+	}
+
 	.hero__blob {
 		position: absolute;
-		inset: -40px;
-		background: radial-gradient(
-			circle at 30% 20%,
-			color-mix(in oklab, var(--primary), transparent 50%),
-			transparent 55%
-		);
-		filter: blur(10px);
+		inset: -60px;
+		background: 
+			radial-gradient(circle at 30% 20%, color-mix(in oklab, var(--primary), transparent 40%), transparent 55%),
+			radial-gradient(circle at 70% 80%, color-mix(in oklab, var(--primary), transparent 70%), transparent 60%);
+		filter: blur(24px);
+		animation: pulseBlob 10s ease-in-out infinite alternate;
 	}
 
 	.hero__frame {
 		position: relative;
 		border-radius: 28px;
-		border: 1px solid var(--border-subtle);
-		background: var(--surface-raised);
+		border: 1px solid color-mix(in oklab, var(--border-subtle), transparent 40%);
+		background: color-mix(in oklab, var(--surface-raised), transparent 50%);
+		backdrop-filter: blur(16px);
+		-webkit-backdrop-filter: blur(16px);
 		overflow: hidden;
-		box-shadow: 0 24px 80px color-mix(in oklab, var(--text-primary), transparent 88%);
+		box-shadow: 0 32px 120px color-mix(in oklab, var(--text-primary), transparent 85%);
 		max-width: 320px;
+		transform: perspective(1000px) rotateY(-5deg) rotateX(2deg);
+		transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s ease;
+	}
+	
+	.hero__frame:hover {
+		transform: perspective(1000px) rotateY(0deg) rotateX(0deg);
+		box-shadow: 0 40px 140px color-mix(in oklab, var(--text-primary), transparent 80%);
 	}
 
 	.hero__frame img {
@@ -334,6 +361,54 @@ const screenshots = [
 
 	.grid-3 {
 		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+
+	.features-split {
+		display: grid;
+		gap: clamp(var(--space-xl), 5vw, var(--space-xxxl));
+		grid-template-columns: 1fr 1fr;
+		align-items: center;
+	}
+
+	.features-split__content {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-lg);
+	}
+
+	.app-floating-image {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		perspective: 1200px;
+	}
+
+	.screenshot-wrapper {
+		max-width: 280px;
+		border-radius: 40px;
+		padding: 12px;
+		transform: rotateY(-10deg) rotateX(5deg) scale(0.95);
+		transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+		box-shadow: 0 40px 100px color-mix(in oklab, black, transparent 70%);
+	}
+
+	.screenshot-wrapper:hover {
+		transform: rotateY(0deg) rotateX(0deg) scale(1.05);
+	}
+
+	.features-split--reverse .screenshot-wrapper {
+		transform: rotateY(10deg) rotateX(5deg) scale(0.95);
+	}
+
+	.features-split--reverse .screenshot-wrapper:hover {
+		transform: rotateY(0deg) rotateX(0deg) scale(1.05);
+	}
+
+	.screenshot-wrapper img {
+		display: block;
+		width: 100%;
+		height: auto;
+		border-radius: 32px;
 	}
 
 	h3 {
@@ -368,6 +443,19 @@ const screenshots = [
 
 		.grid-3 {
 			grid-template-columns: 1fr;
+		}
+		
+		.features-split {
+			grid-template-columns: 1fr;
+		}
+
+		.features-split--reverse .app-floating-image {
+			order: -1;
+		}
+
+		.screenshot-wrapper {
+			transform: none !important;
+			max-width: 240px;
 		}
 	}
 

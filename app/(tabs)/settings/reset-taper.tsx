@@ -1,71 +1,64 @@
 import { useState, useMemo } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Alert, TextStyle, ViewStyle } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Screen } from '@/components/Screen';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { Icon } from '@/components/ui/Icon';
 import { spacing } from '@/lib/theme';
-import { useDesignTokens } from '@/lib/design';
+import { useDesignTokens, typography } from '@/lib/design';
 import { resetAllData } from '@/lib/db';
 import { deleteAllAnalytics } from '@/lib/analytics';
 import { cancelAllNotifications } from '@/lib/notifications';
+import { captureError, captureMessage } from '@/lib/sentry';
+
+const DELETED_ITEMS = [
+  { icon: 'gear' as const, label: 'Taper settings' },
+  { icon: 'chart-line-up' as const, label: 'Progress history & logs' },
+  { icon: 'calendar' as const, label: 'Your taper plan' },
+  { icon: 'bell' as const, label: 'Scheduled notifications' },
+];
 
 export default function ResetTaperScreen() {
   const router = useRouter();
   const { colors } = useDesignTokens();
-  const styles = useMemo(() => createStyles(colors), [colors]);
+  const s = useMemo(() => createStyles(colors), [colors]);
   const [isStartingOver, setIsStartingOver] = useState(false);
-  const devLog = (...args: unknown[]) => {
-    if (__DEV__) console.log(...args);
-  };
 
   const handleStartOver = async () => {
     Alert.alert(
-      'Start Over',
-      'This will delete ALL your data and take you back to onboarding. Are you sure?',
+      'Are you sure?',
+      'This permanently deletes all your data. You cannot undo this.',
       [
+        { text: 'Cancel', style: 'cancel' },
         {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-        {
-          text: 'Start Over',
+          text: 'Delete Everything',
           style: 'destructive',
           onPress: async () => {
             setIsStartingOver(true);
             try {
-              // Cancel scheduled notifications first (no DB)
-              devLog('Starting over: Canceling notifications...');
               await cancelAllNotifications();
-
-              // Atomic reset: all DB data in one transaction (settings, plan, log entries, preferences, analytics)
-              devLog('Starting over: Resetting all data...');
               await resetAllData();
               await deleteAllAnalytics();
 
-              // Verify deletion
               const { getTaperSettings } = await import('@/lib/db-settings');
               const { getUserPlan } = await import('@/lib/db-user-plan');
               const verifySettings = await getTaperSettings();
               const verifyPlan = await getUserPlan();
 
               if (verifySettings || verifyPlan) {
-                if (__DEV__) console.error('ERROR: Data still exists after deletion!', { verifySettings, verifyPlan });
+                captureMessage('Reset: data still exists after deletion', 'warning');
                 Alert.alert('Warning', 'Some data may not have been cleared. Please try again.');
                 setIsStartingOver(false);
                 return;
               }
 
-              devLog('Starting over: Data successfully deleted');
-
-              Alert.alert('Success', 'All data has been cleared. Returning to onboarding.', [
-                {
-                  text: 'OK',
-                  onPress: () => {
-                    router.replace('/(onboarding)/welcome');
-                  },
-                },
+              Alert.alert('Done', 'All data has been cleared.', [
+                { text: 'OK', onPress: () => router.replace('/(onboarding)/welcome') },
               ]);
             } catch (error) {
               if (__DEV__) console.error('Error starting over:', error);
+              if (error instanceof Error) captureError(error, { context: 'reset_taper_start_over' });
               Alert.alert('Error', 'Failed to clear data. Please try again.');
             } finally {
               setIsStartingOver(false);
@@ -77,54 +70,50 @@ export default function ResetTaperScreen() {
   };
 
   return (
-    <Screen title="Start Over">
-      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        <View style={styles.content}>
-          <Text style={styles.subtitle}>
-            This will permanently delete all your data and take you back to onboarding.
-          </Text>
-
-          <View style={styles.infoBox}>
-            <Text style={styles.infoTitle}>What happens when you start over:</Text>
-            <Text style={styles.infoText}>
-              • Your taper settings are deleted{'\n'}
-              • Your progress history (logs) is deleted{'\n'}
-              • Your plan + allowance are deleted{'\n'}
-              • Local analytics (usage stats) are deleted{'\n'}
-              • Scheduled notifications are canceled{'\n'}
-              • You&apos;ll return to onboarding
+    <Screen>
+      <ScrollView contentContainerStyle={s.scrollContent} showsVerticalScrollIndicator={false}>
+        <View style={s.content}>
+          {/* Warning icon */}
+          <View style={s.warningHeader}>
+            <View style={[s.warningIcon, { backgroundColor: colors.error + '14' }]}>
+              <Icon name="trash" size={28} color={colors.error} weight="regular" />
+            </View>
+            <Text style={s.warningTitle}>Start Over</Text>
+            <Text style={s.warningSubtitle}>
+              This will permanently delete all your data and return you to onboarding.
             </Text>
           </View>
 
-          <View style={styles.encouragementBox}>
-            <Text style={styles.encouragementText}>
-              This is a full reset. If you&apos;re sure, tap Start Over below.
-            </Text>
-          </View>
+          {/* What gets deleted */}
+          <Card variant="elevated" padding="lg" style={s.card}>
+            <Text style={s.listTitle}>What will be deleted:</Text>
+            {DELETED_ITEMS.map((item) => (
+              <View key={item.label} style={s.listItem}>
+                <Icon name={item.icon} size={18} color={colors.text.secondary} weight="regular" />
+                <Text style={s.listText}>{item.label}</Text>
+              </View>
+            ))}
+          </Card>
 
-          <TouchableOpacity
-            style={[styles.startOverButton, isStartingOver && styles.startOverButtonDisabled]}
+          {/* Spacer */}
+          <View style={s.spacer} />
+
+          {/* Actions */}
+          <Button
+            title={isStartingOver ? 'Deleting...' : 'Delete All Data'}
             onPress={handleStartOver}
             disabled={isStartingOver}
-            accessibilityRole="button"
-            accessibilityLabel="Start Over"
-            accessibilityHint="Deletes all data and returns to onboarding."
-            accessibilityState={{ disabled: isStartingOver }}>
-            <Text style={styles.startOverButtonText}>
-              {isStartingOver ? 'Starting Over...' : 'Start Over (Go to Onboarding)'}
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity 
-            style={styles.cancelButton} 
+            loading={isStartingOver}
+            variant="secondary"
+            style={s.deleteButton}
+            textStyle={{ color: colors.error }}
+          />
+          <Button
+            title="Cancel"
             onPress={() => router.back()}
+            variant="ghost"
             disabled={isStartingOver}
-            accessibilityRole="button"
-            accessibilityLabel="Cancel"
-            accessibilityHint="Go back to settings."
-            accessibilityState={{ disabled: isStartingOver }}>
-            <Text style={styles.cancelButtonText}>Cancel</Text>
-          </TouchableOpacity>
+          />
         </View>
       </ScrollView>
     </Screen>
@@ -135,71 +124,69 @@ const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) =>
   StyleSheet.create({
     scrollContent: {
       flexGrow: 1,
-    },
+    } as ViewStyle,
     content: {
       flex: 1,
-      paddingTop: spacing.lg,
-      // Screen-komponenten giver allerede horizontal padding
+      paddingTop: spacing.xl,
       paddingHorizontal: 0,
       paddingBottom: spacing.lg,
-    },
-    subtitle: {
-      fontSize: 16,
-      color: colors.text.secondary,
-      marginBottom: spacing.xl,
-      lineHeight: 24,
-      textAlign: 'center',
-    },
-    infoBox: {
-      backgroundColor: colors.background.muted,
-      borderRadius: 12,
-      padding: spacing.lg,
-      marginBottom: spacing.lg,
-    },
-    infoTitle: {
-      fontSize: 18,
-      fontWeight: '600',
+    } as ViewStyle,
+
+    // Warning header
+    warningHeader: {
+      alignItems: 'center',
+      marginBottom: spacing.xxl,
+    } as ViewStyle,
+    warningIcon: {
+      width: 56,
+      height: 56,
+      borderRadius: 28,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom: spacing.md,
+    } as ViewStyle,
+    warningTitle: {
+      fontSize: typography.sizes.xl,
+      fontWeight: `${typography.weights.bold}` as const,
       color: colors.text.primary,
+      marginBottom: spacing.sm,
+    } as TextStyle,
+    warningSubtitle: {
+      fontSize: typography.sizes.sm,
+      color: colors.text.secondary,
+      textAlign: 'center' as const,
+      lineHeight: typography.lineHeights.tight,
+      paddingHorizontal: spacing.lg,
+    } as TextStyle,
+
+    // List
+    card: {
+      marginBottom: spacing.lg,
+    } as ViewStyle,
+    listTitle: {
+      fontSize: typography.sizes.sm,
+      fontWeight: `${typography.weights.semibold}` as const,
+      color: colors.text.secondary,
       marginBottom: spacing.md,
-    },
-    infoText: {
-      fontSize: 16,
-      color: colors.text.secondary,
-      lineHeight: 24,
-    },
-    encouragementBox: {
-      backgroundColor: colors.background.muted,
-      borderRadius: 8,
-      padding: spacing.md,
-      marginBottom: spacing.xl,
-    },
-    encouragementText: {
-      fontSize: 14,
-      color: colors.text.secondary,
-      lineHeight: 20,
-      textAlign: 'center',
-    },
-    startOverButton: {
-      backgroundColor: colors.shared.warning,
-      padding: spacing.md,
-      borderRadius: 8,
+    } as TextStyle,
+    listItem: {
+      flexDirection: 'row',
       alignItems: 'center',
-      marginBottom: spacing.md,
-    },
-    startOverButtonDisabled: {
-      opacity: 0.6,
-    },
-    startOverButtonText: {
-      color: colors.onWarning,
-      fontSize: 18,
-      fontWeight: '600',
-    },
-    cancelButton: {
-      padding: spacing.md,
-      alignItems: 'center',
-    },
-    cancelButtonText: {
-      color: colors.text.secondary,
-      fontSize: 16,
-    },
+      gap: spacing.md,
+      paddingVertical: spacing.sm,
+    } as ViewStyle,
+    listText: {
+      fontSize: typography.sizes.base,
+      color: colors.text.primary,
+    } as TextStyle,
+
+    // Layout
+    spacer: {
+      flex: 1,
+      minHeight: spacing.xxl,
+    } as ViewStyle,
+    deleteButton: {
+      borderColor: colors.error,
+      marginBottom: spacing.sm,
+    } as ViewStyle,
   });

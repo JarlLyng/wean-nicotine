@@ -1,12 +1,11 @@
 import { Screen } from '@/components/Screen';
 import { Button } from '@/components/ui/Button';
-import { Card } from '@/components/ui/Card';
-import { useDesignTokens, getColors } from '@/lib/design';
+import { useDesignTokens, getColors, typography } from '@/lib/design';
 import { useColorScheme } from '@/hooks/use-color-scheme';
-import { borderRadius, spacing, typography } from '@/lib/theme';
+import { borderRadius, spacing } from '@/lib/theme';
 import { useRouter } from 'expo-router';
 import { useState, useMemo } from 'react';
-import { ScrollView, StyleSheet, Text, TextInput, TextStyle, View, ViewStyle } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, TextStyle, View, ViewStyle } from 'react-native';
 
 export default function BaselineScreen() {
   const { colors } = useDesignTokens();
@@ -14,16 +13,16 @@ export default function BaselineScreen() {
   const router = useRouter();
   const [baseline, setBaseline] = useState('');
   const [error, setError] = useState('');
-  const baselineStyles = useMemo(
-    () => createBaselineStyles(getColors(colorScheme === 'dark' ? 'dark' : 'light')),
+  const s = useMemo(
+    () => createStyles(getColors(colorScheme === 'dark' ? 'dark' : 'light')),
     [colorScheme]
   );
 
   const handleNext = () => {
     const value = parseInt(baseline, 10);
-    
+
     if (!baseline || isNaN(value) || value < 1 || value > 100) {
-      setError('Please enter a number between 1 and 100');
+      setError('Enter a number between 1 and 100');
       return;
     }
 
@@ -35,113 +34,133 @@ export default function BaselineScreen() {
   };
 
   return (
-    <Screen title="Set Your Baseline">
-      <ScrollView
-        contentContainerStyle={baselineStyles.scrollContent}
-        showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled"
-        keyboardDismissMode="on-drag">
-        <View style={baselineStyles.content}>
-          <Card variant="flat" style={baselineStyles.card} padding="lg">
-            <Text style={baselineStyles.description}>
-              How many pouches do you typically use per day?
-            </Text>
-            <Text style={baselineStyles.hint}>
-              Be honest — this helps us create a realistic plan for you.
-            </Text>
+    <Screen>
+      <KeyboardAvoidingView
+        style={s.flex}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        keyboardVerticalOffset={100}>
+        <ScrollView
+          contentContainerStyle={s.scrollContent}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="on-drag">
+          <View style={s.content}>
+            {/* Question */}
+            <View style={s.questionSection}>
+              <Text style={s.question}>
+                How many pouches do you use per day?
+              </Text>
+              <Text style={s.hint}>
+                Be honest — this is your starting point, not a target.
+              </Text>
+            </View>
 
-            <View style={baselineStyles.inputContainer}>
+            {/* Input */}
+            <View style={s.inputSection}>
               <TextInput
-                style={baselineStyles.input}
+                style={s.input}
                 value={baseline}
                 onChangeText={(text) => {
                   setBaseline(text);
                   setError('');
                 }}
-                placeholder="e.g., 10"
-                placeholderTextColor={colors.text.secondary}
+                placeholder="0"
+                placeholderTextColor={colors.text.tertiary}
                 keyboardType="number-pad"
                 autoFocus
                 blurOnSubmit
                 returnKeyType="done"
                 onSubmitEditing={handleNext}
-                accessibilityLabel="Baseline pouches per day"
+                maxLength={3}
+                accessibilityLabel="Pouches per day"
                 accessibilityHint="Enter how many pouches you typically use per day."
               />
-              <Text style={baselineStyles.inputLabel}>pouches per day</Text>
+              <Text style={s.inputLabel}>pouches per day</Text>
+              {error ? <Text style={s.error}>{error}</Text> : null}
             </View>
 
-            {error ? <Text style={baselineStyles.error}>{error}</Text> : null}
-          </Card>
+            {/* Spacer pushes button to bottom */}
+            <View style={s.spacer} />
 
-          <Button
-            title="Continue"
-            onPress={handleNext}
-            style={baselineStyles.button}
-          />
-        </View>
-      </ScrollView>
+            <Button
+              title="Continue"
+              onPress={handleNext}
+              style={s.button}
+            />
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </Screen>
   );
 }
 
-const createBaselineStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => {
-  const styles = {
+const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) =>
+  StyleSheet.create({
+    flex: {
+      flex: 1,
+    } as ViewStyle,
     scrollContent: {
       flexGrow: 1,
     } as ViewStyle,
     content: {
       flex: 1,
-      paddingTop: spacing.lg,
-      // Screen-komponenten giver allerede horizontal padding
+      paddingTop: spacing.xl,
       paddingHorizontal: 0,
       paddingBottom: spacing.lg,
     } as ViewStyle,
-    card: {
-      marginBottom: spacing.lg,
+
+    // Question
+    questionSection: {
+      marginBottom: spacing.xxxl,
     } as ViewStyle,
-    description: {
-      ...typography.xl,
-      fontWeight: '600' as const,
+    question: {
+      fontSize: typography.sizes.xl,
+      lineHeight: 30,
+      fontWeight: `${typography.weights.bold}` as const,
       color: colors.text.primary,
       marginBottom: spacing.sm,
-      textAlign: 'center' as const,
     } as TextStyle,
     hint: {
-      ...typography.caption,
+      fontSize: typography.sizes.sm,
+      lineHeight: typography.lineHeights.tight,
       color: colors.text.secondary,
-      marginBottom: spacing.xl,
-      textAlign: 'center' as const,
     } as TextStyle,
-    inputContainer: {
-      marginBottom: spacing.md,
+
+    // Input
+    inputSection: {
+      alignItems: 'center',
+      marginBottom: spacing.xl,
     } as ViewStyle,
     input: {
-      borderWidth: 2,
-      borderColor: colors.border.subtle,
-      borderRadius: borderRadius.lg,
-      padding: spacing.md,
-      ...typography['2xl'],
-      fontWeight: '600' as const,
+      fontSize: 48,
+      lineHeight: 56,
+      fontWeight: `${typography.weights.bold}` as const,
       color: colors.text.primary,
       textAlign: 'center' as const,
-      marginBottom: spacing.xs,
-      backgroundColor: colors.surface.default,
+      width: '100%',
+      paddingVertical: spacing.lg,
+      borderBottomWidth: 2,
+      borderBottomColor: colors.border.subtle,
     } as TextStyle,
     inputLabel: {
-      ...typography.caption,
+      fontSize: typography.sizes.sm,
+      lineHeight: typography.lineHeights.tight,
       color: colors.text.secondary,
-      textAlign: 'center' as const,
+      marginTop: spacing.sm,
     } as TextStyle,
     error: {
-      ...typography.caption,
-      color: colors.shared.error,
-      marginBottom: spacing.sm,
-      textAlign: 'center' as const,
+      fontSize: typography.sizes.sm,
+      lineHeight: typography.lineHeights.tight,
+      color: colors.error,
+      marginTop: spacing.sm,
     } as TextStyle,
+
+    // Layout
+    spacer: {
+      flex: 1,
+      minHeight: spacing.xl,
+    } as ViewStyle,
     button: {
       marginTop: spacing.md,
     } as ViewStyle,
-  };
-  return StyleSheet.create(styles);
-};
+  });

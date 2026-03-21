@@ -6,10 +6,15 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "lint": "expo lint"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.0",
     "astro": "^5.16.11"
+  },
+  "devDependencies": {
+    "@types/react": "~19.2.10",
+    "eslint-config-expo": "~55.0.0"
   }
 }

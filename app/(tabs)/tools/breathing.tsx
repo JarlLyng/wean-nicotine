@@ -2,8 +2,8 @@ import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming, Easing } from 'react-native-reanimated';
 import { Screen } from '@/components/Screen';
-import { spacing } from '@/lib/theme';
-import { useDesignTokens } from '@/lib/design';
+import { spacing, borderRadius } from '@/lib/theme';
+import { useDesignTokens, typography } from '@/lib/design';
 import * as Haptics from 'expo-haptics';
 
 const BREATHING_CYCLES = [
@@ -97,7 +97,7 @@ export default function BreathingExercise() {
   const secondsRemaining = Math.ceil(timeRemaining / 1000);
 
   return (
-    <Screen title="Breathing Exercise">
+    <Screen>
       <View style={breathingStyles.container}>
         <Text style={breathingStyles.subtitle}>
           Take a moment to center yourself. This exercise can help reduce cravings.
@@ -159,10 +159,10 @@ const createBreathingStyles = (colors: ReturnType<typeof useDesignTokens>['color
     paddingBottom: spacing.lg,
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: typography.sizes.base,
     color: colors.text.secondary,
     marginBottom: spacing.xl,
-    lineHeight: 24,
+    lineHeight: typography.lineHeights.normal,
     textAlign: 'center',
   },
   exerciseContainer: {
@@ -175,24 +175,24 @@ const createBreathingStyles = (colors: ReturnType<typeof useDesignTokens>['color
     height: 200,
     borderRadius: 100,
     backgroundColor: colors.primary,
-    paddingTop: 12,
+    paddingTop: spacing.md,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: spacing.xl,
   },
   phaseText: {
-    fontSize: 24,
-    fontWeight: '600',
+    fontSize: typography.sizes.xl,
+    fontWeight: `${typography.weights.semibold}`,
     color: colors.onPrimary,
     marginBottom: spacing.sm,
   },
   timerText: {
-    fontSize: 18,
+    fontSize: typography.sizes.lg,
     color: colors.onPrimary,
     opacity: 0.9,
   },
   instruction: {
-    fontSize: 18,
+    fontSize: typography.sizes.lg,
     color: colors.text.primary,
     textAlign: 'center',
     marginBottom: spacing.xl,
@@ -202,36 +202,36 @@ const createBreathingStyles = (colors: ReturnType<typeof useDesignTokens>['color
     backgroundColor: colors.primary,
     paddingHorizontal: spacing.xl,
     paddingVertical: spacing.md,
-    borderRadius: 8,
+    borderRadius: borderRadius.sm,
   },
   startButtonText: {
     color: colors.onPrimary,
-    fontSize: 18,
-    fontWeight: '600',
+    fontSize: typography.sizes.lg,
+    fontWeight: `${typography.weights.semibold}`,
   },
   stopButton: {
     backgroundColor: colors.background.card,
     paddingHorizontal: spacing.xl,
     paddingVertical: spacing.md,
-    borderRadius: 8,
+    borderRadius: borderRadius.sm,
     borderWidth: 1,
     borderColor: colors.border.subtle,
   },
   stopButtonText: {
     color: colors.text.primary,
-    fontSize: 18,
-    fontWeight: '600',
+    fontSize: typography.sizes.lg,
+    fontWeight: `${typography.weights.semibold}`,
   },
   infoBox: {
     backgroundColor: colors.background.muted,
-    borderRadius: 8,
+    borderRadius: borderRadius.sm,
     padding: spacing.md,
     marginTop: spacing.lg,
   },
   infoText: {
-    fontSize: 14,
+    fontSize: typography.sizes.sm,
     color: colors.text.secondary,
-    lineHeight: 20,
+    lineHeight: typography.lineHeights.tight,
     textAlign: 'center',
   },
 });

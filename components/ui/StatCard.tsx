@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, ViewStyle } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming, withSpring } from 'react-native-reanimated';
-import { typography, spacing, animations } from '@/lib/theme';
-import { useDesignTokens } from '@/lib/design';
+import { spacing, animations } from '@/lib/theme';
+import { useDesignTokens, typography } from '@/lib/design';
 
 interface StatCardProps {
   value: string | number;
@@ -17,10 +17,9 @@ export function StatCard({ value, label, variant = 'default', style }: StatCardP
   const opacity = useSharedValue(0);
 
   useEffect(() => {
-    // Animate in when value changes
     scale.value = withSpring(1, {
-      damping: 12,
-      stiffness: 200,
+      damping: 15,
+      stiffness: 180,
     });
     opacity.value = withTiming(1, { duration: animations.normal });
   }, [value, opacity, scale]);
@@ -60,11 +59,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   value: {
-    ...typography['3xl'],
-    fontWeight: '700',
+    // Design system: use xxl (36px) — closest token to old 28px
+    fontSize: typography.sizes.xxl,
+    lineHeight: typography.lineHeights.xxl,
+    fontWeight: `${typography.weights.bold}`,
   },
   label: {
-    ...typography.sm,
+    fontSize: typography.sizes.sm,
+    lineHeight: typography.lineHeights.tight,
     marginTop: spacing.xs,
   },
 });

@@ -40,7 +40,7 @@ const rel = external ? 'noopener noreferrer' : undefined;
 		justify-content: center;
 		gap: 10px;
 		padding: 12px 14px;
-		border-radius: var(--radius-full);
+		border-radius: 9999px;
 		border: 1px solid var(--border-default);
 		background: var(--surface-raised);
 		color: var(--text-primary);
@@ -61,10 +61,19 @@ const rel = external ? 'noopener noreferrer' : undefined;
 		text-decoration: none;
 	}
 
+	.btn:active {
+		transform: scale(0.97);
+	}
+
 	.btn--primary {
-		background: var(--primary);
+		background: linear-gradient(135deg, var(--primary) 0%, color-mix(in oklab, var(--primary), white 20%) 100%);
 		color: var(--on-primary);
-		border-color: color-mix(in oklab, var(--primary), black 10%);
+		border-color: color-mix(in oklab, var(--primary), white 40%);
+		box-shadow: inset 0 1px 1px color-mix(in oklab, white, transparent 50%), 0 2px 12px color-mix(in oklab, var(--primary), transparent 70%);
+	}
+
+	.btn--primary:hover {
+		box-shadow: inset 0 1px 1px color-mix(in oklab, white, transparent 50%), 0 4px 20px color-mix(in oklab, var(--primary), transparent 60%);
 	}
 
 	.btn--secondary {

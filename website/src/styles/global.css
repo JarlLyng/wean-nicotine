@@ -1,50 +1,8 @@
 @import './tokens.css';
 
-/* Default to system preference (no toggle needed) */
+/* Color scheme follows system preference via tokens.css */
 :root {
 	color-scheme: light dark;
-}
-
-@media (prefers-color-scheme: dark) {
-	:root:not([data-theme]) {
-		color-scheme: dark;
-	}
-}
-
-:root:not([data-theme]) {
-	/* light defaults */
-	--primary: #00ff7b;
-	--on-primary: #000000;
-	--bg-app: #ffffff;
-	--bg-muted: rgba(0, 0, 0, 0.04);
-	--bg-card: rgba(0, 0, 0, 0.04);
-	--surface: #ffffff;
-	--surface-raised: rgba(0, 0, 0, 0.02);
-	--text-primary: #000000;
-	--text-secondary: rgba(0, 0, 0, 0.7);
-	--text-tertiary: rgba(0, 0, 0, 0.55);
-	--border-subtle: rgba(0, 0, 0, 0.1);
-	--border-default: rgba(0, 0, 0, 0.16);
-	--success: #4caf50;
-	--warning: #ff6b35;
-	--error: #ff3b30;
-}
-
-@media (prefers-color-scheme: dark) {
-	:root:not([data-theme]) {
-		--primary: #d0ff00;
-		--on-primary: #000000;
-		--bg-app: #000000;
-		--bg-muted: rgba(255, 255, 255, 0.05);
-		--bg-card: rgba(255, 255, 255, 0.05);
-		--surface: #000000;
-		--surface-raised: rgba(255, 255, 255, 0.03);
-		--text-primary: #ffffff;
-		--text-secondary: rgba(255, 255, 255, 0.75);
-		--text-tertiary: rgba(255, 255, 255, 0.6);
-		--border-subtle: rgba(255, 255, 255, 0.12);
-		--border-default: rgba(255, 255, 255, 0.18);
-	}
 }
 
 * {
@@ -55,13 +13,17 @@ html,
 body {
 	margin: 0;
 	padding: 0;
-	height: 100%;
-	background: var(--bg-app);
+	min-height: 100vh;
+	background-color: var(--bg-app);
+	background-image: 
+		radial-gradient(circle at 10% 0%, color-mix(in oklab, var(--primary), transparent 92%), transparent 50%),
+		radial-gradient(circle at 90% 100%, color-mix(in oklab, var(--primary), transparent 95%), transparent 50%);
+	background-attachment: fixed;
 	color: var(--text-primary);
-	font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+	font-family: var(--font-ui), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
 		'Helvetica Neue', Arial, 'Apple Color Emoji', 'Segoe UI Emoji';
-	font-size: 16px;
-	line-height: 24px;
+	font-size: var(--font-size-base);
+	line-height: var(--line-height-normal);
 	text-rendering: optimizeLegibility;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
@@ -105,5 +67,78 @@ a:hover {
 
 .skip-link:focus {
 	left: var(--space-lg);
+}
+
+/* Glassmorphism Utilities */
+.glass-panel {
+	background: color-mix(in oklab, var(--bg-card), transparent 30%);
+	backdrop-filter: blur(20px);
+	-webkit-backdrop-filter: blur(20px);
+	border: 1px solid color-mix(in oklab, var(--border-subtle), transparent 40%);
+	box-shadow: 0 8px 32px color-mix(in oklab, black, transparent 80%);
+}
+
+/* Atmospheric Background Sections */
+.bg-section {
+	position: relative;
+	width: 100%;
+	min-height: 600px;
+	padding: clamp(60px, 10vw, 120px) 0;
+	display: flex;
+	align-items: center;
+	overflow: hidden;
+}
+
+.bg-section__image {
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+}
+
+.bg-section__image img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+}
+
+.bg-section__overlay {
+	position: absolute;
+	inset: 0;
+	z-index: 2;
+	background: linear-gradient(
+		to bottom,
+		var(--bg-app) 0%,
+		color-mix(in oklab, var(--bg-app), transparent 30%) 15%,
+		color-mix(in oklab, var(--bg-app), transparent 30%) 85%,
+		var(--bg-app) 100%
+	);
+}
+
+.bg-section__content {
+	position: relative;
+	z-index: 3;
+	width: 100%;
+}
+
+.bg-section::before,
+.bg-section::after {
+	content: '';
+	position: absolute;
+	left: 0;
+	right: 0;
+	height: 150px;
+	z-index: 4;
+	pointer-events: none;
+}
+
+.bg-section::before {
+	top: 0;
+	background: linear-gradient(to bottom, var(--bg-app), transparent);
+}
+
+.bg-section::after {
+	bottom: 0;
+	background: linear-gradient(to top, var(--bg-app), transparent);
 }
 

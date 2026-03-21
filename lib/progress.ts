@@ -326,6 +326,66 @@ export async function calculateTotalProgressAndMilestones(
   };
 }
 
+/**
+ * Daily breakdown for bar chart visualization.
+ */
+export interface DailyBreakdown {
+  date: Date;
+  dayLabel: string; // 'Mon', 'Tue', ...
+  used: number;
+  allowance: number;
+  resisted: number;
+  isToday: boolean;
+  isFuture: boolean;
+}
+
+/**
+ * Get per-day breakdown for a given week (used by the bar chart on Progress).
+ */
+export async function getDailyBreakdown(
+  settings: TaperSettings,
+  weekStart: Date,
+  weekEnd: Date,
+): Promise<DailyBreakdown[]> {
+  const dayLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  const settingsStart = new Date(settings.startDate);
+  settingsStart.setHours(0, 0, 0, 0);
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const logs = await getLogEntries({
+    startDate: weekStart.getTime(),
+    endDate: weekEnd.getTime(),
+  });
+
+  const usedByDay = new Map<string, number>();
+  const resistedByDay = new Map<string, number>();
+  for (const log of logs) {
+    const key = toDayKey(new Date(log.timestamp));
+    if (log.type === 'pouch_used') usedByDay.set(key, (usedByDay.get(key) ?? 0) + 1);
+    else if (log.type === 'craving_resisted') resistedByDay.set(key, (resistedByDay.get(key) ?? 0) + 1);
+  }
+
+  const days = getDaysInRange(weekStart, weekEnd);
+  return days.map((day, i) => {
+    const key = toDayKey(day);
+    const dayDate = new Date(day);
+    dayDate.setHours(0, 0, 0, 0);
+    const isFuture = dayDate > today;
+    const isBeforeStart = dayDate < settingsStart;
+    return {
+      date: day,
+      dayLabel: dayLabels[i % 7],
+      used: isBeforeStart || isFuture ? 0 : (usedByDay.get(key) ?? 0),
+      allowance: isBeforeStart ? 0 : calculateDailyAllowance(settings, day),
+      resisted: isBeforeStart || isFuture ? 0 : (resistedByDay.get(key) ?? 0),
+      isToday: dayDate.getTime() === today.getTime(),
+      isFuture,
+    };
+  });
+}
+
 /** @deprecated Use calculateTotalProgressAndMilestones instead */
 export async function calculateTotalProgress(settings: TaperSettings): Promise<TotalProgress> {
   const { progress } = await calculateTotalProgressAndMilestones(settings);

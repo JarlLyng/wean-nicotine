@@ -5,6 +5,7 @@
 import { Platform } from 'react-native';
 import { getDatabase } from './db';
 import { getDummySettings } from './db-web-dummy';
+import { captureError } from './sentry';
 import type { TaperSettings } from './models';
 
 /**
@@ -132,9 +133,8 @@ export async function getTaperSettings(): Promise<TaperSettings | null> {
     try {
       triggers = JSON.parse(result.triggers);
     } catch (error) {
-      if (__DEV__) {
-        console.error('Error parsing triggers JSON:', error);
-      }
+      if (__DEV__) console.error('Error parsing triggers JSON:', error);
+      if (error instanceof Error) captureError(error, { context: 'db_settings_parse_triggers', raw: result.triggers });
       triggers = undefined;
     }
   }

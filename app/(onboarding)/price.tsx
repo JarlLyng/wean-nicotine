@@ -1,14 +1,14 @@
 import { Screen } from '@/components/Screen';
 import { Button } from '@/components/ui/Button';
-import { Card } from '@/components/ui/Card';
-import { useDesignTokens, getColors } from '@/lib/design';
+import { useDesignTokens, getColors, typography } from '@/lib/design';
 import { useColorScheme } from '@/hooks/use-color-scheme';
-import { borderRadius, spacing, typography } from '@/lib/theme';
+import { borderRadius, spacing } from '@/lib/theme';
 import type { CurrencyCode } from '@/lib/currency';
 import { CURRENCY_OPTIONS } from '@/lib/currency';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState, useMemo } from 'react';
-import { ScrollView, StyleSheet, Text, TextInput, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native';
+import * as Haptics from 'expo-haptics';
 
 export default function PriceScreen() {
   const { colors } = useDesignTokens();
@@ -16,12 +16,12 @@ export default function PriceScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
   const baseline = params.baseline ? parseInt(params.baseline as string, 10) : 10;
-  
+
   const [price, setPrice] = useState('');
   const [currency, setCurrency] = useState<CurrencyCode>('DKK');
   const [error, setError] = useState('');
-  const priceStyles = useMemo(
-    () => createPriceStyles(getColors(colorScheme === 'dark' ? 'dark' : 'light')),
+  const s = useMemo(
+    () => createStyles(getColors(colorScheme === 'dark' ? 'dark' : 'light')),
     [colorScheme]
   );
 
@@ -30,7 +30,7 @@ export default function PriceScreen() {
     if (price && price.trim() !== '') {
       const value = parseFloat(normalizedPrice);
       if (isNaN(value) || value < 0) {
-        setError('Please enter a valid price');
+        setError('Enter a valid price');
         return;
       }
     }
@@ -46,180 +46,195 @@ export default function PriceScreen() {
     });
   };
 
-
   return (
-    <Screen title="Price Per Can">
-      <ScrollView
-        contentContainerStyle={priceStyles.scrollContent}
-        showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled"
-        keyboardDismissMode="on-drag">
-        <View style={priceStyles.content}>
-          <Card variant="flat" style={priceStyles.card} padding="lg">
-            <Text style={priceStyles.description}>
-              If you&apos;d like to track money saved, enter the price you pay per can.
-            </Text>
-            <Text style={priceStyles.hint}>
-              This is optional — leave it blank if you don&apos;t want to track money saved.
-            </Text>
-
-            <View style={priceStyles.currencyContainer}>
-              <Text style={priceStyles.currencyLabel}>Currency</Text>
-              <View style={priceStyles.currencyGrid}>
-                {CURRENCY_OPTIONS.map((option) => {
-                  const isSelected = currency === option.code;
-                  return (
-                    <TouchableOpacity
-                      key={option.code}
-                      style={[
-                        priceStyles.currencyPill,
-                        isSelected && priceStyles.currencyPillSelected,
-                      ]}
-                      onPress={() => setCurrency(option.code)}
-                      accessibilityRole="button"
-                      accessibilityLabel={`Select ${option.label}`}>
-                      <Text
-                        style={[
-                          priceStyles.currencyPillText,
-                          isSelected && priceStyles.currencyPillTextSelected,
-                        ]}>
-                        {option.code}
-                      </Text>
-                    </TouchableOpacity>
-                  );
-                })}
-              </View>
+    <Screen>
+      <KeyboardAvoidingView
+        style={s.flex}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        keyboardVerticalOffset={100}>
+        <ScrollView
+          contentContainerStyle={s.scrollContent}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="on-drag">
+          <View style={s.content}>
+            {/* Question */}
+            <View style={s.questionSection}>
+              <Text style={s.question}>
+                What do you pay per can?
+              </Text>
+              <Text style={s.hint}>
+                Optional — lets us show how much money you save.
+              </Text>
             </View>
 
-            <View style={priceStyles.inputContainer}>
+            {/* Currency pills */}
+            <View style={s.currencyRow}>
+              {CURRENCY_OPTIONS.map((option) => {
+                const isSelected = currency === option.code;
+                return (
+                  <TouchableOpacity
+                    key={option.code}
+                    style={[s.currencyPill, isSelected && s.currencyPillSelected]}
+                    onPress={() => {
+                      if (Platform.OS === 'ios') {
+                        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+                      }
+                      setCurrency(option.code);
+                    }}
+                    accessibilityRole="button"
+                    accessibilityLabel={`Select ${option.label}`}
+                    accessibilityState={{ selected: isSelected }}>
+                    <Text style={[s.currencyText, isSelected && s.currencyTextSelected]}>
+                      {option.code}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+
+            {/* Input */}
+            <View style={s.inputSection}>
               <TextInput
-                style={priceStyles.input}
+                style={s.input}
                 value={price}
                 onChangeText={(text) => {
                   setPrice(text);
                   setError('');
                 }}
-                placeholder="e.g., 50.00"
-                placeholderTextColor={colors.text.secondary}
+                placeholder="0"
+                placeholderTextColor={colors.text.tertiary}
                 keyboardType="decimal-pad"
                 blurOnSubmit
                 returnKeyType="done"
                 onSubmitEditing={handleNext}
                 accessibilityLabel={`Price per can (${currency})`}
-                accessibilityHint="Optional. Leave blank if you don't want to track money saved."
+                accessibilityHint="Optional. Leave blank to skip money tracking."
               />
-              <Text style={priceStyles.inputLabel}>price per can ({currency})</Text>
+              <Text style={s.inputLabel}>{currency} per can</Text>
+              {error ? <Text style={s.error}>{error}</Text> : null}
             </View>
 
-            {error ? <Text style={priceStyles.error}>{error}</Text> : null}
-          </Card>
+            {/* Spacer */}
+            <View style={s.spacer} />
 
-          <Button
-            title="Continue"
-            onPress={handleNext}
-            style={priceStyles.button}
-          />
-        </View>
-      </ScrollView>
+            <Button
+              title="Continue"
+              onPress={handleNext}
+              style={s.button}
+            />
+            <TouchableOpacity onPress={handleNext} style={s.skipButton}>
+              <Text style={s.skipText}>Skip — I don't want to track money</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </Screen>
   );
 }
 
-const createPriceStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => {
-  const styles = {
+const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) =>
+  StyleSheet.create({
+    flex: {
+      flex: 1,
+    } as ViewStyle,
     scrollContent: {
       flexGrow: 1,
     } as ViewStyle,
     content: {
       flex: 1,
-      paddingTop: spacing.lg,
-      // Screen-komponenten giver allerede horizontal padding
+      paddingTop: spacing.xl,
       paddingHorizontal: 0,
       paddingBottom: spacing.lg,
     } as ViewStyle,
-    card: {
-      marginBottom: spacing.lg,
+
+    // Question
+    questionSection: {
+      marginBottom: spacing.xxl,
     } as ViewStyle,
-    description: {
-      ...typography.xl,
-      fontWeight: '600' as const,
+    question: {
+      fontSize: typography.sizes.xl,
+      lineHeight: 30,
+      fontWeight: `${typography.weights.bold}` as const,
       color: colors.text.primary,
       marginBottom: spacing.sm,
-      textAlign: 'center' as const,
     } as TextStyle,
     hint: {
-      ...typography.caption,
+      fontSize: typography.sizes.sm,
+      lineHeight: typography.lineHeights.tight,
       color: colors.text.secondary,
-      marginBottom: spacing.xl,
-      textAlign: 'center' as const,
     } as TextStyle,
-    currencyContainer: {
-      marginBottom: spacing.lg,
-    } as ViewStyle,
-    currencyLabel: {
-      ...typography.caption,
-      color: colors.text.secondary,
-      textAlign: 'center' as const,
-      marginBottom: spacing.sm,
-      fontWeight: '600' as const,
-    } as TextStyle,
-    currencyGrid: {
+
+    // Currency
+    currencyRow: {
       flexDirection: 'row',
-      flexWrap: 'wrap',
-      justifyContent: 'center',
-      gap: spacing.xs,
+      gap: spacing.sm,
+      marginBottom: spacing.xxl,
     } as ViewStyle,
     currencyPill: {
-      paddingHorizontal: spacing.md,
+      paddingHorizontal: spacing.lg,
       paddingVertical: spacing.sm,
       borderRadius: borderRadius.full,
-      borderWidth: 2,
+      borderWidth: 1.5,
       borderColor: colors.border.subtle,
       backgroundColor: colors.surface.default,
-      minWidth: 64,
-      alignItems: 'center',
     } as ViewStyle,
     currencyPillSelected: {
       borderColor: colors.primary,
       backgroundColor: colors.primary,
     } as ViewStyle,
-    currencyPillText: {
-      ...typography.body,
+    currencyText: {
+      fontSize: typography.sizes.sm,
+      fontWeight: `${typography.weights.semibold}` as const,
       color: colors.text.primary,
-      fontWeight: '600' as const,
     } as TextStyle,
-    currencyPillTextSelected: {
+    currencyTextSelected: {
       color: colors.onPrimary,
     } as TextStyle,
-    inputContainer: {
-      marginBottom: spacing.md,
+
+    // Input
+    inputSection: {
+      alignItems: 'center',
+      marginBottom: spacing.xl,
     } as ViewStyle,
     input: {
-      borderWidth: 2,
-      borderColor: colors.border.subtle,
-      borderRadius: borderRadius.lg,
-      padding: spacing.md,
-      ...typography['2xl'],
-      fontWeight: '600' as const,
+      fontSize: 48,
+      lineHeight: 56,
+      fontWeight: `${typography.weights.bold}` as const,
       color: colors.text.primary,
       textAlign: 'center' as const,
-      marginBottom: spacing.xs,
-      backgroundColor: colors.surface.default,
+      width: '100%',
+      paddingVertical: spacing.lg,
+      borderBottomWidth: 2,
+      borderBottomColor: colors.border.subtle,
     } as TextStyle,
     inputLabel: {
-      ...typography.caption,
+      fontSize: typography.sizes.sm,
+      lineHeight: typography.lineHeights.tight,
       color: colors.text.secondary,
-      textAlign: 'center' as const,
+      marginTop: spacing.sm,
     } as TextStyle,
     error: {
-      ...typography.caption,
+      fontSize: typography.sizes.sm,
+      lineHeight: typography.lineHeights.tight,
       color: colors.error,
-      marginBottom: spacing.sm,
-      textAlign: 'center' as const,
+      marginTop: spacing.sm,
     } as TextStyle,
-    button: {
-      marginTop: spacing.md,
+
+    // Layout
+    spacer: {
+      flex: 1,
+      minHeight: spacing.xl,
     } as ViewStyle,
-  };
-  return StyleSheet.create(styles);
-};
+    button: {
+      marginBottom: spacing.sm,
+    } as ViewStyle,
+    skipButton: {
+      paddingVertical: spacing.sm,
+      alignItems: 'center',
+    } as ViewStyle,
+    skipText: {
+      fontSize: typography.sizes.sm,
+      color: colors.text.tertiary,
+    } as TextStyle,
+  });

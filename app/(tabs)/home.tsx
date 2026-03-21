@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useMemo } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { useFocusEffect } from 'expo-router';
 import { Screen } from '@/components/Screen';
@@ -142,8 +142,8 @@ export default function HomeScreen() {
   // This ensures we get a completely fresh component instance
   const screenKey = `home-screen-${settingsId || 'no-settings'}`;
   
-  // Memoize styles — only recreate when color scheme changes
-  const styles = useMemo(() => StyleSheet.create({
+  // React Compiler auto-memoizes this
+  const styles = StyleSheet.create({
     content: {
       flex: 1,
       paddingTop: spacing.lg,
@@ -179,8 +179,7 @@ export default function HomeScreen() {
       alignItems: 'center',
     },
     statValue: {
-      ...typography.title,
-      fontSize: 24,
+      ...typography.xl,
       fontWeight: '700',
       color: colors.primary,
       marginBottom: spacing.xs,
@@ -208,10 +207,10 @@ export default function HomeScreen() {
       color: colors.text.secondary,
       textAlign: 'center',
     },
-  }), [colors]);
+  });
 
   return (
-    <Screen key={screenKey} title="Today">
+    <Screen key={screenKey}>
       <View style={styles.content}>
         {isLoading ? (
           <Card variant="elevated" style={styles.card} padding="lg">

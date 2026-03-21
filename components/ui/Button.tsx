@@ -1,8 +1,9 @@
 import React from 'react';
-import { Text, ActivityIndicator, ViewStyle, TextStyle, Pressable, StyleProp } from 'react-native';
+import { Text, ActivityIndicator, ViewStyle, TextStyle, Pressable, StyleProp, Platform } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withSpring, withTiming } from 'react-native-reanimated';
-import { spacing, typography, borderRadius, shadows, animations } from '@/lib/theme';
-import { useDesignTokens } from '@/lib/design';
+import * as Haptics from 'expo-haptics';
+import { spacing, borderRadius, shadows, animations } from '@/lib/theme';
+import { useDesignTokens, typography } from '@/lib/design';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -36,12 +37,14 @@ export function Button({
 
   const getButtonStyle = (): ViewStyle => {
     const baseStyle: ViewStyle = {
+      // Design system: spacing.md vertical, spacing.xl horizontal
       paddingVertical: spacing.md,
-      paddingHorizontal: spacing.lg,
-      borderRadius: borderRadius.lg,
+      paddingHorizontal: spacing.xl,
+      // Design system: primary button radius = md (12)
+      borderRadius: borderRadius.md,
       alignItems: 'center',
       justifyContent: 'center',
-      minHeight: 48, // Touch target size
+      minHeight: 48, // WCAG touch target
     };
 
     switch (variant) {
@@ -52,11 +55,12 @@ export function Button({
           ...shadows.sm,
         };
       case 'secondary':
+        // Design system: bg=background.card, border=border.subtle, text=text.primary
         return {
           ...baseStyle,
-          backgroundColor: 'transparent',
+          backgroundColor: colors.background.card,
           borderWidth: 2,
-          borderColor: isDisabled ? colors.border.subtle : colors.primary,
+          borderColor: isDisabled ? colors.border.subtle : colors.border.default,
         };
       case 'ghost':
         return {
@@ -70,21 +74,22 @@ export function Button({
 
   const getTextStyle = (): TextStyle => {
     const baseStyle: TextStyle = {
-      ...typography.lg,
-      fontWeight: '600',
+      fontSize: typography.sizes.lg,
+      lineHeight: typography.lineHeights.relaxed,
+      fontWeight: `${typography.weights.semibold}`,
     };
 
     switch (variant) {
       case 'primary':
         return {
           ...baseStyle,
-          // Design-system: primary background must use onPrimary for contrast
           color: isDisabled ? colors.text.tertiary : colors.onPrimary,
         };
       case 'secondary':
+        // Design system: text.primary on secondary buttons
         return {
           ...baseStyle,
-          color: isDisabled ? colors.text.tertiary : colors.primary,
+          color: isDisabled ? colors.text.tertiary : colors.text.primary,
         };
       case 'ghost':
         return {
@@ -124,10 +129,17 @@ export function Button({
     }
   };
 
+  const handlePress = () => {
+    if (Platform.OS === 'ios') {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+    }
+    onPress();
+  };
+
   return (
     <AnimatedPressable
       style={[getButtonStyle(), animatedStyle, style]}
-      onPress={onPress}
+      onPress={handlePress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
       disabled={isDisabled}
@@ -138,7 +150,7 @@ export function Button({
       {loading ? (
         <ActivityIndicator
           size="small"
-          color={variant === 'primary' ? colors.onPrimary : colors.primary}
+          color={variant === 'primary' ? colors.onPrimary : colors.text.primary}
         />
       ) : (
         <Text style={[getTextStyle(), textStyle]}>{title}</Text>

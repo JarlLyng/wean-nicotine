@@ -1,47 +1,69 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Platform } from 'react-native';
 
-import { CustomTabBar } from '@/components/CustomTabBar';
-import { spacing } from '@/lib/theme';
-
-// Tab bar height: minHeight (64) + paddingVertical (xs*2=8) + paddingBottom (sm=8)
-const TAB_BAR_CONTENT_HEIGHT = 64 + spacing.xs * 2 + spacing.sm;
+import { IconSymbol } from '@/components/ui/icon-symbol.ios';
+import { useDesignTokens } from '@/lib/design';
 
 export default function TabLayout() {
-  const insets = useSafeAreaInsets();
-  // Dynamic padding: tab bar content + safe area + outer padding
-  const bottomPadding = TAB_BAR_CONTENT_HEIGHT + insets.bottom + spacing.md + spacing.sm;
+  const { colors } = useDesignTokens();
 
   return (
     <Tabs
-      tabBar={(props) => <CustomTabBar {...props} />}
       screenOptions={{
-        headerShown: false,
-        sceneStyle: { paddingBottom: bottomPadding },
+        // Native iOS headers
+        headerShown: true,
+        headerStyle: { backgroundColor: colors.background.app },
+        headerTintColor: colors.text.primary,
+        headerShadowVisible: false,
+        // Tab bar
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: colors.text.secondary,
+        tabBarStyle: {
+          backgroundColor: colors.surface.default,
+          borderTopColor: colors.border.subtle,
+        },
+        // Native haptics on iOS tab press
+        ...(Platform.OS === 'ios' && { tabBarHapticFeedbackEnabled: true }),
       }}>
       <Tabs.Screen
         name="home"
         options={{
           title: 'Today',
+          tabBarIcon: ({ color, size }) => (
+            <IconSymbol name="house.fill" size={size} color={color} />
+          ),
         }}
       />
       <Tabs.Screen
         name="progress"
         options={{
           title: 'Progress',
+          tabBarIcon: ({ color, size }) => (
+            <IconSymbol name="chart.line.uptrend.xyaxis" size={size} color={color} />
+          ),
         }}
       />
       <Tabs.Screen
         name="tools"
         options={{
           title: 'Tools',
+          // Tools has its own Stack layout
+          headerShown: false,
+          tabBarIcon: ({ color, size }) => (
+            <IconSymbol name="heart.fill" size={size} color={color} />
+          ),
         }}
       />
       <Tabs.Screen
         name="settings"
         options={{
           title: 'Settings',
+          // Settings has its own Stack layout
+          headerShown: false,
+          tabBarIcon: ({ color, size }) => (
+            <IconSymbol name="gearshape.fill" size={size} color={color} />
+          ),
         }}
       />
     </Tabs>

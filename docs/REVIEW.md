@@ -1,78 +1,112 @@
-# Code Review — Taper
+# Engineering Review Snapshot
 
-**Dato:** 2026-03-02 (opdateret 2026-03-04)
-**Scope:** Kodebase, arkitektur og produktkvalitet
+Purpose:
+- Capture engineering findings and improvement ideas at a point in time
 
----
+Audience:
+- Maintainers prioritizing technical debt and product polish
+- LLMs assisting with planning or review follow-up
 
-## Overordnet vurdering
+Source of truth:
+- Code is canonical; this document is a dated assessment
 
-Taper er en velstruktureret React Native/Expo-app med klart formål og en god teknisk grundstruktur. Offline-first SQLite, Sentry-integration, og et konsistent design system (IAMJARL tokens).
+Related files:
+- [`docs/AI_CONTEXT.md`](./AI_CONTEXT.md)
+- [`lib/taper-plan.ts`](../lib/taper-plan.ts)
+- [`lib/progress.ts`](../lib/progress.ts)
+- [`app/(tabs)/home.tsx`](../app/(tabs)/home.tsx)
+- [`lib/db.ts`](../lib/db.ts)
 
-**Styrker:**
-- Klar separation af concerns (`lib/` vs. `components/` vs. `app/`)
-- Strict TypeScript gennemgående
-- Godt design system via `lib/design.ts`
-- Fornuftig Sentry-integration med tidlig initialisering
-- Optimistic UI på home screen
+Update when:
+- A finding is resolved or invalidated
+- A major architectural change changes the assessment
 
----
+Last reviewed:
+- Original review: 2026-03-02
+- Re-verified against current code: 2026-03-21
 
-## Åbne forbedringer
+## Current Summary
 
-### 1. Ingen tests — rammer beregningslogikken
+Taper has a coherent Expo/React Native structure with clear domain boundaries, local-first storage, and a consistent design-token system. The main remaining gaps are test coverage, some product configurability, and a few quality-of-life improvements on the home flow.
 
-`lib/taper-plan.ts` og `lib/progress.ts` indeholder forretningslogik, som direkte påvirker brugeroplevelsen. Der er ingen unit tests.
+## Confirmed Strengths
 
-**Anbefaling:** Tilføj Jest og test de mest kritiske paths: `calculateDailyAllowance`, `calculateWeeklyProgress`, `calculateTotalProgressAndMilestones`, og edge cases som negativ tid og 0-baseline.
+- Clear separation between routes (`app/`), shared UI (`components/`), and business logic (`lib/`)
+- Canonical domain types in [`lib/models.ts`](../lib/models.ts)
+- Early Sentry initialization and root error boundary in [`app/_layout.tsx`](../app/_layout.tsx)
+- Local-first SQLite storage with explicit migrations in [`lib/db.ts`](../lib/db.ts)
+- Optimistic logging UX on the home screen
 
----
+## Open Findings
 
-### 2. useReducer i home.tsx
+### 1. No automated tests for core calculations
 
-Home screen har 7+ stykker state. `useReducer` ville gøre transitions eksplicitte og eliminere behovet for at koordinere multiple `setState`-kald.
+Status: Open
 
----
+`lib/taper-plan.ts` and `lib/progress.ts` contain user-facing business logic, but the repository still has no test runner or automated coverage in `package.json`.
 
-### 3. `weeklyReductionPercent` er ikke konfigurerbar
+Recommended follow-up:
+- Add a test runner
+- Cover `calculateDailyAllowance`
+- Cover progress aggregation and milestone calculations
+- Include edge cases like zero baseline, future dates, and empty logs
 
-Default er 5%, og onboarding eksponerer ikke valget. Tilføj et step med f.eks. "Blid (3%)", "Standard (5%)", "Aggressiv (10%)".
+### 2. Home screen state is still dense
 
----
+Status: Open
 
-### 4. Ingen undo på pouch-logging
+[`app/(tabs)/home.tsx`](../app/(tabs)/home.tsx) coordinates multiple interdependent state values and loading branches. It works, but the state model is still heavier than necessary for long-term maintenance.
 
-Vis en "Fortryd"-toast i 5 sekunder efter logging.
+Recommended follow-up:
+- Consider consolidating state with `useReducer` or a dedicated view-model hook
 
----
+### 3. Weekly reduction is stored but not user-configurable in onboarding
 
-### 5. `resetAllData` bruger manuel transaction
+Status: Open
 
-`expo-sqlite` har `withTransactionAsync` som er mere idiomatisk og håndterer rollback automatisk.
+`weeklyReductionPercent` is part of the domain model and settings UI, but onboarding still appears to assume the default plan rather than letting the user choose a taper pace.
 
----
+Recommended follow-up:
+- Add a taper pace step or preset selection during onboarding
 
-### 6. Manglende index på analytics-tabel
+### 4. No undo flow after pouch logging
 
-Ingen indekser på analytics-tabellen. Når data vokser (30-dages retention), kan queries blive langsomme uden index på `timestamp` og `event_type`.
+Status: Open
 
----
+The app supports fast one-tap logging, but there is no short undo window if the user taps accidentally.
 
-## Produkt & UX idéer
+Recommended follow-up:
+- Add a transient undo affordance after `pouch_used`
 
-- **"Pouches Avoided"** er baseret på baseline, ikke dagens allowance. Overvej om det er det rigtige at kommunikere.
-- **Ingen visuel markering** af "under limit" vs. "over limit". Farveskift på ringen ville give umiddelbar feedback.
-- **Tools er svære at opdage** under et craving. Overvej et contextual link fra home screen.
+### 5. `resetAllData` still uses manual SQL transaction control
 
----
+Status: Open
 
-## Prioritering
+[`lib/db.ts`](../lib/db.ts) manually issues `BEGIN`, `COMMIT`, and `ROLLBACK`. This is valid, but still a maintenance hotspot compared with a higher-level transaction helper if Expo’s SQLite API supports the needed semantics cleanly in the current SDK.
 
-| Prioritet | Task |
-|-----------|------|
-| Høj | Tilføj unit tests for beregningslogik |
-| Lav | `useReducer` i home.tsx |
-| Lav | Konfigurerbar reduktionsprocent |
-| Lav | "Fortryd"-toast efter pouch-log |
-| Lav | `withTransactionAsync` i resetAllData |
-| Lav | Analytics index |
+Recommended follow-up:
+- Re-evaluate transaction helper support in the current Expo SQLite version before refactoring
+
+## Resolved Or Invalidated Findings
+
+### Analytics table indexing
+
+Status: Resolved
+
+The previous review noted missing analytics indexes. That is no longer accurate. [`lib/analytics.ts`](../lib/analytics.ts) now creates indexes for both `event_type` and `timestamp`.
+
+## Product And UX Notes
+
+- “Pouches Avoided” is derived from baseline, not from the current allowance. That is mathematically valid but may not match user intuition.
+- The home screen could communicate “under allowance” vs. “over allowance” more explicitly.
+- Tools remain somewhat hidden unless the user intentionally opens the Tools tab.
+
+## Suggested Priority Order
+
+| Priority | Task |
+| --- | --- |
+| High | Add automated tests for taper and progress calculations |
+| Medium | Expose taper pace / reduction percent in onboarding |
+| Medium | Add undo for pouch logging |
+| Low | Simplify home-screen state management |
+| Low | Revisit transaction API for `resetAllData` |
