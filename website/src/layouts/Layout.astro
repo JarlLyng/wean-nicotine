@@ -144,9 +144,15 @@ const structuredData: Record<string, unknown> = {
 		position: sticky;
 		top: 0;
 		z-index: 50;
-		background: color-mix(in oklab, var(--bg-app), transparent 12%);
-		backdrop-filter: blur(14px);
-		border-bottom: 1px solid var(--border-subtle);
+		background: linear-gradient(
+			to bottom,
+			color-mix(in oklab, var(--bg-app), transparent 10%),
+			color-mix(in oklab, var(--bg-app), transparent 25%)
+		);
+		backdrop-filter: blur(24px);
+		-webkit-backdrop-filter: blur(24px);
+		border-bottom: 1px solid color-mix(in oklab, var(--border-subtle), transparent 40%);
+		box-shadow: 0 4px 24px color-mix(in oklab, #000000, transparent 97%);
 	}
 
 	.site-header__inner {

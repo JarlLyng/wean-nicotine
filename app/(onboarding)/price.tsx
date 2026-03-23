@@ -124,7 +124,9 @@ export default function PriceScreen() {
               style={s.button}
             />
             <TouchableOpacity onPress={handleNext} style={s.skipButton}>
-              <Text style={s.skipText}>Skip — I don't want to track money</Text>
+              <Text style={s.skipText}>
+              {"Skip — I don't want to track money"}
+            </Text>
             </TouchableOpacity>
           </View>
         </ScrollView>

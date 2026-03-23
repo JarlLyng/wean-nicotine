@@ -71,11 +71,34 @@ a:hover {
 
 /* Glassmorphism Utilities */
 .glass-panel {
-	background: color-mix(in oklab, var(--bg-card), transparent 30%);
-	backdrop-filter: blur(20px);
-	-webkit-backdrop-filter: blur(20px);
+	background: linear-gradient(
+		135deg,
+		color-mix(in oklab, var(--bg-card), transparent 30%),
+		color-mix(in oklab, var(--bg-card), transparent 70%)
+	);
+	backdrop-filter: blur(24px);
+	-webkit-backdrop-filter: blur(24px);
 	border: 1px solid color-mix(in oklab, var(--border-subtle), transparent 40%);
-	box-shadow: 0 8px 32px color-mix(in oklab, black, transparent 80%);
+	box-shadow: 
+		inset 0 1px 1px color-mix(in oklab, var(--surface), transparent 85%),
+		0 24px 64px color-mix(in oklab, #000000, transparent 80%);
+}
+
+/* Animations */
+@keyframes float {
+	0%, 100% {
+		transform: translateY(0);
+	}
+	50% {
+		transform: translateY(-16px);
+	}
+}
+
+.anim-float {
+	animation: float 8s ease-in-out infinite;
+}
+.anim-float-delayed {
+	animation: float 8s ease-in-out infinite 4s;
 }
 
 /* Atmospheric Background Sections */

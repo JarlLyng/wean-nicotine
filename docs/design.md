@@ -112,7 +112,7 @@ sm: 8   md: 12   lg: 16
 **Rules:**
 - Primary buttons: `radius.md` (12px)
 - Cards: `borderRadius.lg` (16px)
-- Pill/chip shapes: `borderRadius.full` (9999)
+- Pill/chip shapes: `borderRadius.full` (9999) — fra `lib/theme.ts`
 
 ---
 

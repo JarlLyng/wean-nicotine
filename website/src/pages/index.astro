@@ -120,7 +120,7 @@ const screenshots = [
 
 			<div class="hero__visual" aria-hidden="true">
 				<div class="hero__blob"></div>
-				<div class="hero__frame">
+				<div class="hero__frame anim-float">
 					<img
 						src="/screenshots/Hero.png"
 						alt="Taper app Today screen showing daily allowance tracking"
@@ -158,7 +158,7 @@ const screenshots = [
 						</Card>
 					</div>
 					<div class="features-split__image app-floating-image">
-						<div class="glass-panel screenshot-wrapper">
+						<div class="glass-panel screenshot-wrapper anim-float-delayed">
 							<img src="/screenshots/02-today.png" alt="Taper Today screen showing daily allowance and tracking" width="590" height="1278" loading="lazy" />
 						</div>
 					</div>
@@ -217,7 +217,7 @@ const screenshots = [
 			>
 				<div class="features-split features-split--reverse">
 					<div class="features-split__image app-floating-image">
-						<div class="glass-panel screenshot-wrapper">
+						<div class="glass-panel screenshot-wrapper anim-float">
 							<img src="/screenshots/04-tools.png" alt="Taper support tools including breathing exercises and urge surfing" width="590" height="1278" loading="lazy" />
 						</div>
 					</div>
@@ -316,12 +316,13 @@ const screenshots = [
 
 	.hero__blob {
 		position: absolute;
-		inset: -60px;
+		inset: -100px;
 		background: 
-			radial-gradient(circle at 30% 20%, color-mix(in oklab, var(--primary), transparent 40%), transparent 55%),
-			radial-gradient(circle at 70% 80%, color-mix(in oklab, var(--primary), transparent 70%), transparent 60%);
-		filter: blur(24px);
-		animation: pulseBlob 10s ease-in-out infinite alternate;
+			radial-gradient(circle at 30% 20%, color-mix(in oklab, var(--primary), transparent 30%), transparent 60%),
+			radial-gradient(circle at 70% 80%, color-mix(in oklab, var(--success), transparent 40%), transparent 60%),
+			radial-gradient(circle at 50% 50%, color-mix(in oklab, var(--primary), transparent 50%), transparent 70%);
+		filter: blur(48px);
+		animation: pulseBlob 12s ease-in-out infinite alternate;
 	}
 
 	.hero__frame {

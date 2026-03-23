@@ -10,8 +10,8 @@
     "lint": "expo lint"
   },
   "dependencies": {
-    "@astrojs/sitemap": "^3.7.0",
-    "astro": "^5.16.11"
+    "@astrojs/sitemap": "^3.7.1",
+    "astro": "^6.0.8"
   },
   "devDependencies": {
     "@types/react": "~19.2.10",

@@ -120,7 +120,7 @@ const screenshots = [
 
 			<div class="hero__visual" aria-hidden="true">
 				<div class="hero__blob"></div>
-				<div class="hero__frame">
+				<div class="hero__frame anim-float">
 					<img
 						src="/screenshots/Hero.png"
 						alt="Taper app, der viser det daglige kvoteoverblik"
@@ -297,13 +297,13 @@ const screenshots = [
 
 	.hero__blob {
 		position: absolute;
-		inset: -40px;
-		background: radial-gradient(
-			circle at 30% 20%,
-			color-mix(in oklab, var(--primary), transparent 50%),
-			transparent 55%
-		);
-		filter: blur(10px);
+		inset: -100px;
+		background: 
+			radial-gradient(circle at 30% 20%, color-mix(in oklab, var(--primary), transparent 30%), transparent 60%),
+			radial-gradient(circle at 70% 80%, color-mix(in oklab, var(--success), transparent 40%), transparent 60%),
+			radial-gradient(circle at 50% 50%, color-mix(in oklab, var(--primary), transparent 50%), transparent 70%);
+		filter: blur(48px);
+		animation: pulseBlob 12s ease-in-out infinite alternate;
 	}
 
 	.hero__frame {

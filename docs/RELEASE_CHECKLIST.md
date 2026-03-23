@@ -83,7 +83,7 @@ Android + iPad kan komme senere.
 - [ ] **Age Rating**: Konfigurer baseret på indhold
 - [ ] **App Preview Video**: (valgfrit, men anbefalet)
  
-> Android release er ikke i scope for v1.0 (iPhone-only).
+> Android release er ikke i scope for v1.1 (iPhone-only).
 
 **iPad / Watch / Mac / Vision Pro:** Appen er bygget som iPhone-only (`ios.supportsTablet: false`). I App Store Connect vises stadig faner for iPad og Apple Watch under Previews — udfyld kun **Phone**. Hvis du ikke vil tilbyde appen på Apple Silicon Mac eller Apple Vision Pro, kan du under **Pricing and Availability** fravælge "Make this app available" for Mac og Vision Pro.
 
