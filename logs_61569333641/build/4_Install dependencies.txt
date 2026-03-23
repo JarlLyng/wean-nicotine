@@ -1,0 +1,21 @@
+﻿2026-03-23T00:15:53.1658115Z ##[group]Run npm ci
+2026-03-23T00:15:53.1658453Z [36;1mnpm ci[0m
+2026-03-23T00:15:53.1722140Z shell: /usr/bin/bash -e {0}
+2026-03-23T00:15:53.1722457Z ##[endgroup]
+2026-03-23T00:15:54.3234246Z npm warn EBADENGINE Unsupported engine {
+2026-03-23T00:15:54.3235359Z npm warn EBADENGINE   package: '@astrojs/prism@4.0.1',
+2026-03-23T00:15:54.3236206Z npm warn EBADENGINE   required: { node: '>=22.12.0' },
+2026-03-23T00:15:54.3237082Z npm warn EBADENGINE   current: { node: 'v20.20.1', npm: '10.8.2' }
+2026-03-23T00:15:54.3237800Z npm warn EBADENGINE }
+2026-03-23T00:15:54.3267644Z npm warn EBADENGINE Unsupported engine {
+2026-03-23T00:15:54.3268672Z npm warn EBADENGINE   package: 'astro@6.0.8',
+2026-03-23T00:15:54.3277596Z npm warn EBADENGINE   required: { node: '>=22.12.0', npm: '>=9.6.5', pnpm: '>=7.1.0' },
+2026-03-23T00:15:54.3284144Z npm warn EBADENGINE   current: { node: 'v20.20.1', npm: '10.8.2' }
+2026-03-23T00:15:54.3284825Z npm warn EBADENGINE }
+2026-03-23T00:16:03.5054824Z 
+2026-03-23T00:16:03.5055831Z added 519 packages, and audited 520 packages in 10s
+2026-03-23T00:16:03.5056514Z 
+2026-03-23T00:16:03.5056919Z 260 packages are looking for funding
+2026-03-23T00:16:03.5057826Z   run `npm fund` for details
+2026-03-23T00:16:03.5069639Z 
+2026-03-23T00:16:03.5069939Z found 0 vulnerabilities
