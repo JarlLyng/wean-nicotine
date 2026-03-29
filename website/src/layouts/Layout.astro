@@ -10,9 +10,12 @@ export interface Props {
 	description?: string;
 	canonicalPath?: string;
 	noindex?: boolean;
+	/** Which locales this page is available in. Defaults to all locales. */
+	availableLocales?: string[];
 }
 
-const { title, description, canonicalPath, noindex = false } = Astro.props;
+const { title, description, canonicalPath, noindex = false, availableLocales } = Astro.props;
+const localesForHreflang = availableLocales ?? Object.keys(languages);
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
@@ -52,18 +55,20 @@ const structuredData: Record<string, unknown> = {
 		<meta name="description" content={pageDescription} />
 		<link rel="canonical" href={canonicalUrl} />
 		
-		{Object.entries(languages).map(([abbr]) => (
+		{localesForHreflang.map((abbr) => (
 			<link
 				rel="alternate"
 				hreflang={abbr}
 				href={new URL(translatePath(Astro.url.pathname, abbr as keyof typeof languages), Astro.site).toString()}
 			/>
 		))}
-		<link
-			rel="alternate"
-			hreflang="x-default"
-			href={new URL(translatePath(Astro.url.pathname, 'en'), Astro.site).toString()}
-		/>
+		{localesForHreflang.includes('en') && (
+			<link
+				rel="alternate"
+				hreflang="x-default"
+				href={new URL(translatePath(Astro.url.pathname, 'en'), Astro.site).toString()}
+			/>
+		)}
 
 		{noindex ? (
 			<meta name="robots" content="noindex,nofollow" />
