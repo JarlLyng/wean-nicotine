@@ -11,3 +11,11 @@ export function isAppStoreUrlKnown(url: string) {
 	return Boolean(url) && !url.includes('idXXXXXXXXXX');
 }
 
+export function getCampaignAppStoreUrl(campaignToken?: string, providerToken: string = '1111l4fWe') {
+	let url = APP_STORE_URL;
+	if (campaignToken && isAppStoreUrlKnown(url)) {
+		const separator = url.includes('?') ? '&' : '?';
+		url += `${separator}pt=${providerToken}&ct=${campaignToken}`;
+	}
+	return url;
+}

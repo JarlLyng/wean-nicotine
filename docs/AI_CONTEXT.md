@@ -208,14 +208,22 @@ Canonical implementation: [`lib/notifications.ts`](../lib/notifications.ts)
 
 ### Key files
 
-- [`website/src/lib/site.ts`](../website/src/lib/site.ts): site metadata and constants
+- [`website/src/lib/site.ts`](../website/src/lib/site.ts): site metadata, constants, and **Campaign Tracking logic** (`getCampaignAppStoreUrl`)
+- [`website/src/layouts/SeoLandingLayout.astro`](../website/src/layouts/SeoLandingLayout.astro): standard programmatic wrapper for high-intent SEO pages
+- [`website/src/components/AppStoreBadge.astro`](../website/src/components/AppStoreBadge.astro): localized official Apple Store badges (SVG)
 - `website/src/pages/index.astro`: homepage
 - `website/src/pages/privacy.astro`: privacy policy
 - `website/src/pages/support.astro`: support page
 - `website/src/pages/*/index.astro`: SEO landing pages
-- `website/src/pages/da`, `website/src/pages/no`, `website/src/pages/sv`: localized pages
-
+- `website/src/pages/da`, `website/src/pages/no`, `website/src/pages/sv`: localized folders with SEO-optimized pathnames
 ### Strategy linkage
+
+### Scale-out logic
+
+The website uses a **programmatic SEO approach**:
+1.  New landing pages are created in localized folders (e.g., `/da/stop-med-snus-app/`).
+2.  Each page uses `SeoLandingLayout.astro`, which handles standard headers, CTAs, and SEO metadata.
+3.  Each layout instance is provided a `campaignToken` (e.g., `seo_da_app`), which is used by `getCampaignAppStoreUrl` to append Apple Search Ads / App Store Connect metrics (`pt` and `ct` parameters).
 
 SEO intent and landing-page plan are described in [`SEO_STRATEGY.md`](./SEO_STRATEGY.md).
 

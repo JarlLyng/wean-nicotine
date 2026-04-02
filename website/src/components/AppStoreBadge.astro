@@ -1,0 +1,39 @@
+---
+interface Props {
+	href: string;
+	lang?: 'en' | 'da' | 'sv' | 'no';
+}
+
+const { href, lang = 'en' } = Astro.props;
+
+let localeCode = 'en-us';
+if (lang === 'da') localeCode = 'da-dk';
+if (lang === 'sv') localeCode = 'sv-se';
+if (lang === 'no') localeCode = 'no-no';
+
+const badgeUrl = `https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/${localeCode}?size=250x83&amp;releaseDate=1738713600`;
+---
+
+<a href={href} class="app-store-badge" target="_blank" rel="noopener noreferrer">
+	<img 
+		src={badgeUrl} 
+		alt="Download on the App Store" 
+		style="width: 160px; height: 53px; border-radius: 10px;" 
+	/>
+</a>
+
+<style>
+	.app-store-badge {
+		display: inline-block;
+		transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.2s ease;
+	}
+	
+	.app-store-badge:hover {
+		transform: scale(1.05);
+		opacity: 0.95;
+	}
+	
+	.app-store-badge:active {
+		transform: scale(0.95);
+	}
+</style>

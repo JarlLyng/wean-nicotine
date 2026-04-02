@@ -1,192 +1,113 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-import Button from '../../components/Button.astro';
+import SeoLandingLayout from '../../layouts/SeoLandingLayout.astro';
 import Card from '../../components/Card.astro';
 import Section from '../../components/Section.astro';
-import { APP_STORE_URL, isAppStoreUrlKnown, SITE_NAME } from '../../lib/site';
+import { APP_STORE_URL, isAppStoreUrlKnown } from '../../lib/site';
 
 const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
-const appStoreCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming soon on the App Store';
 ---
 
-<Layout
-	title="Nicotine Pouch Reduction App — Track and Cut Down"
+<SeoLandingLayout
+	title="Nicotine Pouch Reduction App — Track and Cut Down | Taper"
 	description="Taper helps you reduce nicotine pouches gradually with simple daily tracking, progress over time, and a calm, private experience."
 	canonicalPath="/nicotine-pouch-reduction-app/"
-	availableLocales={['en']}
+	h1="Reduce your nicotine pouches in small, manageable steps"
+	lede="Quitting cold turkey is stressful. Taper gives you a daily allowance that gradually shrinks, making it easier to cut down on nicotine pouches like Zyn or Velo."
+	bottomCtaHeading="Start your gradual reduction today"
+	bottomCtaText="Download Taper and set up your daily allowance in less than a minute. No accounts required."
+	campaignToken="seo_en_pouches"
+	lang="en"
 >
-	<section class="hero">
-		<div class="container">
-			<h1>Nicotine pouch reduction app — track and cut down</h1>
-			<p class="lede">
-				Taper helps you reduce your nicotine pouch use gradually. Set a daily allowance, track each pouch with one tap,
-				and watch your usage decrease week by week.
-			</p>
-			<div class="cta">
-				<Button variant="primary" href={APP_STORE_URL} disabled={!appStoreKnown} external={true}>
-					{appStoreCtaLabel}
-				</Button>
-				<Button variant="secondary" href="/">Learn more about Taper</Button>
-			</div>
+	<section class="guide__section">
+		<h2>Why gradual reduction works better for pouches</h2>
+		<p>
+			Pouch habits are deeply tied to our daily routines—driving, working, or after meals. Cutting them all out overnight often leads to an overwhelming relapse because your body and brain expect a constant stream of nicotine.
+		</p>
+		<p>
+			A nicotine pouch reduction app like Taper tackles the problem differently. Instead of asking you to quit today, it drops your daily allowance by one or two pouches a week. Your body barely notices the change, making the withdrawal symptoms far more manageable.
+		</p>
+	</section>
+
+	<section class="guide__section">
+		<h2>How to use a nicotine pouch reduction app</h2>
+		<div class="grid-1">
+			<Card as="article">
+				<h3>1. Find your baseline</h3>
+				<p>Enter how many pouches you use on an average day right now. Be honest. This gives Taper the correct starting point.</p>
+			</Card>
+			<Card as="article">
+				<h3>2. Get your daily allowance</h3>
+				<p>Taper sets a lock on a daily limit. Try to stay within this number. Having a clear maximum breaks the chain of chain-pouching.</p>
+			</Card>
+			<Card as="article">
+				<h3>3. Track with one tap</h3>
+				<p>Every time you pop a pouch, log it in the app. Tracking brings awareness to a habit that is usually completely unconscious.</p>
+			</Card>
+			<Card as="article">
+				<h3>4. The weekly step-down</h3>
+				<p>Every week, Taper reduces your daily allowance by a small percentage. You adapt to the slightly lower nicotine intake over seven days before the next drop.</p>
+			</Card>
+			<Card as="article">
+				<h3>5. Coping tools included</h3>
+				<p>Used up your allowance but still craving? Use the built-in urge surfing and box-breathing exercises to ride out the craving until it passes.</p>
+			</Card>
+			<Card as="article">
+				<h3>6. Private progress tracking</h3>
+				<p>Watch your usage slowly trend towards zero. Your data stays entirely on your device because addiction recovery is private.</p>
+			</Card>
 		</div>
 	</section>
 
-	<Section id="who" title="Who this is for" lede="People who use nicotine pouches and want to cut down without quitting cold turkey.">
+	<section class="guide__section">
+		<h2>Common pitfalls when cutting down</h2>
 		<div class="grid-2">
 			<Card as="article">
-				<h3>You want to use fewer nicotine pouches per day</h3>
-				<p>Whether your goal is to reduce from 15 to 5 or from 8 to zero, Taper gives you a plan that decreases gradually.</p>
+				<h3>Social triggers</h3>
+				<p>Going out for drinks or spending time with friends who use pouches often spikes usage. If you slip up, just track it, forgive yourself, and stick to the allowance tomorrow.</p>
 			</Card>
 			<Card as="article">
-				<h3>You want a clear daily number to follow</h3>
-				<p>Instead of vague goals, Taper gives you a specific number of pouches each day. Tap once when you use one.</p>
+				<h3>Not tracking every pouch</h3>
+				<p>If you take a pouch without logging it, your data is compromised and the tapering math won't work. Log every single pouch, even the extra ones.</p>
 			</Card>
 			<Card as="article">
-				<h3>You want to handle cravings better</h3>
-				<p>Built-in breathing exercises, urge surfing, and reflection prompts help you manage the moments when you want to reach for a pouch.</p>
+				<h3>Rushing the process</h3>
+				<p>Don't try to halve your usage in three days. It defeats the point of gradual reduction. Trust the slow, weeks-long process.</p>
 			</Card>
 			<Card as="article">
-				<h3>You want privacy</h3>
-				<p>No accounts, no cloud, no data sharing. Your nicotine pouch tracking stays entirely on your device.</p>
+				<h3>Replacing with other habits</h3>
+				<p>Some people start smoking or vaping to compensate. Taper is built specifically to avoid this by making the nicotine reduction so subtle you don't need a heavy crutch.</p>
 			</Card>
 		</div>
-	</Section>
+	</section>
 
-	<Section id="how" title="How to reduce nicotine pouches with Taper" lede="Three steps to start cutting down.">
-		<div class="grid-3">
-			<Card as="article">
-				<h3>1) Enter your current usage</h3>
-				<p>Tell Taper how many nicotine pouches you use per day. This becomes your starting allowance.</p>
-			</Card>
-			<Card as="article">
-				<h3>2) Track daily with one tap</h3>
-				<p>Each time you use a pouch, tap once. Each time you resist a craving, tap once. That is all you need to do.</p>
-			</Card>
-			<Card as="article">
-				<h3>3) Watch your usage decrease</h3>
-				<p>Your daily allowance drops each week. Track your progress with weekly trends, totals, and optional money saved.</p>
-			</Card>
-		</div>
-	</Section>
+	<section class="guide__section">
+		<h2>The ultimate nicotine tracker</h2>
+		<p>
+			A plan without tracked boundaries crumbles. The subconscious mind loves exceptions. Tracking is central to keeping your promises to yourself.
+		</p>
+		<p>
+			Software like <a href="/">Taper</a> handles the tracking and the math. It turns your daily struggle into lightweight graphics on your phone, without interruptions or accounts.
+		</p>
+	</section>
 
-	<Section id="why" title="Why choose Taper over a generic habit tracker" lede="Taper is built specifically for nicotine pouch reduction.">
+	<Section id="faq" title="Frequently Asked Questions" slot="after-guide">
 		<div class="grid-2">
 			<Card as="article">
-				<h3>Tapering plan, not streaks</h3>
-				<p>Generic trackers count habits. Taper gives you a decreasing daily allowance designed for gradual nicotine reduction.</p>
+				<h3>Does Taper work for Zyn and Velo?</h3>
+				<p>Absolutely. Taper is designed for any brand or strength of nicotine pouch. Since you log usage by "amount of pouches," the brand does not matter.</p>
 			</Card>
 			<Card as="article">
-				<h3>Craving tools built in</h3>
-				<p>Breathing exercises and urge surfing are available right when you need them, not in a separate app.</p>
-			</Card>
-			<Card as="article">
-				<h3>No judgment</h3>
-				<p>If you go over your allowance, Taper keeps going. The approach is calm and supportive, not punishing.</p>
-			</Card>
-			<Card as="article">
-				<h3>Completely private</h3>
-				<p>No accounts, no login, no cloud sync. Your nicotine pouch data never leaves your device.</p>
-			</Card>
-		</div>
-	</Section>
-
-	<Section id="faq" title="Frequently asked questions about nicotine pouch reduction">
-		<div class="grid-2">
-			<Card as="article">
-				<h3>Does Taper work for all nicotine pouch brands?</h3>
-				<p>Yes. Taper tracks pouch count, not brand or strength. It works with ZYN, VELO, On!, or any other brand.</p>
-			</Card>
-			<Card as="article">
-				<h3>Can I adjust the reduction speed?</h3>
-				<p>Yes. You set the weekly reduction percentage during onboarding. You can also start over with different settings at any time.</p>
-			</Card>
-			<Card as="article">
-				<h3>Does Taper work for snus too?</h3>
-				<p>Yes. Taper works for both traditional snus and nicotine pouches. The reduction approach is the same.</p>
+				<h3>How long does a taper plan last?</h3>
+				<p>Most users choose to taper over a period of 7 to 12 weeks, depending on their starting usage and how aggressively they want to reduce.</p>
 			</Card>
 			<Card as="article">
 				<h3>Is Taper free?</h3>
-				<p>Yes. Taper is free to download and use.</p>
+				<p>Yes. You can download and start tracking your nicotine reduction without hitting a paywall for the core experience.</p>
+			</Card>
+			<Card as="article">
+				<h3>Do I need an account?</h3>
+				<p>No. Taper is a local-first app. Your tracking data stays on your iPhone. We don't ask for an email, and there's no cloud sync.</p>
 			</Card>
 		</div>
 	</Section>
-
-	<section class="bottom-cta">
-		<div class="container">
-			<h2>Ready to cut down on nicotine pouches?</h2>
-			<p>Start tracking today and let Taper reduce your daily allowance week by week.</p>
-			<Button variant="primary" href={APP_STORE_URL} disabled={!appStoreKnown} external={true}>
-				{appStoreCtaLabel}
-			</Button>
-		</div>
-	</section>
-</Layout>
-
-<style>
-	.hero {
-		padding: clamp(54px, 7vw, 96px) 0;
-		border-bottom: 1px solid var(--border-subtle);
-	}
-
-	h1 {
-		margin: 0 0 var(--space-lg);
-		font-size: clamp(36px, 5vw, 48px);
-		line-height: 1.1;
-		letter-spacing: -0.03em;
-	}
-
-	.lede {
-		margin: 0 0 var(--space-xl);
-		color: var(--text-secondary);
-		max-width: 62ch;
-		font-size: 18px;
-		line-height: 28px;
-	}
-
-	.cta {
-		display: flex;
-		gap: var(--space-md);
-		flex-wrap: wrap;
-	}
-
-	.grid-2, .grid-3 {
-		display: grid;
-		gap: var(--space-lg);
-	}
-
-	.grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-	.grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-
-	h3 {
-		margin: 0 0 var(--space-sm);
-		font-size: 18px;
-		letter-spacing: -0.01em;
-	}
-
-	p { margin: 0; color: var(--text-secondary); }
-
-	.bottom-cta {
-		padding: clamp(44px, 6vw, 84px) 0;
-		text-align: center;
-		border-top: 1px solid var(--border-subtle);
-	}
-
-	.bottom-cta h2 {
-		margin: 0 0 var(--space-md);
-		font-size: clamp(28px, 3.2vw, 36px);
-		letter-spacing: -0.02em;
-	}
-
-	.bottom-cta p {
-		margin: 0 0 var(--space-xl);
-		color: var(--text-secondary);
-	}
-
-	@media (max-width: 960px) {
-		.grid-3 { grid-template-columns: 1fr; }
-	}
-
-	@media (max-width: 700px) {
-		.grid-2 { grid-template-columns: 1fr; }
-	}
-</style>
+</SeoLandingLayout>

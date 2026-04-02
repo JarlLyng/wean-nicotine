@@ -737,3 +737,72 @@ A tighter homepage positioning could be:
 Taper is a calm, private app that helps you cut down step by step with a daily allowance, one-tap tracking, craving support tools, and local-first progress tracking.
 
 That is much closer to what people may actually search for and still fits the current brand tone.
+
+---
+
+## 23. GEO & App Store Optimization (ASO) Strategy
+
+To maximize downloads, the strategy requires splitting focus by language and region:
+
+### Scandinavia: Dominate "Snus"
+Scandinavia (Sweden, Norway, Denmark) is the home of snus with massive local search volumes and very low competition for dedicated reduction apps.
+- **Languages:** `sv`, `no`, `da`.
+- **Primary targets:** "Sluta snusa", "Slutte med snus", "Stop med snus", "Snus reduction".
+- **ASO Action:** Translate App Store titles, subtitles, and keyword fields into NO, SV, and DA. ASO conversion is very high for local languages.
+
+### International (US / UK): Dominate "Nicotine Pouches"
+The US and UK markets are experiencing explosive growth in nicotine pouches (Zyn, Velo, etc.). "Snus" is less relevant here.
+- **Languages:** `en`.
+- **Primary targets:** "Nicotine pouch reduction", "Zyn taper", "Quit Zyn app", "Taper nicotine pouches".
+- **ASO Action:** Ensure the English App Store listing explicitly emphasizes "Nicotine Pouches" over "Snus" as the primary keyword for the US storefront.
+
+### Programmatic SEO Landings
+To execute this efficiently, we employ a **scalable SEO landing page template** (`SeoLandingLayout.astro`).
+Instead of hardcoding every page, we use a single template to rapidly deploy highly-targeted pages across multiple languages (e.g., `/no/how-to-reduce-snus`, `/en/nicotine-pouch-reduction-app`) that all drive users to the App Store efficiently.
+
+---
+
+## 24. Technical Implementation & Scale-out
+
+To maintain a high-quality user experience while scaling to dozens of localized landing pages, the website uses a **programmatic SEO architecture** in Astro.
+
+### The `SeoLandingLayout` Template
+All high-intent SEO pages should use the [`SeoLandingLayout.astro`](../website/src/layouts/SeoLandingLayout.astro) component. This component enforces:
+- Proper `<h1>` and `<title>` structure.
+- Canonical URLs to avoid duplicate content penalties.
+- Standardized Hero and Bottom CTA sections.
+- Integrated App Store Badges with tracking.
+
+#### Usage Example:
+```astro
+<SeoLandingLayout
+  title="Your SEO Title"
+  description="Meta description..."
+  canonicalPath="/da/din-side/"
+  h1="Main Keyword Heading"
+  lede="Supportive sub-heading..."
+  bottomCtaHeading="Ready to start?"
+  bottomCtaText="Download now..."
+  campaignToken="seo_da_yourpage"
+  lang="da"
+>
+  <section class="guide__section">
+    <!-- Your local content here using <Card> or <Section> components -->
+  </section>
+</SeoLandingLayout>
+```
+
+### Localized App Store Badges
+Use the [`AppStoreBadge.astro`](../website/src/components/AppStoreBadge.astro) component for all primary CTAs. It automatically fetches the official Apple SVG for the correct language (`da`, `sv`, `no`, `en`).
+
+### App Store Campaign Tracking
+Tracking is handled globally by [`getCampaignAppStoreUrl`](../website/src/lib/site.ts). 
+- **Provider Token (PT):** `1111l4fWe` (fixed).
+- **Campaign Token (CT):** Passed via the `campaignToken` prop in the layout.
+
+**Naming Convention for Tokens:**
+`seo_[lang]_[type]`
+- Example: `seo_sv_app` (Swedish App Page)
+- Example: `seo_no_guide` (Norwegian Guide Page)
+
+This allows for granular performance analysis in App Store Connect / Apple Search Ads console.

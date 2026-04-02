@@ -62,7 +62,9 @@ This makes the docs easier for LLMs to classify correctly and reduces accidental
 | Notifications | `lib/notifications.ts` | Includes Expo Go limitation and scheduling behavior. |
 | Error reporting | `lib/sentry.ts` | DSN resolution and production/dev behavior live here. |
 | Marketing site structure | `website/src/` | Astro pages and shared site metadata. |
-| SEO direction | [`SEO_STRATEGY.md`](./SEO_STRATEGY.md) | Strategic guidance for the site. |
+| SEO Components & Layouts | `SeoLandingLayout.astro` | Standardized wrapper for high-intent pages. |
+| App Store Tracking | `website/src/lib/site.ts` | `getCampaignAppStoreUrl` logic for PT/CT tokens. |
+| SEO direction | [`SEO_STRATEGY.md`](./SEO_STRATEGY.md) | Strategic guidance and technical scale-out rules. |
 | Storage rationale | [`decisions/storage.md`](./decisions/storage.md) | Why SQLite was chosen. |
 
 ## Repository Map

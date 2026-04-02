@@ -1,20 +1,26 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-import Button from '../../components/Button.astro';
+import SeoLandingLayout from '../../layouts/SeoLandingLayout.astro';
 import Card from '../../components/Card.astro';
 import Section from '../../components/Section.astro';
-import { APP_STORE_URL, isAppStoreUrlKnown, SITE_NAME } from '../../lib/site';
+import { APP_STORE_URL, isAppStoreUrlKnown } from '../../lib/site';
 
 const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
 const appStoreCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming soon on the App Store';
 ---
 
-<Layout
+<SeoLandingLayout
 	title="Snus Reduction App — Cut Down Step by Step"
 	description="Looking for a snus reduction app? Taper helps you cut down gradually with a daily allowance, one-tap tracking, private progress, and craving support tools."
 	canonicalPath="/snus-reduction-app/"
+	h1="Snus reduction app — cut down step by step"
+	lede="Taper is a calm, private iPhone app built specifically for people who want to reduce their snus use gradually. Instead of quitting cold turkey, you set a daily allowance that decreases week by week."
+	bottomCtaHeading="Ready to reduce your snus use?"
+	bottomCtaText="Start with your current daily amount and let Taper guide you down step by step."
+	appStoreCtaLabel={appStoreCtaLabel}
+	campaignToken="seo_en_snus"
+	lang="en"
 >
-	<script type="application/ld+json">
+	<script type="application/ld+json" slot="after-guide">
 		{
 			"@context": "https://schema.org",
 			"@type": "BreadcrumbList",
@@ -34,23 +40,10 @@ const appStoreCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming s
 			]
 		}
 	</script>
-	<section class="hero">
-		<div class="container">
-			<h1>Snus reduction app — cut down step by step</h1>
-			<p class="lede">
-				Taper is a calm, private iPhone app built specifically for people who want to reduce their snus use gradually.
-				Instead of quitting cold turkey, you set a daily allowance that decreases week by week.
-			</p>
-			<div class="cta">
-				<Button variant="primary" href={APP_STORE_URL} disabled={!appStoreKnown} external={true}>
-					{appStoreCtaLabel}
-				</Button>
-				<Button variant="secondary" href="/">Learn more about Taper</Button>
-			</div>
-		</div>
-	</section>
 
-	<Section id="who" title="Who this is for" lede="Taper is designed for people who use snus and want to cut down at their own pace.">
+	<section class="guide__section">
+		<h2>Who this is for</h2>
+		<p>Taper is designed for people who use snus and want to cut down at their own pace.</p>
 		<div class="grid-2">
 			<Card as="article">
 				<h3>You want to reduce, not necessarily quit overnight</h3>
@@ -69,9 +62,11 @@ const appStoreCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming s
 				<p>No complicated settings or long onboarding. Tell Taper how many pouches you use, and it creates a weekly reduction plan for you.</p>
 			</Card>
 		</div>
-	</Section>
+	</section>
 
-	<Section id="how" title="How Taper helps you reduce snus" lede="A straightforward process that works week by week.">
+	<section class="guide__section">
+		<h2>How Taper helps you reduce snus</h2>
+		<p>A straightforward process that works week by week.</p>
 		<div class="grid-3">
 			<Card as="article">
 				<h3>1) Set your baseline</h3>
@@ -86,9 +81,11 @@ const appStoreCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming s
 				<p>See weekly trends, total pouches avoided, and optional money saved. Use breathing and urge surfing tools when cravings hit.</p>
 			</Card>
 		</div>
-	</Section>
+	</section>
 
-	<Section id="why" title="Why a dedicated snus reduction app" lede="Generic habit trackers are not built for nicotine reduction.">
+	<section class="guide__section">
+		<h2>Why a dedicated snus reduction app</h2>
+		<p>Generic habit trackers are not built for nicotine reduction.</p>
 		<div class="grid-2">
 			<Card as="article">
 				<h3>Built around daily allowance</h3>
@@ -107,9 +104,9 @@ const appStoreCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming s
 				<p>Because everything is stored locally, Taper works without an internet connection.</p>
 			</Card>
 		</div>
-	</Section>
+	</section>
 
-	<Section id="faq" title="Frequently asked questions about snus reduction">
+	<Section id="faq" title="Frequently asked questions about snus reduction" slot="after-guide">
 		<div class="grid-2">
 			<Card as="article">
 				<h3>How fast does Taper reduce my snus allowance?</h3>
@@ -129,83 +126,4 @@ const appStoreCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming s
 			</Card>
 		</div>
 	</Section>
-
-	<section class="bottom-cta">
-		<div class="container">
-			<h2>Ready to reduce your snus use?</h2>
-			<p>Start with your current daily amount and let Taper guide you down step by step.</p>
-			<Button variant="primary" href={APP_STORE_URL} disabled={!appStoreKnown} external={true}>
-				{appStoreCtaLabel}
-			</Button>
-		</div>
-	</section>
-</Layout>
-
-<style>
-	.hero {
-		padding: clamp(54px, 7vw, 96px) 0;
-		border-bottom: 1px solid var(--border-subtle);
-	}
-
-	h1 {
-		margin: 0 0 var(--space-lg);
-		font-size: clamp(36px, 5vw, 48px);
-		line-height: 1.1;
-		letter-spacing: -0.03em;
-	}
-
-	.lede {
-		margin: 0 0 var(--space-xl);
-		color: var(--text-secondary);
-		max-width: 62ch;
-		font-size: 18px;
-		line-height: 28px;
-	}
-
-	.cta {
-		display: flex;
-		gap: var(--space-md);
-		flex-wrap: wrap;
-	}
-
-	.grid-2, .grid-3 {
-		display: grid;
-		gap: var(--space-lg);
-	}
-
-	.grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-	.grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-
-	h3 {
-		margin: 0 0 var(--space-sm);
-		font-size: 18px;
-		letter-spacing: -0.01em;
-	}
-
-	p { margin: 0; color: var(--text-secondary); }
-
-	.bottom-cta {
-		padding: clamp(44px, 6vw, 84px) 0;
-		text-align: center;
-		border-top: 1px solid var(--border-subtle);
-	}
-
-	.bottom-cta h2 {
-		margin: 0 0 var(--space-md);
-		font-size: clamp(28px, 3.2vw, 36px);
-		letter-spacing: -0.02em;
-	}
-
-	.bottom-cta p {
-		margin: 0 0 var(--space-xl);
-		color: var(--text-secondary);
-	}
-
-	@media (max-width: 960px) {
-		.grid-3 { grid-template-columns: 1fr; }
-	}
-
-	@media (max-width: 700px) {
-		.grid-2 { grid-template-columns: 1fr; }
-	}
-</style>
+</SeoLandingLayout>

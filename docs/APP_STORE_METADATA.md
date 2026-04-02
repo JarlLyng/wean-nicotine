@@ -128,6 +128,59 @@ Appen er kun til iPhone (`ios.supportsTablet: false`). Udfyld kun "Phone" med iP
 
 ---
 
+---
+
+## Localized Storefronts (Scandinavia)
+
+Follow the strategy in [`SEO_STRATEGY.md`](./SEO_STRATEGY.md) section 23. Translate the following fields in App Store Connect.
+
+### Danish (da-DK)
+- **Subtitle:** `Trap ned på snus i dit tempo`
+- **Keywords:** `nikotin,snus,nedtrapning,stop,skærned,vane,sporing,poser,fremskridt,velvære,sundhed,nikotinpose`
+- **Description:** 
+```
+Taper hjælper dig med at reducere dit nikotinforbrug skridt for skridt – uanset om du bruger snus, nikotinposer eller lignende produkter. Sæt dit eget tempo, registrer dit daglige forbrug, og se dine fremskridt over tid. Alle data bliver på din enhed.
+
+SÅDAN FUNGERER DET
+• Sæt et udgangspunkt og et ugentligt mål for nedtrapning
+• Registrer brugte poser og modstået trang hver dag
+• Se dit daglige forbrug i en ugentlig oversigt med tendenssporing
+• Optjen medaljer efterhånden som du når nye mål
+• Brug indbyggede værktøjer: vejrtrækningsøvelser og hjælp mod trang
+```
+
+### Swedish (sv-SE)
+- **Subtitle:** `Minska snuset i din takt`
+- **Keywords:** `nikotin,snus,minska,sluta,nedtrappning,vana,spårning,prilla,framsteg,hälsa,portionssnus,vittsnus`
+- **Description:**
+```
+Taper hjälper dig att minska på snusandet steg för steg – oavsett om du använder portionssnus, vitt snus eller liknande produkter. Sätt din egen takt, logga din dagliga användning och se dina framsteg över tid. All data stannar på din enhed.
+
+HUR DET FUNGERAR
+• Sätt en baslinje och ett veckovis mål för nedtrappning
+• Logga använda prillor och hanterat sug varje dag
+• Se din dagliga användning i ett veckoschema med trendspårning
+• Tjäna medaljer när du når nya mål
+• Använd inbyggda verktyg: andningsövningar och stöd för suget
+```
+
+### Norwegian (no-NO)
+- **Subtitle:** `Trapp ned på snus i ditt tempo`
+- **Keywords:** `nikotin,snus,nedtrapping,slutte,redusere,vane,logging,poser,fremgang,helse,nikotinposer,taper`
+- **Description:**
+```
+Taper hjelper deg med å redusere snusbruk steg for steg – uanset om du bruker snus, nikotinposer eller lignende produkter. Sett ditt eget tempo, logg ditt daglige bruk, og se fremgangen over tid. Alle data blir på din enhed.
+
+SLIK FUNGERER DET
+• Sett et nullpunkt og et ukentlig mål for nedtrapping
+• Logg brukte poser og motstått sug hver dag
+• Se ditt daglige forbruk i en ukentlig oversikt med trendsporing
+• Tjen medaljer etter hvert som du når nye mål
+• Bruk innebygde verktøy: pusteøvelser og hjelp mot sug
+```
+
+---
+
 ## App Privacy
 
 Se [`docs/PRIVACY_APP_STORE.md`](./PRIVACY_APP_STORE.md) for trin-for-trin opsætning af Sentry crash data i App Store Connect.

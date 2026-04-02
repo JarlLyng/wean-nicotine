@@ -1,0 +1,164 @@
+---
+import Layout from './Layout.astro';
+import Button from '../components/Button.astro';
+import AppStoreBadge from '../components/AppStoreBadge.astro';
+import { APP_STORE_URL, isAppStoreUrlKnown, getCampaignAppStoreUrl } from '../lib/site';
+
+interface Props {
+	title: string;
+	description: string;
+	canonicalPath: string;
+	h1: string;
+	lede: string;
+	bottomCtaHeading: string;
+	bottomCtaText: string;
+	appStoreCtaLabel?: string;
+	campaignToken?: string;
+	lang?: 'en' | 'da' | 'sv' | 'no';
+}
+
+const {
+	title,
+	description,
+	canonicalPath,
+	h1,
+	lede,
+	bottomCtaHeading,
+	bottomCtaText,
+	appStoreCtaLabel,
+	campaignToken,
+	lang = 'en',
+} = Astro.props;
+
+const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
+const defaultCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming soon on the App Store';
+const finalCtaLabel = appStoreCtaLabel || defaultCtaLabel;
+
+// Compute the final trackable URL
+const finalAppStoreUrl = getCampaignAppStoreUrl(campaignToken);
+---
+
+<Layout title={title} description={description} canonicalPath={canonicalPath}>
+	<article class="guide">
+		<div class="container">
+			<header class="guide__header">
+				<h1>{h1}</h1>
+				<p class="lede">{lede}</p>
+			</header>
+
+			<slot />
+		</div>
+	</article>
+
+	<slot name="after-guide" />
+
+	<section class="bottom-cta">
+		<div class="container">
+			<h2>{bottomCtaHeading}</h2>
+			<p>{bottomCtaText}</p>
+			{appStoreKnown ? (
+				<AppStoreBadge href={finalAppStoreUrl} lang={lang} />
+			) : (
+				<Button variant="primary" href={finalAppStoreUrl} disabled={true}>
+					{finalCtaLabel}
+				</Button>
+			)}
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.guide {
+		padding: clamp(54px, 7vw, 96px) 0;
+	}
+
+	.guide__header {
+		margin-bottom: var(--space-xxl);
+		border-bottom: 1px solid var(--border-subtle);
+		padding-bottom: var(--space-xxl);
+	}
+
+	h1 {
+		margin: 0 0 var(--space-lg);
+		font-size: clamp(36px, 5vw, 48px);
+		line-height: 1.1;
+		letter-spacing: -0.03em;
+	}
+
+	.lede {
+		margin: 0;
+		color: var(--text-secondary);
+		max-width: 62ch;
+		font-size: 18px;
+		line-height: 28px;
+	}
+
+	.bottom-cta {
+		padding: clamp(44px, 6vw, 84px) 0;
+		text-align: center;
+		border-top: 1px solid var(--border-subtle);
+	}
+
+	.bottom-cta h2 {
+		margin: 0 0 var(--space-md);
+		font-size: clamp(28px, 3.2vw, 36px);
+		letter-spacing: -0.02em;
+	}
+
+	.bottom-cta p {
+		margin: 0 0 var(--space-xl);
+		color: var(--text-secondary);
+	}
+</style>
+
+<style is:global>
+	/* Scalable guide section styles passed via slots */
+	.guide__section {
+		margin-bottom: var(--space-xxl);
+	}
+
+	.guide__section h2 {
+		margin: 0 0 var(--space-lg);
+		font-size: clamp(24px, 3vw, 32px);
+		letter-spacing: -0.02em;
+	}
+
+	.guide__section p {
+		margin: 0 0 var(--space-md);
+		color: var(--text-secondary);
+		max-width: 62ch;
+		line-height: 1.7;
+	}
+
+	.guide__section a {
+		color: var(--primary);
+	}
+
+	.grid-1 {
+		display: grid;
+		gap: var(--space-lg);
+		grid-template-columns: 1fr;
+		max-width: 700px;
+	}
+
+	.grid-2 {
+		display: grid;
+		gap: var(--space-lg);
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.grid-1 h3, .grid-2 h3, .guide__section h3 {
+		margin: 0 0 var(--space-sm);
+		font-size: 18px;
+		letter-spacing: -0.01em;
+	}
+
+	.grid-2 p, .grid-1 p { 
+		margin: 0; 
+		color: var(--text-secondary); 
+	}
+
+	@media (max-width: 700px) {
+		.grid-2 { grid-template-columns: 1fr; }
+	}
+</style>
