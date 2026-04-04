@@ -38,7 +38,7 @@ Alternativer:
 
 ---
 
-## iOS App Version 1.1 — Distribution
+## iOS App Version 1.2 — Distribution
 
 ### Promotional Text (valgfrit, max 170 tegn)
 Kan ændres uden ny version:
@@ -46,15 +46,14 @@ Kan ændres uden ny version:
 Track your daily nicotine use, set a taper plan, and build lasting habits. No shame—just progress. Data stays on your device.
 ```
 
-### What's New (v1.1)
+### What's New (v1.2)
 ```
-• Completely redesigned Progress screen with daily usage chart and trend tracking
-• Native iOS navigation with tab bar and headers
-• Redesigned onboarding flow with step indicators
-• Improved Settings with cleaner layout and icons
-• Milestones with visual badges for your achievements
-• Haptic feedback throughout the app
-• Better error tracking for faster bug fixes
+• Enhanced Breathing Exercise: New patterns (4-7-8, Box, Quick Calm), duration selection, and rhythmic haptic feedback
+• New Session Counter: Track your total breathing and mindfulness sessions
+• Interactive Urge Surfing: Guided 5-minute timer with step-by-step instructions and "log as resisted" functionality
+• Reflection Journal: Save your reflections as dated notes, view your history, and explore categorized prompts
+• New Cost Savings Tool: See exactly how much you've saved based on your current pouch price (Weekly/Monthly breakdown)
+• Performance improvements and minor bug fixes
 ```
 
 ### Description (fuld beskrivelse, SEO-optimeret)
@@ -71,12 +70,12 @@ HOW IT WORKS
 • Earn milestone badges as you hit new goals
 • Use built-in tools: breathing exercises, urge surfing, and reflection prompts
 
-WHAT'S NEW IN 1.1
-• Visual daily usage chart — see your week at a glance
-• Trend indicator — fewer or more pouches vs. last week
-• Milestone badges with icons for each achievement type
-• Redesigned onboarding with step-by-step guidance
-• Native iOS look and feel with smooth navigation
+WHAT'S NEW IN 1.2
+• Advanced Breathing: Choose from 4-7-8, Box Breathing, or Quick Calm with immersive haptics
+• Guided Urge Surfing: A 5-minute interactive wave rider to help you through the toughest cravings
+• Reflection Journal: Keep a private log of your journey with dated entries and categories
+• Cost Savings: Real-time calculation of money saved since your start date
+• Native iOS experience with smooth navigation and haptics
 
 FOR YOU
 Taper is for anyone who wants to cut down gradually without judgment. You choose the speed. The app keeps you honest and motivated with clear numbers and optional daily check-ins.
@@ -146,7 +145,14 @@ SÅDAN FUNGERER DET
 • Registrer brugte poser og modstået trang hver dag
 • Se dit daglige forbrug i en ugentlig oversigt med tendenssporing
 • Optjen medaljer efterhånden som du når nye mål
-• Brug indbyggede værktøjer: vejrtrækningsøvelser og hjælp mod trang
+• Brug indbyggede værktøjer: vejrtrækningsøvelser, Urge Surfing og logbog
+
+NYT I 1.2
+• Avanceret vejrtrækning: Vælg mellem 4-7-8, Box Breathing eller Quick Calm
+• Interaktiv Urge Surfing: En 5-minutters guidet timer der hjælper dig gennem trangen
+• Refleksions-logbog: Gem dine tanker med datoer og se din historik
+• Økonomisk overblik: Se præcis hvor meget du har sparet i kr. siden start
+• Flottere animationer og mærkbar haptisk feedback
 ```
 
 ### Swedish (sv-SE)

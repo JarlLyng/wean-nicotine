@@ -1,4 +1,4 @@
-# Release Checklist — Taper (iPhone / iOS v1.1)
+# Release Checklist — Taper (iPhone / iOS v1.2)
 
 Purpose:
 - Operational release checklist for shipping the iOS app
@@ -22,7 +22,7 @@ Update when:
 - Apple submission requirements change
 - Release dependencies or operational steps change
 
-Dette dokument er en praktisk checklist til **iOS release v1.1 (iPhone-only)**.
+Dette dokument er en praktisk checklist til **iOS release v1.2 (iPhone-only)**.
 Android + iPad kan komme senere.
 
 ---
@@ -43,8 +43,8 @@ Android + iPad kan komme senere.
 - [ ] Verificer i Sentry-projektet at events ankommer når der sker fejl i appen (TestFlight/production).
 
 ### Version & Build Numbers
-- [x] Version i `app.json`: "1.1.0" (bruger-synlig; opdateret fra 1.0.0).
-- [x] `ios.buildNumber` i `app.json`: "11" (com.iamjarl.taper) – skal inkrementeres før hvert nyt upload.
+- [x] Version i `app.json`: "1.2.0" (bruger-synlig; opdateret fra 1.1.0).
+- [x] `ios.buildNumber` i `app.json`: "12" (com.iamjarl.taper) – skal inkrementeres før hvert nyt upload.
 - [x] `eas.json`: `cli.appVersionSource`: "local" (version/build fra app.json).
 
 ---

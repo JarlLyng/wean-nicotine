@@ -2,7 +2,7 @@
   "expo": {
     "name": "Taper!",
     "slug": "Taper",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "orientation": "portrait",
     "icon": "./assets/images/ios-light.png",
     "scheme": "taper",
@@ -10,7 +10,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.iamjarl.taper",
-      "buildNumber": "11",
+      "buildNumber": "12",
       "icon": {
         "light": "./assets/images/ios-light.png",
         "dark": "./assets/images/ios-dark.png",
@@ -27,6 +27,7 @@
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
+      "versionCode": 12,
       "predictiveBackGestureEnabled": false
     },
     "web": {

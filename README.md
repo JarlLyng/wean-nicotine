@@ -207,7 +207,7 @@ npx expo run:android
 
 - **Bundle ID:** `com.iamjarl.taper`
 - **Lokalt build (IPA) – Expo fra terminal:**
-  1. **Build-nummer:** I `app.json` skal `ios.buildNumber` være højere end det sidste build uploadet til App Store Connect (fx 3, 4, 5 …). Version (`version`) er bruger-synlig (1.0.0) og ændres typisk først ved næste app-version.
+  1. **Build-nummer:** I `app.json` skal `ios.buildNumber` være højere end det sidste build uploadet til App Store Connect (fx 3, 4, 5 …). Version (`version`) er bruger-synlig (1.2.0) og ændres typisk først ved næste app-version.
   2. **Sentry:** Opret EAS Secret så DSN er med i buildet:  
      `eas env:create --name EXPO_PUBLIC_SENTRY_DSN --value "https://din-dsn@xxx.ingest.sentry.io/xxx" --environment production --visibility plaintext`
   3. Fra projektroden:
