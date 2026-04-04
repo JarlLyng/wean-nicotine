@@ -7,35 +7,27 @@ const { as = 'div' } = Astro.props;
 const Tag = as;
 ---
 
-<Tag class="card">
+<Tag class="card reveal">
 	<slot />
 </Tag>
 
 <style>
 	.card {
-		background: linear-gradient(
-			to bottom right,
-			color-mix(in oklab, var(--bg-card), transparent 30%),
-			color-mix(in oklab, var(--bg-card), transparent 70%)
-		);
-		backdrop-filter: blur(16px);
-		-webkit-backdrop-filter: blur(16px);
-		border: 1px solid color-mix(in oklab, var(--border-subtle), transparent 25%);
+		background: var(--glass-bg);
+		backdrop-filter: blur(var(--glass-blur));
+		-webkit-backdrop-filter: blur(var(--glass-blur));
+		border: 1px solid var(--glass-border);
 		border-radius: var(--radius-lg);
-		padding: var(--space-xl);
-		box-shadow: 
-			inset 0 1px 1px color-mix(in oklab, var(--surface), transparent 85%),
-			0 4px 24px color-mix(in oklab, #000000, transparent 96%);
-		transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, border-color 0.4s ease;
-		will-change: transform;
+		padding: var(--space-xxl);
+		box-shadow: var(--shadow-premium);
+		transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 	}
 
 	.card:hover {
-		transform: translateY(-4px);
-		box-shadow: 
-			inset 0 1px 1px color-mix(in oklab, var(--surface), transparent 85%),
-			0 16px 48px color-mix(in oklab, #000000, transparent 92%);
-		border-color: color-mix(in oklab, var(--border-default), transparent 10%);
+		transform: translateY(-12px);
+		box-shadow: 0 40px 80px rgba(0, 0, 0, 0.12);
+		border-color: color-mix(in oklab, var(--primary), transparent 40%);
+		background: color-mix(in oklab, var(--glass-bg), white 5%);
 	}
 </style>
 

@@ -98,28 +98,28 @@ const screenshots = [
 >
 	<script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 	<section class="hero">
+		<div class="nordic-bg" style="background-image: url('/images/unsplash/nordic-3.jpg');"></div>
 		<div class="container hero__inner">
-			<div class="hero__copy">
+			<div class="hero__copy reveal">
 				<p class="hero__kicker">Lugn. Privat. Ingen skam.</p>
-				<h1>Minska snus och nikotinpåsar – steg för steg.</h1>
+				<h1>Minska nikotinet i din egen takt.</h1>
 				<p class="hero__subline">
-					{SITE_NAME} hjälper dig att trappa ner gradvis med en daglig ranson, snabb registrering och stödverktyg när suget slår till.
+					{SITE_NAME} är en lugn och privat app som hjälper dig att trappa ner på snus och nikotinpåsar — helt utan dömande eller abonnemang.
 				</p>
 
 				<div class="hero__cta">
 					<Button variant="primary" href={APP_STORE_URL} disabled={!appStoreKnown} external={true}>
 						{appStoreCtaLabel}
 					</Button>
-					<Button variant="secondary" href="/sv/privacy">Läs integritetspolicy</Button>
+					<Button variant="secondary" href="/sv/privacy">Se integritetspolicy</Button>
 				</div>
 
 				<p class="hero__fineprint">
-					Inga konton. Ingen spårning. Inga prenumerationer. Data stannar på din enhet.
+					Inga konton. Ingen spårning. Inga prenumerationer. All data stannar på din enhet.
 				</p>
 			</div>
 
-			<div class="hero__visual" aria-hidden="true">
-				<div class="hero__blob"></div>
+			<div class="hero__visual reveal" aria-hidden="true">
 				<div class="hero__frame anim-float">
 					<img
 						src="/screenshots/v1.1/01.png"
@@ -135,111 +135,52 @@ const screenshots = [
 		</div>
 	</section>
 
-	<Section id="how" title="Så här trappar du ner på snus eller nikotinpåsar gradvis" lede="En enkel och skonsam process du kan hålla fast vid.">
+	<Section id="how" title="Så fungerar det" lede="En enkel och skonsam process du kan hålla fast vid.">
 		<div class="grid-3">
 			<Card as="article">
 				<h3>1) Sätt din baslinje</h3>
-				<p>Berätta för Taper hur många påsar du använder per dag. Lägg eventuellt till pris per dosa.</p>
+				<p>Berätta för Taper hur många påsar du använder per dag och ditt nuvarande pris.</p>
 			</Card>
 			<Card as="article">
-				<h3>2) Följ din dagliga kvot</h3>
-				<p>Få ett tydligt dagligt mål och checka in med ett tryck: "Använde en påse" eller "Stod emot suget".</p>
+				<h3>2) Följ din kvot</h3>
+				<p>Få ett tydligt mål varje dag och logga med ett tryck: "Använde en" eller "Stod emot".</p>
 			</Card>
 			<Card as="article">
-				<h3>3) Spåra framsteg + använd verktyg</h3>
-				<p>Se veckans framsteg och använd andningsövningar och reflektioner för att hantera suget.</p>
+				<h3>3) Använd verktygen</h3>
+				<p>Använd andningsövningar, reflektion och se pengarna du sparar varje vecka.</p>
 			</Card>
 		</div>
-	</Section>
-
-	<Section id="screenshots" title="Skärmbilder" lede="En titt på de viktigaste funktionerna.">
-		<ScreenshotGallery items={screenshots} />
 	</Section>
 
 	<Section
 		id="features"
-		title="Följ dina framsteg privat på din enhet"
+		title="Verktyg som gör skillnad"
 		lede="Allt du behöver för att minska gradvis – helt utan konton, skam eller brus."
 	>
-		<div class="grid-2">
-			<Card as="article">
-				<h3>Idag</h3>
-				<p>Daglig kvot, snabb registrering och ett lugnt incheckningsflöde.</p>
-			</Card>
-			<Card as="article">
-				<h3>Framsteg</h3>
-				<p>Veckotrender och totaler som hur många påsar du undvikit och (valfritt) sparade pengar.</p>
-			</Card>
-			<Card as="article">
-				<h3>Stödverktyg</h3>
-				<p>Andning, reflektion och stöd för att "surfa suget" när nikotinabstinensen slår till.</p>
-			</Card>
-			<Card as="article">
-				<h3>Notiser (valfritt)</h3>
-				<p>Dagligen stämmer vi av och påminnelser finns om du aktiverar dem.</p>
-			</Card>
-			<Card as="article">
-				<h3>Börja om</h3>
-				<p>Radera lokala data helt och återgå till startskärmen när du vill.</p>
-			</Card>
-			<Card as="article">
-				<h3>Lokalt först</h3>
-				<p>Dina data sparas endast på din enhet. Inga inlogg. Ingen molnsynk.</p>
-			</Card>
-		</div>
-	</Section>
-
-	<Section
-		id="privacy"
-		title="Integritet som standard"
-		lede="En privat nikotinspårare som håller kvar dina framsteg på din enhet – ingen delning, ingen molnsynk."
-	>
-		<div class="grid-2">
-			<Card as="article">
-				<h3>Vad som stannar på din enhet</h3>
-				<ul>
-					<li>Användningshistorik (använde en påse / stod emot suget + tidsstämplar)</li>
-					<li>Inställningar (baslinje, planparametrar, valfria triggers och ev. pris)</li>
-					<li>Dina egna val (tema, notiser)</li>
-				</ul>
-			</Card>
-			<Card as="article">
-				<h3>Vad vi inte gör</h3>
-				<ul>
-					<li>Inga konton eller inloggningar</li>
-					<li>Ingen annonsspårning</li>
-					<li>Vi säljer ingen personlig data</li>
-					<li>Inga medicinska påståenden</li>
-				</ul>
-			</Card>
-			<Card as="article">
-				<h3>Radera allt</h3>
-				<p>
-					"Börja om" (Start over) raderar all lokal data inuti appen och gör så att du kan starta på nytt.
-				</p>
-			</Card>
-			<Card as="article">
-				<h3>Kraschrapportering (valfritt)</h3>
-				<p>
-					Om det är aktiverat i builden kan Sentry ibland användas för felrapporter i syfte att öka appens stabilitet.
-				</p>
-			</Card>
-		</div>
-	</Section>
-
-	<Section id="why" title="Varför Taper?" lede="Byggd annorlunda än de stora hälsoapparna.">
 		<div class="grid-3">
 			<Card as="article">
+				<h3>Interaktiv andning</h3>
+				<p>Lugna nervsystemet med 4-7-8, Box Breathing eller Quick Calm-vibrationer.</p>
+			</Card>
+			<Card as="article">
+				<h3>Guidad Urge Surfing</h3>
+				<p>En 5-minuters timer som hjälper dig att observera och 'rida ut' suget.</p>
+			</Card>
+			<Card as="article">
+				<h3>Reflektions-anteckningar</h3>
+				<p>Spara korta anteckningar om dina triggers och framsteg för att förstå dina mönster.</p>
+			</Card>
+			<Card as="article">
+				<h3>Ekonomisk översikt</h3>
+				<p>Se exakt hur mycket pengar du har sparat sedan du började — direkt på din iPhone.</p>
+			</Card>
+			<Card as="article">
 				<h3>Integritet först</h3>
-				<p>Din data lämnar aldrig din telefon. Inga konton, inget moln, ingen annonsspårning. Det du loggar förblir ditt.</p>
+				<p>Inga konton. Inget moln. Dina data lagras lokalt och krypterat på din egen enhet.</p>
 			</Card>
 			<Card as="article">
-				<h3>Engångsköp</h3>
-				<p>Betala en gång, få allt. Inga prenumerationer, inga betalväggar, ingen "premium"-nivå. Alla funktioner ingår från dag ett.</p>
-			</Card>
-			<Card as="article">
-				<h3>Gjord av en soloutvecklare</h3>
-				<p>Taper är byggd av en person som bryr sig om produkten — inte ett företag som optimerar för engagemang.</p>
+				<h3>Inga abonnemang</h3>
+				<p>Betala en gång, äg appen för alltid. Inga dolda avgifter eller återkommande betalningar.</p>
 			</Card>
 		</div>
 	</Section>
@@ -260,137 +201,95 @@ const screenshots = [
 
 <style>
 	.hero {
-		padding: clamp(54px, 7vw, 96px) 0;
-		border-bottom: 1px solid var(--border-subtle);
+		position: relative;
+		padding: clamp(80px, 15vw, 160px) 0;
+		min-height: clamp(600px, 80vh, 1000px);
+		display: flex;
+		align-items: center;
+		overflow: hidden;
 	}
 
 	.hero__inner {
 		display: grid;
-		gap: clamp(24px, 4vw, 48px);
-		grid-template-columns: 1.2fr 0.8fr;
+		gap: clamp(40px, 6vw, 80px);
+		grid-template-columns: 1.15fr 0.85fr;
 		align-items: center;
 	}
 
 	.hero__kicker {
 		margin: 0 0 var(--space-md);
-		color: var(--text-tertiary);
-		font-weight: 600;
-		letter-spacing: -0.01em;
-	}
-
-	h1 {
-		margin: 0 0 var(--space-lg);
-		font-size: clamp(42px, 6vw, 56px);
-		line-height: 1.03;
-		letter-spacing: -0.03em;
+		color: var(--primary);
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		font-size: 13px;
 	}
 
 	.hero__subline {
-		margin: 0 0 var(--space-xl);
+		margin: var(--space-xl) 0 var(--space-xxxl);
 		color: var(--text-secondary);
-		max-width: 62ch;
-		font-size: 18px;
-		line-height: 28px;
+		font-size: clamp(18px, 2vw, 21px);
+		line-height: var(--line-height-relaxed);
+		max-width: 50ch;
 	}
 
 	.hero__cta {
 		display: flex;
-		gap: var(--space-md);
+		gap: var(--space-lg);
 		flex-wrap: wrap;
-		align-items: center;
 	}
 
 	.hero__fineprint {
-		margin: var(--space-lg) 0 0;
+		margin: var(--space-xxxl) 0 0;
 		color: var(--text-tertiary);
-		font-size: 14px;
+		font-size: 13px;
+		font-weight: 500;
 	}
 
 	.hero__visual {
 		position: relative;
-		display: grid;
-		place-items: center;
-	}
-
-	.hero__blob {
-		position: absolute;
-		inset: -100px;
-		background: 
-			radial-gradient(circle at 30% 20%, color-mix(in oklab, var(--primary), transparent 30%), transparent 60%),
-			radial-gradient(circle at 70% 80%, color-mix(in oklab, var(--success), transparent 40%), transparent 60%),
-			radial-gradient(circle at 50% 50%, color-mix(in oklab, var(--primary), transparent 50%), transparent 70%);
-		filter: blur(48px);
-		animation: pulseBlob 12s ease-in-out infinite alternate;
+		display: flex;
+		justify-content: center;
 	}
 
 	.hero__frame {
 		position: relative;
-		border-radius: 28px;
-		border: 1px solid var(--border-subtle);
-		background: var(--surface-raised);
+		border-radius: var(--radius-xl);
+		border: 1px solid var(--border-glass);
+		background: rgba(255, 255, 255, 0.05);
+		backdrop-filter: blur(20px);
+		padding: 1px;
+		box-shadow: 0 40px 100px rgba(0, 0, 0, 0.25);
+		max-width: 340px;
 		overflow: hidden;
-		box-shadow: 0 24px 80px color-mix(in oklab, var(--text-primary), transparent 88%);
-		max-width: 320px;
 	}
 
 	.hero__frame img {
 		display: block;
 		width: 100%;
 		height: auto;
+		border-radius: inherit;
 	}
 
-	.grid-2,
-	.grid-3 {
-		display: grid;
-		gap: var(--space-lg);
-	}
-
-	.grid-2 {
-		grid-template-columns: repeat(2, minmax(0, 1fr));
-	}
-
-	.grid-3 {
-		grid-template-columns: repeat(3, minmax(0, 1fr));
-	}
-
-	h3 {
-		margin: 0 0 var(--space-sm);
-		font-size: 18px;
-		letter-spacing: -0.01em;
-	}
-
-	p {
-		margin: 0;
-		color: var(--text-secondary);
-	}
-
-	ul {
-		margin: var(--space-sm) 0 0;
-		padding-left: 18px;
-		color: var(--text-secondary);
-	}
-
-	li {
-		margin: 6px 0;
-	}
-
-	@media (max-width: 960px) {
+	@media (max-width: 1100px) {
 		.hero__inner {
 			grid-template-columns: 1fr;
+			text-align: center;
 		}
 
-		.hero__frame {
-			max-width: 360px;
+		.hero__copy {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
 		}
 
-		.grid-3 {
-			grid-template-columns: 1fr;
+		.hero__subline {
+			margin-left: auto;
+			margin-right: auto;
 		}
-	}
 
-	@media (max-width: 700px) {
-		.grid-2 {
-			grid-template-columns: 1fr;
+		.hero__cta {
+			justify-content: center;
 		}
 	}
 </style>

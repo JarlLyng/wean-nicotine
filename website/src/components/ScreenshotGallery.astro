@@ -15,15 +15,17 @@ const { items } = Astro.props;
 
 <div class="gallery" role="list">
 	{items.map((item) => (
-		<div class="gallery__item" role="listitem">
-			<img
-				src={item.src}
-				alt={item.alt}
-				loading="lazy"
-				decoding="async"
-				width={item.width}
-				height={item.height}
-			/>
+		<div class="gallery__item reveal" role="listitem">
+			<div class="gallery__frame">
+				<img
+					src={item.src}
+					alt={item.alt}
+					loading="lazy"
+					decoding="async"
+					width={item.width}
+					height={item.height}
+				/>
+			</div>
 		</div>
 	))}
 </div>
@@ -31,33 +33,54 @@ const { items } = Astro.props;
 <style>
 	.gallery {
 		display: grid;
-		gap: var(--space-lg);
+		gap: var(--space-xl);
 		grid-template-columns: repeat(12, 1fr);
 	}
 
 	.gallery__item {
 		grid-column: span 3;
-		border-radius: var(--radius-lg);
-		border: 1px solid var(--border-subtle);
-		background: color-mix(in oklab, var(--bg-card), transparent 30%);
+		transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+	}
+
+	.gallery__item:hover {
+		transform: scale(1.05) translateY(-8px);
+		z-index: 10;
+	}
+
+	.gallery__frame {
+		border-radius: var(--radius-xxl);
+		border: 1px solid var(--border-glass);
+		background: rgba(255, 255, 255, 0.05);
+		backdrop-filter: blur(10px);
+		padding: 1px;
 		overflow: hidden;
+		box-shadow: var(--shadow-premium);
 	}
 
 	img {
 		width: 100%;
 		height: auto;
 		display: block;
+		border-radius: inherit;
 	}
 
-	@media (max-width: 960px) {
+	@media (max-width: 1100px) {
+		.gallery__item {
+			grid-column: span 4;
+		}
+	}
+
+	@media (max-width: 768px) {
 		.gallery__item {
 			grid-column: span 6;
 		}
 	}
 
-	@media (max-width: 560px) {
+	@media (max-width: 480px) {
 		.gallery__item {
 			grid-column: span 12;
+			max-width: 300px;
+			margin: 0 auto;
 		}
 	}
 </style>

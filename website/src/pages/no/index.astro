@@ -98,28 +98,28 @@ const screenshots = [
 >
 	<script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 	<section class="hero">
+		<div class="nordic-bg" style="background-image: url('/images/unsplash/nordic-2.jpg');"></div>
 		<div class="container hero__inner">
-			<div class="hero__copy">
+			<div class="hero__copy reveal">
 				<p class="hero__kicker">Rolig. Privat. Ingen skam.</p>
-				<h1>Kutt ned på snus og nikotinposer – trinn for trinn.</h1>
+				<h1>Trapp ned i ditt eget tempo.</h1>
 				<p class="hero__subline">
-					{SITE_NAME} hjelper deg å trappe ned gradvis med en daglig kvote, hurtiglogging, og støtteverktøy når suget melder seg.
+					{SITE_NAME} er en rolig og privat app som hjelper deg å kutte ned på snus og nikotinposer — helt uten mas eller abonnement.
 				</p>
 
 				<div class="hero__cta">
 					<Button variant="primary" href={APP_STORE_URL} disabled={!appStoreKnown} external={true}>
 						{appStoreCtaLabel}
 					</Button>
-					<Button variant="secondary" href="/no/privacy">Les personvernerklæring</Button>
+					<Button variant="secondary" href="/no/privacy">Se personvernerklæring</Button>
 				</div>
 
 				<p class="hero__fineprint">
-					Ingen kontoer. Ingen sporing. Ingen abonnement. Data forblir på enheten.
+					Ingen kontoer. Ingen sporing. Ingen abonnement. Dataene dine forblir på enheten.
 				</p>
 			</div>
 
-			<div class="hero__visual" aria-hidden="true">
-				<div class="hero__blob"></div>
+			<div class="hero__visual reveal" aria-hidden="true">
 				<div class="hero__frame anim-float">
 					<img
 						src="/screenshots/v1.1/01.png"
@@ -135,111 +135,52 @@ const screenshots = [
 		</div>
 	</section>
 
-	<Section id="how" title="Hvordan redusere snus og nikotinposer gradvis" lede="En lettvint og skånsom prosess du greier å holde deg til.">
+	<Section id="how" title="Slik fungerer det" lede="En enkel og skånsom prosess du greier å holde deg til.">
 		<div class="grid-3">
 			<Card as="article">
 				<h3>1) Sett et utgangspunkt</h3>
-				<p>Fortell Taper hvor mange nikotinposer du bruker per dag. Angi gjerne pris per boks.</p>
+				<p>Fortell Taper hvor mange poser du bruker per dag og din nåværende pris.</p>
 			</Card>
 			<Card as="article">
-				<h3>2) Følg din daglige kvote</h3>
-				<p>Få et tydelig tall i dag og klikk bare på: "Brukte en pose" eller "Stod imot suget".</p>
+				<h3>2) Følg kvoten</h3>
+				<p>Få et tydelig tall hver dag og logg med ett trykk: "Brukte en" eller "Stod imot".</p>
 			</Card>
 			<Card as="article">
-				<h3>3) Se fremskritt + bruk verktøy</h3>
-				<p>Følg den ukentlige fremgangen og benytt puste- eller refleksjonsøvelser.</p>
+				<h3>3) Bruk verktøyene</h3>
+				<p>Benytt pusteøvelser, refleksjon og se pengene du sparer hver uke.</p>
 			</Card>
 		</div>
-	</Section>
-
-	<Section id="screenshots" title="Skjermbilder" lede="En kikk inn i appens primære funksjonalitet.">
-		<ScreenshotGallery items={screenshots} />
 	</Section>
 
 	<Section
 		id="features"
-		title="Følg fremgangen din privat på din enhet"
+		title="Viktige verktøy i hverdagen"
 		lede="Alt du trenger for å kutte ned gradvis — fri for kontoer, skam og mas."
 	>
-		<div class="grid-2">
-			<Card as="article">
-				<h3>I dag</h3>
-				<p>Daglig kvote, kjapp trykk-og-logg, med rolig grensesnitt.</p>
-			</Card>
-			<Card as="article">
-				<h3>Fremgang</h3>
-				<p>Ukentlige trender total mengde avvergede poser, og sparte beløp.</p>
-			</Card>
-			<Card as="article">
-				<h3>Støtteverktøy</h3>
-				<p>Pustesirkler, refleksjonsidéer og mental styrke når nikotinabstinensene peaker.</p>
-			</Card>
-			<Card as="article">
-				<h3>Varsler (valgfritt)</h3>
-				<p>Sjekk at du ikke dropper innom automatisk; bruk påminnelser.</p>
-			</Card>
-			<Card as="article">
-				<h3>Bruk "Start på nytt"</h3>
-				<p>Rader de lokale dataene i Taper og resett hvis du ønsker.</p>
-			</Card>
-			<Card as="article">
-				<h3>Lokal lagring</h3>
-				<p>Data lagres utelukkende lokalt. Uten skyer eller sync.</p>
-			</Card>
-		</div>
-	</Section>
-
-	<Section
-		id="privacy"
-		title="Sikkerhet fra grunnen av"
-		lede="En lukket, lokal app. Fremgangen blir værende på din iPhone — og synkroniseres aldri opp i skyen."
-	>
-		<div class="grid-2">
-			<Card as="article">
-				<h3>Nøyaktig hva Taper gemmer på iPhonen</h3>
-				<ul>
-					<li>Tidsstempler for dosene og cravingene</li>
-					<li>Tidsplan og parametre</li>
-					<li>Innstillinger for notifikasjoner m.m.</li>
-				</ul>
-			</Card>
-			<Card as="article">
-				<h3>Det Taper aldri gjør</h3>
-				<ul>
-					<li>Vi har ingen form for log-inn</li>
-					<li>Ingen sporing over Internett for ad-trackere</li>
-					<li>Salgsforbud på brukerdata</li>
-					<li>Gir ingen medisinske instruksjoner</li>
-				</ul>
-			</Card>
-			<Card as="article">
-				<h3>Slett alt</h3>
-				<p>
-					Med "Start på nytt" slettes data fra Taper umiddelbart.
-				</p>
-			</Card>
-			<Card as="article">
-				<h3>Valgfri kræsjrapportering</h3>
-				<p>
-					Om inkludert sendes Sentry-rapporter, kun for å bedre stabiliteten ved å unngå potensielle kræsj.
-				</p>
-			</Card>
-		</div>
-	</Section>
-
-	<Section id="why" title="Hvorfor Taper?" lede="Bygget annerledes enn de store helseappene.">
 		<div class="grid-3">
 			<Card as="article">
+				<h3>Interaktiv pust</h3>
+				<p>Ro ned nervesystemet med 4-7-8, Box Breathing eller Quick Calm vibrasjoner.</p>
+			</Card>
+			<Card as="article">
+				<h3>Guidet Urge Surfing</h3>
+				<p>En 5-minutters timer som hjelper deg å observere og 'ri ut' suget.</p>
+			</Card>
+			<Card as="article">
+				<h3>Refleksjons-notater</h3>
+				<p>Lagre korte notater om dine triggere og fremgang for å forstå dine mønstre.</p>
+			</Card>
+			<Card as="article">
+				<h3>Økonomisk oversikt</h3>
+				<p>Se nøyaktig hvor mye du har spart siden du startet — rett på din iPhone.</p>
+			</Card>
+			<Card as="article">
 				<h3>Personvern først</h3>
-				<p>Dataene dine forlater aldri telefonen din. Ingen kontoer, ingen sky, ingen annonsesporing. Det du logger forblir ditt.</p>
+				<p>Ingen kontoer. Ingen sky. Dine data lagres lokalt og kryptert på din egen enhet.</p>
 			</Card>
 			<Card as="article">
 				<h3>Engangskjøp</h3>
-				<p>Betal én gang, få alt. Ingen abonnementer, ingen betalingsmurer, ingen "premium"-versjon. Alle funksjoner er inkludert fra dag én.</p>
-			</Card>
-			<Card as="article">
-				<h3>Laget av én utvikler</h3>
-				<p>Taper er bygget av én person som bryr seg om produktet — ikke et selskap som optimaliserer for engasjement.</p>
+				<p>Betal én gang, eier appen for alltid. Ingen abonnementer eller skjulte gebyrer.</p>
 			</Card>
 		</div>
 	</Section>
@@ -260,133 +201,98 @@ const screenshots = [
 
 <style>
 	.hero {
-		padding: clamp(54px, 7vw, 96px) 0;
-		border-bottom: 1px solid var(--border-subtle);
+		position: relative;
+		padding: clamp(80px, 15vw, 160px) 0;
+		min-height: clamp(600px, 80vh, 1000px);
+		display: flex;
+		align-items: center;
+		overflow: hidden;
 	}
 
 	.hero__inner {
 		display: grid;
-		gap: clamp(24px, 4vw, 48px);
-		grid-template-columns: 1.2fr 0.8fr;
+		gap: clamp(40px, 6vw, 80px);
+		grid-template-columns: 1.15fr 0.85fr;
 		align-items: center;
 	}
 
 	.hero__kicker {
 		margin: 0 0 var(--space-md);
-		color: var(--text-tertiary);
-		font-weight: 600;
-		letter-spacing: -0.01em;
-	}
-
-	h1 {
-		margin: 0 0 var(--space-lg);
-		font-size: clamp(42px, 6vw, 56px);
-		line-height: 1.03;
-		letter-spacing: -0.03em;
+		color: var(--primary);
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		font-size: 13px;
 	}
 
 	.hero__subline {
-		margin: 0 0 var(--space-xl);
+		margin: var(--space-xl) 0 var(--space-xxxl);
 		color: var(--text-secondary);
-		max-width: 62ch;
-		font-size: 18px;
-		line-height: 28px;
+		font-size: clamp(18px, 2vw, 21px);
+		line-height: var(--line-height-relaxed);
+		max-width: 50ch;
 	}
 
 	.hero__cta {
 		display: flex;
-		gap: var(--space-md);
+		gap: var(--space-lg);
 		flex-wrap: wrap;
-		align-items: center;
 	}
 
 	.hero__fineprint {
-		margin: var(--space-lg) 0 0;
+		margin: var(--space-xxxl) 0 0;
 		color: var(--text-tertiary);
-		font-size: 14px;
+		font-size: 13px;
+		font-weight: 500;
 	}
 
 	.hero__visual {
 		position: relative;
-		display: grid;
-		place-items: center;
-	}
-
-	.hero__blob {
-		position: absolute;
-		inset: -100px;
-		background: 
-			radial-gradient(circle at 30% 20%, color-mix(in oklab, var(--primary), transparent 30%), transparent 60%),
-			radial-gradient(circle at 70% 80%, color-mix(in oklab, var(--success), transparent 40%), transparent 60%),
-			radial-gradient(circle at 50% 50%, color-mix(in oklab, var(--primary), transparent 50%), transparent 70%);
-		filter: blur(48px);
-		animation: pulseBlob 12s ease-in-out infinite alternate;
+		display: flex;
+		justify-content: center;
 	}
 
 	.hero__frame {
 		position: relative;
-		border-radius: 28px;
-		border: 1px solid var(--border-subtle);
-		background: var(--surface-raised);
+		border-radius: var(--radius-xl);
+		border: 1px solid var(--border-glass);
+		background: rgba(255, 255, 255, 0.05);
+		backdrop-filter: blur(20px);
+		padding: 1px;
+		box-shadow: 0 40px 100px rgba(0, 0, 0, 0.25);
+		max-width: 340px;
 		overflow: hidden;
-		box-shadow: 0 24px 80px color-mix(in oklab, var(--text-primary), transparent 88%);
-		max-width: 320px;
 	}
 
 	.hero__frame img {
 		display: block;
 		width: 100%;
 		height: auto;
+		border-radius: inherit;
 	}
 
-	.grid-2,
-	.grid-3 {
-		display: grid;
-		gap: var(--space-lg);
-	}
-
-	.grid-2 {
-		grid-template-columns: repeat(2, minmax(0, 1fr));
-	}
-
-	.grid-3 {
-		grid-template-columns: repeat(3, minmax(0, 1fr));
-	}
-
-	h3 {
-		margin: 0 0 var(--space-sm);
-		font-size: 18px;
-		letter-spacing: -0.01em;
-	}
-
-	p {
-		margin: 0;
-		color: var(--text-secondary);
-	}
-
-	ul {
-		margin: var(--space-sm) 0 0;
-		padding-left: 18px;
-		color: var(--text-secondary);
-	}
-
-	li {
-		margin: 6px 0;
-	}
-
-	@media (max-width: 960px) {
+	@media (max-width: 1100px) {
 		.hero__inner {
 			grid-template-columns: 1fr;
+			text-align: center;
 		}
 
-		.hero__frame {
-			max-width: 360px;
+		.hero__copy {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
 		}
 
-		.grid-3 {
-			grid-template-columns: 1fr;
+		.hero__subline {
+			margin-left: auto;
+			margin-right: auto;
+		}
+
+		.hero__cta {
+			justify-content: center;
 		}
 	}
+</style>
 
 	@media (max-width: 700px) {
 		.grid-2 {
