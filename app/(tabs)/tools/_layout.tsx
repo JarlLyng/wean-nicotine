@@ -29,6 +29,14 @@ export default function ToolsLayout() {
         name="reflection"
         options={{ title: 'Reflection' }}
       />
+      <Stack.Screen
+        name="reflection-journal"
+        options={{ title: 'Reflection Journal' }}
+      />
+      <Stack.Screen
+        name="cost-savings"
+        options={{ title: 'Cost Savings' }}
+      />
     </Stack>
   );
 }

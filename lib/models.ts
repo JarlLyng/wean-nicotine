@@ -31,3 +31,24 @@ export interface UserPlan {
   createdAt: number;
   updatedAt: number;
 }
+
+export type BreathingPattern = 'default' | '4-7-8' | 'box' | 'quick-calm';
+
+export interface BreathingSession {
+  id: number;
+  pattern: BreathingPattern;
+  durationSeconds: number;
+  completedAt: number;
+  createdAt: number;
+}
+
+export type ReflectionCategory = 'triggers' | 'progress' | 'self-care';
+
+export interface Reflection {
+  id: number;
+  promptId: string;
+  category: ReflectionCategory;
+  promptText: string;
+  note: string;
+  createdAt: number;
+}

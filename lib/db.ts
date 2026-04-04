@@ -46,6 +46,22 @@ interface Migration {
 const MIGRATIONS: Migration[] = [
   { version: 1, sql: `ALTER TABLE taper_settings ADD COLUMN triggers TEXT`, ignoreError: true },
   { version: 2, sql: `ALTER TABLE taper_settings ADD COLUMN currency TEXT`, ignoreError: true },
+  { version: 3, sql: `CREATE TABLE IF NOT EXISTS breathing_sessions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    pattern TEXT NOT NULL,
+    duration_seconds INTEGER NOT NULL,
+    completed_at INTEGER NOT NULL,
+    created_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now') * 1000)
+  )` },
+  { version: 4, sql: `CREATE TABLE IF NOT EXISTS reflections (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    prompt_id TEXT NOT NULL,
+    category TEXT NOT NULL,
+    prompt_text TEXT NOT NULL,
+    note TEXT NOT NULL,
+    created_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now') * 1000)
+  )` },
+  { version: 5, sql: `CREATE INDEX IF NOT EXISTS idx_reflections_created_at ON reflections(created_at)` },
 ];
 
 async function runMigrations(database: SQLiteDatabase): Promise<void> {
@@ -180,6 +196,8 @@ export async function resetAllData(): Promise<void> {
     await database.runAsync('DELETE FROM taper_settings');
     await database.runAsync('DELETE FROM user_plan');
     await database.runAsync('DELETE FROM app_preferences');
+    await database.runAsync('DELETE FROM breathing_sessions');
+    await database.runAsync('DELETE FROM reflections');
     await database.runAsync('COMMIT');
   } catch (error) {
     try {

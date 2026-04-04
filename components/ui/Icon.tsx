@@ -30,6 +30,13 @@ import {
   Trophy,
   Lightning,
   Star,
+  Timer,
+  PiggyBank,
+  Notebook,
+  Play,
+  Pause,
+  Clock,
+  BookOpen,
 } from 'phosphor-react-native';
 
 export type IconName = 
@@ -56,7 +63,14 @@ export type IconName =
   | 'medal'
   | 'trophy'
   | 'lightning'
-  | 'star';
+  | 'star'
+  | 'timer'
+  | 'piggy-bank'
+  | 'notebook'
+  | 'play'
+  | 'pause'
+  | 'clock'
+  | 'book-open';
 
 export type IconWeight = 'thin' | 'light' | 'regular' | 'bold' | 'fill' | 'duotone';
 
@@ -94,6 +108,13 @@ const ICON_MAP: Record<IconName, React.ComponentType<{ size?: number; color?: st
   'trophy': Trophy,
   'lightning': Lightning,
   'star': Star,
+  'timer': Timer,
+  'piggy-bank': PiggyBank,
+  'notebook': Notebook,
+  'play': Play,
+  'pause': Pause,
+  'clock': Clock,
+  'book-open': BookOpen,
 };
 
 export function Icon({ name, size = 24, color, weight = 'regular', style }: IconProps) {

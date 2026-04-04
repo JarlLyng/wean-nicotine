@@ -27,6 +27,12 @@ const TOOLS = [
     description: 'Learn how to ride out cravings like a wave',
     icon: 'waves' as const,
   },
+  {
+    id: 'cost-savings',
+    title: 'Cost Savings',
+    description: "See how much money you're saving by cutting back",
+    icon: 'piggy-bank' as const,
+  },
 ];
 
 export default function ToolsScreen() {
