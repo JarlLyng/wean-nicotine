@@ -27,7 +27,7 @@ export default function WelcomeScreen() {
           <Animated.View entering={FadeInDown.duration(400)} style={s.hero}>
             <Text style={s.heroTitle}>Take back control</Text>
             <Text style={s.heroSubtitle}>
-              Taper helps you gradually reduce your snus usage — gently, sustainably, and without pressure.
+              Wean helps you gradually reduce your snus usage — gently, sustainably, and without pressure.
             </Text>
           </Animated.View>
 

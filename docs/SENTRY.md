@@ -1,4 +1,4 @@
-# Sentry – error tracking i Taper
+# Sentry – error tracking i Wean Nicotine
 
 Purpose:
 - Explain how Sentry is configured and how to verify it in builds

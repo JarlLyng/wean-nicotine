@@ -1,8 +1,8 @@
-# Taper
+# Wean Nicotine
 
-**Taper** is a mobile app that helps people gradually reduce and eventually stop using snus (nicotine pouches) through a calm, supportive, and non‑judgmental approach. On the App Store the app is listed as **Taper!** (the name "Taper" was already taken).
+**Wean Nicotine** is a mobile app that helps people gradually reduce and eventually stop using snus (nicotine pouches) through a calm, supportive, and non‑judgmental approach.
 
-Instead of quitting cold turkey, Taper focuses on **tapering** — reducing usage step by step, at your own pace.
+Instead of quitting cold turkey, Wean focuses on **tapering** — reducing usage step by step, at your own pace.
 
 ## Documentation
 
@@ -18,7 +18,7 @@ If you need to understand the repository quickly:
 
 Quitting snus doesn’t have to be all or nothing.
 
-Taper helps users:
+Wean helps users:
 - set a realistic baseline
 - follow a gradual reduction plan
 - track progress without shame
@@ -37,7 +37,7 @@ Taper helps users:
 
 ## 🧠 Product principles
 
-- **Taper, don't punish**  
+- **Wean, don't punish**  
 - **Progress over perfection**  
 - **No shame, no streak anxiety**  
 - **Offline‑first & private by default**  
@@ -96,8 +96,8 @@ Initial release focus is **iPhone**.
 
 ## 🔗 Links
 
-- **Marketing site**: `https://taper.iamjarl.com/`
-- **Privacy policy**: `https://taper.iamjarl.com/privacy/`
+- **Marketing site**: `https://wean.iamjarl.com/`
+- **Privacy policy**: `https://wean.iamjarl.com/privacy/`
 
 ---
 
@@ -240,3 +240,4 @@ License not yet specified. All rights reserved until stated otherwise.
 ---
 
 Built with care under the **IAMJARL** project.
+

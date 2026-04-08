@@ -1,4 +1,4 @@
-# Taper — Roadmap
+# Wean Nicotine — Roadmap
 
 Purpose:
 - Describe the planned evolution of the product across phases
@@ -19,7 +19,7 @@ Related files:
 Update when:
 - A roadmap phase is completed, added, removed, or reprioritized
 
-This roadmap describes the planned development of **Taper**, from initial foundation to a polished MVP and beyond.
+This roadmap describes the planned development of **Wean Nicotine**, from initial foundation to a polished MVP and beyond.
 
 The roadmap is **phase-based**, not date-based, to allow calm, iterative development and room for learning.
 
@@ -40,7 +40,7 @@ This section is the “at a glance” view of where the project stands right now
 
 ### Phase 5 — what’s done vs pending
 - [x] EAS Build configured (`eas.json`); production iOS builds succeed
-- [x] App Store Connect app created (Bundle ID: `com.iamjarl.taper`); listing name: **Taper!**
+- [x] App Store Connect app created (Bundle ID: `com.iamjarl.taper`); listing name: **Wean Nicotine**
 - [x] Build submitted to App Store Connect (v1.1 Live)
 - [x] Sentry production setup (EAS secrets configured)
 - [x] App Store metadata finalised (v1.1)
@@ -220,7 +220,7 @@ This section is the “at a glance” view of where the project stands right now
 ### Deliverables
 - App Store description & keywords
 - Screenshots
-- Privacy policy (live): `https://taper.iamjarl.com/privacy/`
+- Privacy policy (live): `https://wean.iamjarl.com/privacy/`
 - TestFlight build
 - Final bug fixes
 - EAS Build configuration

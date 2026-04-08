@@ -1,5 +1,5 @@
 /**
- * Theme tokens for Taper app
+ * Theme tokens for Wean Nicotine app
  * 
  * Now based on IAMJARL Design System (https://jarllyng.github.io/iamjarl-design/)
  * 

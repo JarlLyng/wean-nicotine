@@ -1,5 +1,5 @@
 /**
- * CRUD operations for TaperSettings
+ * CRUD operations for TaperSettings (Wean Nicotine)
  */
 
 import { Platform } from 'react-native';

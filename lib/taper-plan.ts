@@ -1,5 +1,5 @@
 /**
- * Taper plan calculation utilities
+ * Taper plan calculation utilities (Wean Nicotine)
  */
 
 import type { TaperSettings } from './models';

@@ -1,4 +1,4 @@
-# App Store metadata — Taper! (copy/paste)
+# App Store metadata — Wean Nicotine (copy/paste)
 
 Purpose:
 - Canonical copy bank for App Store Connect metadata fields
@@ -33,7 +33,7 @@ Reduce nicotine at your pace
 ```
 
 Alternativer:
-- `Taper snus & nicotine daily`
+- `Wean off snus & nicotine daily`
 - `Track & reduce nicotine use`
 
 ---
@@ -43,7 +43,7 @@ Alternativer:
 ### Promotional Text (valgfrit, max 170 tegn)
 Kan ændres uden ny version:
 ```
-Track your daily nicotine use, set a taper plan, and build lasting habits. No shame—just progress. Data stays on your device.
+Track your daily nicotine use, set a reduction plan, and build lasting habits. No shame—just progress. Data stays on your device.
 ```
 
 ### What's New (v1.2)
@@ -61,7 +61,7 @@ Track your daily nicotine use, set a taper plan, and build lasting habits. No sh
 **Første 1–2 sætninger** vises i søgeresultater — hold dem klare og med nøgleord.
 
 ```
-Taper helps you reduce nicotine use step by step—whether you use snus, pouches, or similar products. Set your own pace, log your daily use, and see your progress over time. All data stays on your device.
+Wean Nicotine helps you reduce nicotine use step by step—whether you use snus, pouches, or similar products. Set your own pace, log your daily use, and see your progress over time. All data stays on your device.
 
 HOW IT WORKS
 • Set a baseline and weekly reduction goal
@@ -78,7 +78,7 @@ WHAT'S NEW IN 1.2
 • Native iOS experience with smooth navigation and haptics
 
 FOR YOU
-Taper is for anyone who wants to cut down gradually without judgment. You choose the speed. The app keeps you honest and motivated with clear numbers and optional daily check-ins.
+Wean Nicotine is for anyone who wants to cut down gradually without judgment. You choose the speed. The app keeps you honest and motivated with clear numbers and optional daily check-ins.
 
 PRIVACY
 Your data is stored only on your phone. We use crash reporting (Sentry) in production to fix bugs—no tracking, no ads, no selling data.
@@ -89,22 +89,22 @@ This app is for harm reduction and personal tracking only. It is not a substitut
 ### Keywords (max 100 tegn inkl. kommaer — ingen mellemrum efter komma)
 
 ```
-nicotine,snus,taper,quit,reduce,cessation,habit,tracking,pouches,progress,velvære,sundhed,nikotin,trappe
+nicotine,snus,wean,quit,reduce,cessation,habit,tracking,pouches,progress,velvære,sundhed,nikotin,trappe
 ```
 
 Alternativ (mere engelsk fokus):
 ```
-nicotine,snus,taper,quit,reduce,cessation,habit,tracking,pouches,daily,progress,health,wean
+nicotine,snus,wean,quit,reduce,cessation,habit,tracking,pouches,daily,progress,health,taper
 ```
 
 ### Support URL
 ```
-https://taper.iamjarl.com/support
+https://wean.iamjarl.com/support
 ```
 
 ### Marketing URL
 ```
-https://taper.iamjarl.com/
+https://wean.iamjarl.com/
 ```
 
 ### Copyright
@@ -138,7 +138,7 @@ Follow the strategy in [`SEO_STRATEGY.md`](./SEO_STRATEGY.md) section 23. Transl
 - **Keywords:** `nikotin,snus,nedtrapning,stop,skærned,vane,sporing,poser,fremskridt,velvære,sundhed,nikotinpose`
 - **Description:** 
 ```
-Taper hjælper dig med at reducere dit nikotinforbrug skridt for skridt – uanset om du bruger snus, nikotinposer eller lignende produkter. Sæt dit eget tempo, registrer dit daglige forbrug, og se dine fremskridt over tid. Alle data bliver på din enhed.
+Wean Nicotine hjælper dig med at reducere dit nikotinforbrug skridt for skridt – uanset om du bruger snus, nikotinposer eller lignende produkter. Sæt dit eget tempo, registrer dit daglige forbrug, og se dine fremskridt over tid. Alle data bliver på din enhed.
 
 SÅDAN FUNGERER DET
 • Sæt et udgangspunkt og et ugentligt mål for nedtrapning
@@ -160,7 +160,7 @@ NYT I 1.2
 - **Keywords:** `nikotin,snus,minska,sluta,nedtrappning,vana,spårning,prilla,framsteg,hälsa,portionssnus,vittsnus`
 - **Description:**
 ```
-Taper hjälper dig att minska på snusandet steg för steg – oavsett om du använder portionssnus, vitt snus eller liknande produkter. Sätt din egen takt, logga din dagliga användning och se dina framsteg över tid. All data stannar på din enhed.
+Wean Nicotine hjälper dig att minska på snusandet steg för steg – oavsett om du använder portionssnus, vitt snus eller liknande produkter. Sätt din egen takt, logga din dagliga användning och se dina framsteg över tid. All data stannar på din enhed.
 
 HUR DET FUNGERAR
 • Sätt en baslinje och ett veckovis mål för nedtrappning
@@ -175,7 +175,7 @@ HUR DET FUNGERAR
 - **Keywords:** `nikotin,snus,nedtrapping,slutte,redusere,vane,logging,poser,fremgang,helse,nikotinposer,taper`
 - **Description:**
 ```
-Taper hjelper deg med å redusere snusbruk steg for steg – uanset om du bruker snus, nikotinposer eller lignende produkter. Sett ditt eget tempo, logg ditt daglige bruk, og se fremgangen over tid. Alle data blir på din enhed.
+Wean Nicotine hjelper deg med å redusere snusbruk steg for steg – uanset om du bruker snus, nikotinposer eller lignende produkter. Sett ditt eget tempo, logg ditt daglige bruk, og se fremgangen over tid. Alle data blir på din enhed.
 
 SLIK FUNGERER DET
 • Sett et nullpunkt og et ukentlig mål for nedtrapping

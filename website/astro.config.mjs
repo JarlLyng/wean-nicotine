@@ -4,7 +4,7 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-	site: 'https://taper.iamjarl.com',
+	site: 'https://weannicotine.iamjarl.com',
 	integrations: [sitemap()],
 	i18n: {
 		defaultLocale: 'en',

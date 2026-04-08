@@ -1,5 +1,5 @@
 /**
- * SQLite database setup and operations for Taper
+ * SQLite database setup and operations for Wean Nicotine
  * 
  * NOTE: expo-sqlite does not work on web. This app is designed for mobile (iOS/Android) only.
  */

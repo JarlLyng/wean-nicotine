@@ -1,4 +1,4 @@
-# Release Checklist — Taper (iPhone / iOS v1.2)
+# Release Checklist — Wean Nicotine (iPhone / iOS v1.2)
 
 Purpose:
 - Operational release checklist for shipping the iOS app
@@ -70,16 +70,16 @@ Android + iPad kan komme senere.
 ## 📝 App Store Metadata
 
 ### iOS App Store Connect
-- [x] **App Navn**: "Taper!" (App Store listing; "Taper" var optaget)
+- [x] **App Navn**: "Wean Nicotine" (App Store listing)
 - [x] App oprettet i App Store Connect med Bundle ID `com.iamjarl.taper`
 - [ ] **Subtitle**: Kort beskrivelse (30 tegn) — **se [`docs/APP_STORE_METADATA.md`](./APP_STORE_METADATA.md)** (copy/paste; ikke "Reduce your blood pressure")
 - [ ] **Beskrivelse**: Færdig tekst i [`docs/APP_STORE_METADATA.md`](./APP_STORE_METADATA.md) (SEO, disclaimer)
 - [ ] **Keywords**: Se [`docs/APP_STORE_METADATA.md`](./APP_STORE_METADATA.md) (max 100 tegn)
 - [x] **Kategori**: Health & Fitness (Primary), Lifestyle (Secondary)
-- [x] **Privacy Policy URL**: `https://taper.iamjarl.com/privacy/`
+- [x] **Privacy Policy URL**: `https://wean.iamjarl.com/privacy/`
 - [ ] **App Privacy**: Opdater til "Data is collected" + Diagnostics → Crash Data (Sentry) — **se [`docs/PRIVACY_APP_STORE.md`](./PRIVACY_APP_STORE.md)**
-- [ ] **Support URL**: `https://taper.iamjarl.com/support` (eller `https://www.taper.dk/support`)
-- [ ] **Marketing URL**: `https://taper.iamjarl.com/` (eller `https://taper.dk`)
+- [ ] **Support URL**: `https://wean.iamjarl.com/support`
+- [ ] **Marketing URL**: `https://wean.iamjarl.com/`
 - [ ] **Age Rating**: Konfigurer baseret på indhold
 - [ ] **App Preview Video**: (valgfrit, men anbefalet)
  
@@ -99,7 +99,7 @@ Android + iPad kan komme senere.
   - Ingen tracking (evt. lokal statistik tæller kun på device)
   - Hvordan data kan slettes (via "Start Over" i appen)
 - [x] Host privacy policy (GitHub Pages, Netlify, eller lignende)
-- [x] Link: `https://taper.iamjarl.com/privacy/`
+- [x] Link: `https://wean.iamjarl.com/privacy/`
 - [ ] (Valgfrit) Tilføj link til privacy policy i appen
 
 ### Terms of Service

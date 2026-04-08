@@ -1,5 +1,5 @@
 /**
- * Data models for Taper app
+ * Data models for Wean Nicotine app
  */
 
 export type LogEntryType = 'pouch_used' | 'craving_resisted';

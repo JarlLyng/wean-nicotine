@@ -1,5 +1,5 @@
 /**
- * Notification management for Taper
+ * Notification management for Wean Nicotine
  * 
  * NOTE: Notifications require a development build and do not work in Expo Go.
  * To test notifications, create a development build:

@@ -13,7 +13,7 @@ import { cancelAllNotifications } from '@/lib/notifications';
 import { captureError, captureMessage } from '@/lib/sentry';
 
 const DELETED_ITEMS = [
-  { icon: 'gear' as const, label: 'Taper settings' },
+  { icon: 'gear' as const, label: 'Your settings' },
   { icon: 'chart-line-up' as const, label: 'Progress history & logs' },
   { icon: 'calendar' as const, label: 'Your taper plan' },
   { icon: 'bell' as const, label: 'Scheduled notifications' },

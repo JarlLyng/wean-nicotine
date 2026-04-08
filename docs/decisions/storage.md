@@ -29,7 +29,7 @@ Update when:
 
 ## Context
 
-Taper needs local-first storage for:
+Wean needs local-first storage for:
 - Timestamped log entries (pouch usage, cravings resisted)
 - User taper plan settings
 - Daily/weekly progress data
@@ -72,7 +72,7 @@ Taper needs local-first storage for:
 
 ## Use Case Analysis
 
-Taper's primary storage needs:
+Wean's primary storage needs:
 
 1. **Log entries** — timestamped events that need:
    - Date range queries ("entries from last 7 days")
@@ -92,9 +92,9 @@ Taper's primary storage needs:
 
 ## Recommendation
 
-**SQLite** is the clear choice for Taper because:
+**SQLite** is the clear choice for Wean because:
 
-1. **Log entries are relational data** — SQLite excels at querying timestamped logs with date ranges, which is core to Taper's functionality.
+1. **Log entries are relational data** — SQLite excels at querying timestamped logs with date ranges, which is core to Wean's functionality.
 
 2. **Future charting needs** — Charts require time-series queries (group by day/week, date ranges). SQLite makes this straightforward with SQL.
 
@@ -102,7 +102,7 @@ Taper's primary storage needs:
 
 4. **Scalability** — As users log entries over months, SQLite handles thousands of rows efficiently with proper indexing.
 
-5. **Data export** — SQLite databases can be easily exported/backed up, which aligns with Taper's privacy-first approach.
+5. **Data export** — SQLite databases can be easily exported/backed up, which aligns with Wean's privacy-first approach.
 
 6. **Settings can coexist** — Simple settings can still be stored in SQLite (single-row table or JSON column) without complexity.
 

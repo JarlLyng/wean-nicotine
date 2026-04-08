@@ -1,5 +1,5 @@
 /**
- * Progress calculation utilities
+ * Progress calculation utilities (Wean Nicotine)
  */
 
 import type { TaperSettings, LogEntry } from './models';

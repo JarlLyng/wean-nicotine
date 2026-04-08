@@ -1,22 +1,22 @@
-# Marketing site build spec — `https://taper.iamjarl.com` (Astro + GitHub Pages)
+# Marketing site build spec — `https://wean.iamjarl.com` (Astro + GitHub Pages)
 
-This is a **fully self-contained** build spec for an AI that will implement the Taper marketing website.
+This is a **fully self-contained** build spec for an AI that will implement the Wean Nicotine marketing website.
 Do **not** assume access to any private repositories.
 
 ## 1) Goal
-- Build an **SEO-first** marketing site for **Taper**.
+- Build an **SEO-first** marketing site for **Wean Nicotine**.
 - The site is a **static** Astro build hosted on **GitHub Pages**.
 - Primary CTA is **“Download on the App Store”** (links to the App Store listing).
 - The site must include an App Store-ready **Privacy Policy** page to use as the App Store Connect “Privacy Policy URL”.
 - **Language**: **English (default), Danish (da), Swedish (sv), Norwegian (no)** (using Astro i18n).
 - **No TestFlight mentions** anywhere.
-- Canonical domain: **`https://taper.iamjarl.com`**
+- Canonical domain: **`https://wean.iamjarl.com`**
 
 ## 2) Hosting & DNS (Namecheap → GitHub Pages)
-- GitHub Pages custom domain: `taper.iamjarl.com`
+- GitHub Pages custom domain: `wean.iamjarl.com`
 - Namecheap DNS:
   - Record type: **CNAME**
-  - Host: `taper`
+  - Host: `wean`
   - Target: `<github-username>.github.io`
   - TTL: Automatic
 - Enable “Enforce HTTPS” in GitHub Pages once DNS has propagated.
@@ -28,9 +28,9 @@ Do **not** assume access to any private repositories.
 - Key SEO Hub pages (e.g. `/snus-reduction-app/`, `/how-to-reduce-snus/` and localized versions)
 
 ## 4) App summary (truthful capabilities only)
-Taper is an iPhone app that helps users gradually reduce snus / nicotine pouches in a calm, private, non-judgmental way.
+Wean Nicotine is an iPhone app that helps users gradually reduce snus / nicotine pouches in a calm, private, non-judgmental way.
 
-What Taper does (safe to state):
+What Wean does (safe to state):
 - Onboarding: baseline pouches/day, optional price per can, optional trigger selection
 - Today: daily allowance + one-tap logging (“Used a pouch”, “Resisted craving”)
 - Progress: weekly + total progress (pouches avoided, money saved if price is set, milestones)
@@ -39,7 +39,7 @@ What Taper does (safe to state):
 - “Start Over”: deletes local data and returns to onboarding
 - Local-first: data stored on device
 
-What Taper does NOT do (must NOT promise):
+What Wean does NOT do (must NOT promise):
 - No accounts / login
 - No cloud sync
 - No medical advice / clinical claims
@@ -48,7 +48,7 @@ What Taper does NOT do (must NOT promise):
 
 ## 5) Visual design system (match the app)
 The app uses IAMJARL design tokens. Use these as the **source of truth** for the website theme.
-Public reference: `https://jarllyng.github.io/iamjarl-design/` (tokens are conceptually aligned with the app).
+Public reference: `https://jarllyng.github.io/iamjarl-design/`.
 
 ### 5.1 Color tokens (use as CSS variables)
 Implement **light + dark** theme using CSS variables.
@@ -173,7 +173,7 @@ Required structure:
 - “Last updated: YYYY-MM-DD”
 - Who we are / data controller:
   - Name: **IAMJARL**
-  - Website: `https://taper.iamjarl.com`
+  - Website: `https://wean.iamjarl.com`
   - Contact: `support@iamjarl.com`
 - Data we store locally on device:
   - Usage logs (pouch used / craving resisted + timestamps)
@@ -197,13 +197,13 @@ Required structure:
 ## 9) SEO requirements (very important)
 Implement all of the following:
 - Unique `<title>` + meta description per page
-- `rel="canonical"` pointing to `https://taper.iamjarl.com/...`
+- `rel="canonical"` pointing to `https://wean.iamjarl.com/...`
 - Open Graph + Twitter cards
 - `robots.txt` allowing indexing
 - `sitemap.xml`
 - Structured data (JSON-LD), include:
   - Type: `MobileApplication` (or `SoftwareApplication`)
-  - Name: “Taper”
+  - Name: “Wean Nicotine”
   - OperatingSystem: “iOS”
   - ApplicationCategory: “HealthApplication”
   - URL: canonical
@@ -255,13 +255,13 @@ taper-site/
 
 ## 12) GitHub Pages deploy (Astro)
 Use GitHub Actions to build and deploy to Pages.
-Set Astro `site` to `https://taper.iamjarl.com` (important for sitemap + canonical).
+Set Astro `site` to `https://wean.iamjarl.com` (important for sitemap + canonical).
 Ensure `CNAME` is deployed for the custom domain.
 
 ## 13) Copy starter (English)
 Hero options:
 - “Reduce snus step by step — calmly.”
-- “Taper off nicotine pouches without shame.”
+- “Wean off nicotine pouches without shame.”
 
 Subline:
 - “A calm, private iPhone app for gradual reduction, daily tracking, and supportive tools.”

@@ -27,7 +27,7 @@ Update when:
 
 ## One-Screen Summary
 
-- `Taper` is a mobile app that helps users reduce snus and nicotine pouch usage gradually.
+- `Wean Nicotine` is a mobile app that helps users reduce snus and nicotine pouch usage gradually.
 - The repo also contains the public marketing site in `website/`.
 - The app is local-first. There is no backend, no account system, and no cloud sync in the MVP.
 - The mobile app uses Expo SDK 55, Expo Router, SQLite, Expo Notifications, Sentry, and React Compiler.

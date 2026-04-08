@@ -1,5 +1,5 @@
 /**
- * Custom hook for app initialization
+ * Custom hook for app initialization (Wean Nicotine)
  * Handles Sentry, database and analytics setup on app launch
  */
 
@@ -15,7 +15,7 @@ export function useAppInitialize() {
 
     // Skip database initialization on web
     if (Platform.OS === 'web') {
-      console.warn('Taper is designed for mobile devices only. SQLite is not available on web.');
+      console.warn('Wean Nicotine is designed for mobile devices only. SQLite is not available on web.');
       return;
     }
 

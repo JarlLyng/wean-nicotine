@@ -1,5 +1,5 @@
 /**
- * Cost savings calculation utility.
+ * Cost savings calculation utility (Wean Nicotine).
  * Reads existing taper_settings and log_entries to compute how much money
  * the user has saved by reducing nicotine use.
  */

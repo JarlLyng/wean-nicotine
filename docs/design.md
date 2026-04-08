@@ -31,7 +31,7 @@ Update when:
 
 ## Design Philosophy
 
-Taper's design is built around three core principles:
+Wean's design is built around three core principles:
 
 1. **Calm and supportive** — Not clinical or judgmental
 2. **Clear visual hierarchy** — Easy to scan and understand

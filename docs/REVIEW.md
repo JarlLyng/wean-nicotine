@@ -27,7 +27,7 @@ Last reviewed:
 
 ## Current Summary
 
-Taper has a coherent Expo/React Native structure with clear domain boundaries, local-first storage, and a consistent design-token system. The main remaining gaps are test coverage, some product configurability, and a few quality-of-life improvements on the home flow.
+Wean Nicotine has a coherent Expo/React Native structure with clear domain boundaries, local-first storage, and a consistent design-token system. The main remaining gaps are test coverage, some product configurability, and a few quality-of-life improvements on the home flow.
 
 ## Confirmed Strengths
 

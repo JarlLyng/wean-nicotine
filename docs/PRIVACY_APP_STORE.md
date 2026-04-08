@@ -29,7 +29,7 @@ Når `EXPO_PUBLIC_SENTRY_DSN` er sat ved build, sender appen data til Sentry. Du
 
 ### Trin for trin
 
-1. Gå til **App Store Connect** → din app **Taper!** → **App Privacy**.
+1. Gå til **App Store Connect** → din app **Wean Nicotine** → **App Privacy**.
 2. Klik **Edit** ved "Data Types".
 3. Vælg **"Data is collected from this app"** (ikke "Data Not Collected").
 4. Klik **"Add Data Type"** (eller "Add new data type").
@@ -48,7 +48,7 @@ Når `EXPO_PUBLIC_SENTRY_DSN` er sat ved build, sender appen data til Sentry. Du
 
 ## 2. Privacy Policy (offentlig side)
 
-Din privacy policy på **https://taper.iamjarl.com/privacy/** bør indeholde:
+Din privacy policy på **https://wean.iamjarl.com/privacy/** bør indeholde:
 
 - At appen primært gemmer data lokalt på enheden.
 - At vi i production builds sender **crash- og fejllogs** til Sentry (tredjepart) udelukkende for at finde og rette fejl. Ingen tracking, ingen reklamer, ingen salg af data.

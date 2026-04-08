@@ -1,6 +1,6 @@
-# Taper marketing site (`taper-marketingsite`)
+# Wean Nicotine marketing site
 
-Static Astro marketing site for **Taper**, intended for GitHub Pages with custom domain `https://taper.iamjarl.com`.
+Static Astro marketing site for **Wean Nicotine**, intended for GitHub Pages with custom domain `https://wean.iamjarl.com`.
 
 ## Udvikling
 

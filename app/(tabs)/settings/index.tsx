@@ -227,7 +227,7 @@ export default function SettingsScreen() {
 
           {/* ── Version ── */}
           <Text style={s.version}>
-            Taper! v{Constants.expoConfig?.version ?? '1.0.0'} (Build {Constants.expoConfig?.ios?.buildNumber ?? '?'})
+            Wean Nicotine v{Constants.expoConfig?.version ?? '1.0.0'} (Build {Constants.expoConfig?.ios?.buildNumber ?? '?'})
           </Text>
         </View>
       </ScrollView>

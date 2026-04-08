@@ -1,6 +1,6 @@
-# SEO Strategy — Taper
+# SEO Strategy — Wean Nicotine
 
-Site: https://taper.iamjarl.com/
+Site: https://wean.iamjarl.com/
 Product: A calm, privacy-first app that helps people reduce snus and nicotine pouches gradually with a daily allowance, one-tap tracking, weekly progress, optional reminders, and support tools when cravings hit.
 
 Purpose:
@@ -27,11 +27,11 @@ Update when:
 
 ---
 
-## 1. What Taper actually is
+## 1. What Wean Nicotine actually is
 
-Taper is **not** an audio tool.
+Wean Nicotine is **not** an audio tool.
 
-Based on the live site, Taper is positioned as a **nicotine reduction app for snus and nicotine pouches**. The homepage messaging focuses on:
+Based on the live site, Wean is positioned as a **nicotine reduction app for snus and nicotine pouches**. The homepage messaging focuses on:
 
 - reducing snus and nicotine pouches step by step
 - daily allowance and one-tap tracking
@@ -55,7 +55,7 @@ That means the SEO strategy must target people searching for help with:
 
 ### Primary positioning
 
-**Taper is the calm, private app for reducing snus and nicotine pouches gradually.**
+**Wean Nicotine is the calm, private app for reducing snus and nicotine pouches gradually.**
 
 ### Secondary positioning
 
@@ -64,9 +64,9 @@ That means the SEO strategy must target people searching for help with:
 - A private, local-first alternative to generic habit trackers
 - A focused tool for people who want to cut down without shame, noise, or accounts
 
-### What makes Taper distinct
+### What makes Wean distinct
 
-The live site already gives Taper a differentiated angle. That angle should be the center of SEO:
+The live site already gives Wean a differentiated angle. That angle should be the center of SEO:
 
 - built specifically for **snus and nicotine pouches**
 - focused on **reduction**, not just all-or-nothing quitting
@@ -79,7 +79,7 @@ This is a much better SEO wedge than trying to rank broadly for generic “quit 
 
 ---
 
-## 3. Best keyword strategy for Taper
+## 3. Best keyword strategy for Wean Nicotine
 
 The strongest opportunity is **high-intent long-tail SEO**, not broad head terms.
 
@@ -90,7 +90,7 @@ Broad keywords like these will be competitive and often medically dominated:
 - stop nicotine
 - nicotine addiction help
 
-Instead, Taper should begin with keyword clusters where product intent is clearer and competition is more realistic.
+Instead, Wean should begin with keyword clusters where product intent is clearer and competition is more realistic.
 
 ### Cluster A — Snus reduction
 
@@ -192,13 +192,13 @@ The homepage should target the main commercial-intent cluster around **snus redu
 
 ### Recommended homepage title tag
 
-Taper — Snus & Nicotine Pouch Reduction App
+Wean Nicotine — Snus & Nicotine Pouch Reduction App
 
 Alternative title options:
 
-- Taper — Reduce Snus and Nicotine Pouches Step by Step
-- Taper — Private App to Cut Down on Nicotine Pouches
-- Taper — Calm Snus Reduction and Nicotine Taper App
+- Wean Nicotine — Reduce Snus and Nicotine Pouches Step by Step
+- Wean Nicotine — Private App to Cut Down on Nicotine Pouches
+- Wean — Calm Snus Reduction and Nicotine Taper App
 
 ### Recommended meta description
 
@@ -212,7 +212,7 @@ This is already close to what the site uses and should stay.
 
 ### Recommended H2 structure
 
-- What Taper helps you do
+- What Wean helps you do
 - How to reduce snus or nicotine pouches gradually
 - Why a tapering approach can feel more manageable
 - Track progress privately on your device
@@ -225,8 +225,8 @@ Right now the homepage communicates the product well, but it should mention the 
 
 Add copy that clearly states:
 
-- Taper is a **snus reduction app**
-- Taper is also for **nicotine pouches**
+- Wean is a **snus reduction app**
+- Wean is also for **nicotine pouches**
 - It helps users **cut down gradually**
 - It works as a **tracker** and a **taper plan companion**
 - It is **private**, **local-first**, and **does not require an account**
@@ -235,9 +235,9 @@ Important: do this naturally. Do not keyword-stuff.
 
 ---
 
-## 6. Best content model for Taper
+## 6. Best content model for Wean Nicotine
 
-Taper should not rely only on the homepage.
+Wean should not rely only on the homepage.
 
 The best SEO model is:
 
@@ -287,16 +287,16 @@ These capture specific pains that can convert well.
 
 These are useful once the first core pages exist.
 
-- `/taper-vs-habit-tracker/`
-- `/taper-vs-notes-app-for-tracking/`
-- `/taper-vs-spreadsheet-tracking/`
+- `/wean-vs-habit-tracker/`
+- `/wean-vs-notes-app-for-tracking/`
+- `/wean-vs-spreadsheet-tracking/`
 - `/gradual-reduction-vs-cold-turkey/`
 
 Be careful with medical framing on the last one. Keep it non-clinical and experience-based.
 
 ---
 
-## 8. Page templates that fit Taper
+## 8. Page templates that fit Wean
 
 ### Template A — Commercial landing page
 
@@ -331,14 +331,14 @@ Structure:
 2. step-by-step guide
 3. common mistakes / common challenges
 4. when tracking helps
-5. gentle CTA to Taper
+5. gentle CTA to Wean
 6. FAQ
 
 ### Template C — Comparison page
 
 Best for:
 
-- Taper vs habit tracker
+- Wean vs habit tracker
 - gradual reduction vs cold turkey
 
 Structure:
@@ -380,8 +380,8 @@ Examples:
 - How do you reduce snus gradually?
 - What is a nicotine taper?
 - Can I track nicotine pouches without an account?
-- Is Taper private?
-- Does Taper work offline?
+- Is Wean private?
+- Does Wean work offline?
 
 ### Experience-based framing
 
@@ -395,7 +395,7 @@ The content should sound practical and supportive, not clinical or sensational.
 
 Because this is in a health-adjacent area, the content must avoid overclaiming.
 
-Do not position Taper as:
+Do not position Wean as:
 
 - medical treatment
 - therapy
@@ -504,7 +504,7 @@ Anchor text should be natural, such as:
 ### Homepage
 
 Title:
-Taper — Snus & Nicotine Pouch Reduction App
+Wean Nicotine — Snus & Nicotine Pouch Reduction App
 
 Description:
 Reduce snus and nicotine pouches gradually with a calm, private app. Track your daily allowance, log use in one tap, and get support when cravings hit.
@@ -512,23 +512,23 @@ Reduce snus and nicotine pouches gradually with a calm, private app. Track your 
 ### `/snus-reduction-app/`
 
 Title:
-Snus Reduction App — Cut Down Step by Step | Taper
+Snus Reduction App — Cut Down Step by Step | Wean Nicotine
 
 Description:
-Looking for a snus reduction app? Taper helps you cut down gradually with a daily allowance, one-tap tracking, private progress, and craving support tools.
+Looking for a snus reduction app? Wean helps you cut down gradually with a daily allowance, one-tap tracking, private progress, and craving support tools.
 
 ### `/nicotine-pouch-reduction-app/`
 
 Title:
-Nicotine Pouch Reduction App — Track and Cut Down | Taper
+Nicotine Pouch Reduction App — Track and Cut Down | Wean Nicotine
 
 Description:
-Taper helps you reduce nicotine pouches gradually with simple daily tracking, progress over time, and a calm, private experience.
+Wean Nicotine helps you reduce nicotine pouches gradually with simple daily tracking, progress over time, and a calm, private experience.
 
 ### `/how-to-reduce-snus/`
 
 Title:
-How to Reduce Snus Gradually — A Practical Guide | Taper
+How to Reduce Snus Gradually — A Practical Guide | Wean Nicotine
 
 Description:
 Learn how to reduce snus gradually with a simple daily approach, better tracking, and practical ways to handle cravings.
@@ -547,7 +547,7 @@ For SEO and AI search visibility, add:
 
 ### Suggested homepage schema properties
 
-- name: Taper
+- name: Wean Nicotine
 - applicationCategory: HealthApplication or UtilitiesApplication
 - operatingSystem: iOS
 - description: app for reducing snus and nicotine pouches gradually
@@ -578,7 +578,7 @@ Because this is a static site, technical SEO should be relatively easy to keep c
 
 ## 16. App Store SEO (ASO) matters here too
 
-Because the site says “Coming soon on the App Store,” Taper should align site SEO with App Store naming and description.
+Because the site says “Coming soon on the App Store,” Wean should align site SEO with App Store naming and description.
 
 Keep naming consistent across:
 
@@ -656,7 +656,7 @@ These are the pages I would build first.
 
 ---
 
-## 19. Backlink strategy that actually fits Taper
+## 19. Backlink strategy that actually fits Wean
 
 Do not chase generic backlink campaigns first.
 
@@ -696,7 +696,7 @@ Track in Google Search Console:
 ### Secondary metrics
 
 - clicks to App Store
-- branded searches for “Taper app”
+- branded searches for “Wean Nicotine app”
 - landing page performance by topic cluster
 
 ### What success looks like early
@@ -713,7 +713,7 @@ Success is:
 
 ## 21. Final recommendation
 
-Taper’s SEO opportunity is **not** broad “quit smoking” SEO.
+Wean’s SEO opportunity is **not** broad “quit smoking” SEO.
 
 It is the more specific intersection of:
 
@@ -734,7 +734,7 @@ If you build around that position, the site can attract more qualified traffic t
 A tighter homepage positioning could be:
 
 **Reduce snus and nicotine pouches gradually.**
-Taper is a calm, private app that helps you cut down step by step with a daily allowance, one-tap tracking, craving support tools, and local-first progress tracking.
+Wean is a calm, private app that helps you cut down step by step with a daily allowance, one-tap tracking, craving support tools, and local-first progress tracking.
 
 That is much closer to what people may actually search for and still fits the current brand tone.
 

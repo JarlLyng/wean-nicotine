@@ -7,7 +7,7 @@
 // Stub implementation that will never be called on web
 // (because db.ts checks Platform.OS before using SQLite)
 export function openDatabaseAsync() {
-  throw new Error('SQLite is not available on web. Taper is designed for mobile devices only.');
+  throw new Error('SQLite is not available on web. Wean Nicotine is designed for mobile devices only.');
 }
 
 // Export all the functions that expo-sqlite might export

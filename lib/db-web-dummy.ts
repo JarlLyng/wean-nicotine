@@ -1,5 +1,5 @@
 /**
- * Dummy data for web preview
+ * Dummy data for web preview (Wean Nicotine)
  * Provides realistic sample data so the UI can be viewed on web
  */
 
