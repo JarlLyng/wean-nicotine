@@ -172,6 +172,29 @@ const structuredData: Record<string, unknown> = {
 </html>
 
 <style>
+	.skip-link {
+		position: absolute;
+		left: -9999px;
+		top: auto;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+	}
+	.skip-link:focus {
+		position: fixed;
+		top: var(--space-sm);
+		left: var(--space-sm);
+		width: auto;
+		height: auto;
+		padding: var(--space-sm) var(--space-md);
+		background: var(--bg-app);
+		color: var(--primary);
+		border: 1px solid var(--primary);
+		border-radius: var(--radius-md);
+		z-index: 100;
+		font-weight: 600;
+	}
+
 	.site-header {
 		position: sticky;
 		top: 0;

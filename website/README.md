@@ -1,6 +1,6 @@
 # Wean Nicotine marketing site
 
-Static Astro marketing site for **Wean Nicotine**, intended for GitHub Pages with custom domain `https://wean.iamjarl.com`.
+Static Astro marketing site for **Wean Nicotine**, intended for GitHub Pages with custom domain `https://weannicotine.iamjarl.com`.
 
 ## Udvikling
 

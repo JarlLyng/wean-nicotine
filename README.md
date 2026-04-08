@@ -96,8 +96,8 @@ Initial release focus is **iPhone**.
 
 ## 🔗 Links
 
-- **Marketing site**: `https://wean.iamjarl.com/`
-- **Privacy policy**: `https://wean.iamjarl.com/privacy/`
+- **Marketing site**: `https://weannicotine.iamjarl.com/`
+- **Privacy policy**: `https://weannicotine.iamjarl.com/privacy/`
 
 ---
 

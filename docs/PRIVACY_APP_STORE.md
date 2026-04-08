@@ -48,7 +48,7 @@ Når `EXPO_PUBLIC_SENTRY_DSN` er sat ved build, sender appen data til Sentry. Du
 
 ## 2. Privacy Policy (offentlig side)
 
-Din privacy policy på **https://wean.iamjarl.com/privacy/** bør indeholde:
+Din privacy policy på **https://weannicotine.iamjarl.com/privacy/** bør indeholde:
 
 - At appen primært gemmer data lokalt på enheden.
 - At vi i production builds sender **crash- og fejllogs** til Sentry (tredjepart) udelukkende for at finde og rette fejl. Ingen tracking, ingen reklamer, ingen salg af data.

@@ -76,14 +76,14 @@ Android + iPad kan komme senere.
 - [ ] **Beskrivelse**: Færdig tekst i [`docs/APP_STORE_METADATA.md`](./APP_STORE_METADATA.md) (SEO, disclaimer)
 - [ ] **Keywords**: Se [`docs/APP_STORE_METADATA.md`](./APP_STORE_METADATA.md) (max 100 tegn)
 - [x] **Kategori**: Health & Fitness (Primary), Lifestyle (Secondary)
-- [x] **Privacy Policy URL**: `https://wean.iamjarl.com/privacy/`
+- [x] **Privacy Policy URL**: `https://weannicotine.iamjarl.com/privacy/`
 - [ ] **App Privacy**: Opdater til "Data is collected" + Diagnostics → Crash Data (Sentry) — **se [`docs/PRIVACY_APP_STORE.md`](./PRIVACY_APP_STORE.md)**
-- [ ] **Support URL**: `https://wean.iamjarl.com/support`
-- [ ] **Marketing URL**: `https://wean.iamjarl.com/`
+- [ ] **Support URL**: `https://weannicotine.iamjarl.com/support`
+- [ ] **Marketing URL**: `https://weannicotine.iamjarl.com/`
 - [ ] **Age Rating**: Konfigurer baseret på indhold
 - [ ] **App Preview Video**: (valgfrit, men anbefalet)
  
-> Android release er ikke i scope for v1.1 (iPhone-only).
+> Android release er ikke i scope for v1.2 (iPhone-only).
 
 **iPad / Watch / Mac / Vision Pro:** Appen er bygget som iPhone-only (`ios.supportsTablet: false`). I App Store Connect vises stadig faner for iPad og Apple Watch under Previews — udfyld kun **Phone**. Hvis du ikke vil tilbyde appen på Apple Silicon Mac eller Apple Vision Pro, kan du under **Pricing and Availability** fravælge "Make this app available" for Mac og Vision Pro.
 
@@ -99,7 +99,7 @@ Android + iPad kan komme senere.
   - Ingen tracking (evt. lokal statistik tæller kun på device)
   - Hvordan data kan slettes (via "Start Over" i appen)
 - [x] Host privacy policy (GitHub Pages, Netlify, eller lignende)
-- [x] Link: `https://wean.iamjarl.com/privacy/`
+- [x] Link: `https://weannicotine.iamjarl.com/privacy/`
 - [ ] (Valgfrit) Tilføj link til privacy policy i appen
 
 ### Terms of Service

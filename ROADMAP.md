@@ -220,7 +220,7 @@ This section is the “at a glance” view of where the project stands right now
 ### Deliverables
 - App Store description & keywords
 - Screenshots
-- Privacy policy (live): `https://wean.iamjarl.com/privacy/`
+- Privacy policy (live): `https://weannicotine.iamjarl.com/privacy/`
 - TestFlight build
 - Final bug fixes
 - EAS Build configuration

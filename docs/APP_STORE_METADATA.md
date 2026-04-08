@@ -99,12 +99,12 @@ nicotine,snus,wean,quit,reduce,cessation,habit,tracking,pouches,daily,progress,h
 
 ### Support URL
 ```
-https://wean.iamjarl.com/support
+https://weannicotine.iamjarl.com/support
 ```
 
 ### Marketing URL
 ```
-https://wean.iamjarl.com/
+https://weannicotine.iamjarl.com/
 ```
 
 ### Copyright

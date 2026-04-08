@@ -1,6 +1,6 @@
 # SEO Strategy — Wean Nicotine
 
-Site: https://wean.iamjarl.com/
+Site: https://weannicotine.iamjarl.com/
 Product: A calm, privacy-first app that helps people reduce snus and nicotine pouches gradually with a daily allowance, one-tap tracking, weekly progress, optional reminders, and support tools when cravings hit.
 
 Purpose:

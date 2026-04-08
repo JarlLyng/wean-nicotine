@@ -1,4 +1,4 @@
-# Marketing site build spec — `https://wean.iamjarl.com` (Astro + GitHub Pages)
+# Marketing site build spec — `https://weannicotine.iamjarl.com` (Astro + GitHub Pages)
 
 This is a **fully self-contained** build spec for an AI that will implement the Wean Nicotine marketing website.
 Do **not** assume access to any private repositories.
@@ -10,10 +10,10 @@ Do **not** assume access to any private repositories.
 - The site must include an App Store-ready **Privacy Policy** page to use as the App Store Connect “Privacy Policy URL”.
 - **Language**: **English (default), Danish (da), Swedish (sv), Norwegian (no)** (using Astro i18n).
 - **No TestFlight mentions** anywhere.
-- Canonical domain: **`https://wean.iamjarl.com`**
+- Canonical domain: **`https://weannicotine.iamjarl.com`**
 
 ## 2) Hosting & DNS (Namecheap → GitHub Pages)
-- GitHub Pages custom domain: `wean.iamjarl.com`
+- GitHub Pages custom domain: `weannicotine.iamjarl.com`
 - Namecheap DNS:
   - Record type: **CNAME**
   - Host: `wean`
@@ -173,7 +173,7 @@ Required structure:
 - “Last updated: YYYY-MM-DD”
 - Who we are / data controller:
   - Name: **IAMJARL**
-  - Website: `https://wean.iamjarl.com`
+  - Website: `https://weannicotine.iamjarl.com`
   - Contact: `support@iamjarl.com`
 - Data we store locally on device:
   - Usage logs (pouch used / craving resisted + timestamps)
@@ -197,7 +197,7 @@ Required structure:
 ## 9) SEO requirements (very important)
 Implement all of the following:
 - Unique `<title>` + meta description per page
-- `rel="canonical"` pointing to `https://wean.iamjarl.com/...`
+- `rel="canonical"` pointing to `https://weannicotine.iamjarl.com/...`
 - Open Graph + Twitter cards
 - `robots.txt` allowing indexing
 - `sitemap.xml`
@@ -255,7 +255,7 @@ taper-site/
 
 ## 12) GitHub Pages deploy (Astro)
 Use GitHub Actions to build and deploy to Pages.
-Set Astro `site` to `https://wean.iamjarl.com` (important for sitemap + canonical).
+Set Astro `site` to `https://weannicotine.iamjarl.com` (important for sitemap + canonical).
 Ensure `CNAME` is deployed for the custom domain.
 
 ## 13) Copy starter (English)
