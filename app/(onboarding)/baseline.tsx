@@ -68,9 +68,6 @@ export default function BaselineScreen() {
                 placeholderTextColor={colors.text.tertiary}
                 keyboardType="number-pad"
                 autoFocus
-                blurOnSubmit
-                returnKeyType="done"
-                onSubmitEditing={handleNext}
                 maxLength={3}
                 accessibilityLabel="Pouches per day"
                 accessibilityHint="Enter how many pouches you typically use per day."

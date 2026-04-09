@@ -105,9 +105,6 @@ export default function PriceScreen() {
                 placeholder="0"
                 placeholderTextColor={colors.text.tertiary}
                 keyboardType="decimal-pad"
-                blurOnSubmit
-                returnKeyType="done"
-                onSubmitEditing={handleNext}
                 accessibilityLabel={`Price per can (${currency})`}
                 accessibilityHint="Optional. Leave blank to skip money tracking."
               />

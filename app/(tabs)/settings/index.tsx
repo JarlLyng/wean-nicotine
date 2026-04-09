@@ -213,13 +213,13 @@ export default function SettingsScreen() {
           <View style={s.linksSection}>
             <Button
               title="Privacy Policy"
-              onPress={() => Linking.openURL('https://taper.iamjarl.com/privacy/')}
+              onPress={() => Linking.openURL('https://weannicotine.iamjarl.com/privacy/')}
               variant="ghost"
               style={s.linkButton}
             />
             <Button
               title="Support"
-              onPress={() => Linking.openURL('https://taper.iamjarl.com/support')}
+              onPress={() => Linking.openURL('https://weannicotine.iamjarl.com/support')}
               variant="ghost"
               style={s.linkButton}
             />
