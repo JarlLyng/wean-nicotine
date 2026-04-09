@@ -96,44 +96,90 @@ const screenshots = [
 	canonicalPath="/"
 >
 	<script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+	<!-- ══ HERO ══ -->
 	<section class="hero">
-		<div class="nordic-bg" style="background-image: url('/images/unsplash/nordic-4.jpg');"></div>
+		<!-- Animated aurora background -->
+		<div class="hero__aurora" aria-hidden="true">
+			<div class="hero__aurora-orb hero__aurora-orb--1"></div>
+			<div class="hero__aurora-orb hero__aurora-orb--2"></div>
+			<div class="hero__aurora-orb hero__aurora-orb--3"></div>
+		</div>
+		<div class="hero__noise" aria-hidden="true"></div>
+
 		<div class="container hero__inner">
 			<div class="hero__copy reveal">
 				<p class="hero__kicker">Calm. Private. No shame.</p>
-				<h1>A gentler way to quit nicotine.</h1>
+				<h1>A gentler way to<br/>quit nicotine.</h1>
 				<p class="hero__subline">
-					{SITE_NAME} is a calm and private app designed to help you reduce snus and nicotine pouches gradually, at your own pace.
+					{SITE_NAME} helps you reduce snus and nicotine pouches gradually — at your own pace, on your own device.
 				</p>
 
 				<div class="hero__cta">
 					<Button variant="primary" href={APP_STORE_URL} disabled={!appStoreKnown} external={true}>
 						{appStoreCtaLabel}
 					</Button>
-					<Button variant="secondary" href="/privacy">View privacy policy</Button>
+					<Button variant="secondary" href="#screenshots">See the app</Button>
 				</div>
 
 				<p class="hero__fineprint">
-					No accounts. No tracking. No subscriptions. Your data stays on your device.
+					No accounts &middot; No tracking &middot; No subscriptions &middot; Your data stays on your device
 				</p>
 			</div>
 
 			<div class="hero__visual reveal" aria-hidden="true">
-				<div class="hero__frame anim-float">
-					<img
-						src="/screenshots/v1.1/01.png"
-						alt="Wean Nicotine app showing daily allowance tracking"
-						width="780"
-						height="1691"
-						loading="eager"
-						decoding="async"
-						fetchpriority="high"
-					/>
+				<div class="hero__phone-group">
+					<div class="hero__phone hero__phone--back">
+						<img
+							src="/screenshots/v1.1/04.png"
+							alt=""
+							width="590"
+							height="1278"
+							loading="eager"
+							decoding="async"
+						/>
+					</div>
+					<div class="hero__phone hero__phone--front anim-float">
+						<img
+							src="/screenshots/v1.1/01.png"
+							alt="Wean Nicotine app showing daily allowance tracking"
+							width="780"
+							height="1691"
+							loading="eager"
+							decoding="async"
+							fetchpriority="high"
+						/>
+					</div>
 				</div>
 			</div>
 		</div>
 	</section>
 
+	<!-- ══ SOCIAL PROOF BAR ══ -->
+	<section class="proof">
+		<div class="container">
+			<div class="proof__row">
+				<div class="proof__item">
+					<span class="proof__icon">&#9679;</span>
+					<span class="proof__label">100% local &amp; private</span>
+				</div>
+				<div class="proof__item">
+					<span class="proof__icon">&#9679;</span>
+					<span class="proof__label">One-time purchase</span>
+				</div>
+				<div class="proof__item">
+					<span class="proof__icon">&#9679;</span>
+					<span class="proof__label">Works offline</span>
+				</div>
+				<div class="proof__item">
+					<span class="proof__icon">&#9679;</span>
+					<span class="proof__label">No sign-up required</span>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- ══ HOW IT WORKS ══ -->
 	<Section id="how" title="How it works" lede="A simple, gentle process you can stick with.">
 		<div class="grid-3">
 			<Card as="article">
@@ -151,6 +197,32 @@ const screenshots = [
 		</div>
 	</Section>
 
+	<!-- ══ SCREENSHOTS ══ -->
+	<section id="screenshots" class="screenshots-section">
+		<div class="nordic-bg" style="background-image: url('/images/unsplash/nordic-1.jpg');"></div>
+		<div class="container">
+			<div class="section-header reveal">
+				<h2>See the app in action</h2>
+				<p>Track daily use, handle cravings, and watch your progress grow — all in a calm, focused interface.</p>
+			</div>
+			<div class="screenshots-showcase reveal">
+				<div class="screenshot-card">
+					<img src="/screenshots/v1.1/03.png" alt="Today screen: daily allowance with one-tap logging" width="590" height="1278" loading="lazy" decoding="async" />
+					<p class="screenshot-caption">Log use in one tap</p>
+				</div>
+				<div class="screenshot-card screenshot-card--hero">
+					<img src="/screenshots/v1.1/04.png" alt="Progress screen: weekly stats showing pouches avoided and money saved" width="590" height="1278" loading="lazy" decoding="async" />
+					<p class="screenshot-caption">Track your progress</p>
+				</div>
+				<div class="screenshot-card">
+					<img src="/screenshots/v1.1/05.png" alt="Support tools: breathing exercise and urge surfing" width="590" height="1278" loading="lazy" decoding="async" />
+					<p class="screenshot-caption">Handle cravings</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- ══ FEATURES ══ -->
 	<Section
 		id="features"
 		title="Tools built for your journey"
@@ -184,6 +256,21 @@ const screenshots = [
 		</div>
 	</Section>
 
+	<!-- ══ NATURE BREAK ══ -->
+	<section class="nature-break">
+		<div class="nordic-bg" style="background-image: url('/images/unsplash/nordic-3.jpg');"></div>
+		<div class="container nature-break__inner reveal">
+			<h2>Your pace. Your privacy. Your journey.</h2>
+			<p>Built by someone who gets it — no corporate agenda, no data harvesting. Just a calm tool that helps you take back control.</p>
+			<div class="hero__cta" style="justify-content: center;">
+				<Button variant="primary" href={APP_STORE_URL} disabled={!appStoreKnown} external={true}>
+					{appStoreCtaLabel}
+				</Button>
+			</div>
+		</div>
+	</section>
+
+	<!-- ══ FAQ ══ -->
 	<Section id="faq" title="Frequently asked questions" lede="Common questions about snus reduction and nicotine pouch tracking.">
 		<div class="grid-2">
 			<Card as="article"><h3>{faqItems[0].question}</h3><p>{faqItems[0].answer}</p></Card>
@@ -199,13 +286,102 @@ const screenshots = [
 </Layout>
 
 <style>
+	/* ═══════════════════════════════════════
+	   HERO — Animated Aurora Background
+	   ═══════════════════════════════════════ */
 	.hero {
 		position: relative;
-		padding: clamp(80px, 15vw, 160px) 0;
-		min-height: clamp(600px, 80vh, 1000px);
+		padding: clamp(100px, 18vw, 200px) 0 clamp(80px, 12vw, 160px);
+		min-height: clamp(600px, 85vh, 1100px);
 		display: flex;
 		align-items: center;
 		overflow: hidden;
+	}
+
+	/* Aurora orbs */
+	.hero__aurora {
+		position: absolute;
+		inset: 0;
+		z-index: -2;
+		overflow: hidden;
+	}
+
+	.hero__aurora-orb {
+		position: absolute;
+		border-radius: 50%;
+		filter: blur(120px);
+		opacity: 0.5;
+		will-change: transform;
+	}
+
+	.hero__aurora-orb--1 {
+		width: clamp(400px, 50vw, 800px);
+		height: clamp(400px, 50vw, 800px);
+		background: var(--primary);
+		top: -20%;
+		left: -10%;
+		animation: aurora-drift-1 16s ease-in-out infinite;
+	}
+
+	.hero__aurora-orb--2 {
+		width: clamp(300px, 40vw, 600px);
+		height: clamp(300px, 40vw, 600px);
+		background: #8b5cf6;
+		bottom: -10%;
+		right: -5%;
+		animation: aurora-drift-2 20s ease-in-out infinite;
+	}
+
+	.hero__aurora-orb--3 {
+		width: clamp(250px, 35vw, 500px);
+		height: clamp(250px, 35vw, 500px);
+		background: #06b6d4;
+		top: 30%;
+		left: 40%;
+		animation: aurora-drift-3 14s ease-in-out infinite;
+	}
+
+	@keyframes aurora-drift-1 {
+		0%, 100% { transform: translate(0, 0) scale(1); }
+		33% { transform: translate(10%, 15%) scale(1.1); }
+		66% { transform: translate(-5%, -10%) scale(0.95); }
+	}
+
+	@keyframes aurora-drift-2 {
+		0%, 100% { transform: translate(0, 0) scale(1); }
+		33% { transform: translate(-15%, -10%) scale(1.15); }
+		66% { transform: translate(10%, 5%) scale(0.9); }
+	}
+
+	@keyframes aurora-drift-3 {
+		0%, 100% { transform: translate(0, 0) scale(1); }
+		50% { transform: translate(15%, -20%) scale(1.2); }
+	}
+
+	/* Noise texture overlay for depth */
+	.hero__noise {
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		background:
+			radial-gradient(ellipse at 50% 0%, transparent 50%, var(--bg-app) 100%),
+			linear-gradient(to bottom, transparent 0%, var(--bg-app) 95%);
+	}
+
+	/* Dark mode: different orb colors */
+	@media (prefers-color-scheme: dark) {
+		.hero__aurora-orb--1 {
+			background: var(--primary);
+			opacity: 0.3;
+		}
+		.hero__aurora-orb--2 {
+			background: #7c3aed;
+			opacity: 0.25;
+		}
+		.hero__aurora-orb--3 {
+			background: #0891b2;
+			opacity: 0.2;
+		}
 	}
 
 	.hero__inner {
@@ -220,8 +396,14 @@ const screenshots = [
 		color: var(--primary);
 		font-weight: 700;
 		text-transform: uppercase;
-		letter-spacing: 0.1em;
+		letter-spacing: 0.12em;
 		font-size: 13px;
+	}
+
+	h1 {
+		font-size: var(--font-size-hero);
+		line-height: var(--line-height-tight);
+		letter-spacing: -0.04em;
 	}
 
 	.hero__subline {
@@ -243,33 +425,169 @@ const screenshots = [
 		color: var(--text-tertiary);
 		font-size: 13px;
 		font-weight: 500;
+		letter-spacing: 0.02em;
 	}
 
+	/* Hero phone group — overlapping phones */
 	.hero__visual {
 		position: relative;
 		display: flex;
 		justify-content: center;
 	}
 
-	.hero__frame {
+	.hero__phone-group {
 		position: relative;
+		width: 340px;
+		height: 500px;
+	}
+
+	.hero__phone {
+		position: absolute;
 		border-radius: var(--radius-xl);
 		border: 1px solid var(--border-glass);
 		background: rgba(255, 255, 255, 0.05);
 		backdrop-filter: blur(20px);
 		padding: 1px;
-		box-shadow: 0 40px 100px rgba(0, 0, 0, 0.25);
-		max-width: 340px;
 		overflow: hidden;
+		box-shadow: 0 40px 100px rgba(0, 0, 0, 0.25);
 	}
 
-	.hero__frame img {
+	.hero__phone img {
 		display: block;
 		width: 100%;
 		height: auto;
 		border-radius: inherit;
 	}
 
+	.hero__phone--front {
+		width: 280px;
+		z-index: 2;
+		top: 0;
+		left: 0;
+	}
+
+	.hero__phone--back {
+		width: 240px;
+		z-index: 1;
+		top: 40px;
+		right: 0;
+		opacity: 0.7;
+		transform: rotate(4deg);
+	}
+
+	/* ═══════════════════════════════════════
+	   SOCIAL PROOF BAR
+	   ═══════════════════════════════════════ */
+	.proof {
+		padding: var(--space-xxl) 0;
+		border-bottom: 1px solid var(--border-subtle);
+	}
+
+	.proof__row {
+		display: flex;
+		justify-content: center;
+		gap: var(--space-xxxl);
+		flex-wrap: wrap;
+	}
+
+	.proof__item {
+		display: flex;
+		align-items: center;
+		gap: var(--space-sm);
+	}
+
+	.proof__icon {
+		color: var(--primary);
+		font-size: 8px;
+	}
+
+	.proof__label {
+		font-size: var(--font-size-sm);
+		font-weight: 600;
+		color: var(--text-secondary);
+	}
+
+	/* ═══════════════════════════════════════
+	   SCREENSHOTS SHOWCASE
+	   ═══════════════════════════════════════ */
+	.screenshots-section {
+		position: relative;
+		padding: var(--space-huge) 0;
+		overflow: hidden;
+	}
+
+	.screenshots-showcase {
+		display: grid;
+		grid-template-columns: 1fr 1.15fr 1fr;
+		gap: var(--space-xl);
+		align-items: center;
+		max-width: 900px;
+		margin: 0 auto;
+	}
+
+	.screenshot-card {
+		text-align: center;
+		transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+	}
+
+	.screenshot-card:hover {
+		transform: translateY(-12px);
+	}
+
+	.screenshot-card--hero {
+		transform: scale(1.08);
+		z-index: 2;
+	}
+
+	.screenshot-card--hero:hover {
+		transform: scale(1.08) translateY(-12px);
+	}
+
+	.screenshot-card img {
+		width: 100%;
+		height: auto;
+		display: block;
+		border-radius: var(--radius-xl);
+		border: 1px solid var(--border-glass);
+		box-shadow: var(--shadow-premium);
+	}
+
+	.screenshot-caption {
+		margin: var(--space-lg) 0 0;
+		font-size: var(--font-size-sm);
+		font-weight: 600;
+		color: var(--text-secondary);
+	}
+
+	/* ═══════════════════════════════════════
+	   NATURE BREAK — Mid-page CTA
+	   ═══════════════════════════════════════ */
+	.nature-break {
+		position: relative;
+		padding: clamp(80px, 12vw, 180px) 0;
+		overflow: hidden;
+		text-align: center;
+	}
+
+	.nature-break__inner {
+		max-width: 640px;
+		margin: 0 auto;
+	}
+
+	.nature-break__inner h2 {
+		margin-bottom: var(--space-lg);
+	}
+
+	.nature-break__inner p {
+		font-size: var(--font-size-lg);
+		line-height: var(--line-height-relaxed);
+		color: var(--text-secondary);
+		margin-bottom: var(--space-xxl);
+	}
+
+	/* ═══════════════════════════════════════
+	   RESPONSIVE
+	   ═══════════════════════════════════════ */
 	@media (max-width: 1100px) {
 		.hero__inner {
 			grid-template-columns: 1fr;
@@ -289,6 +607,52 @@ const screenshots = [
 
 		.hero__cta {
 			justify-content: center;
+		}
+
+		.hero__phone-group {
+			margin: 0 auto;
+		}
+	}
+
+	@media (max-width: 768px) {
+		.screenshots-showcase {
+			grid-template-columns: 1fr;
+			max-width: 280px;
+		}
+
+		.screenshot-card--hero {
+			transform: none;
+		}
+
+		.screenshot-card--hero:hover {
+			transform: translateY(-12px);
+		}
+
+		.proof__row {
+			gap: var(--space-lg);
+		}
+
+		.hero__phone-group {
+			width: 280px;
+			height: 420px;
+		}
+
+		.hero__phone--front {
+			width: 230px;
+		}
+
+		.hero__phone--back {
+			width: 200px;
+		}
+	}
+
+	/* Reduce motion for accessibility */
+	@media (prefers-reduced-motion: reduce) {
+		.hero__aurora-orb {
+			animation: none !important;
+		}
+		.anim-float {
+			animation: none !important;
 		}
 	}
 </style>
