@@ -129,6 +129,12 @@ const structuredData: Record<string, unknown> = {
 					<span class="brand__name">{SITE_NAME}</span>
 				</a>
 
+				<button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+					<span class="nav-toggle__bar"></span>
+					<span class="nav-toggle__bar"></span>
+					<span class="nav-toggle__bar"></span>
+				</button>
+
 				<nav class="nav" aria-label="Primary">
 					<a class="nav__link" href={translatePath('/privacy')}>{t('nav.privacy')}</a>
 					<a class="nav__link" href={translatePath('/support')}>{t('nav.support')}</a>
@@ -144,6 +150,25 @@ const structuredData: Record<string, unknown> = {
 				</nav>
 			</div>
 		</header>
+
+		<script is:inline>
+			const toggle = document.querySelector('.nav-toggle');
+			const nav = document.querySelector('.nav');
+			if (toggle && nav) {
+				toggle.addEventListener('click', () => {
+					const open = nav.classList.toggle('nav--open');
+					toggle.classList.toggle('nav-toggle--open', open);
+					toggle.setAttribute('aria-expanded', String(open));
+				});
+				nav.querySelectorAll('a').forEach(link => {
+					link.addEventListener('click', () => {
+						nav.classList.remove('nav--open');
+						toggle.classList.remove('nav-toggle--open');
+						toggle.setAttribute('aria-expanded', 'false');
+					});
+				});
+			}
+		</script>
 
 		<main id="main">
 			<slot />
@@ -239,12 +264,40 @@ const structuredData: Record<string, unknown> = {
 		letter-spacing: -0.02em;
 	}
 
+	.nav-toggle {
+		display: none;
+		background: none;
+		border: none;
+		padding: var(--space-sm);
+		cursor: pointer;
+		flex-direction: column;
+		gap: 5px;
+		z-index: 60;
+	}
+
+	.nav-toggle__bar {
+		display: block;
+		width: 22px;
+		height: 2px;
+		background: var(--text-primary);
+		border-radius: 2px;
+		transition: transform 0.3s ease, opacity 0.3s ease;
+	}
+
+	.nav-toggle--open .nav-toggle__bar:nth-child(1) {
+		transform: translateY(7px) rotate(45deg);
+	}
+	.nav-toggle--open .nav-toggle__bar:nth-child(2) {
+		opacity: 0;
+	}
+	.nav-toggle--open .nav-toggle__bar:nth-child(3) {
+		transform: translateY(-7px) rotate(-45deg);
+	}
+
 	.nav {
 		display: flex;
 		align-items: center;
 		gap: var(--space-lg);
-		flex-wrap: wrap;
-		justify-content: flex-end;
 	}
 
 	.nav__link {
@@ -255,6 +308,42 @@ const structuredData: Record<string, unknown> = {
 	.nav__link:hover {
 		color: var(--text-primary);
 		text-decoration: none;
+	}
+
+	@media (max-width: 700px) {
+		.nav-toggle {
+			display: flex;
+		}
+
+		.nav {
+			display: none;
+			position: absolute;
+			top: 100%;
+			left: 0;
+			right: 0;
+			flex-direction: column;
+			align-items: stretch;
+			gap: 0;
+			background: var(--bg-app);
+			border-bottom: 1px solid var(--border-subtle);
+			box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+			padding: var(--space-sm) var(--space-xl);
+		}
+
+		.nav--open {
+			display: flex;
+		}
+
+		.nav__link {
+			padding: var(--space-md) 0;
+			border-bottom: 1px solid var(--border-subtle);
+		}
+
+		.nav :global(.btn) {
+			margin-top: var(--space-md);
+			margin-bottom: var(--space-md);
+			text-align: center;
+		}
 	}
 
 	main {
@@ -295,5 +384,16 @@ const structuredData: Record<string, unknown> = {
 
 	.disabled-link {
 		color: var(--text-tertiary);
+	}
+
+	@media (max-width: 700px) {
+		.site-footer__inner {
+			flex-direction: column;
+			text-align: center;
+		}
+
+		.site-footer__right {
+			justify-content: center;
+		}
 	}
 </style>
