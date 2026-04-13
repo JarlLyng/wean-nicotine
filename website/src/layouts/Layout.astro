@@ -175,22 +175,37 @@ const structuredData: Record<string, unknown> = {
 		</main>
 
 		<footer class="site-footer">
-			<div class="container site-footer__inner">
-				<div class="site-footer__left">
-					<p class="fineprint">
-						© {new Date().getFullYear()} {COMPANY_NAME}. All rights reserved. {t('footer.tagline')}
-					</p>
-				</div>
-				<div class="site-footer__right">
+			<div class="container site-footer__grid">
+				<div class="site-footer__col">
+					<p class="footer-heading">{SITE_NAME}</p>
+					<a href={translatePath('/privacy')}>{t('nav.privacy')}</a>
+					<a href={translatePath('/support')}>{t('nav.support')}</a>
 					{appStoreKnown ? (
 						<a href={APP_STORE_URL} target="_blank" rel="noopener noreferrer">App Store</a>
 					) : (
-						<span class="disabled-link" aria-disabled="true">App Store (coming soon)</span>
+						<span class="disabled-link" aria-disabled="true">App Store</span>
 					)}
-					<a href={translatePath('/privacy')}>{t('nav.privacy')}</a>
-					<a href={translatePath('/support')}>{t('nav.support')}</a>
-					<a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>
 				</div>
+				<div class="site-footer__col">
+					<p class="footer-heading">Resources</p>
+					<a href="/snus-reduction-app/">Snus Reduction App</a>
+					<a href="/nicotine-pouch-reduction-app/">Nicotine Pouch Reduction</a>
+					<a href="/how-to-reduce-snus/">How to Reduce Snus</a>
+					<a href="/how-to-quit-nicotine-pouches/">How to Quit Nicotine Pouches</a>
+				</div>
+				<div class="site-footer__col">
+					<p class="footer-heading">Guides</p>
+					<a href="/how-to-handle-nicotine-cravings/">Handle Nicotine Cravings</a>
+					<a href="/taper-nicotine/">Taper Nicotine</a>
+					<a href="/track-snus-use/">Track Snus Use</a>
+					<a href="/private-quit-nicotine-app/">Private Quit App</a>
+				</div>
+			</div>
+			<div class="container site-footer__bottom">
+				<p class="fineprint">
+					© {new Date().getFullYear()} <a href="https://iamjarl.com" target="_blank" rel="noopener noreferrer">{COMPANY_NAME}</a>. All rights reserved. {t('footer.tagline')}
+				</p>
+				<p class="fineprint"><a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a></p>
 			</div>
 		</footer>
 	</body>
@@ -352,48 +367,81 @@ const structuredData: Record<string, unknown> = {
 
 	.site-footer {
 		border-top: 1px solid var(--border-subtle);
-		padding: var(--space-xxl) 0;
+		padding: var(--space-huge) 0 var(--space-xxl);
 	}
 
-	.site-footer__inner {
+	.site-footer__grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: var(--space-xxl);
+		padding-bottom: var(--space-xxl);
+		border-bottom: 1px solid var(--border-subtle);
+		margin-bottom: var(--space-xl);
+	}
+
+	.site-footer__col {
 		display: flex;
-		align-items: center;
+		flex-direction: column;
+		gap: var(--space-sm);
+	}
+
+	.site-footer__col a {
+		color: var(--text-secondary);
+		font-size: var(--font-size-sm);
+	}
+
+	.site-footer__col a:hover {
+		color: var(--text-primary);
+		text-decoration: none;
+	}
+
+	.footer-heading {
+		margin: 0 0 var(--space-sm);
+		font-weight: 700;
+		font-size: var(--font-size-sm);
+		color: var(--text-primary);
+	}
+
+	.site-footer__bottom {
+		display: flex;
 		justify-content: space-between;
-		gap: var(--space-lg);
+		align-items: center;
 		flex-wrap: wrap;
+		gap: var(--space-lg);
 	}
 
 	.fineprint {
 		margin: 0;
 		color: var(--text-tertiary);
-		font-size: 14px;
+		font-size: 13px;
 	}
 
-	.site-footer__right {
-		display: flex;
-		align-items: center;
-		gap: var(--space-lg);
-		flex-wrap: wrap;
-		color: var(--text-secondary);
+	.fineprint a {
+		color: var(--text-tertiary);
 	}
 
-	.site-footer__right a:hover {
+	.fineprint a:hover {
 		color: var(--text-primary);
-		text-decoration: none;
 	}
 
 	.disabled-link {
 		color: var(--text-tertiary);
+		font-size: var(--font-size-sm);
 	}
 
 	@media (max-width: 700px) {
-		.site-footer__inner {
-			flex-direction: column;
+		.site-footer__grid {
+			grid-template-columns: 1fr;
 			text-align: center;
 		}
 
-		.site-footer__right {
-			justify-content: center;
+		.site-footer__col {
+			align-items: center;
+		}
+
+		.site-footer__bottom {
+			flex-direction: column;
+			text-align: center;
 		}
 	}
 </style>
