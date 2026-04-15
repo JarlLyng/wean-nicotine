@@ -20,6 +20,27 @@ const appStoreCtaLabel = appStoreKnown ? 'Hämta i App Store' : 'Kommer snart i 
 	campaignToken="seo_sv_app"
 	lang="sv"
 >
+	<script type="application/ld+json" slot="after-guide">
+		{
+			"@context": "https://schema.org",
+			"@type": "BreadcrumbList",
+			"itemListElement": [
+				{
+					"@type": "ListItem",
+					"position": 1,
+					"name": "Home",
+					"item": "https://weannicotine.iamjarl.com"
+				},
+				{
+					"@type": "ListItem",
+					"position": 2,
+					"name": "Sluta Snusa App",
+					"item": "https://weannicotine.iamjarl.com/sv/sluta-snusa-app/"
+				}
+			]
+		}
+	</script>
+
 	<section class="guide__section">
 		<h2>Vem är appen till för?</h2>
 		<p>Wean Nicotine är för dig som snusar och vill trappa ner i din egen takt.</p>

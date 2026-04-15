@@ -20,6 +20,27 @@ const appStoreCtaLabel = appStoreKnown ? 'Last ned i App Store' : 'Kommer snart 
 	campaignToken="seo_no_guide"
 	lang="no"
 >
+	<script type="application/ld+json" slot="after-guide">
+		{
+			"@context": "https://schema.org",
+			"@type": "BreadcrumbList",
+			"itemListElement": [
+				{
+					"@type": "ListItem",
+					"position": 1,
+					"name": "Home",
+					"item": "https://weannicotine.iamjarl.com"
+				},
+				{
+					"@type": "ListItem",
+					"position": 2,
+					"name": "Hvordan slutte med snus",
+					"item": "https://weannicotine.iamjarl.com/no/hvordan-slutte-med-snus/"
+				}
+			]
+		}
+	</script>
+
 	<section class="guide__section">
 		<h2>Systematikken under en veltolket gradvis overgang</h2>
 		<p>

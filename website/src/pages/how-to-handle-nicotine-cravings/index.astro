@@ -3,10 +3,12 @@ import Layout from '../../layouts/Layout.astro';
 import Button from '../../components/Button.astro';
 import Card from '../../components/Card.astro';
 import Section from '../../components/Section.astro';
-import { APP_STORE_URL, isAppStoreUrlKnown, SITE_NAME } from '../../lib/site';
+import { APP_STORE_URL, isAppStoreUrlKnown, SITE_NAME, getCampaignAppStoreUrl } from '../../lib/site';
 
+const campaignToken = 'seo_en_guide_craving';
 const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
 const appStoreCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming soon on the App Store';
+const finalAppStoreUrl = getCampaignAppStoreUrl(campaignToken);
 ---
 
 <Layout
@@ -119,11 +121,32 @@ const appStoreCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming s
 		</div>
 	</Section>
 
+	<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "BreadcrumbList",
+			"itemListElement": [
+				{
+					"@type": "ListItem",
+					"position": 1,
+					"name": "Home",
+					"item": "https://weannicotine.iamjarl.com"
+				},
+				{
+					"@type": "ListItem",
+					"position": 2,
+					"name": "How to Handle Nicotine Cravings",
+					"item": "https://weannicotine.iamjarl.com/how-to-handle-nicotine-cravings/"
+				}
+			]
+		}
+	</script>
+
 	<section class="bottom-cta">
 		<div class="container">
 			<h2>Get craving support when you need it</h2>
 			<p>Wean Nicotine includes breathing exercises, urge surfing, and reflection tools built right into the app.</p>
-			<Button variant="primary" href={APP_STORE_URL} disabled={!appStoreKnown} external={true}>
+			<Button variant="primary" href={finalAppStoreUrl} disabled={!appStoreKnown} external={true}>
 				{appStoreCtaLabel}
 			</Button>
 		</div>

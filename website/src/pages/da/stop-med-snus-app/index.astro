@@ -20,6 +20,27 @@ const appStoreCtaLabel = appStoreKnown ? 'Hent i App Store' : 'Kommer snart i Ap
 	campaignToken="seo_da_app"
 	lang="da"
 >
+	<script type="application/ld+json" slot="after-guide">
+		{
+			"@context": "https://schema.org",
+			"@type": "BreadcrumbList",
+			"itemListElement": [
+				{
+					"@type": "ListItem",
+					"position": 1,
+					"name": "Home",
+					"item": "https://weannicotine.iamjarl.com"
+				},
+				{
+					"@type": "ListItem",
+					"position": 2,
+					"name": "Snus Nedtrapnings App",
+					"item": "https://weannicotine.iamjarl.com/da/stop-med-snus-app/"
+				}
+			]
+		}
+	</script>
+
 	<section class="guide__section">
 		<h2>Hvem er appen for?</h2>
 		<p>Wean Nicotine er designet til folk, der bruger snus og vil skære ned i deres eget tempo.</p>

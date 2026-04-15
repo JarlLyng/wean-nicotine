@@ -3,10 +3,12 @@ import Layout from '../../layouts/Layout.astro';
 import Button from '../../components/Button.astro';
 import Card from '../../components/Card.astro';
 import Section from '../../components/Section.astro';
-import { APP_STORE_URL, isAppStoreUrlKnown, SITE_NAME } from '../../lib/site';
+import { APP_STORE_URL, isAppStoreUrlKnown, SITE_NAME, getCampaignAppStoreUrl } from '../../lib/site';
 
+const campaignToken = 'seo_en_taper';
 const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
 const appStoreCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming soon on the App Store';
+const finalAppStoreUrl = getCampaignAppStoreUrl(campaignToken);
 ---
 
 <Layout
@@ -23,7 +25,7 @@ const appStoreCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming s
 				Set a daily allowance, track each pouch with one tap, and lower your use at a pace that works for you.
 			</p>
 			<div class="cta">
-				<Button variant="primary" href={APP_STORE_URL} disabled={!appStoreKnown} external={true}>
+				<Button variant="primary" href={finalAppStoreUrl} disabled={!appStoreKnown} external={true}>
 					{appStoreCtaLabel}
 				</Button>
 				<Button variant="secondary" href="/">Learn more about Wean Nicotine</Button>
@@ -111,11 +113,32 @@ const appStoreCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming s
 		</div>
 	</Section>
 
+	<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "BreadcrumbList",
+			"itemListElement": [
+				{
+					"@type": "ListItem",
+					"position": 1,
+					"name": "Home",
+					"item": "https://weannicotine.iamjarl.com"
+				},
+				{
+					"@type": "ListItem",
+					"position": 2,
+					"name": "Taper Nicotine",
+					"item": "https://weannicotine.iamjarl.com/taper-nicotine/"
+				}
+			]
+		}
+	</script>
+
 	<section class="bottom-cta">
 		<div class="container">
 			<h2>Ready to taper your nicotine use?</h2>
 			<p>Start with your current daily amount and let Wean Nicotine guide you down gradually.</p>
-			<Button variant="primary" href={APP_STORE_URL} disabled={!appStoreKnown} external={true}>
+			<Button variant="primary" href={finalAppStoreUrl} disabled={!appStoreKnown} external={true}>
 				{appStoreCtaLabel}
 			</Button>
 		</div>

@@ -3,10 +3,12 @@ import Layout from '../../layouts/Layout.astro';
 import Button from '../../components/Button.astro';
 import Card from '../../components/Card.astro';
 import Section from '../../components/Section.astro';
-import { APP_STORE_URL, isAppStoreUrlKnown, SITE_NAME } from '../../lib/site';
+import { APP_STORE_URL, isAppStoreUrlKnown, SITE_NAME, getCampaignAppStoreUrl } from '../../lib/site';
 
+const campaignToken = 'seo_en_guide_snus';
 const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
 const appStoreCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming soon on the App Store';
+const finalAppStoreUrl = getCampaignAppStoreUrl(campaignToken);
 ---
 
 <Layout
@@ -118,11 +120,32 @@ const appStoreCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming s
 		</div>
 	</Section>
 
+	<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "BreadcrumbList",
+			"itemListElement": [
+				{
+					"@type": "ListItem",
+					"position": 1,
+					"name": "Home",
+					"item": "https://weannicotine.iamjarl.com"
+				},
+				{
+					"@type": "ListItem",
+					"position": 2,
+					"name": "How to Reduce Snus",
+					"item": "https://weannicotine.iamjarl.com/how-to-reduce-snus/"
+				}
+			]
+		}
+	</script>
+
 	<section class="bottom-cta">
 		<div class="container">
 			<h2>Start reducing your snus use today</h2>
 			<p>Wean Nicotine makes it simple with a daily allowance, one-tap tracking, and craving support.</p>
-			<Button variant="primary" href={APP_STORE_URL} disabled={!appStoreKnown} external={true}>
+			<Button variant="primary" href={finalAppStoreUrl} disabled={!appStoreKnown} external={true}>
 				{appStoreCtaLabel}
 			</Button>
 		</div>

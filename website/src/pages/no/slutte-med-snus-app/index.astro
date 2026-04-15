@@ -20,6 +20,27 @@ const appStoreCtaLabel = appStoreKnown ? 'Last ned i App Store' : 'Kommer snart 
 	campaignToken="seo_no_app"
 	lang="no"
 >
+	<script type="application/ld+json" slot="after-guide">
+		{
+			"@context": "https://schema.org",
+			"@type": "BreadcrumbList",
+			"itemListElement": [
+				{
+					"@type": "ListItem",
+					"position": 1,
+					"name": "Home",
+					"item": "https://weannicotine.iamjarl.com"
+				},
+				{
+					"@type": "ListItem",
+					"position": 2,
+					"name": "Snus Nedtrappingsapp",
+					"item": "https://weannicotine.iamjarl.com/no/slutte-med-snus-app/"
+				}
+			]
+		}
+	</script>
+
 	<section class="guide__section">
 		<h2>Hvem appen fungerer for</h2>
 		<p>Wean Nicotine er spesielt dedikert mot personer som simpelthen behøver å roe ned snusingen sin.</p>

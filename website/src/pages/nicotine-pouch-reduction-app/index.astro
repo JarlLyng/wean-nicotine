@@ -15,9 +15,30 @@ const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
 	lede="Quitting cold turkey is stressful. Wean Nicotine gives you a daily allowance that gradually shrinks, making it easier to cut down on nicotine pouches like Zyn or Velo."
 	bottomCtaHeading="Start your gradual reduction today"
 	bottomCtaText="Download Wean Nicotine and set up your daily allowance in less than a minute. No accounts required."
-	campaignToken="seo_en_pouches"
+	campaignToken="seo_en_pouch"
 	lang="en"
 >
+	<script type="application/ld+json" slot="after-guide">
+		{
+			"@context": "https://schema.org",
+			"@type": "BreadcrumbList",
+			"itemListElement": [
+				{
+					"@type": "ListItem",
+					"position": 1,
+					"name": "Home",
+					"item": "https://weannicotine.iamjarl.com"
+				},
+				{
+					"@type": "ListItem",
+					"position": 2,
+					"name": "Nicotine Pouch Reduction App",
+					"item": "https://weannicotine.iamjarl.com/nicotine-pouch-reduction-app/"
+				}
+			]
+		}
+	</script>
+
 	<section class="guide__section">
 		<h2>Why gradual reduction works better for pouches</h2>
 		<p>

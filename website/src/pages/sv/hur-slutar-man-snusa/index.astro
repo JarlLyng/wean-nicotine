@@ -20,6 +20,27 @@ const appStoreCtaLabel = appStoreKnown ? 'Hämta i App Store' : 'Kommer snart i 
 	campaignToken="seo_sv_guide"
 	lang="sv"
 >
+	<script type="application/ld+json" slot="after-guide">
+		{
+			"@context": "https://schema.org",
+			"@type": "BreadcrumbList",
+			"itemListElement": [
+				{
+					"@type": "ListItem",
+					"position": 1,
+					"name": "Home",
+					"item": "https://weannicotine.iamjarl.com"
+				},
+				{
+					"@type": "ListItem",
+					"position": 2,
+					"name": "Hur slutar man snusa",
+					"item": "https://weannicotine.iamjarl.com/sv/hur-slutar-man-snusa/"
+				}
+			]
+		}
+	</script>
+
 	<section class="guide__section">
 		<h2>Varför en gradvis nedtrappning fungerar ypperligt för många</h2>
 		<p>
