@@ -235,6 +235,7 @@ SEO intent and landing-page plan are described in [`SEO_STRATEGY.md`](./SEO_STRA
 - Persistence: [`lib/db.ts`](../lib/db.ts) and `lib/db-*.ts`
 - Notifications: [`lib/notifications.ts`](../lib/notifications.ts)
 - Error reporting: [`lib/sentry.ts`](../lib/sentry.ts)
+- Task tracking: [GitHub Issues](https://github.com/JarlLyng/Taper/issues) with labels `P1`/`P2`/`P3`, `seo`, `aso`, `website`, `marketing`, `enhancement`
 - Repo-level orientation: [`docs/README.md`](./README.md)
 
 ## Change Checklist For LLMs And Contributors
