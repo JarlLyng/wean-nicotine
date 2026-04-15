@@ -229,7 +229,7 @@ Ingen secrets eller credentials ligger i repoet. Brug EAS Secrets for `EXPO_PUBL
 
 ## 🗺️ Roadmap
 
-See `ROADMAP.md` for planned milestones and future ideas.
+All planned work is tracked in [GitHub Issues](https://github.com/JarlLyng/Taper/issues) with priority labels (P1/P2/P3) and category labels (seo, aso, website, marketing, enhancement).
 
 ---
 

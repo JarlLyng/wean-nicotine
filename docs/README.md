@@ -25,7 +25,7 @@ If you are a human or an LLM, read documents in this order:
 
 1. [`AI_CONTEXT.md`](./AI_CONTEXT.md) for the canonical repo and app overview.
 2. [`README.md`](../README.md) for setup, product framing, and release workflow.
-3. [`ROADMAP.md`](../ROADMAP.md) for future-facing planning.
+3. [GitHub Issues](https://github.com/JarlLyng/Taper/issues) for all open tasks (labels: P1/P2/P3, seo, aso, website, marketing).
 4. Domain-specific docs from the map below.
 
 ## Documentation Rules
@@ -80,7 +80,6 @@ This makes the docs easier for LLMs to classify correctly and reduces accidental
 ## Document Catalog
 
 - [`AI_CONTEXT.md`](./AI_CONTEXT.md): Canonical repo overview for fast machine and human orientation.
-- [`ROADMAP.md`](../ROADMAP.md): Phase-based product roadmap and future direction.
 - [`design.md`](./design.md): Design-system principles and token usage.
 - [`SEO_STRATEGY.md`](./SEO_STRATEGY.md): SEO positioning and content architecture for the website.
 - [`SENTRY.md`](./SENTRY.md): Sentry setup and troubleshooting.
