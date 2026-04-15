@@ -239,13 +239,8 @@ See `docs/RELEASE_CHECKLIST.md` for a comprehensive release checklist covering a
 
 ## Future ideas (Post-MVP)
 
-- iCloud / optional cloud sync
-- Widgets (daily allowance, progress)
-- Live Activities (iOS)
-- Multiple taper plans / experiments
-- Export data (CSV)
-- Broader nicotine support (gum, lozenges)
-- Android release
+All post-MVP ideas are tracked as GitHub Issues with the `enhancement` + `P3` labels.
+See: https://github.com/JarlLyng/Taper/issues?q=is%3Aopen+label%3Aenhancement+label%3AP3
 
 ---
 

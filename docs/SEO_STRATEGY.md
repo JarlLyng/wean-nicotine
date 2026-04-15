@@ -129,9 +129,9 @@ Disse felter er allerede dokumenteret i `docs/APP_STORE_METADATA.md` og er opdat
 **Subtitle (30 tegn):** `Reduce nicotine at your pace`  
 **Keywords (100 tegn):** `nicotine,snus,wean,quit,reduce,cessation,habit,tracking,pouches,progress,velvære,sundhed,nikotin,trappe`
 
-### DU SKAL: Overvej alternative keyword-felter
+### Anbefalede keyword-felter per storefront
 
-Nuværende keyword-felt blander engelsk og dansk. Apple indexerer per storefront-sprog. Anbefalede opsplitninger:
+Nuværende keyword-felt blander engelsk og dansk. Apple indexerer per storefront-sprog. Anbefalede opsplitninger (tracked in [#18](https://github.com/JarlLyng/Taper/issues/18)):
 
 **Engelsk (US/UK/int.):**
 ```
@@ -153,7 +153,7 @@ nikotin,snus,sluta,minska,nedtrappning,vana,spårning,prilla,framsteg,hälsa,por
 nikotin,snus,slutte,redusere,nedtrapping,vane,logging,poser,fremgang,helse,nikotinposer,sug,taper
 ```
 
-### DU SKAL: Sikr at App Store-beskrivelsens første sætning nævner "snus"
+### App Store-beskrivelsens første sætning
 
 Første 1-2 sætninger vises i søgeresultater. Den nuværende (fra APP_STORE_METADATA.md) er god:
 
@@ -216,7 +216,9 @@ Homepage-FAQ'en er allerede struktureret godt til AI-ekstraktion: 8 spørgsmål 
 
 `MobileApplication` schema er på plads i Layout.astro (price: 29 DKK, priceCurrency: DKK).
 
-### DU SKAL: Optimér landing pages til AI-passage-ekstraktion
+### Optimér landing pages til AI-passage-ekstraktion
+
+Tracked in [#20](https://github.com/JarlLyng/Taper/issues/20).
 
 AI-motorer (ChatGPT, Perplexity, Google AI Overviews) udtrækker individuelle afsnit. Hver landing page bør have:
 
@@ -231,7 +233,9 @@ AI-motorer (ChatGPT, Perplexity, Google AI Overviews) udtrækker individuelle af
 - "Is there an app to taper off snus?" → homepage eller `/taper-nicotine/`
 - "Best private app for quitting nicotine" → `/private-quit-nicotine-app/`
 
-### DU SKAL: Tilføj statistik og kildehenvisninger
+### Tilføj statistik og kildehenvisninger
+
+Tracked in [#21](https://github.com/JarlLyng/Taper/issues/21).
 
 GEO-forskning viser at indhold med konkrete tal og kilder får op til 40% højere AI-synlighed. Tilføj til landing pages:
 
@@ -243,28 +247,13 @@ GEO-forskning viser at indhold med konkrete tal og kilder får op til 40% højer
 
 ## 7. Indhold der stadig mangler
 
-### Prioritet 1 — Comparison pages
+Alle manglende indholdssider er oprettet som GitHub Issues med `website` + `seo` labels:
 
-Disse er ikke oprettet endnu men er vigtige for konvertering:
+- **Comparison pages** (P2): Wean vs. habit trackers, gradual reduction vs. cold turkey
+- **Ekstra skandinaviske sider** (P2): Nikotintrang-hjælp for DA/SV/NO
+- **Blog-artikler** (P3): Tips for reducing snus, tapering approach, privacy in health apps
 
-- `/wean-vs-habit-tracker/` — Wean vs. generiske vanetrackere
-- `/gradual-reduction-vs-cold-turkey/` — sammenligning af tilgange
-
-### Prioritet 2 — Ekstra skandinaviske sider
-
-Hver skandinavisk locale har kun 2 indholdssider (app + guide). Overvej:
-
-- `/da/nikotin-trang-hjaelp/` — "Hjælp til nikotintrang"
-- `/sv/nikotinsug-hjalp/` — "Hjälp mot nikotinsug"
-- `/no/nikotinsug-hjelp/` — "Hjelp mot nikotinsug"
-
-### Prioritet 3 — Blog/indholdshubb
-
-Der er ingen blog endnu. Overvej 3-5 artikler:
-
-- "5 Tips for Reducing Snus Without Quitting Cold Turkey"
-- "How the Tapering Approach Works for Nicotine Pouches"
-- "Why Privacy Matters in Health Apps"
+Se [website + seo issues](https://github.com/JarlLyng/Taper/issues?q=is%3Aopen+label%3Awebsite+label%3Aseo) for den fulde liste.
 
 ---
 
@@ -299,30 +288,22 @@ Wean Nicotine bør deles i communities hvor målgruppen allerede er. Tonen skal 
 
 ---
 
-## 9. 90-dages roadmap
+## 9. Task tracking
 
-### Måned 1
+All SEO, ASO, and marketing tasks are tracked as GitHub Issues with priority labels.
 
-- [x] Fix JSON-LD pris (29 DKK)
-- [x] Tilføj BreadcrumbList til alle landing pages
-- [x] Tilføj campaign tokens til alle landing pages
-- [x] App Store URL ændret til landenneutral
-- [ ] Verificer App Store-navn i App Store Connect (URL siger "taper", skal vise "Wean Nicotine")
-- [ ] Indsend lokaliserede keywords per storefront i App Store Connect
-- [ ] Post i r/Snus og r/SideProject
+| Priority | Filter |
+|----------|--------|
+| P1 — do now | [P1 issues](https://github.com/JarlLyng/Taper/issues?q=is%3Aopen+label%3AP1) |
+| P2 — this month | [P2 issues](https://github.com/JarlLyng/Taper/issues?q=is%3Aopen+label%3AP2) |
+| P3 — nice to have | [P3 issues](https://github.com/JarlLyng/Taper/issues?q=is%3Aopen+label%3AP3) |
+| SEO | [SEO issues](https://github.com/JarlLyng/Taper/issues?q=is%3Aopen+label%3Aseo) |
+| ASO | [ASO issues](https://github.com/JarlLyng/Taper/issues?q=is%3Aopen+label%3Aaso) |
+| Marketing | [Marketing issues](https://github.com/JarlLyng/Taper/issues?q=is%3Aopen+label%3Amarketing) |
 
-### Måned 2
+### Completed (April 2026)
 
-- [ ] Opret 2 comparison pages (wean-vs-habit-tracker, gradual-vs-cold-turkey)
-- [ ] Tilføj statistik/kilder til eksisterende landing pages
-- [ ] Opret 1 ekstra side per skandinavisk sprog
-- [ ] Launch på Product Hunt
-- [ ] Overvåg Search Console — identificer queries der konverterer
-
-### Måned 3
-
-- [ ] Opret 2-3 blog-artikler
-- [ ] Submit til Indie Hackers + Hacker News
-- [ ] Tilføj AlternativeTo-listing
-- [ ] Raffinér metadata baseret på Search Console-data
-- [ ] Overvej Custom Product Pages (CPPs) for specifikke søgetermer
+- Fix JSON-LD pris (29 DKK)
+- BreadcrumbList tilføjet til alle 14 landing pages
+- Campaign tokens tilføjet til alle 14 landing pages
+- App Store URL ændret til landenneutral
