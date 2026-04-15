@@ -160,7 +160,7 @@ Required section order:
    - Copyright
 
 ## 7) App Store CTA behavior
-- App Store URL: `https://apps.apple.com/dk/app/taper/id6758867485`
+- App Store URL: `https://apps.apple.com/app/wean-nicotine/id6758867485`
 - Configured in `website/src/lib/site.ts` as `APP_STORE_URL`
 - CTA button reads “Download on the App Store” and links directly to the listing
 

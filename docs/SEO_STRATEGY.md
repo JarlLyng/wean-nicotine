@@ -1,7 +1,7 @@
 # SEO & ASO Strategy — Wean Nicotine
 
 Site: https://weannicotine.iamjarl.com  
-App Store: https://apps.apple.com/app/taper/id6758867485  
+App Store: https://apps.apple.com/app/wean-nicotine/id6758867485  
 Google Search Console: Connected  
 Last updated: 2026-04-15
 
@@ -95,7 +95,7 @@ Footer links to all 8 English SEO landing pages in two columns ("Resources" + "G
 - [x] JSON-LD price fixed: `price: '29'`, `priceCurrency: 'DKK'` (was `price: '0'`)
 - [x] BreadcrumbList JSON-LD added to all 14 SEO landing pages (8 EN + 6 Scandinavian)
 - [x] Campaign tokens added to all 14 SEO landing pages
-- [x] App Store URL changed to country-neutral (`/app/taper/id6758867485` without `/dk/`)
+- [x] App Store URL changed to country-neutral (`/app/wean-nicotine/id6758867485`)
 
 ### Campaign tokens in use
 
