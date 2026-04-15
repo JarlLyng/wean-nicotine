@@ -25,7 +25,7 @@ If you are a human or an LLM, read documents in this order:
 
 1. [`AI_CONTEXT.md`](./AI_CONTEXT.md) for the canonical repo and app overview.
 2. [`README.md`](../README.md) for setup, product framing, and release workflow.
-3. [GitHub Issues](https://github.com/JarlLyng/Taper/issues) for all open tasks (labels: P1/P2/P3, seo, aso, website, marketing).
+3. [GitHub Issues](https://github.com/JarlLyng/wean-nicotine/issues) for all open tasks (labels: P1/P2/P3, seo, aso, website, marketing).
 4. Domain-specific docs from the map below.
 
 ## Documentation Rules

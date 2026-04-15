@@ -131,7 +131,7 @@ Disse felter er allerede dokumenteret i `docs/APP_STORE_METADATA.md` og er opdat
 
 ### Anbefalede keyword-felter per storefront
 
-Nuværende keyword-felt blander engelsk og dansk. Apple indexerer per storefront-sprog. Anbefalede opsplitninger (tracked in [#18](https://github.com/JarlLyng/Taper/issues/18)):
+Nuværende keyword-felt blander engelsk og dansk. Apple indexerer per storefront-sprog. Anbefalede opsplitninger (tracked in [#18](https://github.com/JarlLyng/wean-nicotine/issues/18)):
 
 **Engelsk (US/UK/int.):**
 ```
@@ -218,7 +218,7 @@ Homepage-FAQ'en er allerede struktureret godt til AI-ekstraktion: 8 spørgsmål 
 
 ### Optimér landing pages til AI-passage-ekstraktion
 
-Tracked in [#20](https://github.com/JarlLyng/Taper/issues/20).
+Tracked in [#20](https://github.com/JarlLyng/wean-nicotine/issues/20).
 
 AI-motorer (ChatGPT, Perplexity, Google AI Overviews) udtrækker individuelle afsnit. Hver landing page bør have:
 
@@ -235,7 +235,7 @@ AI-motorer (ChatGPT, Perplexity, Google AI Overviews) udtrækker individuelle af
 
 ### Tilføj statistik og kildehenvisninger
 
-Tracked in [#21](https://github.com/JarlLyng/Taper/issues/21).
+Tracked in [#21](https://github.com/JarlLyng/wean-nicotine/issues/21).
 
 GEO-forskning viser at indhold med konkrete tal og kilder får op til 40% højere AI-synlighed. Tilføj til landing pages:
 
@@ -253,7 +253,7 @@ Alle manglende indholdssider er oprettet som GitHub Issues med `website` + `seo`
 - **Ekstra skandinaviske sider** (P2): Nikotintrang-hjælp for DA/SV/NO
 - **Blog-artikler** (P3): Tips for reducing snus, tapering approach, privacy in health apps
 
-Se [website + seo issues](https://github.com/JarlLyng/Taper/issues?q=is%3Aopen+label%3Awebsite+label%3Aseo) for den fulde liste.
+Se [website + seo issues](https://github.com/JarlLyng/wean-nicotine/issues?q=is%3Aopen+label%3Awebsite+label%3Aseo) for den fulde liste.
 
 ---
 
@@ -294,12 +294,12 @@ All SEO, ASO, and marketing tasks are tracked as GitHub Issues with priority lab
 
 | Priority | Filter |
 |----------|--------|
-| P1 — do now | [P1 issues](https://github.com/JarlLyng/Taper/issues?q=is%3Aopen+label%3AP1) |
-| P2 — this month | [P2 issues](https://github.com/JarlLyng/Taper/issues?q=is%3Aopen+label%3AP2) |
-| P3 — nice to have | [P3 issues](https://github.com/JarlLyng/Taper/issues?q=is%3Aopen+label%3AP3) |
-| SEO | [SEO issues](https://github.com/JarlLyng/Taper/issues?q=is%3Aopen+label%3Aseo) |
-| ASO | [ASO issues](https://github.com/JarlLyng/Taper/issues?q=is%3Aopen+label%3Aaso) |
-| Marketing | [Marketing issues](https://github.com/JarlLyng/Taper/issues?q=is%3Aopen+label%3Amarketing) |
+| P1 — do now | [P1 issues](https://github.com/JarlLyng/wean-nicotine/issues?q=is%3Aopen+label%3AP1) |
+| P2 — this month | [P2 issues](https://github.com/JarlLyng/wean-nicotine/issues?q=is%3Aopen+label%3AP2) |
+| P3 — nice to have | [P3 issues](https://github.com/JarlLyng/wean-nicotine/issues?q=is%3Aopen+label%3AP3) |
+| SEO | [SEO issues](https://github.com/JarlLyng/wean-nicotine/issues?q=is%3Aopen+label%3Aseo) |
+| ASO | [ASO issues](https://github.com/JarlLyng/wean-nicotine/issues?q=is%3Aopen+label%3Aaso) |
+| Marketing | [Marketing issues](https://github.com/JarlLyng/wean-nicotine/issues?q=is%3Aopen+label%3Amarketing) |
 
 ### Completed (April 2026)
 
