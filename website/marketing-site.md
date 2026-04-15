@@ -16,7 +16,7 @@ Do **not** assume access to any private repositories.
 - GitHub Pages custom domain: `weannicotine.iamjarl.com`
 - Namecheap DNS:
   - Record type: **CNAME**
-  - Host: `wean`
+  - Host: `weannicotine`
   - Target: `<github-username>.github.io`
   - TTL: Automatic
 - Enable “Enforce HTTPS” in GitHub Pages once DNS has propagated.
@@ -53,38 +53,38 @@ Public reference: `https://jarllyng.github.io/iamjarl-design/`.
 ### 5.1 Color tokens (use as CSS variables)
 Implement **light + dark** theme using CSS variables.
 
-**Light mode**
-- `--primary`: `#00FF7B`
-- `--on-primary`: `#000000`
-- `--bg-app`: `#FFFFFF`
-- `--bg-muted`: `rgba(0, 0, 0, 0.04)`
-- `--bg-card`: `rgba(0, 0, 0, 0.04)`
-- `--surface`: `#FFFFFF`
-- `--surface-raised`: `rgba(0, 0, 0, 0.02)`
-- `--text-primary`: `#000000`
-- `--text-secondary`: `rgba(0, 0, 0, 0.70)`
-- `--text-tertiary`: `rgba(0, 0, 0, 0.55)`
-- `--border-subtle`: `rgba(0, 0, 0, 0.10)`
-- `--border-default`: `rgba(0, 0, 0, 0.16)`
+**Light mode (Nordic Day)**
+- `--primary`: `#CE63FF`
+- `--primary-muted`: `color-mix(in oklab, var(--primary), transparent 85%)`
+- `--on-primary`: `#ffffff`
+- `--bg-app`: `#f8fafc`
+- `--bg-muted`: `color-mix(in oklab, var(--bg-app), #000000 5%)`
+- `--surface`: `#ffffff`
+- `--surface-raised`: `#ffffff`
+- `--text-primary`: `#0f172a`
+- `--text-secondary`: `#475569`
+- `--text-tertiary`: `#94a3b8`
+- `--border-subtle`: `rgba(15, 23, 42, 0.08)`
+- `--border-default`: `rgba(15, 23, 42, 0.12)`
 
-**Dark mode**
+**Dark mode (Nordic Night)**
 - `--primary`: `#D0FF00`
+- `--primary-muted`: `color-mix(in oklab, var(--primary), transparent 90%)`
 - `--on-primary`: `#000000`
-- `--bg-app`: `#000000`
-- `--bg-muted`: `rgba(255, 255, 255, 0.05)`
-- `--bg-card`: `rgba(255, 255, 255, 0.05)`
-- `--surface`: `#000000`
-- `--surface-raised`: `rgba(255, 255, 255, 0.03)`
-- `--text-primary`: `#FFFFFF`
-- `--text-secondary`: `rgba(255, 255, 255, 0.75)`
-- `--text-tertiary`: `rgba(255, 255, 255, 0.60)`
-- `--border-subtle`: `rgba(255, 255, 255, 0.12)`
-- `--border-default`: `rgba(255, 255, 255, 0.18)`
+- `--bg-app`: `#020617`
+- `--bg-muted`: `#0f172a`
+- `--surface`: `#0f172a`
+- `--surface-raised`: `#1e293b`
+- `--text-primary`: `#f8fafc`
+- `--text-secondary`: `#94a3b8`
+- `--text-tertiary`: `#64748b`
+- `--border-subtle`: `rgba(255, 255, 255, 0.08)`
+- `--border-default`: `rgba(255, 255, 255, 0.12)`
 
 Semantic colors (shared)
-- `--success`: `#4CAF50`
-- `--warning`: `#FF6B35`
-- `--error`: `#FF3B30`
+- `--success`: `#10b981`
+- `--warning`: `#f59e0b`
+- `--error`: `#ef4444`
 
 ### 5.2 Spacing + radius (CSS)
 Use a spacing scale similar to the app:
@@ -160,10 +160,9 @@ Required section order:
    - Copyright
 
 ## 7) App Store CTA behavior
-- Use `APP_STORE_URL = "https://apps.apple.com/app/idXXXXXXXXXX"` until the real link is known.
-- If the App Store URL is not known yet:
-  - The CTA may show “Coming soon” and be disabled
-  - Do **not** mention TestFlight
+- App Store URL: `https://apps.apple.com/dk/app/taper/id6758867485`
+- Configured in `website/src/lib/site.ts` as `APP_STORE_URL`
+- CTA button reads “Download on the App Store” and links directly to the listing
 
 ## 8) Privacy Policy page (`/privacy`) — App Store-ready
 Tone: plain, clear, non-fluffy, English.

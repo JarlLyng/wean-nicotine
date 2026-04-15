@@ -36,7 +36,7 @@ This section is the “at a glance” view of where the project stands right now
 - [x] Phase 4.5 — Design & Visual Polish (App icons & splash screens updated)
 - [x] Phase 5 — Release Preparation (v1.1 released; Sentry configured)
 - [x] Phase 6 — Tools Expansion (v1.2: Breathing, Urge Surfing, Reflection, Cost Savings)
-- [/] Phase 6.1 — v1.2 Submission (Building now)
+- [x] Phase 6.1 — v1.2 Submission (build 15, live on TestFlight & App Store)
 
 ### Phase 5 — what’s done vs pending
 - [x] EAS Build configured (`eas.json`); production iOS builds succeed

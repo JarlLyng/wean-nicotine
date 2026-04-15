@@ -24,7 +24,7 @@ Update when:
 
 ---
 
-## Architecture (v1.1)
+## Architecture
 
 Sentry is configured in three layers:
 

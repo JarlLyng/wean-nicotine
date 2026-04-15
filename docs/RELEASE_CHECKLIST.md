@@ -44,7 +44,7 @@ Android + iPad kan komme senere.
 
 ### Version & Build Numbers
 - [x] Version i `app.json`: "1.2.0" (bruger-synlig; opdateret fra 1.1.0).
-- [x] `ios.buildNumber` i `app.json`: "13" (com.iamjarl.taper) – skal inkrementeres før hvert nyt upload.
+- [x] `ios.buildNumber` i `app.json`: "15" (com.iamjarl.taper) – skal inkrementeres før hvert nyt upload.
 - [x] `eas.json`: `cli.appVersionSource`: "local" (version/build fra app.json).
 
 ---
@@ -211,7 +211,7 @@ Android + iPad kan komme senere.
 - [ ] Upload build: IPA via **Transporter** (foretrukket) eller EAS Submit
 - [ ] Udfyld alle metadata felter (beskrivelse, keywords, screenshots)
 - [ ] Upload screenshots
-- [ ] Konfigurer pricing (gratis)
+- [x] Konfigurer pricing (one-time purchase / engangskøb)
 - [ ] Submit for review
 - [ ] Vente på review (typisk 1-3 dage)
 

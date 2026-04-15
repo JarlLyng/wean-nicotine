@@ -200,6 +200,12 @@ const structuredData: Record<string, unknown> = {
 					<a href="/track-snus-use/">Track Snus Use</a>
 					<a href="/private-quit-nicotine-app/">Private Quit App</a>
 				</div>
+				<div class="site-footer__col">
+					<p class="footer-heading">More from IAMJARL</p>
+					<a href="https://iamjarl.com" target="_blank" rel="noopener noreferrer">IAMJARL Portfolio</a>
+					<a href="https://wodrounds.iamjarl.com" target="_blank" rel="noopener noreferrer">WODrounds</a>
+					<a href="https://madebyhuman.iamjarl.com" target="_blank" rel="noopener noreferrer">Made by Human</a>
+				</div>
 			</div>
 			<div class="container site-footer__bottom">
 				<p class="fineprint">
@@ -372,7 +378,7 @@ const structuredData: Record<string, unknown> = {
 
 	.site-footer__grid {
 		display: grid;
-		grid-template-columns: repeat(3, 1fr);
+		grid-template-columns: repeat(4, 1fr);
 		gap: var(--space-xxl);
 		padding-bottom: var(--space-xxl);
 		border-bottom: 1px solid var(--border-subtle);
@@ -427,6 +433,12 @@ const structuredData: Record<string, unknown> = {
 	.disabled-link {
 		color: var(--text-tertiary);
 		font-size: var(--font-size-sm);
+	}
+
+	@media (max-width: 900px) {
+		.site-footer__grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
 	}
 
 	@media (max-width: 700px) {

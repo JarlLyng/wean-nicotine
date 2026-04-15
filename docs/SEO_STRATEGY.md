@@ -29,9 +29,7 @@ Update when:
 
 ## 1. What Wean Nicotine actually is
 
-Wean Nicotine is **not** an audio tool.
-
-Based on the live site, Wean is positioned as a **nicotine reduction app for snus and nicotine pouches**. The homepage messaging focuses on:
+Wean Nicotine is a **nicotine reduction app for snus and nicotine pouches**, available on the App Store as a one-time purchase. The homepage messaging focuses on:
 
 - reducing snus and nicotine pouches step by step
 - daily allowance and one-tap tracking
@@ -470,7 +468,9 @@ Supporting pages:
 
 ## 12. Internal linking strategy
 
-Each page should link to:
+**Current status:** The global footer now links to 8 SEO subpages from every page on the site (4 under "Resources", 4 under "Guides"). This ensures all key pages are crawlable from any entry point.
+
+Each page should additionally link in its body copy to:
 
 - the homepage
 - one core commercial page
@@ -551,7 +551,7 @@ For SEO and AI search visibility, add:
 - applicationCategory: HealthApplication or UtilitiesApplication
 - operatingSystem: iOS
 - description: app for reducing snus and nicotine pouches gradually
-- offers: if/when pricing exists
+- offers: one-time purchase (use actual App Store price and currency)
 
 Be careful to keep descriptions factual and non-medical.
 
@@ -578,7 +578,7 @@ Because this is a static site, technical SEO should be relatively easy to keep c
 
 ## 16. App Store SEO (ASO) matters here too
 
-Because the site says “Coming soon on the App Store,” Wean should align site SEO with App Store naming and description.
+Wean Nicotine is live on the App Store (app-id: 6758867485). Site SEO and App Store naming must stay aligned.
 
 Keep naming consistent across:
 
@@ -630,29 +630,32 @@ These are the pages I would build first.
 
 ---
 
-## 18. Recommended 90-day roadmap
+## 18. Implementation status & next steps
 
-### Month 1
+### Done (as of April 2026)
 
-- fix homepage messaging and metadata
-- add schema
-- create 3 core landing pages
-- submit sitemap to Google Search Console
-- set up Bing Webmaster Tools too
+- ✅ Homepage messaging and metadata — title, meta description, OG tags, structured data
+- ✅ FAQPage schema on homepage
+- ✅ MobileApplication (SoftwareApplication) schema on homepage
+- ✅ BreadcrumbList schema on SEO subpages
+- ✅ Sitemap submitted to Google Search Console (27 URLs)
+- ✅ 6 core commercial pages live: `/snus-reduction-app/`, `/nicotine-pouch-reduction-app/`, `/taper-nicotine/`, `/track-snus-use/`, `/track-nicotine-pouches/`, `/private-quit-nicotine-app/`
+- ✅ 3 informational pages live: `/how-to-reduce-snus/`, `/how-to-quit-nicotine-pouches/`, `/how-to-handle-nicotine-cravings/`
+- ✅ Localized pages: DA (3 pages), NO (3 pages), SV (3 pages)
+- ✅ Footer internal linking to 8 SEO subpages from every page on the site
+- ✅ App Store live with localized metadata
+- ✅ hreflang tags on all pages (en, da, sv, no, x-default)
+- ✅ Canonical tags on all pages
+- ✅ v1.2 screenshots on homepage and screenshot gallery
 
-### Month 2
+### Next priorities
 
-- publish 3–4 informational pages
-- add FAQ schema to the best pages
-- improve internal linking
-- add App Store page when live
-
-### Month 3
-
-- publish 3 comparison / privacy-focused pages
-- refine pages based on Search Console queries
-- expand pages that start getting impressions
-- test screenshot alt text and CTA copy improvements
+- Publish comparison pages (e.g. `/gradual-reduction-vs-cold-turkey/`)
+- Publish remaining informational pages (e.g. `/how-to-taper-nicotine/`)
+- Add cross-links to IAMJARL ecosystem sites (see section 26)
+- Refine pages based on Search Console query data
+- Product Hunt launch
+- Expand pages that start getting impressions
 
 ---
 
@@ -806,3 +809,137 @@ Tracking is handled globally by [`getCampaignAppStoreUrl`](../website/src/lib/si
 - Example: `seo_no_guide` (Norwegian Guide Page)
 
 This allows for granular performance analysis in App Store Connect / Apple Search Ads console.
+
+---
+
+## 25. GEO — Generative Engine Optimization (2026)
+
+AI-powered search (ChatGPT, Google AI Overviews, Perplexity, Copilot) is now a major discovery channel. Wean Nicotine must be citable by these engines.
+
+### 25.1 Schema stacking
+
+Deploy triple JSON-LD on every page:
+
+- **SoftwareApplication** — name, operatingSystem, applicationCategory (HealthApplication), offers, aggregateRating
+- **FAQPage** — on all pages with FAQ blocks (homepage, guide pages)
+- **BreadcrumbList** — on all subpages
+
+On article/guide pages, add:
+- **Article** — headline, author, datePublished, dateModified
+- **HowTo** — for step-by-step reduction guides
+
+### 25.2 Passage-level optimization
+
+AI engines extract individual passages, not full pages. Every section on every page should:
+
+- Open with a direct, factual statement that answers a question
+- Be self-contained (comprehensible without reading the rest of the page)
+- Include at least one concrete detail (number, comparison, or mechanism)
+
+Example passage for AI extraction:
+
+> Wean Nicotine is an iOS app (one-time purchase) that helps users reduce snus and nicotine pouch consumption through a gradual daily allowance system. Users set a baseline, and the app reduces the allowed number of pouches each week. All data stays on device — no accounts, no cloud sync.
+
+### 25.3 AI-answer target queries
+
+Optimize content to be cited when AI answers these questions:
+
+- "What is the best app to quit snus?"
+- "How do I reduce nicotine pouch use gradually?"
+- "Is there an app that helps taper off snus?"
+- "What is a nicotine taper plan?"
+- "Best private app for quitting nicotine"
+
+Each query should have a dedicated passage or page that directly answers it.
+
+### 25.4 Statistics and credibility signals
+
+AI engines favor content with concrete data. Where possible, include:
+
+- User-facing stats: "Reduces daily allowance by 5% per week"
+- Factual context: "The average snus user in Sweden consumes 12–15 pouches per day"
+- Comparison data: "Unlike generic habit trackers, Wean calculates a personalized daily allowance"
+- Source citations where appropriate (public health data, nicotine research)
+
+---
+
+## 26. Cross-linking — IAMJARL Ecosystem
+
+Wean Nicotine is part of the IAMJARL project ecosystem. Cross-linking between subdomains strengthens overall domain authority and creates natural discovery paths between projects.
+
+### 26.1 IAMJARL subdomains
+
+| Subdomain | Status | Description |
+|---|---|---|
+| [iamjarl.com](https://iamjarl.com) | ✅ Live | Portfolio / hub site |
+| [weannicotine.iamjarl.com](https://weannicotine.iamjarl.com) | ✅ Live | This project |
+| [madebyhuman.iamjarl.com](https://madebyhuman.iamjarl.com) | ✅ Live | Made by Human badge/initiative |
+| [wodrounds.iamjarl.com](https://wodrounds.iamjarl.com) | ✅ Live | CrossFit WOD tool |
+| beef.iamjarl.com | 🚧 Not yet live | Future project |
+
+### 26.2 Links FROM weannicotine.iamjarl.com
+
+Currently implemented:
+- ✅ IAMJARL link in footer copyright line → iamjarl.com
+- ✅ "More from IAMJARL" footer column with links to iamjarl.com, wodrounds, and madebyhuman
+
+### 26.3 Links TO weannicotine.iamjarl.com
+
+Each live IAMJARL site should link back to Wean Nicotine:
+
+- **iamjarl.com** — Projects section
+- **madebyhuman.iamjarl.com** — featured project
+- **wodrounds.iamjarl.com** — "Also from IAMJARL" footer link
+- **beef.iamjarl.com** — add when it goes live
+
+### 26.4 Why this matters
+
+All *.iamjarl.com subdomains share domain authority. Each indexed, interlinked subdomain strengthens the overall signal. With 4+ live subdomains linking to each other, the crawl paths and trust signals compound over time. This is especially valuable for a new product like Wean Nicotine that does not yet have external backlinks.
+
+---
+
+## 27. Where to Make Noise
+
+Wean Nicotine should be shared in specific communities where the target audience already exists. The tone should be authentic, helpful, and non-promotional.
+
+### 27.1 Reddit
+
+Post as a genuine user sharing a tool, not an ad. Engage in comments.
+
+- **r/Snus** (~50k members) — share Wean when someone asks about reducing snus use
+- **r/QuitVaping** (~20k) — relevant for nicotine pouch users who overlap
+- **r/stopsmoking** (~250k) — mention Wean when someone discusses nicotine pouches or gradual reduction
+- **r/NicotinePouches** — comment when people discuss cutting down
+- **r/DecidingToBeBetter** — "I built an app to help me quit snus" personal story angle
+- **r/iOSProgramming** / **r/SwiftUI** — developer angle: "I built a health app in Expo/React Native"
+- **r/SideProject** — launch post about the indie development journey
+- **r/Sweden** / **r/Denmark** / **r/Norway** — local Scandinavian communities discussing snus culture
+
+### 27.2 Product Hunt
+
+Launch on Product Hunt with:
+
+- Tagline: "Reduce snus and nicotine pouches step by step"
+- Category: Health & Fitness
+- Maker story: personal angle about building a calm, private tool
+- Schedule for a Tuesday or Wednesday morning (best launch days)
+
+### 27.3 Indie Hacker communities
+
+- **Indie Hackers** — post in the product section + write a "how I built" article
+- **Hacker News** — Show HN post when the app is polished and has traction
+- **Twitter/X** — #buildinpublic, #indiedev, #iosdev hashtags
+
+### 27.4 Health and wellness directories
+
+- **AlternativeTo.com** — list as alternative to NicQuit, Smoke Free, QuitNow
+- **Product Hunt Health collection**
+- **AppAdvice / MacStories** — pitch for review as a Scandinavian indie health app
+- **Nordic health/tech blogs** — pitch the "Scandinavian approach to nicotine reduction" angle
+
+### 27.5 Scandinavian media
+
+- Swedish tech blogs (e.g., Breakit, DI Digital)
+- Danish health publications
+- Norwegian digital health communities
+- Snus-specific forums and Facebook groups in Scandinavia
