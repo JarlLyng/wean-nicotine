@@ -1,10 +1,10 @@
 # Wean Nicotine
 
-![Co-created with AI](https://madebyhuman.iamjarl.com/badges/co-created-white.svg)
-
 **Wean Nicotine** is a mobile app that helps people gradually reduce and eventually stop using snus (nicotine pouches) through a calm, supportive, and non‑judgmental approach.
 
 Instead of quitting cold turkey, Wean focuses on **tapering** — reducing usage step by step, at your own pace.
+
+![Co-created with AI](https://madebyhuman.iamjarl.com/badges/co-created-white.svg)
 
 ## Documentation
 
