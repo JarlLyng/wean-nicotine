@@ -15,7 +15,6 @@ Related files:
 - [`app/_layout.tsx`](../app/_layout.tsx)
 - [`hooks/useAppInitialize.ts`](../hooks/useAppInitialize.ts)
 - [`docs/PRIVACY_APP_STORE.md`](./PRIVACY_APP_STORE.md)
-- [`docs/RELEASE_CHECKLIST.md`](./RELEASE_CHECKLIST.md)
 
 Update when:
 - DSN handling changes

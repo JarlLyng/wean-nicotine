@@ -12,7 +12,6 @@ Source of truth:
 - Product positioning should stay aligned with [`AI_CONTEXT.md`](./AI_CONTEXT.md) and [`SEO_STRATEGY.md`](./SEO_STRATEGY.md)
 
 Related files:
-- [`docs/RELEASE_CHECKLIST.md`](./RELEASE_CHECKLIST.md)
 - [`docs/PRIVACY_APP_STORE.md`](./PRIVACY_APP_STORE.md)
 - [`website/src/lib/site.ts`](../website/src/lib/site.ts)
 

@@ -83,10 +83,8 @@ This makes the docs easier for LLMs to classify correctly and reduces accidental
 - [`design.md`](./design.md): Design-system principles and token usage.
 - [`SEO_STRATEGY.md`](./SEO_STRATEGY.md): SEO positioning and content architecture for the website.
 - [`SENTRY.md`](./SENTRY.md): Sentry setup and troubleshooting.
-- [`RELEASE_CHECKLIST.md`](./RELEASE_CHECKLIST.md): Release sequence and checks.
 - [`APP_STORE_METADATA.md`](./APP_STORE_METADATA.md): App Store listing copy and metadata.
 - [`PRIVACY_APP_STORE.md`](./PRIVACY_APP_STORE.md): App privacy answers for App Store Connect.
-- [`REVIEW.md`](./REVIEW.md): Review notes and validation guidance.
 - [`decisions/storage.md`](./decisions/storage.md): ADR for local persistence.
 
 ## Change Guidance
