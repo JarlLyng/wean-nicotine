@@ -4,7 +4,7 @@
 
 Instead of quitting cold turkey, Wean focuses on **tapering** — reducing usage step by step, at your own pace.
 
-![Co-created with AI](https://madebyhuman.iamjarl.com/badges/co-created-white.svg)
+[![Co-created with AI](https://madebyhuman.iamjarl.com/badges/co-created-white.svg)](https://madebyhuman.iamjarl.com)
 
 ## Documentation
 
