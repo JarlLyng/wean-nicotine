@@ -1,0 +1,128 @@
+---
+import SeoLandingLayout from '../../../layouts/SeoLandingLayout.astro';
+import Card from '../../../components/Card.astro';
+import Section from '../../../components/Section.astro';
+import { APP_STORE_URL, isAppStoreUrlKnown } from '../../../lib/site';
+
+const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
+const appStoreCtaLabel = appStoreKnown ? 'Ladda ner på App Store' : 'Kommer snart på App Store';
+---
+
+<SeoLandingLayout
+	title="Hjälp mot nikotinsug — så hanterar du suget i stunden"
+	description="Lär dig praktiska tekniker för att hantera nikotinsug när du minskar på snus eller nikotinportioner. Andning, urge surfing och strategier som faktiskt fungerar när suget slår till."
+	canonicalPath="/sv/nikotinsug-hjalp/"
+	h1="Hjälp mot nikotinsug"
+	lede="Nikotinsug toppar vanligtvis inom 3–5 minuter och avtar sedan — om du kan rida ut de korta minuterna försvinner suget av sig självt. Nyckeln är att ha praktiska tekniker redo innan suget slår till. Här hittar du sex forskningsbaserade strategier som fungerar i själva stunden, oavsett om du minskar på snus eller nikotinportioner."
+	bottomCtaHeading="Få stöd mot suget när det slår till"
+	bottomCtaText="Wean Nicotine har andningsövningar, urge surfing och reflektionsverktyg inbyggt — redo precis när du nått din dagliga ranson och suget melder sig."
+	appStoreCtaLabel={appStoreCtaLabel}
+	campaignToken="seo_sv_craving"
+	lang="sv"
+>
+	<script type="application/ld+json" slot="after-guide">
+		{
+			"@context": "https://schema.org",
+			"@type": "BreadcrumbList",
+			"itemListElement": [
+				{
+					"@type": "ListItem",
+					"position": 1,
+					"name": "Home",
+					"item": "https://weannicotine.iamjarl.com"
+				},
+				{
+					"@type": "ListItem",
+					"position": 2,
+					"name": "Hjälp mot nikotinsug",
+					"item": "https://weannicotine.iamjarl.com/sv/nikotinsug-hjalp/"
+				}
+			]
+		}
+	</script>
+
+	<section class="guide__section">
+		<h2>Varför nikotinsug uppstår</h2>
+		<p>När du minskar ditt nikotinintag registrerar hjärnan förändringen. Den har anpassat sig till en viss nivå av nikotin och reagerar med sug när nivån sjunker. Det är normalt och övergående. Den genomsnittliga snusaren eller användaren av nikotinportioner konsumerar 10–15 portioner per dag, och gradvis nedtrappning — istället för abrupt stopp — håller suget mer hanterbart.</p>
+		<p>Sug triggas också av vanor och associationer. Om du alltid tar en prilla efter kaffet börjar hjärnan förvänta sig nikotin just då. Att förstå sina triggers gör dem lättare att hantera.</p>
+	</section>
+
+	<section class="guide__section">
+		<h2>Sex praktiska tekniker mot sug</h2>
+		<div class="grid-1">
+			<Card as="article">
+				<h3>1. Andas igenom det</h3>
+				<p>Ta långsamma, djupa andetag i en till två minuter. Andas in i fyra sekunder, håll i fyra, andas ut i sex. Detta aktiverar kroppens lugnande respons och minskar sugets intensitet.</p>
+			</Card>
+			<Card as="article">
+				<h3>2. Pröva urge surfing</h3>
+				<p>Istället för att kämpa mot suget — observera det. Lägg märke till var i kroppen du känner det. Se det stiga, toppa och avta. Nikotinsug toppar vanligtvis inom 3–5 minuter och avtar sedan om du inte agerar på det. Forskning visar att gradvis nedtrappning är lika effektiv som abrupt stopp (Lindson et al., Cochrane Review 2019) — delvis för att det håller sugtopparna mindre.</p>
+			</Card>
+			<Card as="article">
+				<h3>3. Byt miljö</h3>
+				<p>Gå ut, byt rum eller ta en kort promenad. Att bryta det fysiska sammanhang där suget uppstod gör det ofta svagare.</p>
+			</Card>
+			<Card as="article">
+				<h3>4. Skjut upp i fem minuter</h3>
+				<p>Säg till dig själv att du väntar i fem minuter innan du bestämmer dig. Eftersom nikotinsug vanligtvis toppar inom 3–5 minuter och avtar sedan, har intensiteten oftast sjunkit märkbart när tiden gått ut.</p>
+			</Card>
+			<Card as="article">
+				<h3>5. Gör något annat</h3>
+				<p>Drick ett glas vatten, tugga tuggummi, ät en frukt eller gör något med händerna. Att ge kroppen en annan input kan omdirigera suget.</p>
+			</Card>
+			<Card as="article">
+				<h3>6. Påminn dig om ditt varför</h3>
+				<p>Varför minskar du? Bättre hälsa, spara pengar, känna mer kontroll? Att påminna sig om motivationen i stunden kan stärka beslutsamheten.</p>
+			</Card>
+		</div>
+	</section>
+
+	<section class="guide__section">
+		<h2>När suget är som starkast</h2>
+		<div class="grid-2">
+			<Card as="article">
+				<h3>Direkt efter måltider</h3>
+				<p>För många är suget efter maten det starkaste. Pröva att ersätta det med en kort promenad, tandborstning eller ett glas vatten.</p>
+			</Card>
+			<Card as="article">
+				<h3>Under stress</h3>
+				<p>Stress gör suget mer intensivt. Att ha en andningsteknik redo är särskilt användbart i dessa stunder.</p>
+			</Card>
+			<Card as="article">
+				<h3>I sociala situationer</h3>
+				<p>Att se andra använda nikotin kan trigga starka sug. Att känna sitt dagliga tal och ha en plan hjälper dig att hålla kursen.</p>
+			</Card>
+			<Card as="article">
+				<h3>Första veckan efter nedtrappning</h3>
+				<p>De första dagarna på en ny lägre nivå är oftast de svåraste. Suget avtar när kroppen anpassar sig, vanligtvis inom en vecka.</p>
+			</Card>
+		</div>
+	</section>
+
+	<section class="guide__section">
+		<h2>När verktygen ska vara nära till hands</h2>
+		<p>Mitt i suget är det svårt att tänka klart. Därför kan det göra stor skillnad att ha stödverktyg redo på telefonen. Du behöver inte komma ihåg vad du ska göra — du öppnar bara appen.</p>
+		<p><a href="/sv/">Wean Nicotine</a> har inbyggda verktyg mot sug: andningsövningar, urge surfing-guider och reflektionsfrågor. De är gjorda för precis den stunden när du nått din dagliga gräns och suget slår till. Appen sänker din dagliga ranson med 5 % per vecka som standard, och logga varje prilla med ett tryck — det tar under 2 sekunder. Ett engångsköp för 29 DKK (ca 45 SEK), där all data lagras lokalt på din iPhone.</p>
+	</section>
+
+	<Section id="faq" title="Vanliga frågor om nikotinsug" slot="after-guide">
+		<div class="grid-2">
+			<Card as="article">
+				<h3>Hur länge varar nikotinsug?</h3>
+				<p>Ett enskilt sug toppar vanligtvis inom 3–5 minuter och avtar sedan. Frekvensen och intensiteten av sug minskar över tid när kroppen anpassar sig till lägre nikotinnivåer. De flesta nedtrappningsplaner når betydande resultat inom 6–12 veckor.</p>
+			</Card>
+			<Card as="article">
+				<h3>Försvinner suget helt?</h3>
+				<p>För de flesta blir suget mycket mer sällsynt och svagare över veckor. Enstaka milda sug kan förekomma en tid, men blir lätta att hantera.</p>
+			</Card>
+			<Card as="article">
+				<h3>Ska jag använda nikotinersättning?</h3>
+				<p>Det är ett beslut att fatta med din läkare. Vissa kombinerar gradvis nedtrappning med nikotinplåster eller -tuggummi. Wean Nicotine är ett självhjälpsverktyg, inte medicinsk rådgivning.</p>
+			</Card>
+			<Card as="article">
+				<h3>Kan Wean Nicotine hjälpa mig mot suget?</h3>
+				<p>Ja. Wean Nicotine har andningsövningar, urge surfing och reflektionsfrågor. De finns tillgängliga precis när du behöver dem. Läs mer om <a href="/sv/sluta-snusa-app/">att minska på snus</a> eller <a href="/sv/hur-slutar-man-snusa/">hur du slutar gradvis</a> med Wean Nicotine.</p>
+			</Card>
+		</div>
+	</Section>
+</SeoLandingLayout>

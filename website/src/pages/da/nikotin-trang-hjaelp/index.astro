@@ -1,0 +1,128 @@
+---
+import SeoLandingLayout from '../../../layouts/SeoLandingLayout.astro';
+import Card from '../../../components/Card.astro';
+import Section from '../../../components/Section.astro';
+import { APP_STORE_URL, isAppStoreUrlKnown } from '../../../lib/site';
+
+const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
+const appStoreCtaLabel = appStoreKnown ? 'Hent i App Store' : 'Kommer snart i App Store';
+---
+
+<SeoLandingLayout
+	title="Hjælp til nikotintrang — sådan håndterer du trangen i nuet"
+	description="Lær praktiske teknikker til at håndtere nikotintrang når du reducerer snus eller nikotinposer. Vejrtrækning, urge surfing og strategier der virker i selve øjeblikket."
+	canonicalPath="/da/nikotin-trang-hjaelp/"
+	h1="Hjælp til nikotintrang"
+	lede="Nikotintrang topper typisk inden for 3–5 minutter og aftager derefter — hvis du kan ride de korte minutter af, forsvinder trangen af sig selv. Nøglen er at have praktiske teknikker klar inden trangen rammer. Herunder finder du seks forskningsbaserede strategier, der virker i selve øjeblikket, uanset om du skærer ned på snus eller nikotinposer."
+	bottomCtaHeading="Få støtte mod trang lige når du har brug for det"
+	bottomCtaText="Wean Nicotine har vejrtrækningsøvelser, urge surfing og refleksionsværktøjer indbygget — klar i det øjeblik du har nået din daglige kvote og trangen melder sig."
+	appStoreCtaLabel={appStoreCtaLabel}
+	campaignToken="seo_da_craving"
+	lang="da"
+>
+	<script type="application/ld+json" slot="after-guide">
+		{
+			"@context": "https://schema.org",
+			"@type": "BreadcrumbList",
+			"itemListElement": [
+				{
+					"@type": "ListItem",
+					"position": 1,
+					"name": "Home",
+					"item": "https://weannicotine.iamjarl.com"
+				},
+				{
+					"@type": "ListItem",
+					"position": 2,
+					"name": "Hjælp til nikotintrang",
+					"item": "https://weannicotine.iamjarl.com/da/nikotin-trang-hjaelp/"
+				}
+			]
+		}
+	</script>
+
+	<section class="guide__section">
+		<h2>Hvorfor nikotintrang opstår</h2>
+		<p>Når du reducerer dit nikotinindtag, registrerer hjernen forandringen. Den har tilpasset sig et bestemt niveau af nikotin og reagerer med trang, når niveauet falder. Det er normalt og forbigående. Den gennemsnitlige snus- eller nikotinposebruger bruger 10–15 poser om dagen, og gradvis nedtrapning — fremfor brat stop — holder trangen mere overkommelig.</p>
+		<p>Trang udløses også af vaner og associationer. Hvis du altid tager en pose efter kaffen, begynder hjernen at forvente nikotin netop dér. At forstå dine triggere gør dem lettere at håndtere.</p>
+	</section>
+
+	<section class="guide__section">
+		<h2>Seks praktiske teknikker til at håndtere trang</h2>
+		<div class="grid-1">
+			<Card as="article">
+				<h3>1. Vejrtrækning</h3>
+				<p>Tag langsomme, dybe vejrtrækninger i ét til to minutter. Indånd i fire sekunder, hold i fire, udånd i seks. Det aktiverer kroppens ro-respons og tager presset ud af trangen.</p>
+			</Card>
+			<Card as="article">
+				<h3>2. Urge surfing</h3>
+				<p>I stedet for at bekæmpe trangen, så observér den. Læg mærke til hvor i kroppen du mærker den. Se den stige, toppe og aftage. Nikotintrang topper typisk inden for 3–5 minutter og aftager derefter, hvis du ikke handler på den. Forskning viser, at gradvis nedtrapning er lige så effektiv som brat stop (Lindson et al., Cochrane Review 2019) — delvist fordi det holder trangsspidserne mindre.</p>
+			</Card>
+			<Card as="article">
+				<h3>3. Skift omgivelser</h3>
+				<p>Gå udenfor, skift rum eller tag en kort tur. At bryde den fysiske kontekst trangen opstod i, gør den ofte svagere.</p>
+			</Card>
+			<Card as="article">
+				<h3>4. Udsæt i fem minutter</h3>
+				<p>Sig til dig selv at du venter fem minutter før du beslutter dig. Da nikotintrang typisk topper inden for 3–5 minutter og aftager derefter, er intensiteten som regel faldet betydeligt når tiden er gået.</p>
+			</Card>
+			<Card as="article">
+				<h3>5. Gør noget andet</h3>
+				<p>Drik et glas vand, tyg tyggegummi, spis et stykke frugt eller brug hænderne til noget. At give kroppen et andet input kan omdirigere trangen.</p>
+			</Card>
+			<Card as="article">
+				<h3>6. Mind dig selv om dit hvorfor</h3>
+				<p>Hvorfor reducerer du? Bedre helbred, penge sparet, mere kontrol? At minde dig selv om motivationen i nuet kan styrke din beslutsomhed.</p>
+			</Card>
+		</div>
+	</section>
+
+	<section class="guide__section">
+		<h2>Hvornår trangen er stærkest</h2>
+		<div class="grid-2">
+			<Card as="article">
+				<h3>Lige efter måltider</h3>
+				<p>For mange er trangen efter maden den stærkeste. Prøv at erstatte den med en kort gåtur, tandbørstning eller et glas vand.</p>
+			</Card>
+			<Card as="article">
+				<h3>Under stress</h3>
+				<p>Stress gør trangen mere intens. At have en vejrtrækningsteknik klar er især nyttigt i disse øjeblikke.</p>
+			</Card>
+			<Card as="article">
+				<h3>I sociale situationer</h3>
+				<p>At se andre bruge nikotin kan udløse stærk trang. At kende sit daglige tal og have en plan hjælper dig med at holde kursen.</p>
+			</Card>
+			<Card as="article">
+				<h3>Første uge efter nedtrapning</h3>
+				<p>De første dage på et nyt lavere niveau er typisk de sværeste. Trangen aftager, når kroppen tilpasser sig, typisk inden for en uge.</p>
+			</Card>
+		</div>
+	</section>
+
+	<section class="guide__section">
+		<h2>Når værktøjerne skal være lige ved hånden</h2>
+		<p>I selve trangen er det svært at tænke klart. Derfor kan det gøre en reel forskel at have støtteværktøjer klar på telefonen. Du behøver ikke huske hvad du skal gøre — du åbner bare appen.</p>
+		<p><a href="/da/">Wean Nicotine</a> har indbyggede værktøjer mod trang: vejrtrækningsøvelser, urge surfing-guides og refleksionsspørgsmål. De er lavet til netop det øjeblik, hvor du har nået din daglige grænse, og trangen rammer. Appen sænker din daglige kvote med 5 % om ugen som standard, og log hver pose med ét tryk — det tager under 2 sekunder. Et engangskøb til 29 kr, hvor al data gemmes lokalt på din iPhone.</p>
+	</section>
+
+	<Section id="faq" title="Ofte stillede spørgsmål om nikotintrang" slot="after-guide">
+		<div class="grid-2">
+			<Card as="article">
+				<h3>Hvor længe varer nikotintrang?</h3>
+				<p>En enkelt trang topper typisk inden for 3–5 minutter og aftager derefter. Hyppigheden og intensiteten af trangen aftager over tid, når kroppen tilpasser sig et lavere nikotinniveau. De fleste nedtrapningsplaner når væsentlige resultater inden for 6–12 uger.</p>
+			</Card>
+			<Card as="article">
+				<h3>Forsvinder trangen helt?</h3>
+				<p>For de fleste bliver trangen meget sjældnere og svagere over uger. Lejlighedsvise milde trang kan forekomme et stykke tid, men bliver lette at håndtere.</p>
+			</Card>
+			<Card as="article">
+				<h3>Bør jeg bruge nikotinerstatning?</h3>
+				<p>Det er en beslutning du skal tage med din læge. Nogle kombinerer gradvis nedtrapning med nikotinplaster eller -tyggegummi. Wean Nicotine er et hjælp-til-selvhjælp-værktøj, ikke medicinsk rådgivning.</p>
+			</Card>
+			<Card as="article">
+				<h3>Kan Wean Nicotine hjælpe mig med trangen?</h3>
+				<p>Ja. Wean Nicotine har vejrtrækningsøvelser, urge surfing og refleksionsspørgsmål. De er tilgængelige lige når du har brug for dem. Læs mere om <a href="/da/stop-med-snus-app/">at reducere snus</a> eller <a href="/da/hvordan-stopper-man-med-snus/">hvordan du gradvist stopper</a> med Wean Nicotine.</p>
+			</Card>
+		</div>
+	</Section>
+</SeoLandingLayout>

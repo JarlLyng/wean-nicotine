@@ -1,0 +1,191 @@
+---
+import SeoLandingLayout from '../../layouts/SeoLandingLayout.astro';
+import Card from '../../components/Card.astro';
+import Section from '../../components/Section.astro';
+import { APP_STORE_URL, isAppStoreUrlKnown } from '../../lib/site';
+
+const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
+const appStoreCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming soon on the App Store';
+---
+
+<SeoLandingLayout
+	title="Wean Nicotine vs. Habit Tracker Apps — Which Is Better for Quitting Nicotine?"
+	description="A habit tracker counts streaks. A nicotine reduction app calculates a shrinking daily allowance. Compare Wean Nicotine vs. generic habit trackers for snus and nicotine pouch reduction."
+	canonicalPath="/wean-vs-habit-tracker/"
+	h1="Wean Nicotine vs. a habit tracker — which works better for quitting nicotine?"
+	lede="A generic habit tracker counts streaks and binary yes/no days. A nicotine reduction app calculates a specific daily allowance that shrinks each week, with craving support tools built in. Wean Nicotine drops your daily allowance by 5% per week by default — something no habit tracker does out of the box."
+	bottomCtaHeading="Ready for a tool built specifically for nicotine reduction?"
+	bottomCtaText="Wean Nicotine replaces streak-shaming with a shrinking daily allowance — one-time purchase, no cloud, no accounts."
+	appStoreCtaLabel={appStoreCtaLabel}
+	campaignToken="seo_en_vshabit"
+	lang="en"
+>
+	<script type="application/ld+json" slot="after-guide">
+		{
+			"@context": "https://schema.org",
+			"@type": "BreadcrumbList",
+			"itemListElement": [
+				{
+					"@type": "ListItem",
+					"position": 1,
+					"name": "Home",
+					"item": "https://weannicotine.iamjarl.com"
+				},
+				{
+					"@type": "ListItem",
+					"position": 2,
+					"name": "Wean vs. Habit Tracker",
+					"item": "https://weannicotine.iamjarl.com/wean-vs-habit-tracker/"
+				}
+			]
+		}
+	</script>
+
+	<section class="guide__section">
+		<h2>The short answer</h2>
+		<p>A habit tracker is a good general tool for adding new habits like exercise or reading. It is a poor fit for reducing a physical dependence like nicotine. Nicotine use is not a yes/no habit — it is a daily quantity that needs to decrease gradually so your body adjusts without severe withdrawal.</p>
+		<p>Wean Nicotine is built around a shrinking daily allowance, not a streak count. The average snus or nicotine pouch user consumes 10 to 15 pouches per day. A habit tracker would ask "did you use snus today?" — which is always yes, so the tracker is useless. Wean asks "are you under your daily allowance?" and the allowance drops each week until it reaches zero.</p>
+	</section>
+
+	<section class="guide__section">
+		<h2>What habit trackers are designed for</h2>
+		<p>Popular habit tracker apps — Streaks, Habitify, Productive, Way of Life, HabitHub — are built around a core loop of daily check-ins and streak mechanics.</p>
+		<div class="grid-2">
+			<Card as="article">
+				<h3>Adding positive habits</h3>
+				<p>Habit trackers work well for habits you want more of — exercise, reading, meditation, flossing. The core mechanic is "did I do the thing today?" Yes is a streak win. No breaks the streak.</p>
+			</Card>
+			<Card as="article">
+				<h3>Binary yes/no tracking</h3>
+				<p>Most habit trackers do not track quantity well. They ask if you did the habit, not how much. That works for "did you meditate today?" It fails for "how much did you use?"</p>
+			</Card>
+			<Card as="article">
+				<h3>Streak-based motivation</h3>
+				<p>The streak is the motivator. Missing a day feels like losing something valuable, which creates pressure to not break the chain. For positive habits, this can be helpful.</p>
+			</Card>
+			<Card as="article">
+				<h3>Subscription pricing</h3>
+				<p>Most popular habit trackers charge $4 to $10 per month for the full feature set. Over a year of nicotine reduction that adds up to $50 to $120 for a tool you may only use for 12 weeks.</p>
+			</Card>
+		</div>
+	</section>
+
+	<section class="guide__section">
+		<h2>Why habit trackers struggle with nicotine reduction</h2>
+		<p>Nicotine addiction has a physical dimension that most habit trackers are not designed to handle. Here are the specific places they break down.</p>
+		<div class="grid-2">
+			<Card as="article">
+				<h3>Binary tracking hides the real number</h3>
+				<p>If you used a pouch today, a habit tracker marks it a "fail day." But did you use 3 pouches or 14? The difference is everything for a taper. Without a count, you cannot reduce.</p>
+			</Card>
+			<Card as="article">
+				<h3>Streak mechanics shame slip-ups</h3>
+				<p>When you break a streak at day 42, most habit trackers reset the counter to zero. For nicotine, one bad day does not erase six weeks of reduction — but the app's mental model says otherwise, which pushes people to quit the app (and often the reduction).</p>
+			</Card>
+			<Card as="article">
+				<h3>No built-in reduction plan</h3>
+				<p>A habit tracker does not know that dropping from 14 pouches to 0 overnight is a terrible idea. It has no concept of a taper. You have to design your own reduction plan and manually update it every week.</p>
+			</Card>
+			<Card as="article">
+				<h3>No craving support</h3>
+				<p>Nicotine cravings typically peak within 3 to 5 minutes and then subside. A tool that helps you ride out those 5 minutes — with breathing exercises or urge surfing techniques — is the difference between staying under your allowance and using "just one." Generic habit trackers do not include these.</p>
+			</Card>
+			<Card as="article">
+				<h3>No physical dependence awareness</h3>
+				<p>Habit trackers treat all habits the same. But nicotine has real physical dependence. Dropping too fast causes withdrawal symptoms that tank your focus, mood, and sleep. A reduction tool needs to know this. Habit trackers do not.</p>
+			</Card>
+			<Card as="article">
+				<h3>Privacy mismatch</h3>
+				<p>Most habit trackers sync to the cloud and require an account. Nicotine use is sensitive personal health data — many users prefer that it stays on device. Habit trackers are not built with that as a priority.</p>
+			</Card>
+		</div>
+	</section>
+
+	<section class="guide__section">
+		<h2>Wean Nicotine, feature by feature</h2>
+		<div class="grid-2">
+			<Card as="article">
+				<h3>Shrinking daily allowance</h3>
+				<p>Instead of a streak, Wean gives you a specific number of pouches per day — say 14 — and reduces it by 5% each week by default. You can adjust the reduction pace. After 12 weeks of default reduction, the allowance has dropped by roughly 46%.</p>
+			</Card>
+			<Card as="article">
+				<h3>One-tap logging</h3>
+				<p>Every pouch is logged with a single tap. The average session takes under 2 seconds. Self-monitoring alone can reduce consumption by 15 to 20% even without a formal plan (Burke et al., Journal of the American Dietetic Association), so the logging itself is doing work.</p>
+			</Card>
+			<Card as="article">
+				<h3>Built-in craving tools</h3>
+				<p>Breathing exercises, urge surfing, and reflection prompts are one tap away inside the app. When a craving peaks, you do not need to leave the app and find a YouTube video — the tool is right there.</p>
+			</Card>
+			<Card as="article">
+				<h3>Slip-ups do not reset progress</h3>
+				<p>Going over your allowance is tracked, but it does not erase anything. Your taper continues, your weekly trends continue, and the tone of the app stays calm and supportive. Progress, not perfection.</p>
+			</Card>
+			<Card as="article">
+				<h3>Fully local data</h3>
+				<p>All data is stored locally on your iPhone — zero data leaves your device. No account, no sign-up, no cloud sync, no analytics watching you. The privacy-first architecture is enforced by design, not a toggle.</p>
+			</Card>
+			<Card as="article">
+				<h3>One-time purchase</h3>
+				<p>Wean Nicotine is a one-time purchase, around $4 USD. No subscription, no recurring charges, no "upgrade to unlock this feature" popups. Pay once, use it forever.</p>
+			</Card>
+		</div>
+	</section>
+
+	<section class="guide__section">
+		<h2>Side-by-side</h2>
+		<div class="grid-2">
+			<Card as="article">
+				<h3>Tracking model</h3>
+				<p>Habit tracker: did you do it today, yes or no. Wean: how many pouches today vs. your allowance.</p>
+			</Card>
+			<Card as="article">
+				<h3>Motivation model</h3>
+				<p>Habit tracker: streak count, fear of losing the chain. Wean: weekly progress trend and pouches avoided vs. baseline.</p>
+			</Card>
+			<Card as="article">
+				<h3>Reduction plan</h3>
+				<p>Habit tracker: none. Wean: 5% automatic weekly reduction, adjustable.</p>
+			</Card>
+			<Card as="article">
+				<h3>Craving support</h3>
+				<p>Habit tracker: none. Wean: breathing exercises, urge surfing, reflection prompts.</p>
+			</Card>
+			<Card as="article">
+				<h3>Privacy model</h3>
+				<p>Habit tracker: cloud sync, account required. Wean: fully local, no account.</p>
+			</Card>
+			<Card as="article">
+				<h3>Pricing</h3>
+				<p>Habit tracker: $4 to $10 per month. Wean: one-time $4 USD.</p>
+			</Card>
+		</div>
+	</section>
+
+	<section class="guide__section">
+		<h2>When a habit tracker makes sense</h2>
+		<p>Habit trackers are excellent tools for the habits they are designed for. If you want to add meditation, exercise, or daily reading to your life, a streak-based app works well. The yes/no model matches the behavior you are tracking.</p>
+		<p>They also work for some quit contexts — for example, tracking days since a last drink if you are abstaining fully rather than tapering. The binary "did I stay sober today?" maps onto a streak naturally.</p>
+		<p>But for gradual nicotine reduction — where the goal is a slowly decreasing quantity rather than a binary yes/no — the tool has to match the job. That is what Wean Nicotine is built for.</p>
+	</section>
+
+	<Section id="faq" title="Frequently asked questions" slot="after-guide">
+		<div class="grid-2">
+			<Card as="article">
+				<h3>Can I just use a spreadsheet or notes app?</h3>
+				<p>You can, and some people do successfully. The two things you lose are automatic allowance calculation and one-tap logging speed. Spreadsheets also do not include craving support tools. If you are the type who will maintain the spreadsheet, it can work.</p>
+			</Card>
+			<Card as="article">
+				<h3>Does Wean Nicotine replace all habit tracker apps?</h3>
+				<p>No. Wean is purpose-built for nicotine reduction. For other habits you are trying to add or quit, a general habit tracker is still the right tool.</p>
+			</Card>
+			<Card as="article">
+				<h3>What if I relapse and need to restart?</h3>
+				<p>Wean has a "start over" flow that resets your plan cleanly. Unlike a habit tracker resetting your streak to zero, restarting on Wean feels like choosing a new starting point, not losing a battle. See <a href="/how-to-handle-nicotine-cravings/">how to handle cravings</a> and <a href="/gradual-reduction-vs-cold-turkey/">gradual reduction vs cold turkey</a> for more on managing setbacks.</p>
+			</Card>
+			<Card as="article">
+				<h3>Can I export my Wean data if I want to?</h3>
+				<p>Data export is on the roadmap. For now, your data lives fully on device — nothing leaves your iPhone without you actively doing it.</p>
+			</Card>
+		</div>
+	</Section>
+</SeoLandingLayout>
