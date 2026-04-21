@@ -92,6 +92,9 @@ const structuredData: Record<string, unknown> = {
 		<meta name="generator" content={Astro.generator} />
 		<script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
 
+		<!-- Umami Analytics (privacy-friendly, cookie-free) -->
+		<script defer src="https://umami-iamjarl.vercel.app/script.js" data-website-id="ab39d27c-ff32-49c4-b9e3-4c8407aad2b8"></script>
+
 		<!-- Premium Typography -->
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
