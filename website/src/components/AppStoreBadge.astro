@@ -14,11 +14,19 @@ if (lang === 'no') localeCode = 'no-no';
 const badgeUrl = `https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/${localeCode}?size=250x83&amp;releaseDate=1738713600`;
 ---
 
-<a href={href} class="app-store-badge" target="_blank" rel="noopener noreferrer">
-	<img 
-		src={badgeUrl} 
-		alt="Download on the App Store" 
-		style="width: 160px; height: 53px; border-radius: 10px;" 
+<a
+	href={href}
+	class="app-store-badge"
+	target="_blank"
+	rel="noopener noreferrer"
+	data-umami-event="app-store-click"
+	data-umami-event-source="badge"
+	data-umami-event-lang={lang}
+>
+	<img
+		src={badgeUrl}
+		alt="Download on the App Store"
+		style="width: 160px; height: 53px; border-radius: 10px;"
 	/>
 </a>
 

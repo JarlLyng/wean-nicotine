@@ -7,6 +7,10 @@ export interface Props {
 	disabled?: boolean;
 	external?: boolean;
 	ariaLabel?: string;
+	/** Umami event name. If set, clicks are tracked. */
+	trackEvent?: string;
+	/** Optional source identifier (e.g. "hero", "footer") sent with the event. */
+	trackSource?: string;
 }
 
 const {
@@ -15,10 +19,14 @@ const {
 	disabled = false,
 	external = false,
 	ariaLabel,
+	trackEvent,
+	trackSource,
 } = Astro.props;
 
 const target = external ? '_blank' : undefined;
 const rel = external ? 'noopener noreferrer' : undefined;
+const isAppStoreLink = typeof href === 'string' && href.includes('apps.apple.com');
+const resolvedEvent = trackEvent ?? (isAppStoreLink ? 'app-store-click' : undefined);
 ---
 
 <a
@@ -29,6 +37,8 @@ const rel = external ? 'noopener noreferrer' : undefined;
 	aria-disabled={disabled ? 'true' : undefined}
 	aria-label={ariaLabel}
 	tabindex={disabled ? -1 : undefined}
+	data-umami-event={resolvedEvent}
+	data-umami-event-source={resolvedEvent ? (trackSource ?? 'button') : undefined}
 >
 	<slot />
 </a>

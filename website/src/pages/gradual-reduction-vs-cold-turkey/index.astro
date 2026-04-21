@@ -1,0 +1,158 @@
+---
+import SeoLandingLayout from '../../layouts/SeoLandingLayout.astro';
+import Card from '../../components/Card.astro';
+import Section from '../../components/Section.astro';
+import { APP_STORE_URL, isAppStoreUrlKnown } from '../../lib/site';
+
+const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
+const appStoreCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming soon on the App Store';
+---
+
+<SeoLandingLayout
+	title="Gradual Reduction vs. Cold Turkey — Which Works Better for Quitting Nicotine?"
+	description="Gradual reduction vs. cold turkey for nicotine: a 2019 Cochrane Review found gradual tapering is as effective as abrupt cessation, but better tolerated. Compare both approaches."
+	canonicalPath="/gradual-reduction-vs-cold-turkey/"
+	h1="Gradual reduction vs. cold turkey — which works better?"
+	lede="A 2019 Cochrane Review of 51 studies and over 22,000 participants found that gradual reduction is as effective as abrupt cessation for long-term quit success (Lindson et al., 2019). Both can work — the question is which one you can sustain."
+	bottomCtaHeading="Ready to try gradual reduction?"
+	bottomCtaText="Wean Nicotine drops your daily allowance by 5% per week — small enough that your body adjusts without the intense withdrawal of cold turkey."
+	appStoreCtaLabel={appStoreCtaLabel}
+	campaignToken="seo_en_gradualvscold"
+	lang="en"
+>
+	<script type="application/ld+json" slot="after-guide">
+		{
+			"@context": "https://schema.org",
+			"@type": "BreadcrumbList",
+			"itemListElement": [
+				{
+					"@type": "ListItem",
+					"position": 1,
+					"name": "Home",
+					"item": "https://weannicotine.iamjarl.com"
+				},
+				{
+					"@type": "ListItem",
+					"position": 2,
+					"name": "Gradual Reduction vs. Cold Turkey",
+					"item": "https://weannicotine.iamjarl.com/gradual-reduction-vs-cold-turkey/"
+				}
+			]
+		}
+	</script>
+
+	<section class="guide__section">
+		<h2>The short answer</h2>
+		<p>Both methods work. Research shows neither approach wins decisively on long-term success rates. The real difference is tolerability — how likely you are to stick with the method long enough to succeed.</p>
+		<p>Cold turkey is faster and clearer, but roughly 95% of unaided cold turkey attempts fail within a year (U.S. Surgeon General, 2020). Gradual reduction takes longer but has a lower dropout rate because withdrawal symptoms are spread out and milder.</p>
+	</section>
+
+	<section class="guide__section">
+		<h2>Cold turkey — how it works</h2>
+		<p>Cold turkey means stopping all nicotine use in a single moment. No taper, no replacement, nothing — just a firm end date.</p>
+		<div class="grid-2">
+			<Card as="article">
+				<h3>Why it appeals</h3>
+				<p>Clarity is powerful. One decision, one date, no negotiating with yourself every day about "just one more." Some people genuinely need that clean break to succeed.</p>
+			</Card>
+			<Card as="article">
+				<h3>Who it works for</h3>
+				<p>Cold turkey tends to work for people with strong external motivation (health scare, pregnancy), short nicotine history (under 2 years), or past experience succeeding at other all-or-nothing habit changes.</p>
+			</Card>
+			<Card as="article">
+				<h3>The withdrawal reality</h3>
+				<p>Nicotine withdrawal symptoms peak within 24 to 72 hours and can include irritability, brain fog, difficulty concentrating, headaches, and intense cravings. Cravings themselves typically peak within 3 to 5 minutes and then subside, but the background discomfort can last 2 to 4 weeks.</p>
+			</Card>
+			<Card as="article">
+				<h3>The failure pattern</h3>
+				<p>Most cold turkey attempts fail between days 2 and 7, when withdrawal is most intense and the memory of nicotine is still fresh. People cave for "just one," which often leads back to baseline within a week.</p>
+			</Card>
+		</div>
+	</section>
+
+	<section class="guide__section">
+		<h2>Gradual reduction — how it works</h2>
+		<p>Gradual reduction (also called tapering) means lowering your nicotine intake week by week until you reach zero. A typical taper reduces daily use by 5 to 15% per week, reaching significant reduction within 6 to 12 weeks.</p>
+		<div class="grid-2">
+			<Card as="article">
+				<h3>Why it appeals</h3>
+				<p>Your body has time to adjust to lower nicotine levels. Withdrawal is spread out and milder at each step. You stay functional at work and in relationships while you change the habit.</p>
+			</Card>
+			<Card as="article">
+				<h3>Who it works for</h3>
+				<p>Tapering tends to work for people with long nicotine history (5+ years), high daily use (10+ pouches or cigarettes), previous failed cold turkey attempts, or jobs and relationships where the cognitive cost of acute withdrawal is too high.</p>
+			</Card>
+			<Card as="article">
+				<h3>What makes it stick</h3>
+				<p>Self-monitoring is the backbone. Simply tracking every dose can reduce consumption by 15 to 20% even without a formal plan (Burke et al., Journal of the American Dietetic Association). Without tracking, it is too easy to drift back to baseline.</p>
+			</Card>
+			<Card as="article">
+				<h3>The failure pattern</h3>
+				<p>Taper plans fail when people stop tracking or stop reducing the weekly allowance. Without a specific daily number, "using less" becomes a vague goal that the brain happily ignores. Structure is what separates a successful taper from a stalled one.</p>
+			</Card>
+		</div>
+	</section>
+
+	<section class="guide__section">
+		<h2>Side-by-side comparison</h2>
+		<div class="grid-2">
+			<Card as="article">
+				<h3>Timeline</h3>
+				<p>Cold turkey: done in a day (though withdrawal lasts 2 to 4 weeks). Gradual: 6 to 12 weeks for most users, depending on starting level and chosen pace.</p>
+			</Card>
+			<Card as="article">
+				<h3>Withdrawal intensity</h3>
+				<p>Cold turkey: severe for the first week, then tapering off. Gradual: mild at each step, cumulative effect is more tolerable but stretches over weeks.</p>
+			</Card>
+			<Card as="article">
+				<h3>Success rate (12-month abstinence)</h3>
+				<p>Cochrane Review 2019 found no statistically significant difference between the two approaches in long-term quit success. What matters more is which method you actually stick with.</p>
+			</Card>
+			<Card as="article">
+				<h3>Risk of relapse</h3>
+				<p>Cold turkey: highest in the first 7 days. Gradual: spread across weeks, typically at plateaus where the next reduction feels too hard. Both benefit from tools for handling the moment a craving arrives.</p>
+			</Card>
+			<Card as="article">
+				<h3>Impact on daily life</h3>
+				<p>Cold turkey: high cognitive cost for 1 to 2 weeks (affects work, sleep, mood). Gradual: minimal impact most weeks, slight discomfort after each step-down.</p>
+			</Card>
+			<Card as="article">
+				<h3>Does science pick a winner?</h3>
+				<p>No. The 2019 Cochrane Review concludes neither method is superior for long-term success. Both should be presented as valid options, with the choice driven by individual circumstances.</p>
+			</Card>
+		</div>
+	</section>
+
+	<section class="guide__section">
+		<h2>Which one should you pick?</h2>
+		<p>Honest answer: the method you are most likely to complete. If you have a clean track record of finishing things you start and the willingness to absorb a bad week, cold turkey is faster and cleaner. If you have tried cold turkey before and relapsed, or you have commitments (work, family, health conditions) that make acute withdrawal risky, tapering is more likely to stick.</p>
+		<p>Many people do best with a hybrid: taper down to a low baseline (2 to 3 pouches or cigarettes per day), then finish with a short cold turkey at the end when most of the physical dependence is already reduced.</p>
+	</section>
+
+	<section class="guide__section">
+		<h2>How Wean Nicotine supports gradual reduction</h2>
+		<p>If you decide tapering is the right approach for you, <a href="/">Wean Nicotine</a> handles the structure. You enter your current daily baseline of snus or nicotine pouches, and the app reduces your allowance by 5% each week by default (you can adjust the pace). Log each pouch in one tap — the average logging session takes under 2 seconds.</p>
+		<p>Built-in breathing exercises and urge surfing tools help during craving peaks. Weekly progress views show how many pouches you have avoided and how much money you have saved. All data stays on your iPhone — there is no account, no cloud sync, and no analytics tracking you. One-time purchase, around $4 USD.</p>
+	</section>
+
+	<Section id="faq" title="Frequently asked questions" slot="after-guide">
+		<div class="grid-2">
+			<Card as="article">
+				<h3>Is cold turkey really 95% likely to fail?</h3>
+				<p>Unaided cold turkey attempts (no support, no tools) have roughly that failure rate within a year (U.S. Surgeon General, 2020). The rate improves significantly with structured support, behavioral tools, and in some cases nicotine replacement therapy.</p>
+			</Card>
+			<Card as="article">
+				<h3>What is a realistic gradual reduction timeline?</h3>
+				<p>Most tapering plans reach significant reduction within 6 to 12 weeks. Aggressive tapers (10 to 15% per week) finish faster but have higher dropout. Gentle tapers (3 to 5% per week) take longer but have better adherence.</p>
+			</Card>
+			<Card as="article">
+				<h3>Does gradual reduction count as "really quitting"?</h3>
+				<p>Yes. The goal of both methods is the same — zero nicotine. The path there is different. The 2019 Cochrane Review explicitly concluded that gradual reduction is a valid cessation strategy, not a consolation prize.</p>
+			</Card>
+			<Card as="article">
+				<h3>Can I use nicotine replacement therapy with either method?</h3>
+				<p>Yes, and research supports combining NRT (gum, patches, lozenges) with either approach. Talk to your doctor about timing and dosage. Wean Nicotine tracks your pouch use specifically and does not account for NRT — that is a separate conversation with a healthcare provider.</p>
+			</Card>
+		</div>
+	</Section>
+</SeoLandingLayout>
