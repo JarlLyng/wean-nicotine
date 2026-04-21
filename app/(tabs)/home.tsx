@@ -5,14 +5,22 @@ import { Screen } from '@/components/Screen';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { ProgressRing } from '@/components/ui/ProgressRing';
+import { Toast } from '@/components/ui/Toast';
 import { spacing, typography } from '@/lib/theme';
 import { useDesignTokens } from '@/lib/design';
 import { getUserPlan } from '@/lib/db-user-plan';
 import { getTaperSettings } from '@/lib/db-settings';
 import { calculateDailyAllowance } from '@/lib/taper-plan';
-import { createLogEntry, getLogEntriesForDay } from '@/lib/db-log-entries';
+import { createLogEntry, deleteLogEntry, getLogEntriesForDay } from '@/lib/db-log-entries';
 import { captureError } from '@/lib/sentry';
 import * as Haptics from 'expo-haptics';
+
+type UndoKind = 'pouch_used' | 'craving_resisted';
+
+interface UndoState {
+  entryId: number;
+  kind: UndoKind;
+}
 
 function formatAllowanceDisplay(n: number): string {
   const rounded = Math.round(n * 10) / 10;
@@ -28,6 +36,7 @@ export default function HomeScreen() {
   const [baselinePouchesPerDay, setBaselinePouchesPerDay] = useState<number | null>(null);
   const [isLogging, setIsLogging] = useState(false);
   const [settingsId, setSettingsId] = useState<number | null>(null);
+  const [undo, setUndo] = useState<UndoState | null>(null);
   const isLoadingRef = useRef(false);
 
   const loadData = useCallback(async ({ showLoading = true }: { showLoading?: boolean } = {}) => {
@@ -110,9 +119,11 @@ export default function HomeScreen() {
     try {
       setIsLogging(true);
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-      await createLogEntry('pouch_used');
+      const entryId = await createLogEntry('pouch_used');
       // Optimistic UI update (avoid full-screen reload/spinner)
       setPouchesUsedToday((prev) => prev + 1);
+      // Offer 5-second undo window
+      setUndo({ entryId, kind: 'pouch_used' });
       // Reconcile in background (no loading state)
       void loadData({ showLoading: false });
     } catch (error) {
@@ -126,9 +137,11 @@ export default function HomeScreen() {
     try {
       setIsLogging(true);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-      await createLogEntry('craving_resisted');
+      const entryId = await createLogEntry('craving_resisted');
       // Optimistic UI update (avoid full-screen reload/spinner)
       setCravingsResistedToday((prev) => prev + 1);
+      // Offer 5-second undo window
+      setUndo({ entryId, kind: 'craving_resisted' });
       // Reconcile in background (no loading state)
       void loadData({ showLoading: false });
     } catch (error) {
@@ -137,6 +150,35 @@ export default function HomeScreen() {
       setIsLogging(false);
     }
   };
+
+  const handleUndo = useCallback(async () => {
+    if (!undo) return;
+    const { entryId, kind } = undo;
+    // Optimistic UI rollback before hitting the DB so the tap feels instant
+    if (kind === 'pouch_used') {
+      setPouchesUsedToday((prev) => Math.max(0, prev - 1));
+    } else {
+      setCravingsResistedToday((prev) => Math.max(0, prev - 1));
+    }
+    setUndo(null);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+    try {
+      await deleteLogEntry(entryId);
+      // Reconcile in background to catch any drift
+      void loadData({ showLoading: false });
+    } catch (error) {
+      captureError(
+        error instanceof Error ? error : new Error(String(error)),
+        { context: 'home_undo_log_entry' }
+      );
+      // If delete failed, refetch so the UI reflects the real DB state
+      void loadData({ showLoading: false });
+    }
+  }, [undo, loadData]);
+
+  const handleUndoDismiss = useCallback(() => {
+    setUndo(null);
+  }, []);
 
   // Force remount when settingsId changes (after onboarding/reset)
   // This ensures we get a completely fresh component instance
@@ -306,6 +348,17 @@ export default function HomeScreen() {
           </Card>
         )}
       </View>
+      <Toast
+        visible={undo !== null}
+        message={
+          undo?.kind === 'pouch_used'
+            ? 'Pouch logged'
+            : 'Craving resisted — nice.'
+        }
+        actionLabel="Undo"
+        onActionPress={handleUndo}
+        onDismiss={handleUndoDismiss}
+      />
     </Screen>
   );
 }
