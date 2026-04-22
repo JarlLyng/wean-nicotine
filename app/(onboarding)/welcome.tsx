@@ -3,7 +3,7 @@ import { Screen } from '@/components/Screen';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
 import { useDesignTokens } from '@/lib/design';
-import { spacing, typography, borderRadius } from '@/lib/theme';
+import { spacing, typography } from '@/lib/theme';
 import { useMemo } from 'react';
 import { ScrollView, StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';

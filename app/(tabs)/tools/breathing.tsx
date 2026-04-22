@@ -14,7 +14,7 @@ import { useFocusEffect } from 'expo-router';
 import { Screen } from '@/components/Screen';
 import { Icon } from '@/components/ui/Icon';
 import { Button } from '@/components/ui/Button';
-import { spacing, borderRadius } from '@/lib/theme';
+import { spacing } from '@/lib/theme';
 import { useDesignTokens, typography } from '@/lib/design';
 import { saveBreathingSession, getBreathingSessionCount } from '@/lib/db-breathing';
 import { captureError } from '@/lib/sentry';

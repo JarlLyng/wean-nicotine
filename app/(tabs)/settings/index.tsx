@@ -6,7 +6,7 @@ import { useColorScheme } from '@/hooks/use-color-scheme';
 import { setPreferredColorScheme } from '@/lib/color-scheme';
 import { formatMoney } from '@/lib/currency';
 import { getTaperSettings } from '@/lib/db-settings';
-import { useDesignTokens } from '@/lib/design';
+import { useDesignTokens , typography } from '@/lib/design';
 import { captureError } from '@/lib/sentry';
 import type { TaperSettings } from '@/lib/models';
 import Constants from 'expo-constants';
@@ -17,7 +17,6 @@ import {
   scheduleDailyCheckIn,
 } from '@/lib/notifications';
 import { borderRadius, spacing } from '@/lib/theme';
-import { typography } from '@/lib/design';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { Alert, Linking, ScrollView, StyleSheet, Switch, Text, TextStyle, View, ViewStyle } from 'react-native';

@@ -2,7 +2,7 @@ import { Screen } from '@/components/Screen';
 import { Button } from '@/components/ui/Button';
 import { useDesignTokens, getColors, typography } from '@/lib/design';
 import { useColorScheme } from '@/hooks/use-color-scheme';
-import { borderRadius, spacing } from '@/lib/theme';
+import { spacing } from '@/lib/theme';
 import { useRouter } from 'expo-router';
 import { useState, useMemo } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, TextStyle, View, ViewStyle } from 'react-native';

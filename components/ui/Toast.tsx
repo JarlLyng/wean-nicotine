@@ -10,15 +10,13 @@
  */
 
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, Pressable, ViewStyle } from 'react-native';
+import { View, Text, StyleSheet, Pressable, ViewStyle , Platform } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withTiming,
-  runOnJS,
 } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
-import { Platform } from 'react-native';
 import { spacing, borderRadius, shadows } from '@/lib/theme';
 import { useDesignTokens, typography } from '@/lib/design';
 

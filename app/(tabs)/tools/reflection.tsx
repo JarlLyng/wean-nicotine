@@ -1,8 +1,7 @@
 import { useState, useMemo, useCallback } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
-import { useRouter } from 'expo-router';
-import Animated, { FadeIn, FadeInDown, FadeOut } from 'react-native-reanimated';
-import { useFocusEffect } from 'expo-router';
+import { useRouter , useFocusEffect } from 'expo-router';
+import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
 import { Screen } from '@/components/Screen';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
@@ -65,7 +64,7 @@ const REFLECTION_PROMPTS: Prompt[] = [
   },
 ];
 
-const CATEGORIES: Array<{ key: ReflectionCategory | 'all'; label: string }> = [
+const CATEGORIES: { key: ReflectionCategory | 'all'; label: string }[] = [
   { key: 'all', label: 'All' },
   { key: 'triggers', label: 'Triggers' },
   { key: 'progress', label: 'Progress' },

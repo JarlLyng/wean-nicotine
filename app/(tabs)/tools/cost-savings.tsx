@@ -48,7 +48,7 @@ export default function CostSavingsScreen() {
           <Icon name="piggy-bank" size={56} color={colors.text.tertiary} />
           <Text style={s.emptyTitle}>No price data</Text>
           <Text style={s.emptyText}>
-            Add your pouch price in Settings to see how much money you're saving.
+            Add your pouch price in Settings to see how much money you&apos;re saving.
           </Text>
         </View>
       </Screen>

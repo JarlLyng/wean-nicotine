@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, ScrollView, Switch, Alert, Pressable, TextStyle
 import { Screen } from '@/components/Screen';
 import { Card } from '@/components/ui/Card';
 import { Icon } from '@/components/ui/Icon';
-import { spacing, borderRadius } from '@/lib/theme';
+import { spacing } from '@/lib/theme';
 import { useDesignTokens, typography } from '@/lib/design';
 import { captureError } from '@/lib/sentry';
 import { getTaperSettings } from '@/lib/db-settings';

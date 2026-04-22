@@ -5,7 +5,7 @@ import { Screen } from '@/components/Screen';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Icon } from '@/components/ui/Icon';
-import { spacing, borderRadius } from '@/lib/theme';
+import { spacing } from '@/lib/theme';
 import { useDesignTokens, typography } from '@/lib/design';
 import { createLogEntry } from '@/lib/db-log-entries';
 import { captureError } from '@/lib/sentry';
