@@ -63,7 +63,7 @@ function withPrivacyManifest(config) {
     'ios',
     async (config) => {
       const projectRoot = config.modRequest.projectRoot;
-      const projectName = config.modRequest.projectName || config.slug || 'Taper';
+      const projectName = config.modRequest.projectName || config.slug || 'wean-nicotine';
       const dir = path.join(projectRoot, 'ios', projectName);
       if (!fs.existsSync(dir)) {
         return config;

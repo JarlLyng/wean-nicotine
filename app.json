@@ -1,11 +1,11 @@
 {
   "expo": {
     "name": "Wean Nicotine",
-    "slug": "Taper",
+    "slug": "wean-nicotine",
     "version": "1.2.0",
     "orientation": "portrait",
     "icon": "./assets/images/ios-light.png",
-    "scheme": "taper",
+    "scheme": ["wean", "taper"],
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": false,
