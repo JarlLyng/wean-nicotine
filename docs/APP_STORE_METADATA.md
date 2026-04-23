@@ -60,10 +60,11 @@ Track your daily nicotine use, set a reduction plan, and build lasting habits. N
 **Første 1–2 sætninger** vises i søgeresultater — hold dem klare og med nøgleord.
 
 ```
-Wean Nicotine helps you reduce nicotine use step by step—whether you use snus, pouches, or similar products. Set your own pace, log your daily use, and see your progress over time. All data stays on your device.
+Wean Nicotine helps you reduce nicotine use step by step—whether you use snus, pouches, or similar products. Set your baseline, log your daily use, and follow a gradual weekly reduction. All data stays on your device.
 
 HOW IT WORKS
-• Set a baseline and weekly reduction goal
+• Set your baseline daily use during onboarding
+• Follow a gentle 5% weekly reduction
 • Log pouches used and cravings resisted each day
 • See your daily usage in a weekly bar chart with trend tracking
 • Earn milestone badges as you hit new goals
