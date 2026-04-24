@@ -185,6 +185,12 @@ export default function SettingsScreen() {
                   </View>
                 </View>
               )}
+              <Button
+                title="Edit plan"
+                onPress={() => router.push('/(tabs)/settings/edit-plan')}
+                variant="ghost"
+                style={s.linkAction}
+              />
             </Card>
           )}
 

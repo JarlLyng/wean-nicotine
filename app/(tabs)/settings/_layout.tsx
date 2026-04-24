@@ -22,6 +22,10 @@ export default function SettingsLayout() {
         options={{ title: 'Notifications' }}
       />
       <Stack.Screen
+        name="edit-plan"
+        options={{ title: 'Edit Plan' }}
+      />
+      <Stack.Screen
         name="reset-taper"
         options={{ title: 'Start Over' }}
       />
