@@ -64,18 +64,19 @@ Wean Nicotine helps you reduce nicotine use step by step—whether you use snus,
 
 HOW IT WORKS
 • Set your baseline daily use during onboarding
-• Follow a gentle 5% weekly reduction
-• Log pouches used and cravings resisted each day
+• Choose your weekly reduction pace (3% to 15%, default 5%)
+• Log pouches used and cravings resisted each day with one tap
+• Undo accidental logs in the 5-second window after tapping
+• Edit your plan anytime from Settings — change baseline or pace without losing history
 • See your daily usage in a weekly bar chart with trend tracking
 • Earn milestone badges as you hit new goals
 • Use built-in tools: breathing exercises, urge surfing, and reflection prompts
 
-WHAT'S NEW IN 1.2
-• Advanced Breathing: Choose from 4-7-8, Box Breathing, or Quick Calm with immersive haptics
-• Guided Urge Surfing: A 5-minute interactive wave rider to help you through the toughest cravings
-• Reflection Journal: Keep a private log of your journey with dated entries and categories
-• Cost Savings: Real-time calculation of money saved since your start date
-• Native iOS experience with smooth navigation and haptics
+WHAT'S NEW IN 1.3
+• Choose your own taper pace during onboarding — 3%, 5%, 7%, 10%, or 15% weekly reduction
+• Edit your plan anytime from Settings — adjust baseline, pace, or price without losing your log history
+• Undo pouch logging with a 5-second toast after every tap
+• Quality-of-life improvements under the hood for a smoother experience
 
 FOR YOU
 Wean Nicotine is for anyone who wants to cut down gradually without judgment. You choose the speed. The app keeps you honest and motivated with clear numbers and optional daily check-ins.
