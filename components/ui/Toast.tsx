@@ -1,12 +1,15 @@
 /**
  * Toast — a transient notification with an optional action (e.g. "Undo").
  *
- * Appears from the bottom, stays for `durationMs` (default 5000ms), then fades out.
+ * Appears from the top, stays for `durationMs` (default 5000ms), then fades out.
  * Tapping the action button triggers `onActionPress` and dismisses the toast.
- * Tapping the body (outside the action) dismisses without triggering the action.
  *
- * Designed to be mounted conditionally — parent controls visibility via `visible`
- * and handles cleanup in `onDismiss`.
+ * Uses a fixed dark surface + white text in both light and dark mode so
+ * contrast is guaranteed regardless of theme — the classic iOS snackbar
+ * pattern. The action label reuses `colors.primary`, which renders well on
+ * dark in both modes (purple in light, yellow-green in dark).
+ *
+ * Parent controls visibility via `visible` and handles cleanup in `onDismiss`.
  */
 
 import React, { useEffect } from 'react';
@@ -19,6 +22,10 @@ import Animated, {
 import * as Haptics from 'expo-haptics';
 import { spacing, borderRadius, shadows } from '@/lib/theme';
 import { useDesignTokens, typography } from '@/lib/design';
+
+// Fixed surface colors so contrast is predictable regardless of theme
+const TOAST_SURFACE = '#1C1C1E';
+const TOAST_TEXT = '#FFFFFF';
 
 interface ToastProps {
   visible: boolean;
@@ -41,12 +48,13 @@ export function Toast({
 }: ToastProps) {
   const { colors } = useDesignTokens();
   const opacity = useSharedValue(0);
-  const translateY = useSharedValue(20);
+  // Start above the final position and slide down on show
+  const translateY = useSharedValue(-24);
 
   useEffect(() => {
     if (!visible) {
       opacity.value = withTiming(0, { duration: 180 });
-      translateY.value = withTiming(20, { duration: 180 });
+      translateY.value = withTiming(-24, { duration: 180 });
       return;
     }
 
@@ -84,8 +92,8 @@ export function Toast({
         style={[
           styles.toast,
           {
-            backgroundColor: colors.text.primary,
-            shadowColor: colors.text.primary,
+            backgroundColor: TOAST_SURFACE,
+            shadowColor: '#000000',
           },
           shadows.md,
         ]}
@@ -96,7 +104,7 @@ export function Toast({
           style={[
             styles.message,
             {
-              color: colors.background.card,
+              color: TOAST_TEXT,
               fontSize: typography.sizes.base,
               lineHeight: typography.lineHeights.normal,
             },
@@ -141,7 +149,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: spacing.lg,
     right: spacing.lg,
-    bottom: spacing.xl,
+    top: spacing.md,
     alignItems: 'center',
   },
   toast: {
