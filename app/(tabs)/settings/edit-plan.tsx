@@ -35,7 +35,7 @@ import {
 } from 'react-native';
 
 const REDUCTION_PRESETS = [
-  { value: 3, label: '3%', description: 'Very gentle' },
+  { value: 3, label: '3%', description: 'Gentle' },
   { value: 5, label: '5%', description: 'Default' },
   { value: 7, label: '7%', description: 'Moderate' },
   { value: 10, label: '10%', description: 'Faster' },

@@ -25,7 +25,7 @@ import {
 } from 'react-native';
 
 const REDUCTION_PRESETS = [
-  { value: 3, label: '3%', description: 'Very gentle — slower taper, easier on withdrawal' },
+  { value: 3, label: '3%', description: 'Gentle — slower taper, easier on withdrawal' },
   { value: 5, label: '5%', description: 'Default — balanced pace recommended for most people' },
   { value: 7, label: '7%', description: 'Moderate — faster progress, slightly more challenging' },
   { value: 10, label: '10%', description: 'Faster — noticeably tougher weekly steps' },
