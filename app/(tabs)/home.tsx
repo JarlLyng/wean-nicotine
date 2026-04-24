@@ -1,6 +1,5 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
-import { useFocusEffect } from 'expo-router';
 import { Screen } from '@/components/Screen';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -8,11 +7,9 @@ import { ProgressRing } from '@/components/ui/ProgressRing';
 import { Toast } from '@/components/ui/Toast';
 import { spacing, typography } from '@/lib/theme';
 import { useDesignTokens } from '@/lib/design';
-import { getUserPlan } from '@/lib/db-user-plan';
-import { getTaperSettings } from '@/lib/db-settings';
-import { calculateDailyAllowance } from '@/lib/taper-plan';
-import { createLogEntry, deleteLogEntry, getLogEntriesForDay } from '@/lib/db-log-entries';
+import { createLogEntry, deleteLogEntry } from '@/lib/db-log-entries';
 import { captureError } from '@/lib/sentry';
+import { useHomeData } from '@/hooks/useHomeData';
 import * as Haptics from 'expo-haptics';
 
 type UndoKind = 'pouch_used' | 'craving_resisted';
@@ -29,162 +26,82 @@ function formatAllowanceDisplay(n: number): string {
 
 export default function HomeScreen() {
   const { colors } = useDesignTokens();
-  const [dailyAllowance, setDailyAllowance] = useState<number | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [pouchesUsedToday, setPouchesUsedToday] = useState(0);
-  const [cravingsResistedToday, setCravingsResistedToday] = useState(0);
-  const [baselinePouchesPerDay, setBaselinePouchesPerDay] = useState<number | null>(null);
+  const {
+    data,
+    isLoading,
+    reload,
+    incrementPouches,
+    decrementPouches,
+    incrementCravings,
+    decrementCravings,
+  } = useHomeData();
+  const { dailyAllowance, pouchesUsedToday, cravingsResistedToday, baselinePouchesPerDay, settingsId } = data;
+
+  // UI-only transient state — not part of the data layer
   const [isLogging, setIsLogging] = useState(false);
-  const [settingsId, setSettingsId] = useState<number | null>(null);
   const [undo, setUndo] = useState<UndoState | null>(null);
-  const isLoadingRef = useRef(false);
 
-  const loadData = useCallback(async ({ showLoading = true }: { showLoading?: boolean } = {}) => {
-    if (isLoadingRef.current) return;
-    isLoadingRef.current = true;
-    try {
-      if (showLoading) setIsLoading(true);
-      const settings = await getTaperSettings();
-
-      if (!settings) {
-        setDailyAllowance(null);
-        setPouchesUsedToday(0);
-        setCravingsResistedToday(0);
-        setBaselinePouchesPerDay(null);
-        setSettingsId(null);
-        return;
-      }
-
-      let userPlan = await getUserPlan();
-
-      // If user_plan is missing but settings exist, recreate it
-      if (!userPlan) {
-        const { saveUserPlan } = await import('@/lib/db-user-plan');
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        const allowance = calculateDailyAllowance(settings, today);
-
-        await saveUserPlan({
-          settingsId: settings.id,
-          currentDailyAllowance: allowance,
-          lastCalculatedDate: Date.now(),
-        }, true);
-
-        userPlan = await getUserPlan();
-
-        if (!userPlan) {
-          setDailyAllowance(null);
-          setPouchesUsedToday(0);
-          setCravingsResistedToday(0);
-          setBaselinePouchesPerDay(null);
-          return;
-        }
-      }
-
-      // Recalculate allowance from settings (always fresh, especially after reset/onboarding)
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      const calculatedAllowance = calculateDailyAllowance(settings, today);
-
-      const todayLogs = await getLogEntriesForDay(today);
-      const usedCount = todayLogs.filter(log => log.type === 'pouch_used').length;
-      const resistedCount = todayLogs.filter(log => log.type === 'craving_resisted').length;
-
-      const displayAllowance = Math.round(calculatedAllowance * 10) / 10;
-      setSettingsId(settings.id);
-      setPouchesUsedToday(usedCount);
-      setCravingsResistedToday(resistedCount);
-      setDailyAllowance(displayAllowance);
-      setBaselinePouchesPerDay(settings.baselinePouchesPerDay);
-    } catch (error) {
-      captureError(error instanceof Error ? error : new Error(String(error)), { context: 'home_load_data' });
-      setDailyAllowance(null);
-      setPouchesUsedToday(0);
-      setBaselinePouchesPerDay(null);
-    } finally {
-      setIsLoading(false);
-      isLoadingRef.current = false;
-    }
-  }, []);
-
-  // Load data when screen comes into focus
-  useFocusEffect(
-    useCallback(() => {
-      isLoadingRef.current = false;
-      loadData();
-    }, [loadData])
-  );
-
-  const handleLogPouch = async () => {
+  const handleLogPouch = useCallback(async () => {
     try {
       setIsLogging(true);
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
       const entryId = await createLogEntry('pouch_used');
-      // Optimistic UI update (avoid full-screen reload/spinner)
-      setPouchesUsedToday((prev) => prev + 1);
-      // Offer 5-second undo window
+      incrementPouches();
       setUndo({ entryId, kind: 'pouch_used' });
-      // Reconcile in background (no loading state)
-      void loadData({ showLoading: false });
+      void reload({ showLoading: false });
     } catch (error) {
       captureError(error instanceof Error ? error : new Error(String(error)), { context: 'home_log_pouch' });
     } finally {
       setIsLogging(false);
     }
-  };
+  }, [incrementPouches, reload]);
 
-  const handleLogCravingResisted = async () => {
+  const handleLogCravingResisted = useCallback(async () => {
     try {
       setIsLogging(true);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       const entryId = await createLogEntry('craving_resisted');
-      // Optimistic UI update (avoid full-screen reload/spinner)
-      setCravingsResistedToday((prev) => prev + 1);
-      // Offer 5-second undo window
+      incrementCravings();
       setUndo({ entryId, kind: 'craving_resisted' });
-      // Reconcile in background (no loading state)
-      void loadData({ showLoading: false });
+      void reload({ showLoading: false });
     } catch (error) {
       captureError(error instanceof Error ? error : new Error(String(error)), { context: 'home_log_craving_resisted' });
     } finally {
       setIsLogging(false);
     }
-  };
+  }, [incrementCravings, reload]);
 
   const handleUndo = useCallback(async () => {
     if (!undo) return;
     const { entryId, kind } = undo;
-    // Optimistic UI rollback before hitting the DB so the tap feels instant
+    // Optimistic rollback so the tap feels instant
     if (kind === 'pouch_used') {
-      setPouchesUsedToday((prev) => Math.max(0, prev - 1));
+      decrementPouches();
     } else {
-      setCravingsResistedToday((prev) => Math.max(0, prev - 1));
+      decrementCravings();
     }
     setUndo(null);
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
     try {
       await deleteLogEntry(entryId);
-      // Reconcile in background to catch any drift
-      void loadData({ showLoading: false });
+      void reload({ showLoading: false });
     } catch (error) {
       captureError(
         error instanceof Error ? error : new Error(String(error)),
         { context: 'home_undo_log_entry' }
       );
-      // If delete failed, refetch so the UI reflects the real DB state
-      void loadData({ showLoading: false });
+      // On delete failure, refetch so the UI reflects real DB state
+      void reload({ showLoading: false });
     }
-  }, [undo, loadData]);
+  }, [undo, decrementPouches, decrementCravings, reload]);
 
   const handleUndoDismiss = useCallback(() => {
     setUndo(null);
   }, []);
 
   // Force remount when settingsId changes (after onboarding/reset)
-  // This ensures we get a completely fresh component instance
   const screenKey = `home-screen-${settingsId || 'no-settings'}`;
-  
-  // React Compiler auto-memoizes this
+
   const styles = StyleSheet.create({
     content: {
       flex: 1,
@@ -260,15 +177,13 @@ export default function HomeScreen() {
           </Card>
         ) : dailyAllowance !== null ? (
           <View style={styles.mainContent}>
-            {/* Daily Allowance Card with Progress Ring */}
             <Card variant="elevated" style={styles.card} padding="lg">
               <Text style={styles.label}>Your Daily Allowance</Text>
-              
-              {/* Progress Ring Visualization */}
+
               <View style={styles.progressContainer}>
                 <ProgressRing
                   progress={
-                    dailyAllowance > 0 
+                    dailyAllowance > 0
                       ? Math.min(pouchesUsedToday / dailyAllowance, 1)
                       : 0
                   }
@@ -286,7 +201,6 @@ export default function HomeScreen() {
                 />
               </View>
 
-              {/* Used, Avoided, Remaining, Resisted Stats */}
               <View style={styles.statsContainer}>
                 <View style={styles.statsRow}>
                   <View style={styles.statItem}>
@@ -320,7 +234,6 @@ export default function HomeScreen() {
               </View>
             </Card>
 
-            {/* Action Buttons - Always at bottom */}
             <View style={styles.loggingButtons}>
               <Button
                 title="Used a pouch"
