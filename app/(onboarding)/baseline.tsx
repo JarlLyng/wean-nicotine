@@ -28,7 +28,7 @@ export default function BaselineScreen() {
 
     setError('');
     router.push({
-      pathname: '/(onboarding)/price',
+      pathname: '/(onboarding)/pace',
       params: { baseline: value.toString() },
     });
   };

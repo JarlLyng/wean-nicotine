@@ -16,9 +16,10 @@ export default function OnboardingLayout() {
       }}>
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="welcome" options={{ title: '' }} />
-      <Stack.Screen name="baseline" options={{ title: 'Step 1 of 3' }} />
-      <Stack.Screen name="price" options={{ title: 'Step 2 of 3' }} />
-      <Stack.Screen name="triggers" options={{ title: 'Step 3 of 3' }} />
+      <Stack.Screen name="baseline" options={{ title: 'Step 1 of 4' }} />
+      <Stack.Screen name="pace" options={{ title: 'Step 2 of 4' }} />
+      <Stack.Screen name="price" options={{ title: 'Step 3 of 4' }} />
+      <Stack.Screen name="triggers" options={{ title: 'Step 4 of 4' }} />
     </Stack>
   );
 }

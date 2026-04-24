@@ -30,6 +30,7 @@ export default function TriggersScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
   const baseline = params.baseline ? parseInt(params.baseline as string, 10) : 10;
+  const pace = params.pace ? parseInt(params.pace as string, 10) : 5;
   const price = params.price ? parseFloat(params.price as string) : 0;
   const currency = (params.currency as CurrencyCode | undefined) ?? 'DKK';
   const devLog = (...args: unknown[]) => { if (__DEV__) console.log(...args); };
@@ -75,8 +76,8 @@ export default function TriggersScreen() {
         devWarn('Warning: Data not fully deleted before creating new', { checkSettings, checkPlan });
       }
 
-      devLog('Onboarding complete: Saving new taper settings...', { baseline, price, triggers: selectedTriggers });
-      const settings = generateDefaultTaperPlan(baseline, 5);
+      devLog('Onboarding complete: Saving new taper settings...', { baseline, pace, price, triggers: selectedTriggers });
+      const settings = generateDefaultTaperPlan(baseline, pace);
       const settingsId = await saveTaperSettings({
         ...settings,
         pricePerCan: price > 0 ? Math.round(price * 100) : undefined,

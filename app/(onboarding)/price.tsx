@@ -16,6 +16,7 @@ export default function PriceScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
   const baseline = params.baseline ? parseInt(params.baseline as string, 10) : 10;
+  const pace = params.pace ? parseInt(params.pace as string, 10) : 5;
 
   const [price, setPrice] = useState('');
   const [currency, setCurrency] = useState<CurrencyCode>('DKK');
@@ -40,6 +41,7 @@ export default function PriceScreen() {
       pathname: '/(onboarding)/triggers',
       params: {
         baseline: baseline.toString(),
+        pace: pace.toString(),
         price: normalizedPrice || '0',
         currency,
       },
