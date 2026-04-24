@@ -20,7 +20,11 @@
 module.exports = {
   expo: {
     name: 'Wean Nicotine',
-    slug: 'wean-nicotine',
+    // Intentionally kept as 'Taper' — Expo's slug is immutable after a
+    // project is created (tied to the EAS projectId below). Changing it
+    // breaks EAS project linking. Like bundleIdentifier, this is a
+    // legacy technical identifier that users never see.
+    slug: 'Taper',
     version: '1.3.0',
     orientation: 'portrait',
     icon: './assets/images/ios-light.png',
