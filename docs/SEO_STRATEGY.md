@@ -123,7 +123,7 @@ Footer links to all 8 English SEO landing pages in two columns ("Resources" + "G
 
 ### App Store metadata (copy-paste ready)
 
-Disse felter er allerede dokumenteret i `docs/APP_STORE_METADATA.md` og er opdateret til v1.2. De vigtigste:
+Disse felter er allerede dokumenteret i `docs/APP_STORE_METADATA.md` og er opdateret til v1.3. De vigtigste:
 
 **App name:** Wean Nicotine (verificer dette er det der står i App Store Connect)  
 **Subtitle (30 tegn):** `Reduce nicotine at your pace`  

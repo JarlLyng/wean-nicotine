@@ -90,18 +90,18 @@ Update when:
 
 ### Navigation model
 
-- `app/(onboarding)/`: welcome and initial setup flow
-- `app/(tabs)/home.tsx`: daily allowance and quick logging
+- `app/(onboarding)/`: welcome, baseline, pace (3–15% weekly reduction), price, triggers — 4 setup steps
+- `app/(tabs)/home.tsx`: daily allowance and quick logging; data layer lives in [`hooks/useHomeData.ts`](../hooks/useHomeData.ts); undo toast after every log entry
 - `app/(tabs)/progress.tsx`: progress summary with 7-day bar chart, trend tracking, and milestones
 - `app/(tabs)/tools/`: breathing, urge-surfing, reflection support flows
-- `app/(tabs)/settings/`: notifications, reset, and app settings
+- `app/(tabs)/settings/`: notifications, theme, edit plan (baseline/pace/price), start over
 
 ### UI system
 
 - [`lib/design.ts`](../lib/design.ts) defines the IAMJARL Design System tokens (v0.1.3).
 - [`lib/theme.ts`](../lib/theme.ts) exposes backward-compatible theme helpers.
 - [`components/Screen.tsx`](../components/Screen.tsx) is a content wrapper (no title/SafeAreaView — native headers handle that).
-- `components/ui/` contains reusable primitives: `Button` (with haptics), `Card`, `ProgressRing`, `Icon` (Phosphor), `StatCard`, `IconSymbol` (SF Symbols for tabs).
+- `components/ui/` contains reusable primitives: `Button` (with haptics), `Card`, `ProgressRing`, `Icon` (Phosphor), `StatCard`, `IconSymbol` (SF Symbols for tabs), `Toast` (transient notification with optional action).
 - Navigation uses native iOS tab bar (SF Symbols) and native Expo Router Stack headers with Large Title support.
 - React Compiler is enabled (`reactCompiler: true`) for automatic memoization.
 
@@ -198,6 +198,15 @@ Canonical implementation: [`lib/notifications.ts`](../lib/notifications.ts)
 - Supports a single daily trigger reminder based on selected triggers.
 - Existing reminders are cancelled before replacement to avoid duplicate schedules.
 
+## Testing
+
+- `jest-expo` preset configured in `package.json`.
+- Unit tests live under `lib/__tests__/`.
+  - [`taper-plan.test.ts`](../lib/__tests__/taper-plan.test.ts): allowance math, default plan generation, edge cases.
+  - [`progress.test.ts`](../lib/__tests__/progress.test.ts): weekly progress, total + milestone detection, week boundaries. DB layer (`getLogEntries`) is mocked.
+- Run tests: `npm test` or `npm run test:watch`.
+- Target: pure functions in `lib/` are fully covered. Screen and hook tests are not part of the baseline.
+
 ## Website Architecture
 
 ### Purpose
@@ -233,19 +242,22 @@ SEO intent and landing-page plan are described in [`SEO_STRATEGY.md`](./SEO_STRA
 - Domain types: [`lib/models.ts`](../lib/models.ts)
 - Design tokens: [`lib/design.ts`](../lib/design.ts), [`lib/theme.ts`](../lib/theme.ts)
 - Persistence: [`lib/db.ts`](../lib/db.ts) and `lib/db-*.ts`
+- Home screen data layer: [`hooks/useHomeData.ts`](../hooks/useHomeData.ts)
 - Notifications: [`lib/notifications.ts`](../lib/notifications.ts)
 - Error reporting: [`lib/sentry.ts`](../lib/sentry.ts)
+- Tests: `lib/__tests__/` (jest-expo)
 - Task tracking: [GitHub Issues](https://github.com/JarlLyng/wean-nicotine/issues) with labels `P1`/`P2`/`P3`, `seo`, `aso`, `website`, `marketing`, `enhancement`
 - Repo-level orientation: [`docs/README.md`](./README.md)
 
 ## Change Checklist For LLMs And Contributors
 
-- Before editing a screen, inspect both the route file and the supporting `lib/` module it depends on.
+- Before editing a screen, inspect both the route file and the supporting `lib/` module or hook it depends on (e.g., home.tsx → `hooks/useHomeData.ts`).
 - Before changing a data field, update `lib/models.ts`, the relevant `db-*.ts` files, and any migration needs in `lib/db.ts`.
-- Before changing the tapering logic, update `lib/taper-plan.ts` and verify the screens that display allowance or progress.
+- Before changing the tapering logic in `lib/taper-plan.ts`, run `npm test` — changes should not break the 20 existing unit tests unless the rule itself is changing.
 - Before changing visual tokens, inspect `lib/design.ts`, `lib/theme.ts`, and shared UI primitives.
 - Before changing notifications, inspect both settings screens and `lib/notifications.ts`.
 - Before changing website messaging, check whether the change should also affect SEO docs, privacy copy, or App Store metadata.
+- Before adding a new route, re-run `npx expo start` once so `.expo/types/router.d.ts` regenerates typed routes.
 
 ## Known Pitfalls
 

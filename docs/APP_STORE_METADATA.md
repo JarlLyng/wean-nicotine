@@ -37,22 +37,20 @@ Alternativer:
 
 ---
 
-## iOS App Version 1.2 — Distribution
+## iOS App Version 1.3 — Distribution
 
 ### Promotional Text (valgfrit, max 170 tegn)
 Kan ændres uden ny version:
 ```
-Track your daily nicotine use, set a reduction plan, and build lasting habits. No shame—just progress. Data stays on your device.
+Track your daily nicotine use, choose your own reduction pace, and adjust your plan anytime. No shame—just progress. Data stays on your device.
 ```
 
-### What's New (v1.2)
+### What's New (v1.3)
 ```
-• Enhanced Breathing Exercise: New patterns (4-7-8, Box, Quick Calm), duration selection, and rhythmic haptic feedback
-• New Session Counter: Track your total breathing and mindfulness sessions
-• Interactive Urge Surfing: Guided 5-minute timer with step-by-step instructions and "log as resisted" functionality
-• Reflection Journal: Save your reflections as dated notes, view your history, and explore categorized prompts
-• New Cost Savings Tool: See exactly how much you've saved based on your current pouch price (Weekly/Monthly breakdown)
-• Performance improvements and minor bug fixes
+• Choose your own taper pace during onboarding — 3%, 5%, 7%, 10%, or 15% weekly reduction
+• Edit your plan anytime from Settings — adjust baseline, pace, or price without losing your log history
+• Undo pouch logging with a 5-second toast after every tap
+• Quality-of-life improvements under the hood for a smoother experience
 ```
 
 ### Description (fuld beskrivelse, SEO-optimeret)
@@ -142,18 +140,20 @@ Follow the strategy in [`SEO_STRATEGY.md`](./SEO_STRATEGY.md) section 23. Transl
 Wean Nicotine hjælper dig med at reducere dit nikotinforbrug skridt for skridt – uanset om du bruger snus, nikotinposer eller lignende produkter. Sæt dit eget tempo, registrer dit daglige forbrug, og se dine fremskridt over tid. Alle data bliver på din enhed.
 
 SÅDAN FUNGERER DET
-• Sæt et udgangspunkt og et ugentligt mål for nedtrapning
-• Registrer brugte poser og modstået trang hver dag
+• Sæt dit udgangspunkt for daglig brug under onboarding
+• Vælg dit ugentlige tempo (3–15 %, standard 5 %)
+• Registrer brugte poser og modstået trang hver dag med ét tryk
+• Fortryd forkerte log-entries inden for 5 sekunder efter et tryk
+• Ændr din plan når som helst i Indstillinger — uden at miste historik
 • Se dit daglige forbrug i en ugentlig oversigt med tendenssporing
 • Optjen medaljer efterhånden som du når nye mål
 • Brug indbyggede værktøjer: vejrtrækningsøvelser, Urge Surfing og logbog
 
-NYT I 1.2
-• Avanceret vejrtrækning: Vælg mellem 4-7-8, Box Breathing eller Quick Calm
-• Interaktiv Urge Surfing: En 5-minutters guidet timer der hjælper dig gennem trangen
-• Refleksions-logbog: Gem dine tanker med datoer og se din historik
-• Økonomisk overblik: Se præcis hvor meget du har sparet i kr. siden start
-• Flottere animationer og mærkbar haptisk feedback
+NYT I 1.3
+• Vælg dit eget tempo under onboarding — 3 %, 5 %, 7 %, 10 % eller 15 % ugentlig nedtrapning
+• Ændr din plan når som helst i Indstillinger — juster baseline, tempo eller pris uden at miste loghistorik
+• Fortryd-toast i 5 sekunder efter hvert tryk
+• Forbedringer under hætten for en mere flydende oplevelse
 ```
 
 ### Swedish (sv-SE)
@@ -161,14 +161,23 @@ NYT I 1.2
 - **Keywords:** `nikotin,snus,minska,sluta,nedtrappning,vana,spårning,prilla,framsteg,hälsa,portionssnus,vittsnus`
 - **Description:**
 ```
-Wean Nicotine hjälper dig att minska på snusandet steg för steg – oavsett om du använder portionssnus, vitt snus eller liknande produkter. Sätt din egen takt, logga din dagliga användning och se dina framsteg över tid. All data stannar på din enhed.
+Wean Nicotine hjälper dig att minska på snusandet steg för steg – oavsett om du använder portionssnus, vitt snus eller liknande produkter. Sätt din egen takt, logga din dagliga användning och se dina framsteg över tid. All data stannar på din enhet.
 
 HUR DET FUNGERAR
-• Sätt en baslinje och ett veckovis mål för nedtrappning
-• Logga använda prillor och hanterat sug varje dag
+• Ange din baslinje för daglig användning under introduktionen
+• Välj din veckovisa takt (3–15 %, standard 5 %)
+• Logga använda prillor och hanterat sug varje dag med ett tryck
+• Ångra felaktiga loggningar i 5-sekundersfönstret efter ett tryck
+• Ändra din plan när som helst i Inställningar — utan att förlora historik
 • Se din dagliga användning i ett veckoschema med trendspårning
 • Tjäna medaljer när du når nya mål
 • Använd inbyggda verktyg: andningsövningar och stöd för suget
+
+NYTT I 1.3
+• Välj din egen takt under introduktionen — 3, 5, 7, 10 eller 15 % veckovis nedtrappning
+• Ändra din plan när som helst i Inställningar — justera baslinje, takt eller pris utan att förlora logghistoriken
+• Ångra-toast i 5 sekunder efter varje tryck
+• Förbättringar under huven för en smidigare upplevelse
 ```
 
 ### Norwegian (no-NO)
@@ -176,14 +185,23 @@ HUR DET FUNGERAR
 - **Keywords:** `nikotin,snus,nedtrapping,slutte,redusere,vane,logging,poser,fremgang,helse,nikotinposer,taper`
 - **Description:**
 ```
-Wean Nicotine hjelper deg med å redusere snusbruk steg for steg – uanset om du bruker snus, nikotinposer eller lignende produkter. Sett ditt eget tempo, logg ditt daglige bruk, og se fremgangen over tid. Alle data blir på din enhed.
+Wean Nicotine hjelper deg med å redusere snusbruken steg for steg – uansett om du bruker snus, nikotinposer eller lignende produkter. Sett ditt eget tempo, logg ditt daglige bruk, og se fremgangen over tid. Alle data blir på enheten din.
 
 SLIK FUNGERER DET
-• Sett et nullpunkt og et ukentlig mål for nedtrapping
-• Logg brukte poser og motstått sug hver dag
+• Sett utgangspunktet for daglig bruk under onboarding
+• Velg ditt ukentlige tempo (3–15 %, standard 5 %)
+• Logg brukte poser og motstått sug hver dag med ett trykk
+• Angre feillogging innen 5 sekunder etter et trykk
+• Endre planen din når som helst i Innstillinger — uten å miste loggene
 • Se ditt daglige forbruk i en ukentlig oversikt med trendsporing
 • Tjen medaljer etter hvert som du når nye mål
 • Bruk innebygde verktøy: pusteøvelser og hjelp mot sug
+
+NYTT I 1.3
+• Velg ditt eget tempo under onboarding — 3 %, 5 %, 7 %, 10 % eller 15 % ukentlig nedtrapping
+• Endre planen din når som helst i Innstillinger — juster utgangspunkt, tempo eller pris uten å miste logghistorikken
+• Angre-toast i 5 sekunder etter hvert trykk
+• Forbedringer under panseret for en smidigere opplevelse
 ```
 
 ---
