@@ -17,7 +17,7 @@ import { captureError } from '@/lib/sentry';
 import { getTaperSettings, saveTaperSettings } from '@/lib/db-settings';
 import { saveUserPlan } from '@/lib/db-user-plan';
 import { calculateDailyAllowance } from '@/lib/taper-plan';
-import { spacing, borderRadius, typography } from '@/lib/theme';
+import { spacing, borderRadius, typography, fontWeights } from '@/lib/theme';
 import { useRouter } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
 import {
@@ -219,7 +219,7 @@ export default function EditPlanScreen() {
               </Text>
               <View style={s.priceRow}>
                 <TextInput
-                  style={[s.input, s.priceInput]}
+                  style={s.input}
                   value={pricePerCan}
                   onChangeText={(t) => {
                     setPricePerCan(t);
@@ -296,18 +296,22 @@ const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) =>
       marginBottom: spacing.md,
     } as TextStyle,
     input: {
-      borderWidth: 1,
-      borderColor: colors.border.default,
-      backgroundColor: colors.background.card,
-      borderRadius: borderRadius.md,
-      padding: spacing.md,
-      ...typography.lg,
+      fontSize: 32,
+      lineHeight: 40,
+      fontWeight: fontWeights.bold,
       color: colors.text.primary,
+      textAlign: 'center',
+      width: '100%',
+      paddingVertical: spacing.md,
+      borderBottomWidth: 2,
+      borderBottomColor: colors.border.subtle,
+      backgroundColor: 'transparent',
     } as TextStyle,
     inputUnit: {
       ...typography.caption,
       color: colors.text.tertiary,
       marginTop: spacing.xs,
+      textAlign: 'center',
     } as TextStyle,
     presetRow: {
       flexDirection: 'row',
@@ -346,11 +350,8 @@ const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) =>
       color: colors.primary,
     } as TextStyle,
     priceRow: {
-      gap: spacing.sm,
+      gap: spacing.md,
     } as ViewStyle,
-    priceInput: {
-      flex: 0,
-    } as TextStyle,
     currencyRow: {
       flexDirection: 'row',
       flexWrap: 'wrap',
