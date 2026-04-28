@@ -1,0 +1,74 @@
+# Dependabot configuration for Wean Nicotine
+#
+# Three ecosystems are watched:
+#  - root npm (the Expo/React Native app)
+#  - website npm (the Astro marketing site)
+#  - github-actions (workflow versions)
+#
+# Updates are grouped per ecosystem to keep PR noise low. Major versions
+# are only opened individually for the app since Expo upgrades require
+# care; everything else groups minor + patch together.
+#
+# See https://docs.github.com/en/code-security/dependabot for the full
+# schema.
+
+version: 2
+updates:
+  # Mobile app (Expo / React Native)
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "07:00"
+      timezone: Europe/Copenhagen
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - app
+    groups:
+      app-minor-and-patch:
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch
+    # Expo SDK and React Native majors require manual upgrade dance —
+    # let Dependabot open them as individual PRs we can review carefully.
+    ignore:
+      - dependency-name: "expo"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react-native"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react"
+        update-types: ["version-update:semver-major"]
+
+  # Marketing website (Astro)
+  - package-ecosystem: npm
+    directory: "/website"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "07:00"
+      timezone: Europe/Copenhagen
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - website
+    groups:
+      website-all:
+        patterns:
+          - "*"
+
+  # GitHub Actions workflow versions
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "07:00"
+      timezone: Europe/Copenhagen
+    open-pull-requests-limit: 3
+    labels:
+      - dependencies
+      - ci

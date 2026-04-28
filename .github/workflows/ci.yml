@@ -1,0 +1,77 @@
+# CI pipeline for Wean Nicotine
+#
+# Runs on every PR and on push to main. Two parallel jobs:
+#  - app: lint, typecheck, tests, expo-doctor
+#  - website: build the Astro marketing site
+#
+# Both must be green for merge protection to allow the PR through.
+#
+# Node version is pinned via .nvmrc (or falls back to 22) — match the
+# version EAS uses for production builds. expo-doctor is informational
+# only (does not fail the build) since some checks may produce expected
+# warnings (e.g. transitive vulnerabilities outside our control).
+
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+# Cancel older runs of the same branch when a new push comes in
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  app:
+    name: App (lint + typecheck + tests)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Lint
+        run: CI=1 npx expo lint
+        env:
+          # No DSN needed for lint
+          EXPO_PUBLIC_SENTRY_DSN: ""
+
+      - name: TypeScript check
+        run: npx tsc --noEmit
+
+      - name: Run tests
+        run: npm test -- --runInBand
+
+      - name: expo-doctor (informational)
+        run: npx expo-doctor || true
+
+  website:
+    name: Website (build)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: website/package-lock.json
+
+      - name: Install website dependencies
+        run: npm ci
+        working-directory: website
+
+      - name: Build website
+        run: npm run build
+        working-directory: website
