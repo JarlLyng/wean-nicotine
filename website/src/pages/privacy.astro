@@ -56,11 +56,12 @@ const lastUpdated = '2026-01-21';
 
 			<h2>Third‑party services</h2>
 			<p>
-				If enabled in the build, Wean Nicotine may use <strong>Sentry</strong> for crash/error reporting to help us
-				improve app stability. If used, Sentry may receive error events and basic device/app context
-				necessary to diagnose issues (for example: app version, device model, OS version, and a crash stack
-				trace). Your pouch logs, plan settings, and other usage data are not sent to Sentry. We do not use
-				Sentry for advertising.
+				If enabled in the build, Wean Nicotine uses <strong>Sentry</strong> for crash and error reporting to help us
+				improve app stability. Sentry receives exception messages, stack traces, and basic device/app context
+				(app version, device model, OS version) plus screen-transition timing for performance monitoring.
+				Your pouch logs, plan settings, baseline, price, currency, and triggers are <em>never</em> sent to Sentry —
+				this is enforced both by how we call Sentry and by an automatic scrubber that strips known sensitive
+				fields before transmission. We do not use Sentry for advertising.
 			</p>
 
 			<h2>Website analytics</h2>

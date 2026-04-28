@@ -38,6 +38,13 @@ Sentry is configured in three layers:
   - `enableTimeToInitialDisplay: true` measures render time per screen
 - **`tracesSampleRate`**: 20% in production (was 10% in v1.0)
 
+### Privacy hardening
+
+- **`sendDefaultPii: false`** is set explicitly. Sentry will not auto-collect IP, cookies, headers, or other request metadata.
+- **`beforeSend` PII scrubber** strips known sensitive keys from `event.extra` before transmission. The list lives in `PII_KEYS` in `lib/sentry.ts` and covers: baseline, pricePerCan, currency, triggers, raw, pouchesUsedToday, cravingsResistedToday, dailyAllowance, currentDailyAllowance, weeklyReductionPercent, logEntries, userPlan, taperSettings.
+- Callers of `captureError(err, extra)` **must not** pass user values in `extra`. Pass only technical strings (`context`, `screen`, `operation`). The scrubber is defense-in-depth, not a license to be sloppy.
+- Tests for the scrubber live in [`lib/__tests__/sentry-scrubber.test.ts`](../lib/__tests__/sentry-scrubber.test.ts) — extend them when `PII_KEYS` changes.
+
 ### Error capture coverage
 
 All catch blocks in the app report to Sentry in production:

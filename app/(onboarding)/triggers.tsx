@@ -105,7 +105,9 @@ export default function TriggersScreen() {
       router.replace('/(tabs)/home');
     } catch (error) {
       if (__DEV__) console.error('Error completing onboarding:', error);
-      if (error instanceof Error) captureError(error, { context: 'onboarding_complete', baseline, price, currency });
+      // Note: only technical context is sent — never user values like baseline, price,
+      // currency, or triggers. See lib/sentry.ts beforeSend for the canonical scrubber.
+      if (error instanceof Error) captureError(error, { context: 'onboarding_complete' });
       Alert.alert('Error', 'Something went wrong. Please try again.');
     } finally {
       setIsSaving(false);

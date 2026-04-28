@@ -7,12 +7,60 @@
  * - Root component wrapped with Sentry.wrap() for native crash capture
  * - Sentry.ErrorBoundary wraps the React tree for JS error fallback
  * - captureError() called in every production catch-block
+ *
+ * Privacy guarantees (must stay aligned with website + App Store privacy copy):
+ * - sendDefaultPii is false — Sentry will not collect IP, cookies, etc.
+ * - User-controlled values (baseline pouches/day, price, currency, triggers,
+ *   pouch logs, allowance, weeklyReductionPercent) are NEVER sent. Callers
+ *   pass only technical `context` strings; the beforeSend scrubber below
+ *   enforces this as defense-in-depth in case someone forgets.
+ * - Performance tracing is enabled at 20% in production. Traces include
+ *   screen names and timing, no usage values.
  */
 
 import * as Sentry from '@sentry/react-native';
 import { reactNavigationIntegration } from '@sentry/react-native';
 import Constants from 'expo-constants';
 import { Platform } from 'react-native';
+
+/**
+ * Keys that must never reach Sentry. If any captureError caller passes one of
+ * these in `extra`, beforeSend strips it before the event is sent. This is a
+ * safety net — callers should not pass user data in the first place.
+ */
+const PII_KEYS = new Set<string>([
+  'baseline',
+  'baselinePouchesPerDay',
+  'price',
+  'pricePerCan',
+  'currency',
+  'triggers',
+  'raw',
+  'pouchesUsedToday',
+  'cravingsResistedToday',
+  'dailyAllowance',
+  'currentDailyAllowance',
+  'weeklyReductionPercent',
+  'logEntries',
+  'userPlan',
+  'taperSettings',
+]);
+
+/**
+ * Strip known PII keys from a Sentry `extra` payload. Exported for unit testing.
+ */
+export function scrubExtra(extra: Record<string, unknown> | undefined): Record<string, unknown> | undefined {
+  if (!extra) return extra;
+  const cleaned: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(extra)) {
+    if (PII_KEYS.has(key)) {
+      cleaned[key] = '[scrubbed]';
+    } else {
+      cleaned[key] = value;
+    }
+  }
+  return cleaned;
+}
 
 /** True only when we had a DSN and called Sentry.init() – use to show "not configured" in Diagnostics. */
 let sentryInitialized = false;
@@ -63,7 +111,10 @@ export function initSentry(): void {
     environment: __DEV__ ? 'development' : 'production',
     enableAutoSessionTracking: true,
     sessionTrackingIntervalMillis: 30000,
-    tracesSampleRate: __DEV__ ? 1.0 : 0.2, // 20% of transactions in production (was 10%)
+    tracesSampleRate: __DEV__ ? 1.0 : 0.2, // 20% of transactions in production
+    // Privacy: do not auto-collect IP addresses, cookies, headers, etc.
+    // We only want stack traces + technical context strings.
+    sendDefaultPii: false,
     // Attach app version and build info
     release: Constants.expoConfig?.version || '1.0.0',
     dist: Constants.expoConfig?.ios?.buildNumber || Constants.expoConfig?.android?.versionCode?.toString() || undefined,
@@ -73,6 +124,18 @@ export function initSentry(): void {
         console.log('Sentry event (dev mode - not sent):', event.exception?.values?.[0]?.value ?? event.message);
         return null;
       }
+
+      // Defense-in-depth: scrub any sensitive user-data keys that may have
+      // accidentally been passed via captureError(extra). Callers should not
+      // pass user data in the first place — see PII_KEYS above for the list.
+      if (event.extra) {
+        event.extra = scrubExtra(event.extra);
+      }
+      // contexts.extra is another path Sentry merges into events
+      if (event.contexts?.extra) {
+        event.contexts.extra = scrubExtra(event.contexts.extra as Record<string, unknown>);
+      }
+
       return event;
     },
     // Default integrations (ANR detection, app start, native crashes, screenshots)

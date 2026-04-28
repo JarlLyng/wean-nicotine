@@ -134,7 +134,9 @@ export async function getTaperSettings(): Promise<TaperSettings | null> {
       triggers = JSON.parse(result.triggers);
     } catch (error) {
       if (__DEV__) console.error('Error parsing triggers JSON:', error);
-      if (error instanceof Error) captureError(error, { context: 'db_settings_parse_triggers', raw: result.triggers });
+      // Note: do NOT include the raw triggers string — it contains user-selected
+      // contexts (e.g. "Coffee", "Stress") which are personal usage data.
+      if (error instanceof Error) captureError(error, { context: 'db_settings_parse_triggers' });
       triggers = undefined;
     }
   }

@@ -56,10 +56,10 @@ const lastUpdated = '2026-01-21';
 
 			<h2>Tredjepartstjenester</h2>
 			<p>
-				Hvis aktivert i utgivelsen, kan Wean Nicotine bruke <strong>Sentry</strong> for rapportering av feil/krasj for å hjelpe
-				oss med å forbedre appstabiliteten. Hvis den brukes, kan Sentry motta feilhendelser og grunnleggende enhets-/appkontekst
-				som er nødvendig for å diagnostisere problemer (for eksempel: appversjon, enhetsmodell, OS-versjon og sporing av krasj).
-				Posefloggene dine, planinnstillinger og andre brukerdata sendes ikke til Sentry. Vi bruker ikke Sentry for annonsering.
+				Hvis aktivert i utgivelsen, bruker Wean Nicotine <strong>Sentry</strong> for rapportering av feil og krasj for å hjelpe
+				oss med å forbedre appstabiliteten. Sentry mottar feilhendelser og grunnleggende enhets-/appkontekst
+				som er nødvendig for diagnostikk (for eksempel: appversjon, enhetsmodell, OS-versjon og krasj-sporing) pluss tidsmåling av skjermoverganger for ytelsesovervåking.
+				Posefloggene dine, planinnstillinger, utgangspunkt, pris, valuta og triggere sendes <em>aldri</em> til Sentry — dette sikres både av måten vi kaller Sentry på, og av en automatisk scrubber som fjerner kjente sensitive felter før sending. Vi bruker ikke Sentry for annonsering.
 			</p>
 
 			<h2>Webanalyse</h2>
