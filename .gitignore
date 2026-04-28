@@ -56,3 +56,6 @@ build-*.ipa
 # Marketing site (Astro)
 website/.astro/
 CODEX_ANBEFALINGER.md
+
+# Claude Code local config (not portable across machines)
+.claude/

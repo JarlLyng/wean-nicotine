@@ -47,7 +47,7 @@ Wean helps users:
 
 ---
 
-## 📱 MVP feature set
+## 📱 Current feature set
 
 ### Onboarding
 - Set baseline usage (pouches per day)
@@ -237,7 +237,7 @@ All planned work is tracked in [GitHub Issues](https://github.com/JarlLyng/wean-
 
 ## 📄 License
 
-License not yet specified. All rights reserved until stated otherwise.
+[MIT](./LICENSE) © 2026 IAMJARL.
 
 ---
 

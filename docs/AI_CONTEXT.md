@@ -253,7 +253,7 @@ SEO intent and landing-page plan are described in [`SEO_STRATEGY.md`](./SEO_STRA
 
 - Before editing a screen, inspect both the route file and the supporting `lib/` module or hook it depends on (e.g., home.tsx → `hooks/useHomeData.ts`).
 - Before changing a data field, update `lib/models.ts`, the relevant `db-*.ts` files, and any migration needs in `lib/db.ts`.
-- Before changing the tapering logic in `lib/taper-plan.ts`, run `npm test` — changes should not break the 20 existing unit tests unless the rule itself is changing.
+- Before changing the tapering logic in `lib/taper-plan.ts`, run `npm test` — changes should not break the existing unit tests unless the rule itself is changing.
 - Before changing visual tokens, inspect `lib/design.ts`, `lib/theme.ts`, and shared UI primitives.
 - Before changing notifications, inspect both settings screens and `lib/notifications.ts`.
 - Before changing website messaging, check whether the change should also affect SEO docs, privacy copy, or App Store metadata.
