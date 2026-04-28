@@ -33,14 +33,30 @@ updates:
         update-types:
           - minor
           - patch
-    # Expo SDK and React Native majors require manual upgrade dance —
-    # let Dependabot open them as individual PRs we can review carefully.
+    # Expo SDK, React Native, and React majors require manual upgrade dance.
+    # React Native minor bumps (0.83 → 0.85 etc.) are also breaking in practice
+    # because of native code + jest preset migrations, even though semver
+    # technically calls them minor. Block both to avoid surprise CI failures.
     ignore:
       - dependency-name: "expo"
-        update-types: ["version-update:semver-major"]
+        update-types:
+          - "version-update:semver-major"
+          - "version-update:semver-minor"
       - dependency-name: "react-native"
-        update-types: ["version-update:semver-major"]
+        update-types:
+          - "version-update:semver-major"
+          - "version-update:semver-minor"
       - dependency-name: "react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react-dom"
+        update-types: ["version-update:semver-major"]
+      # Major-version bumps for these dev tools are tracked manually too —
+      # they tend to require config migrations.
+      - dependency-name: "eslint"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "jest"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "typescript"
         update-types: ["version-update:semver-major"]
 
   # Marketing website (Astro)

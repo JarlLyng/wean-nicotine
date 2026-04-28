@@ -37,10 +37,26 @@ Alternativer:
 
 ---
 
-## iOS App Version 1.3 — Distribution (submitted 2026-04-24)
+## iOS App Version 1.3.1 — Distribution
 
 ### Promotional Text (valgfrit, max 170 tegn)
 Kan ændres uden ny version:
+```
+Pick your own taper pace. Edit your plan anytime. Undo accidental logs. All data stays on your iPhone — no cloud, no accounts, no subscriptions.
+```
+
+### What's New (v1.3.1)
+```
+• Polished the undo toast — now slides down from the top with stronger contrast so it's easier to read
+• Refreshed the Edit Plan screen for clearer inputs
+• Tightened the privacy story — added a built-in safety net so usage data never reaches our error reporter, even by accident
+• Updated to the latest design system colors
+• Dependency security updates and small under-the-hood improvements
+```
+
+## iOS App Version 1.3 — Distribution (submitted 2026-04-24, live)
+
+### Promotional Text (valgfrit, max 170 tegn)
 ```
 Pick your own taper pace. Edit your plan anytime. Undo accidental logs. All data stays on your iPhone — no cloud, no accounts, no subscriptions.
 ```
