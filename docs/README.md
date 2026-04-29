@@ -79,13 +79,23 @@ This makes the docs easier for LLMs to classify correctly and reduces accidental
 
 ## Document Catalog
 
+### In this directory (`docs/`)
+
 - [`AI_CONTEXT.md`](./AI_CONTEXT.md): Canonical repo overview for fast machine and human orientation.
 - [`design.md`](./design.md): Design-system principles and token usage.
 - [`SEO_STRATEGY.md`](./SEO_STRATEGY.md): SEO positioning and content architecture for the website.
-- [`SENTRY.md`](./SENTRY.md): Sentry setup and troubleshooting.
-- [`APP_STORE_METADATA.md`](./APP_STORE_METADATA.md): App Store listing copy and metadata.
+- [`SENTRY.md`](./SENTRY.md): Sentry setup, privacy hardening, and troubleshooting.
+- [`APP_STORE_METADATA.md`](./APP_STORE_METADATA.md): App Store listing copy and metadata for all storefronts.
 - [`PRIVACY_APP_STORE.md`](./PRIVACY_APP_STORE.md): App privacy answers for App Store Connect.
 - [`decisions/storage.md`](./decisions/storage.md): ADR for local persistence.
+
+### At the repo root
+
+- [`../README.md`](../README.md): Product framing, setup instructions, release workflow.
+- [`../CONTRIBUTING.md`](../CONTRIBUTING.md): How outside contributors should report bugs, suggest features, or open PRs.
+- [`../SECURITY.md`](../SECURITY.md): Vulnerability disclosure policy.
+- [`../CODEOWNERS`](../CODEOWNERS): Auto-review-request configuration.
+- [`../LICENSE`](../LICENSE): MIT license.
 
 ## Change Guidance
 

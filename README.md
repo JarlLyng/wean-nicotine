@@ -47,7 +47,7 @@ Wean helps users:
 
 ---
 
-## 📱 Current feature set
+## 📱 Feature set
 
 ### Onboarding
 - Set baseline usage (pouches per day)
@@ -61,8 +61,9 @@ Wean helps users:
 - Calm, non-judgmental UI even if you go over the limit
 
 ### Taper plan
-- Automatic reduction over time (weekly % reduction)
-- Default pace is intentionally simple (MVP)
+- Automatic weekly reduction with user-selectable pace (3% to 15%)
+- Edit baseline, pace, or price anytime from Settings without losing log history
+- Undo accidental logs within a 5-second window
 
 ### Progress & motivation
 - Pouches avoided vs baseline
@@ -88,7 +89,7 @@ Wean helps users:
 - **Local‑first storage** (SQLite via `expo-sqlite`)
 - **Expo Notifications**
 - **Sentry** (error tracking & monitoring)
-- No backend in MVP
+- No backend — by design
 
 **Note:** This app is designed for mobile (iOS/Android) only. SQLite is not available on web browsers.
 Initial release focus is **iPhone**.
@@ -134,7 +135,7 @@ See [`docs/README.md`](./docs/README.md) for the documentation index and [`docs/
 
 ---
 
-## 🚫 Out of scope (MVP)
+## 🚫 Out of scope
 
 - Accounts / login
 - Cloud sync
@@ -209,7 +210,7 @@ npx expo run:android
 
 - **Bundle ID:** `com.iamjarl.taper`
 - **Lokalt build (IPA) – Expo fra terminal:**
-  1. **Build-nummer:** I `app.config.js` skal `ios.buildNumber` være højere end det sidste build uploadet til App Store Connect. Version (`version`) er bruger-synlig (aktuelt `1.3.0`) og bumpes kun ved en egentlig app-opdatering.
+  1. **Build-nummer:** I `app.config.js` skal `ios.buildNumber` være højere end det sidste build uploadet til App Store Connect. Version (`version`) er bruger-synlig (aktuelt `1.3.1`) og bumpes kun ved en egentlig app-opdatering.
   2. **Sentry:** Opret EAS Secret så DSN er med i buildet:  
      `eas env:create --name EXPO_PUBLIC_SENTRY_DSN --value "https://din-dsn@xxx.ingest.sentry.io/xxx" --environment production --visibility plaintext`
   3. Fra projektroden:

@@ -46,13 +46,44 @@ Pick your own taper pace. Edit your plan anytime. Undo accidental logs. All data
 ```
 
 ### What's New (v1.3.1)
+
+**English:**
 ```
-• Polished the undo toast — now slides down from the top with stronger contrast so it's easier to read
-• Refreshed the Edit Plan screen for clearer inputs
-• Tightened the privacy story — added a built-in safety net so usage data never reaches our error reporter, even by accident
-• Updated to the latest design system colors
-• Dependency security updates and small under-the-hood improvements
+• Undo toast now appears at the top with stronger contrast — easier to see and tap
+• Cleaner inputs on the Edit Plan screen
+• Refreshed brand color
+• Tightened privacy: extra safeguards keep your usage data out of error reports
+• Stability and small fixes
 ```
+
+**Danish:**
+```
+• Fortryd-toasten kommer nu fra toppen med bedre kontrast — lettere at se og trykke på
+• Klarere inputfelter på "Ret plan"-skærmen
+• Opdateret brandfarve
+• Strammet privatliv: ekstra sikkerhedsnet holder dine brugsdata ude af fejlrapporter
+• Stabilitet og mindre rettelser
+```
+
+**Swedish:**
+```
+• Ångra-toasten visas nu från toppen med bättre kontrast — lättare att se och trycka på
+• Tydligare inmatningsfält på Ändra plan-skärmen
+• Uppdaterad varumärkesfärg
+• Skärpt integritet: extra skyddsnät håller din användningsdata borta från felrapporter
+• Stabilitet och småfixar
+```
+
+**Norwegian:**
+```
+• Angre-toasten vises nå fra toppen med bedre kontrast — lettere å se og trykke på
+• Tydeligere inntastingsfelt på Endre plan-skjermen
+• Oppdatert merkefarge
+• Skjerpet personvern: ekstra sikkerhetsnett holder brukerdataene dine borte fra feilrapporter
+• Stabilitet og småfikser
+```
+
+> Subtitle, Promotional Text, Description og Keywords er uændrede fra v1.3 — se sektionen længere nede.
 
 ## iOS App Version 1.3 — Distribution (submitted 2026-04-24, live)
 
@@ -146,7 +177,7 @@ Appen er kun til iPhone (`ios.supportsTablet: false`). Udfyld kun "Phone" med iP
 
 ## Localized Storefronts (submitted 2026-04-24)
 
-Endelige tekster som er indsendt til App Store Connect for v1.3.0 på dansk, svensk og norsk.
+Endelige tekster som er indsendt til App Store Connect for v1.3 på dansk, svensk og norsk. Disse subtitles, promo-tekster, descriptions og keywords er stadig aktuelle for v1.3.1 (kun "What's New" ændres mellem patch-releases — find 1.3.1 release notes længere oppe).
 
 ### Danish (da-DK)
 

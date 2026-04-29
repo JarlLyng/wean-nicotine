@@ -28,10 +28,11 @@ Update when:
 ## One-Screen Summary
 
 - `Wean Nicotine` is a mobile app that helps users reduce snus and nicotine pouch usage gradually.
-- The repo also contains the public marketing site in `website/`.
-- The app is local-first. There is no backend, no account system, and no cloud sync in the MVP.
+- The repo is **public** under MIT, also contains the marketing site in `website/`.
+- The app is local-first by design. No backend, no account system, no cloud sync.
 - The mobile app uses Expo SDK 55, Expo Router, SQLite, Expo Notifications, Sentry, and React Compiler.
-- The website uses Astro and contains SEO landing pages in multiple languages.
+- The website uses Astro and contains SEO landing pages in EN/DA/SV/NO.
+- Latest live App Store version: **1.3.1**.
 
 ## What Exists In This Repo
 
@@ -244,9 +245,11 @@ SEO intent and landing-page plan are described in [`SEO_STRATEGY.md`](./SEO_STRA
 - Persistence: [`lib/db.ts`](../lib/db.ts) and `lib/db-*.ts`
 - Home screen data layer: [`hooks/useHomeData.ts`](../hooks/useHomeData.ts)
 - Notifications: [`lib/notifications.ts`](../lib/notifications.ts)
-- Error reporting: [`lib/sentry.ts`](../lib/sentry.ts)
-- Tests: `lib/__tests__/` (jest-expo)
-- Task tracking: [GitHub Issues](https://github.com/JarlLyng/wean-nicotine/issues) with labels `P1`/`P2`/`P3`, `seo`, `aso`, `website`, `marketing`, `enhancement`
+- Error reporting: [`lib/sentry.ts`](../lib/sentry.ts) — includes the PII scrubber and `sendDefaultPii: false`. Privacy hardening details in [`SENTRY.md`](./SENTRY.md).
+- Tests: `lib/__tests__/` (jest-expo, 43 tests across 3 suites). Run via `npm test` or `npm run check`.
+- Task tracking: [GitHub Issues](https://github.com/JarlLyng/wean-nicotine/issues) with labels `P1`/`P2`/`P3`, `seo`, `aso`, `website`, `marketing`, `enhancement`.
+- Outside contributions: [`CONTRIBUTING.md`](../CONTRIBUTING.md) sets expectations for bug reports, feature requests, and PRs.
+- Security: [`SECURITY.md`](../SECURITY.md) for vulnerability disclosure. Repo has CodeQL + Dependabot + secret scanning enabled.
 - Repo-level orientation: [`docs/README.md`](./README.md)
 
 ## Change Checklist For LLMs And Contributors
