@@ -24,6 +24,11 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+# Least-privilege: this workflow only reads code and runs tests.
+# It does not need write access to anything.
+permissions:
+  contents: read
+
 jobs:
   app:
     name: App (lint + typecheck + tests)
