@@ -13,7 +13,7 @@
   <rect width="1200" height="630" fill="url(#r)"/>
   <g fill="#fff" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial" letter-spacing="-0.02em">
     <text x="80" y="210" font-size="72" font-weight="700">Wean Nicotine</text>
-    <text x="80" y="300" font-size="40" font-weight="600" opacity="0.92">Reduce snus and nicotine pouches  step by step.</text>
+    <text x="80" y="300" font-size="40" font-weight="600" opacity="0.92">Reduce snus and nicotine pouches step by step.</text>
     <text x="80" y="370" font-size="28" opacity="0.72">Calm. Private. No shame.</text>
   </g>
   <g>
@@ -22,4 +22,3 @@
     <circle cx="1020" cy="148" r="6" fill="rgba(255,255,255,0.22)"/>
   </g>
 </svg>
-

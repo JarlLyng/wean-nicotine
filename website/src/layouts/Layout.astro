@@ -27,7 +27,9 @@ const pageDescription =
 	'Reduce snus and nicotine pouches gradually with a calm, private app. Track daily allowance, log use in one tap, handle cravings, and see progress over time.';
 
 const canonicalUrl = new URL(canonicalPath ?? Astro.url.pathname, Astro.site).toString();
-const ogImageUrl = new URL('/og-image.svg', Astro.site).toString();
+// PNG (not SVG) — most social platforms reject SVG og:image
+// Regenerate via: cd website && node -e "require('sharp')(require('fs').readFileSync('public/og-image.svg'),{density:200}).resize(1200,630,{fit:'contain',background:'#000'}).png({compressionLevel:9}).toFile('public/og-image.png')"
+const ogImageUrl = new URL('/og-image.png', Astro.site).toString();
 
 const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
 const appStoreCtaLabel = appStoreKnown ? t('cta.appstore') : t('cta.comingsoon');
@@ -82,11 +84,16 @@ const structuredData: Record<string, unknown> = {
 		<meta property="og:description" content={pageDescription} />
 		<meta property="og:url" content={canonicalUrl} />
 		<meta property="og:image" content={ogImageUrl} />
+		<meta property="og:image:type" content="image/png" />
+		<meta property="og:image:width" content="1200" />
+		<meta property="og:image:height" content="630" />
+		<meta property="og:image:alt" content={`${SITE_NAME} — reduce snus and nicotine pouches step by step`} />
 
 		<meta name="twitter:card" content="summary_large_image" />
 		<meta name="twitter:title" content={pageTitle} />
 		<meta name="twitter:description" content={pageDescription} />
 		<meta name="twitter:image" content={ogImageUrl} />
+		<meta name="twitter:image:alt" content={`${SITE_NAME} — reduce snus and nicotine pouches step by step`} />
 
 		<meta name="apple-itunes-app" content="app-id=6758867485" />
 		<meta name="generator" content={Astro.generator} />
