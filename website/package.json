@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.2",
-    "astro": "^6.0.8"
+    "astro": "^6.2.1"
   },
   "devDependencies": {
     "@types/react": "~19.2.10",
