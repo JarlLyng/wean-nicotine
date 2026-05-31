@@ -141,35 +141,6 @@ export async function getLogEntriesForDay(date: Date): Promise<LogEntry[]> {
 }
 
 /**
- * Count log entries by type for a date range
- */
-export async function countLogEntriesByType(
-  type: LogEntryType,
-  startDate?: number,
-  endDate?: number
-): Promise<number> {
-  const db = await getDatabase();
-  let query = 'SELECT COUNT(*) as count FROM log_entries WHERE type = ?';
-  const params: (string | number | null)[] = [type];
-
-  if (startDate) {
-    query += ' AND timestamp >= ?';
-    params.push(startDate);
-  }
-
-  if (endDate) {
-    query += ' AND timestamp <= ?';
-    params.push(endDate);
-  }
-
-  const result = await db.getFirstAsync<{ count: number }>(query, params);
-  if (!result) {
-    return 0;
-  }
-  return result.count;
-}
-
-/**
  * Delete a log entry by ID
  */
 export async function deleteLogEntry(id: number): Promise<void> {
@@ -177,37 +148,6 @@ export async function deleteLogEntry(id: number): Promise<void> {
   await db.runAsync('DELETE FROM log_entries WHERE id = ?', [id]);
 }
 
-/**
- * Delete all log entries (used when resetting/starting over)
- */
-export async function deleteAllLogEntries(): Promise<void> {
-  const db = await getDatabase();
-  if (__DEV__) {
-    console.log('deleteAllLogEntries: Deleting all log entries...');
-  }
-
-  // First, count how many entries exist
-  const countBefore = await db.getFirstAsync<{ count: number }>('SELECT COUNT(*) as count FROM log_entries');
-  if (__DEV__) {
-    console.log('deleteAllLogEntries: Entries before deletion:', countBefore?.count || 0);
-  }
-
-  // Delete all entries
-  await db.runAsync('DELETE FROM log_entries');
-
-  // Verify deletion
-  const countAfter = await db.getFirstAsync<{ count: number }>('SELECT COUNT(*) as count FROM log_entries');
-  if (__DEV__) {
-    console.log('deleteAllLogEntries: Entries after deletion:', countAfter?.count || 0);
-  }
-
-  if (countAfter && countAfter.count > 0) {
-    if (__DEV__) {
-      console.error('deleteAllLogEntries: WARNING - Some entries were not deleted!');
-    }
-  } else {
-    if (__DEV__) {
-      console.log('deleteAllLogEntries: All entries successfully deleted');
-    }
-  }
-}
+// Note: `countLogEntriesByType` and `deleteAllLogEntries` were removed —
+// neither was referenced outside this file, and `resetAllData()` in lib/db.ts
+// handles the bulk delete transactionally. See #5/#7.

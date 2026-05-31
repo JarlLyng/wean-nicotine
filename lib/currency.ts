@@ -8,6 +8,23 @@ export const CURRENCY_OPTIONS: Array<{ code: CurrencyCode; label: string; locale
   { code: 'USD', label: 'US dollars (USD)', locale: 'en-US' },
 ];
 
+const VALID_CURRENCY_CODES: ReadonlySet<CurrencyCode> = new Set(
+  CURRENCY_OPTIONS.map((c) => c.code),
+);
+
+/**
+ * Narrow an arbitrary string (e.g. from the DB) to a `CurrencyCode`. Falls
+ * back to the default `'DKK'` if the value is null/undefined/unknown. Use this
+ * at every external boundary so the inline 5-way `===` check doesn't get
+ * duplicated.
+ */
+export function parseCurrency(value: string | null | undefined, fallback: CurrencyCode = 'DKK'): CurrencyCode {
+  if (value && VALID_CURRENCY_CODES.has(value as CurrencyCode)) {
+    return value as CurrencyCode;
+  }
+  return fallback;
+}
+
 export function formatMoney(cents: number, currency: CurrencyCode): string {
   const value = (cents ?? 0) / 100;
 

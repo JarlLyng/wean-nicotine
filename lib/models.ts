@@ -2,6 +2,8 @@
  * Data models for Wean Nicotine app
  */
 
+import type { CurrencyCode } from './currency';
+
 export type LogEntryType = 'pouch_used' | 'craving_resisted';
 
 export interface LogEntry {
@@ -15,7 +17,7 @@ export interface TaperSettings {
   id: number;
   baselinePouchesPerDay: number;
   pricePerCan?: number; // Optional, in smallest currency unit (e.g., cents)
-  currency?: 'DKK' | 'SEK' | 'NOK' | 'EUR' | 'USD';
+  currency?: CurrencyCode;
   weeklyReductionPercent: number; // e.g., 5 for 5% reduction per week
   startDate: number; // Unix timestamp in milliseconds
   triggers?: string[]; // Selected triggers from onboarding (e.g., ['Coffee', 'Stress', 'After meals'])

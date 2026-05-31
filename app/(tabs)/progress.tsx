@@ -27,15 +27,25 @@ import Animated, { FadeIn, FadeInDown, FadeInRight } from 'react-native-reanimat
 // Helpers
 // ──────────────────────────────────────────────
 
-/** Icon + color for milestone type */
-function milestoneIcon(type: Milestone['type']): { name: 'medal' | 'trophy' | 'lightning' | 'coins' | 'brain' | 'star'; color: string } {
+/**
+ * Icon + color for a milestone type.
+ *
+ * Pulls accent colors from the IAMJARL palette so dark mode auto-flips and we
+ * avoid shipping hardcoded near-duplicate hex (#FF9500, #FFD700, etc) that
+ * ignored the theme.
+ */
+type MilestoneIconName = 'medal' | 'trophy' | 'lightning' | 'coins' | 'brain' | 'star';
+function milestoneIcon(
+  type: Milestone['type'],
+  colors: ReturnType<typeof useDesignTokens>['colors'],
+): { name: MilestoneIconName; color: string } {
   switch (type) {
-    case 'first_day_under_limit': return { name: 'medal', color: '#FF9500' };
-    case 'week_under_limit': return { name: 'trophy', color: '#FFD700' };
-    case 'pouches_avoided': return { name: 'lightning', color: '#FF6B35' };
-    case 'money_saved': return { name: 'coins', color: '#4CAF50' };
-    case 'cravings_resisted': return { name: 'brain', color: '#CE63FF' };
-    default: return { name: 'star', color: '#FF9500' };
+    case 'first_day_under_limit': return { name: 'medal', color: colors.warning };
+    case 'week_under_limit':      return { name: 'trophy', color: colors.primary };
+    case 'pouches_avoided':       return { name: 'lightning', color: colors.warning };
+    case 'money_saved':           return { name: 'coins', color: colors.success };
+    case 'cravings_resisted':     return { name: 'brain', color: colors.primary };
+    default:                      return { name: 'star', color: colors.primary };
   }
 }
 
@@ -465,7 +475,7 @@ export default function ProgressScreen() {
             <Card variant="elevated" style={s.card} padding="lg">
               <Text style={s.cardTitle}>Milestones</Text>
               {milestones.map((milestone, index) => {
-                const badge = milestoneIcon(milestone.type);
+                const badge = milestoneIcon(milestone.type, colors);
                 return (
                   <Animated.View
                     key={milestone.id}
