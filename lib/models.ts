@@ -25,14 +25,10 @@ export interface TaperSettings {
   updatedAt: number;
 }
 
-export interface UserPlan {
-  id: number;
-  settingsId: number; // Foreign key to TaperSettings
-  currentDailyAllowance: number; // Calculated based on taper plan
-  lastCalculatedDate: number; // Unix timestamp in milliseconds
-  createdAt: number;
-  updatedAt: number;
-}
+// Note: the `UserPlan` model and its underlying `user_plan` table were
+// removed in #11. The daily allowance is always recomputed from
+// `TaperSettings` at display time (see `lib/taper-plan.ts`), so the cached
+// row served no purpose.
 
 export type BreathingPattern = 'default' | '4-7-8' | 'box' | 'quick-calm';
 

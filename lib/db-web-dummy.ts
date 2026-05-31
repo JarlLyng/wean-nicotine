@@ -3,7 +3,7 @@
  * Provides realistic sample data so the UI can be viewed on web
  */
 
-import type { TaperSettings, UserPlan, LogEntry, LogEntryType } from './models';
+import type { TaperSettings, LogEntry, LogEntryType } from './models';
 
 // Generate dummy settings
 export function getDummySettings(): TaperSettings {
@@ -23,21 +23,7 @@ export function getDummySettings(): TaperSettings {
   };
 }
 
-// Generate dummy user plan
-export function getDummyUserPlan(settingsId: number): UserPlan {
-  const now = Date.now();
-  // Calculate a realistic daily allowance (about 9 pouches after 2 weeks at 5% reduction)
-  const dailyAllowance = 9.2;
-  
-  return {
-    id: 1,
-    settingsId,
-    currentDailyAllowance: dailyAllowance,
-    lastCalculatedDate: now,
-    createdAt: now,
-    updatedAt: now,
-  };
-}
+// (getDummyUserPlan removed in #11 — the user_plan cache table no longer exists.)
 
 // Cache base dummy log entries per session to ensure deterministic data
 let cachedBaseDummyEntries: LogEntry[] | null = null;

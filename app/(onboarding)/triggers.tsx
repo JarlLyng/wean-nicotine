@@ -11,8 +11,7 @@ import { useDesignTokens, getColors, typography } from '@/lib/design';
 import { captureError } from '@/lib/sentry';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { saveTaperSettings, getTaperSettings } from '@/lib/db-settings';
-import { saveUserPlan, getUserPlan } from '@/lib/db-user-plan';
-import { generateDefaultTaperPlan, calculateDailyAllowance } from '@/lib/taper-plan';
+import { generateDefaultTaperPlan } from '@/lib/taper-plan';
 import type { CurrencyCode } from '@/lib/currency';
 
 const TRIGGERS: { label: string; icon: 'brain' | 'heart' | 'wind' | 'waves' | 'gear' | 'star' | 'calendar' }[] = [
@@ -72,34 +71,22 @@ export default function TriggersScreen() {
       await deleteAllAnalytics();
 
       const checkSettings = await getTaperSettings();
-      const checkPlan = await getUserPlan();
-      if (checkSettings || checkPlan) {
-        devWarn('Warning: Data not fully deleted before creating new', { checkSettings, checkPlan });
+      if (checkSettings) {
+        devWarn('Warning: settings not fully deleted before creating new');
       }
 
       devLog('Onboarding complete: Saving new taper settings...', { baseline, pace, price, triggers: selectedTriggers });
       const settings = generateDefaultTaperPlan(baseline, pace);
-      const settingsId = await saveTaperSettings({
+      await saveTaperSettings({
         ...settings,
         pricePerCan: price > 0 ? Math.round(price * 100) : undefined,
         currency,
         triggers: selectedTriggers.length > 0 ? selectedTriggers : undefined,
       }, true);
 
-      const savedSettings = await getTaperSettings();
-      if (!savedSettings) throw new Error('Failed to retrieve saved settings');
-
-      const dailyAllowance = calculateDailyAllowance(savedSettings, new Date());
-      await saveUserPlan({
-        settingsId,
-        currentDailyAllowance: dailyAllowance,
-        lastCalculatedDate: Date.now(),
-      }, true);
-
-      const verifyPlan = await getUserPlan();
       const verifySettings = await getTaperSettings();
-      if (!verifyPlan || !verifySettings) {
-        throw new Error('Failed to verify saved data');
+      if (!verifySettings) {
+        throw new Error('Failed to verify saved settings');
       }
 
       await new Promise(resolve => setTimeout(resolve, 200));
