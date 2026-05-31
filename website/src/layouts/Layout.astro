@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import Button from '../components/Button.astro';
+import LanguageSwitcher from '../components/LanguageSwitcher.astro';
 import { APP_STORE_URL, COMPANY_NAME, isAppStoreUrlKnown, SITE_NAME, SUPPORT_EMAIL } from '../lib/site';
 import { getLangFromUrl, useTranslations, useTranslatedPath } from '../i18n/utils';
 import { languages } from '../i18n/ui';
@@ -152,6 +153,7 @@ const structuredData: Record<string, unknown> = {
 				<nav class="nav" aria-label="Primary">
 					<a class="nav__link" href={translatePath('/privacy')}>{t('nav.privacy')}</a>
 					<a class="nav__link" href={translatePath('/support')}>{t('nav.support')}</a>
+					<LanguageSwitcher availableLocales={localesForHreflang} />
 					<Button
 						variant="primary"
 						href={APP_STORE_URL}
@@ -228,7 +230,10 @@ const structuredData: Record<string, unknown> = {
 				<p class="fineprint">
 					© {new Date().getFullYear()} <a href="https://iamjarl.com" target="_blank" rel="noopener noreferrer">{COMPANY_NAME}</a>. All rights reserved. {t('footer.tagline')}
 				</p>
-				<p class="fineprint"><a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a></p>
+				<div class="footer-meta">
+					<LanguageSwitcher availableLocales={localesForHreflang} />
+					<p class="fineprint"><a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a></p>
+				</div>
 			</div>
 		</footer>
 	</body>
@@ -431,6 +436,13 @@ const structuredData: Record<string, unknown> = {
 		align-items: center;
 		flex-wrap: wrap;
 		gap: var(--space-lg);
+	}
+
+	.footer-meta {
+		display: flex;
+		align-items: center;
+		gap: var(--space-lg);
+		flex-wrap: wrap;
 	}
 
 	.fineprint {
