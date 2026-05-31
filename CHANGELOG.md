@@ -7,8 +7,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-05-31
+
+User-visible changes shipped with iOS build 18.
+
 ### Added
-- Repository CHANGELOG (this file) and back-tagged historical releases.
+- **Onboarding progress dots** below the header on baseline, pace, price, and triggers — visual progress through the 4-step setup, with `accessibilityRole="progressbar"` for screen readers.
+- **Hold-to-confirm Reset Taper.** Two-second press-and-hold with an animated primary-coloured fill replaces the one-tap "Delete Everything" alert. Light/warning haptics on iOS at start and fire.
+- **Breathing completion celebration.** Bigger duotone check, "Nicely done." headline, and a session-count subtext that switches between first-session copy and a running total. Matches the "wean don't punish" tone.
+- **Bar-chart legend** now documents all four states: Under limit, Over, No data, Upcoming.
+- **Calm error state on Today.** When the data load fails (parse error / transient SQLite), the screen surfaces a "Couldn't load right now" card with a Try again button instead of routing the user back through onboarding.
+- **Deep-link to OS notification settings.** Permission-denied alerts now offer "Open Settings" via `Linking.openSettings()` so the user can flip the system toggle without leaving the app for a settings safari.
+- **17 new unit tests** for `cost-savings.ts` and `notifications.ts` — total now 60.
+
+### Changed
+- IAMJARL design-system pass: realigned `typography` line-heights to the IAMJARL pairings (xs 12/16, sm 14/20, base 16/24, lg 18/28, xl 24/32, xxl 36/44). Dropped legacy `neutral.*`, `semantic.info`, `'3xl'`, and `fontWeights.medium: '500'` from `lib/theme.ts`. Nine inline `'500'` weight usages updated to `'600'`.
+- Milestone palette now reads from `colors.warning` / `colors.success` / `colors.primary` instead of hardcoded `#FF9500` / `#FFD700` / `#FF6B35` / `#4CAF50` / `#CE63FF` — auto-flips in dark mode.
+- Switch off-track in dark mode bumped from `border.subtle` (rgba white 0.12) to `border.default` (rgba white 0.18) so the affordance is visible against `#000`.
+- Touch targets ≥ 44pt across segmented control (Progress) and currency pills (Price onboarding).
+- ProgressScreen reads all five week/breakdown/total queries via `Promise.all` instead of sequentially, cutting cold-load latency.
+- `useHomeData` removed its self-healing recreation of `user_plan` — the cache table no longer exists.
+- Currency typing centralized: `parseCurrency()` helper, `CurrencyCode` imported via `lib/models.ts`. Dropped one `as any` cast in `tools/cost-savings.tsx` and the 5-way `===` chain in `db-settings.ts`.
+
+### Fixed
+- **Notifications race.** `NotificationsScreen`'s one-shot self-heal could re-create a trigger reminder concurrently with a user toggle, leaving an orphan. New `cancelled` flag + `didSelfHealRef` guard the heal so it can never run twice or after unmount.
+- Removed 2 `as any` router-push casts (tools index, reflection journal link) in favour of proper `Href` typing.
+- Onboarding question titles and Settings section header now carry `accessibilityRole="header"` so screen readers can navigate by landmark.
+- IAMJARL focus ring (2px) on `Button` when keyboard-focused.
+
+### Internal
+- `lib/db.ts`: migrations are now transactional and idempotent. `BEGIN`/`COMMIT`/`ROLLBACK` per migration; `schema_version` only advances on success. Legacy ALTERs use `PRAGMA table_info` to detect already-applied columns instead of the swallow-all-errors `ignoreError`.
+- Migration v6 creates the `analytics` table inside the migration runner (moved from `analytics.ts`'s inline CREATE).
+- Migration v7 `DROP TABLE IF EXISTS user_plan` — the cache was never read for display.
+- Removed 6 unused exports across `lib/`: `calculateTotalProgress`, `detectMilestones`, `scheduleTriggerReminder` (singular), `countLogEntriesByType`, `deleteAllLogEntries`, `deleteTaperSettings`. Deleted dead `lib/db-web-stub.ts`.
+- New UI primitives: `OnboardingProgress`, `Input` (default + display variants), `Chip` (filled / outline), `ListItem`. `baseline.tsx` migrated as a demo.
 
 ## [1.3.1] - 2026-04-30
 
@@ -66,7 +98,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-[Unreleased]: https://github.com/JarlLyng/wean-nicotine/compare/v1.3.1...HEAD
+[Unreleased]: https://github.com/JarlLyng/wean-nicotine/compare/v1.4.0...HEAD
+[1.4.0]: https://github.com/JarlLyng/wean-nicotine/compare/v1.3.1...v1.4.0
 [1.3.1]: https://github.com/JarlLyng/wean-nicotine/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/JarlLyng/wean-nicotine/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/JarlLyng/wean-nicotine/compare/v1.1.0...v1.2.0
