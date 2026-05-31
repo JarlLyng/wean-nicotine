@@ -107,10 +107,20 @@ const structuredData: Record<string, unknown> = {
 		<!-- Umami Analytics (privacy-friendly, cookie-free) -->
 		<script defer src="https://umami-iamjarl.vercel.app/script.js" data-website-id="ab39d27c-ff32-49c4-b9e3-4c8407aad2b8"></script>
 
-		<!-- Premium Typography -->
-		<link rel="preconnect" href="https://fonts.googleapis.com">
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+		<!-- Typography is self-hosted via @fontsource — see styles/global.css.
+		     Removed the render-blocking Google Fonts <link> that previously
+		     stalled first paint and required preconnect hints. -->
+
+		<!-- Preload the LCP hero image so the browser fetches it before the
+		     HTML parser discovers the <img>. Cuts ~200-400ms off LCP on cold
+		     loads. Same path across all locale homes. -->
+		<link
+			rel="preload"
+			as="image"
+			href="/screenshots/v1.2/05-today.png"
+			type="image/png"
+			fetchpriority="high"
+		/>
 
 		<!-- Scroll Reveal Script -->
 		<script is:inline>
