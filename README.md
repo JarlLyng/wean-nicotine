@@ -1,10 +1,22 @@
 # Wean Nicotine
 
+[![CI](https://github.com/JarlLyng/wean-nicotine/actions/workflows/ci.yml/badge.svg)](https://github.com/JarlLyng/wean-nicotine/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/github/license/JarlLyng/wean-nicotine)](./LICENSE)
+[![Version](https://img.shields.io/github/package-json/v/JarlLyng/wean-nicotine)](./CHANGELOG.md)
+[![Platform](https://img.shields.io/badge/platform-iOS-blue)](https://apps.apple.com/app/wean-nicotine/id6745262907)
+[![Expo SDK](https://img.shields.io/badge/Expo%20SDK-55-000020?logo=expo)](https://docs.expo.dev/)
+[![Co-created with AI](https://madebyhuman.iamjarl.com/badges/co-created-white.svg)](https://madebyhuman.iamjarl.com)
+
 **Wean Nicotine** is a mobile app that helps people gradually reduce and eventually stop using snus (nicotine pouches) through a calm, supportive, and non‑judgmental approach.
 
 Instead of quitting cold turkey, Wean focuses on **tapering** — reducing usage step by step, at your own pace.
 
-[![Co-created with AI](https://madebyhuman.iamjarl.com/badges/co-created-white.svg)](https://madebyhuman.iamjarl.com)
+<p align="center">
+  <img src="website/public/screenshots/v1.2/05-today.png" alt="Today screen — daily allowance and quick logging" width="220" />
+  <img src="website/public/screenshots/v1.2/06-progress.png" alt="Progress screen — weekly chart and milestones" width="220" />
+  <img src="website/public/screenshots/v1.2/07-tools.png" alt="Tools — breathing, urge surfing, reflection" width="220" />
+  <img src="website/public/screenshots/v1.2/08-savings.png" alt="Cost savings tool" width="220" />
+</p>
 
 ## Documentation
 
@@ -111,6 +123,7 @@ app/
   (onboarding)/          # Onboarding flow screens
     welcome.tsx
     baseline.tsx
+    pace.tsx
     price.tsx
     triggers.tsx
   (tabs)/                # Main app screens (tab navigation)
@@ -120,15 +133,24 @@ app/
       breathing.tsx
       urge-surfing.tsx
       reflection.tsx
+      reflection-journal.tsx
+      cost-savings.tsx
     settings/            # Settings screens
       index.tsx
-      reset-taper.tsx
+      edit-plan.tsx
       notifications.tsx
-components/             # Reusable UI components
+      reset-taper.tsx
+components/             # Reusable UI components (incl. ui/ primitives)
+hooks/                  # React hooks (useHomeData, useAppInitialize, …)
 lib/                    # Business logic & utilities
   db*.ts                # Database operations
-  theme.ts              # Design tokens
+  design.ts             # IAMJARL design tokens
+  theme.ts              # Theme bridge for design tokens
+  taper-plan.ts         # Tapering math
+  progress.ts           # Progress + milestones
+  notifications.ts      # Local notification scheduling
 docs/                   # Documentation
+website/                # Astro marketing site
 ```
 
 See [`docs/README.md`](./docs/README.md) for the documentation index and [`docs/decisions/storage.md`](./docs/decisions/storage.md) for storage architecture details.
@@ -169,24 +191,24 @@ npx expo start
 
 ### Environment Variables
 
-#### Development (Local)
-Kopiér `.env.example` til `.env` og udfyld værdierne. Relevant for Sentry:
+#### Development (local)
+Copy `.env.example` to `.env` and fill in the values. Relevant for Sentry:
 
-- **EXPO_PUBLIC_SENTRY_DSN** – DSN fra Sentry (Client Keys). Bruges af appen til at sende fejl.
-- **SENTRY_AUTH_TOKEN** – (valgfrit) Auth token fra Sentry (User settings → Auth Tokens). Bruges af Sentry CLI fx til upload af source maps, så stack traces vises læsbart i Sentry.
+- **EXPO_PUBLIC_SENTRY_DSN** — DSN from Sentry (Client Keys). Used by the app to send errors.
+- **SENTRY_AUTH_TOKEN** — (optional) Auth token from Sentry (User settings → Auth Tokens). Used by the Sentry CLI for tasks like source-map upload so stack traces render readably in Sentry.
 
-Sentry-events sendes **ikke** i development mode – de logges kun i konsollen.
+Sentry events are **not** sent in development mode — they are only logged to the console.
 
-#### Production (EAS Build – lokalt eller sky)
-Ved `eas build` (både `--local` og uden) bruges **EAS Secrets** – ikke `.env`. Opret secret før build:
+#### Production (EAS Build — local or cloud)
+With `eas build` (both `--local` and cloud), **EAS Secrets** are used — not `.env`. Create the secret before building:
 
 ```bash
-eas env:create --name EXPO_PUBLIC_SENTRY_DSN --value "https://din-dsn@xxx.ingest.sentry.io/xxx" --environment production --visibility plaintext
+eas env:create --name EXPO_PUBLIC_SENTRY_DSN --value "https://your-dsn@xxx.ingest.sentry.io/xxx" --environment production --visibility plaintext
 ```
 
-Lokal `.env` er til dev og evt. andre værktøjer; EAS injicerer kun variabler fra EAS Secrets under build.
+Local `.env` is for dev and other tooling; EAS only injects variables from EAS Secrets during builds.
 
-**Note:** Sentry is optional. The app will work without it, but errors won't be tracked in production. Konfiguration og verifikation: **`docs/SENTRY.md`**. DSN indlejres ved build via `app.config.js` → `extra.sentryDsn`.
+**Note:** Sentry is optional. The app works without it, but errors won't be tracked in production. Configuration and verification: **`docs/SENTRY.md`**. The DSN is embedded at build time via `app.config.js` → `extra.sentryDsn`.
 
 ### Testing Notifications
 
@@ -206,33 +228,35 @@ npx expo run:android
 
 ## 📦 Build & release (iOS)
 
-**Foretrukket workflow:** Lokalt build → IPA-fil → upload via **Transporter** til App Store Connect.
+**Preferred workflow:** Local build → IPA → upload via **Transporter** to App Store Connect.
 
 - **Bundle ID:** `com.iamjarl.taper`
-- **Lokalt build (IPA) – Expo fra terminal:**
-  1. **Build-nummer:** I `app.config.js` skal `ios.buildNumber` være højere end det sidste build uploadet til App Store Connect. Version (`version`) er bruger-synlig (aktuelt `1.3.1`) og bumpes kun ved en egentlig app-opdatering.
-  2. **Sentry:** Opret EAS Secret så DSN er med i buildet:  
-     `eas env:create --name EXPO_PUBLIC_SENTRY_DSN --value "https://din-dsn@xxx.ingest.sentry.io/xxx" --environment production --visibility plaintext`
-  3. Fra projektroden:
+- **Local build (IPA) — Expo from terminal:**
+  1. **Build number:** In `app.config.js`, `ios.buildNumber` must be higher than the last build uploaded to App Store Connect. `version` is user-visible (currently `1.3.1`) and only bumped for an actual app update.
+  2. **Sentry:** Create the EAS Secret so the DSN is embedded in the build:
+     `eas env:create --name EXPO_PUBLIC_SENTRY_DSN --value "https://your-dsn@xxx.ingest.sentry.io/xxx" --environment production --visibility plaintext`
+  3. From the project root:
      ```bash
      npx eas build --profile production --platform ios --local
      ```
-     Buildet kører på din Mac og producerer en IPA (EAS viser stien når det er færdigt).
-  4. Upload IPA til App Store Connect via **Transporter** (Mac App Store).
+     The build runs on your Mac and produces an IPA (EAS prints the path when finished).
+  4. Upload the IPA to App Store Connect via **Transporter** (Mac App Store).
 
-- **Kun Xcode (hvis du har `ios/` og foretrækker det):** Åbn `ios/Taper.xcworkspace` → **Product → Archive** → **Distribute App** / **Export** → IPA i **Transporter**. Sørg for at build-nummer i Xcode/Info.plist matcher eller overstiger sidst uploadet.
+- **Xcode only (if you have `ios/` and prefer it):** Open `ios/Taper.xcworkspace` → **Product → Archive** → **Distribute App** / **Export** → IPA → **Transporter**. Make sure the build number in Xcode/Info.plist matches or exceeds the last uploaded build.
 
-- **Sentry:** DSN kommer fra EAS env (production). Ved lokalt build: sæt `export EXPO_PUBLIC_SENTRY_DSN="https://..."` i terminalen før `eas build --local`. Fejlsøgning: `docs/SENTRY.md`.
+- **Sentry:** DSN comes from EAS env (production). For local builds: `export EXPO_PUBLIC_SENTRY_DSN="https://..."` in the terminal before `eas build --local`. Troubleshooting: `docs/SENTRY.md`.
 
-**Alternativ (sky-build):** `npx eas build --profile production --platform ios` (uden `--local`) – bygger i skyen. Samme EAS Secret. Derefter fx `npx eas submit --platform ios --latest` eller download IPA og brug Transporter.
+**Alternative (cloud build):** `npx eas build --profile production --platform ios` (without `--local`) — builds in the cloud. Same EAS Secret. Then either `npx eas submit --platform ios --latest`, or download the IPA and use Transporter.
 
-Ingen secrets eller credentials ligger i repoet. Brug EAS Secrets for `EXPO_PUBLIC_SENTRY_DSN` (og evt. andre) til builds.
+No secrets or credentials are stored in the repo. Use EAS Secrets for `EXPO_PUBLIC_SENTRY_DSN` (and any others) during builds.
 
 ---
 
 ## 🗺️ Roadmap
 
 All planned work is tracked in [GitHub Issues](https://github.com/JarlLyng/wean-nicotine/issues) with priority labels (P1/P2/P3) and category labels (seo, aso, website, marketing, enhancement).
+
+See [`CHANGELOG.md`](./CHANGELOG.md) for the version history.
 
 ---
 
