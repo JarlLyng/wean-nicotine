@@ -28,35 +28,36 @@ export const spacing = {
 } as const;
 
 // IAMJARL typography tokens mapped to React Native format
+// Every size/lineHeight pair follows IAMJARL: xs 12/16, sm 14/20, base 16/24,
+// lg 18/28, xl 24/32, xxl 36/44.
 export const typography = {
-  // IAMJARL sizes
   xs: {
     fontSize: designTokens.typography.sizes.xs,
-    lineHeight: designTokens.typography.lineHeights.sm,
+    lineHeight: designTokens.typography.lineHeights.xs,
     fontWeight: `${designTokens.typography.weights.regular}`,
     allowFontScaling: true,
   },
   sm: {
     fontSize: designTokens.typography.sizes.sm,
-    lineHeight: designTokens.typography.lineHeights.tight,
+    lineHeight: designTokens.typography.lineHeights.sm,
     fontWeight: `${designTokens.typography.weights.regular}`,
     allowFontScaling: true,
   },
   base: {
     fontSize: designTokens.typography.sizes.base,
-    lineHeight: designTokens.typography.lineHeights.normal,
+    lineHeight: designTokens.typography.lineHeights.base,
     fontWeight: `${designTokens.typography.weights.regular}`,
     allowFontScaling: true,
   },
   lg: {
     fontSize: designTokens.typography.sizes.lg,
-    lineHeight: designTokens.typography.lineHeights.relaxed,
+    lineHeight: designTokens.typography.lineHeights.lg,
     fontWeight: `${designTokens.typography.weights.regular}`,
     allowFontScaling: true,
   },
   xl: {
     fontSize: designTokens.typography.sizes.xl,
-    lineHeight: designTokens.typography.lineHeights.normal,
+    lineHeight: designTokens.typography.lineHeights.xl,
     fontWeight: `${designTokens.typography.weights.semibold}`,
     allowFontScaling: true,
   },
@@ -66,7 +67,7 @@ export const typography = {
     fontWeight: `${designTokens.typography.weights.semibold}`,
     allowFontScaling: true,
   },
-  // Backward compatibility aliases
+  // Aliases (kept for code clarity; map back into the IAMJARL scale)
   title: {
     fontSize: designTokens.typography.sizes.xxl,
     lineHeight: designTokens.typography.lineHeights.xxl,
@@ -75,28 +76,24 @@ export const typography = {
   },
   body: {
     fontSize: designTokens.typography.sizes.base,
-    lineHeight: designTokens.typography.lineHeights.normal,
+    lineHeight: designTokens.typography.lineHeights.base,
     fontWeight: `${designTokens.typography.weights.regular}`,
     allowFontScaling: true,
   },
   caption: {
     fontSize: designTokens.typography.sizes.sm,
-    lineHeight: designTokens.typography.lineHeights.tight,
+    lineHeight: designTokens.typography.lineHeights.sm,
     fontWeight: `${designTokens.typography.weights.regular}`,
     allowFontScaling: true,
   },
+  // Display alias used by input fields — xl with semibold per IAMJARL
   '2xl': {
-    fontSize: designTokens.typography.sizes.xl, // Kept at xl (24) for backward compat — used in inputs
-    lineHeight: designTokens.typography.lineHeights.normal,
+    fontSize: designTokens.typography.sizes.xl,
+    lineHeight: designTokens.typography.lineHeights.xl,
     fontWeight: `${designTokens.typography.weights.semibold}`,
     allowFontScaling: true,
   },
-  '3xl': {
-    fontSize: 28, // Not in IAMJARL, keeping for backward compatibility
-    lineHeight: 36,
-    fontWeight: `${designTokens.typography.weights.bold}`,
-    allowFontScaling: true,
-  },
+  // Hero/display alias — xxl bold
   '4xl': {
     fontSize: designTokens.typography.sizes.xxl,
     lineHeight: designTokens.typography.lineHeights.xxl,
@@ -105,13 +102,11 @@ export const typography = {
   },
 } as const;
 
-// IAMJARL font weights
+// IAMJARL font weights — only regular/semibold/bold are allowed by the system
 export const fontWeights = {
   regular: `${designTokens.typography.weights.regular}`,
   semibold: `${designTokens.typography.weights.semibold}`,
   bold: `${designTokens.typography.weights.bold}`,
-  // Backward compatibility
-  medium: '500' as const,
 } as const;
 
 /**
@@ -163,59 +158,14 @@ export const colors = {
   accentMid: lightColors.primary, // Using IAMJARL primary
   accentEnd: lightColors.primary, // Using IAMJARL primary
   
-  // Legacy support (deprecated)
-  neutral: {
-    50: '#fafafa',
-    100: '#f5f5f5',
-    200: '#e5e5e5',
-    300: '#d4d4d4',
-    400: '#a3a3a3',
-    500: '#737373',
-    600: '#525252',
-    700: '#404040',
-    800: '#262626',
-    900: '#171717',
-    950: '#0a0a0a',
-  },
-  accent: {
-    primary: lightColors.primary,
-    primaryDark: designTokens.colors.modes.dark.primary,
-    primaryLight: lightColors.primary,
-  },
-  semantic: {
-    success: {
-      main: designTokens.colors.shared.success,
-      light: '#d1fae5',
-      dark: '#059669',
-    },
-    warning: {
-      main: designTokens.colors.shared.warning,
-      light: '#fef3c7',
-      dark: '#d97706',
-    },
-    info: {
-      main: '#3b82f6',
-      light: '#dbeafe',
-      dark: '#2563eb',
-    },
-    error: {
-      main: designTokens.colors.shared.error,
-      light: '#fee2e2',
-      dark: '#dc2626',
-    },
-  },
 } as const;
 
-// IAMJARL radius tokens
+// IAMJARL radius tokens (sm 8, md 12, lg 16). full is for pill shapes.
 export const borderRadius = {
   none: 0,
   sm: designTokens.radius.sm,
   md: designTokens.radius.md,
   lg: designTokens.radius.lg,
-  // Backward compatibility
-  xl: 16, // Same as lg in IAMJARL
-  '2xl': 20,
-  '3xl': 24,
   full: 9999,
 } as const;
 

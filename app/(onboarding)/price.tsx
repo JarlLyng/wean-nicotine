@@ -1,5 +1,6 @@
 import { Screen } from '@/components/Screen';
 import { Button } from '@/components/ui/Button';
+import { OnboardingProgress } from '@/components/ui/OnboardingProgress';
 import { useDesignTokens, getColors, typography } from '@/lib/design';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { borderRadius, spacing } from '@/lib/theme';
@@ -50,6 +51,7 @@ export default function PriceScreen() {
 
   return (
     <Screen>
+      <OnboardingProgress current={3} total={4} />
       <KeyboardAvoidingView
         style={s.flex}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}

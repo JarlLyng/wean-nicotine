@@ -5,6 +5,7 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Screen } from '@/components/Screen';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
+import { OnboardingProgress } from '@/components/ui/OnboardingProgress';
 import { spacing, borderRadius } from '@/lib/theme';
 import { useDesignTokens, getColors, typography } from '@/lib/design';
 import { captureError } from '@/lib/sentry';
@@ -116,6 +117,7 @@ export default function TriggersScreen() {
 
   return (
     <Screen>
+      <OnboardingProgress current={4} total={4} />
       <ScrollView
         contentContainerStyle={s.scrollContent}
         showsVerticalScrollIndicator={false}

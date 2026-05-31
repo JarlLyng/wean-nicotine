@@ -41,12 +41,22 @@ export const designTokens = {
       xl: 24,
       xxl: 36,
     },
+    // IAMJARL line-height pairings: every size has a matching line height
+    // (xs 12/16, sm 14/20, base 16/24, lg 18/28, xl 24/32, xxl 36/44).
+    // Legacy aliases (tight/normal/relaxed) are kept for backward compat with
+    // existing call sites and map to the closest IAMJARL pair; new code should
+    // use the IAMJARL-keyed names matching the font size.
     lineHeights: {
+      xs: 16,
+      sm: 20,
+      base: 24,
+      lg: 28,
+      xl: 32,
+      xxl: 44,
+      // legacy aliases — do not use in new code
       tight: 20,
       normal: 24,
       relaxed: 28,
-      xxl: 43.2,
-      sm: 18,
     },
     weights: {
       regular: 400,

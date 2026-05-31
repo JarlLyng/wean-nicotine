@@ -9,6 +9,7 @@
 
 import { Screen } from '@/components/Screen';
 import { Button } from '@/components/ui/Button';
+import { OnboardingProgress } from '@/components/ui/OnboardingProgress';
 import { useDesignTokens, getColors, typography } from '@/lib/design';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { spacing, borderRadius } from '@/lib/theme';
@@ -57,6 +58,7 @@ export default function PaceScreen() {
 
   return (
     <Screen>
+      <OnboardingProgress current={2} total={4} />
       <ScrollView
         contentContainerStyle={s.scrollContent}
         showsVerticalScrollIndicator={false}

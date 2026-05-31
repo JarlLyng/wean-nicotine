@@ -260,7 +260,7 @@ const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) =>
     },
     pillText: {
       fontSize: typography.sizes.sm,
-      fontWeight: '500' as const,
+      fontWeight: '600' as const,
       color: colors.text.secondary,
     },
     pillTextActive: {
@@ -277,7 +277,7 @@ const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) =>
     },
     categoryBadge: {
       fontSize: typography.sizes.xs,
-      fontWeight: '500' as const,
+      fontWeight: '600' as const,
       color: colors.primary,
       textTransform: 'uppercase',
       letterSpacing: 1,
@@ -285,7 +285,7 @@ const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) =>
     },
     promptText: {
       fontSize: typography.sizes.xl,
-      fontWeight: '500' as const,
+      fontWeight: '600' as const,
       color: colors.text.primary,
       textAlign: 'center',
       lineHeight: typography.lineHeights.relaxed,
@@ -337,6 +337,6 @@ const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) =>
     journalLinkText: {
       fontSize: typography.sizes.base,
       color: colors.primary,
-      fontWeight: '500' as const,
+      fontWeight: '600' as const,
     },
   });
