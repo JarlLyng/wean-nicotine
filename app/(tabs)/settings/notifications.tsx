@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { View, Text, StyleSheet, ScrollView, Switch, Alert, Pressable, TextStyle, ViewStyle } from 'react-native';
 import { Screen } from '@/components/Screen';
 import { Card } from '@/components/ui/Card';
@@ -41,75 +41,105 @@ export default function NotificationsScreen() {
   const [selectedTriggers, setSelectedTriggers] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Track whether the one-shot self-heal (re-create a trigger reminder we lost
+  // somehow but still expect from stored preferences) has already run for this
+  // mount. Prevents a race where the user toggles off DURING the heal: without
+  // this, the heal could re-create the reminder right after the user's
+  // cancel call landed.
+  const didSelfHealRef = useRef(false);
+
   useEffect(() => {
-    loadNotificationStatus();
-  }, []);
+    // `cancelled` guards every setState path below so we never write to state
+    // after the screen has unmounted (and never resurrect a reminder the user
+    // disabled while we were mid-fetch).
+    let cancelled = false;
 
-  const loadNotificationStatus = async () => {
-    try {
-      const { getPermissionsAsync } = await import('expo-notifications');
-      const { status } = await getPermissionsAsync();
-      setHasPermission(status === 'granted');
+    const load = async () => {
+      try {
+        const { getPermissionsAsync } = await import('expo-notifications');
+        const { status } = await getPermissionsAsync();
+        if (cancelled) return;
+        setHasPermission(status === 'granted');
 
-      const settings = await getTaperSettings();
-      const triggers = settings?.triggers ?? [];
-      setSelectedTriggers(triggers);
+        const settings = await getTaperSettings();
+        if (cancelled) return;
+        const triggers = settings?.triggers ?? [];
+        setSelectedTriggers(triggers);
 
-      const notifications = await getAllScheduledNotifications();
-      const hasDailyCheckIn = notifications.some(
-        (n) => n.content.data?.type === 'daily_checkin'
-      );
-      setDailyCheckInEnabled(hasDailyCheckIn);
+        const notifications = await getAllScheduledNotifications();
+        if (cancelled) return;
+        const hasDailyCheckIn = notifications.some(
+          (n) => n.content.data?.type === 'daily_checkin'
+        );
+        setDailyCheckInEnabled(hasDailyCheckIn);
 
-      const triggerReminder = notifications.find(
-        (n) => n.content.data?.type === 'trigger_reminder'
-      );
-      const hasTriggerReminder = Boolean(triggerReminder);
-      setTriggerRemindersEnabled(hasTriggerReminder);
+        const triggerReminder = notifications.find(
+          (n) => n.content.data?.type === 'trigger_reminder'
+        );
+        const hasTriggerReminder = Boolean(triggerReminder);
+        setTriggerRemindersEnabled(hasTriggerReminder);
 
-      const storedEnabled = (await getPreference(PREF_TRIGGER_REMINDERS_ENABLED)) === '1';
-      const storedTimeRaw = await getPreference(PREF_TRIGGER_REMINDERS_TIME);
-      let storedTime: ReminderTime | null = null;
-      if (storedTimeRaw) {
-        try {
-          const parsed = JSON.parse(storedTimeRaw) as Partial<ReminderTime>;
-          if (typeof parsed.hour === 'number' && typeof parsed.minute === 'number') {
-            storedTime = { hour: parsed.hour, minute: parsed.minute };
+        const storedEnabled = (await getPreference(PREF_TRIGGER_REMINDERS_ENABLED)) === '1';
+        const storedTimeRaw = await getPreference(PREF_TRIGGER_REMINDERS_TIME);
+        if (cancelled) return;
+        let storedTime: ReminderTime | null = null;
+        if (storedTimeRaw) {
+          try {
+            const parsed = JSON.parse(storedTimeRaw) as Partial<ReminderTime>;
+            if (typeof parsed.hour === 'number' && typeof parsed.minute === 'number') {
+              storedTime = { hour: parsed.hour, minute: parsed.minute };
+            }
+          } catch { /* ignore */ }
+        }
+
+        let scheduledTime: ReminderTime | null = null;
+        if (triggerReminder && triggerReminder.trigger && typeof triggerReminder.trigger === 'object') {
+          const t = triggerReminder.trigger as Record<string, unknown>;
+          if (typeof t.hour === 'number' && typeof t.minute === 'number') {
+            scheduledTime = { hour: t.hour, minute: t.minute };
           }
-        } catch { /* ignore */ }
-      }
-
-      let scheduledTime: ReminderTime | null = null;
-      if (triggerReminder && triggerReminder.trigger && typeof triggerReminder.trigger === 'object') {
-        const t = triggerReminder.trigger as Record<string, unknown>;
-        if (typeof t.hour === 'number' && typeof t.minute === 'number') {
-          scheduledTime = { hour: t.hour, minute: t.minute };
         }
-      }
-      const effectiveTime = scheduledTime ?? storedTime ?? { hour: 20, minute: 0 };
-      setTriggerReminderTime(effectiveTime);
+        const effectiveTime = scheduledTime ?? storedTime ?? { hour: 20, minute: 0 };
+        setTriggerReminderTime(effectiveTime);
 
-      if (hasTriggerReminder && !storedEnabled) {
-        await setPreference(PREF_TRIGGER_REMINDERS_ENABLED, '1');
-      }
-
-      if (storedEnabled && !hasTriggerReminder && status === 'granted') {
-        const id = await scheduleTriggerReminders(triggers, effectiveTime.hour, effectiveTime.minute);
-        if (id) {
-          setTriggerRemindersEnabled(true);
+        if (hasTriggerReminder && !storedEnabled) {
           await setPreference(PREF_TRIGGER_REMINDERS_ENABLED, '1');
-        } else {
-          await setPreference(PREF_TRIGGER_REMINDERS_ENABLED, '0');
-          setTriggerRemindersEnabled(false);
         }
+
+        // One-shot self-heal: stored pref says "enabled" but no reminder is
+        // currently scheduled (system cleared it, fresh install on a restored
+        // device, etc). Only run once per mount and never after the user has
+        // potentially toggled in the meantime.
+        if (
+          storedEnabled &&
+          !hasTriggerReminder &&
+          status === 'granted' &&
+          !didSelfHealRef.current
+        ) {
+          didSelfHealRef.current = true;
+          const id = await scheduleTriggerReminders(triggers, effectiveTime.hour, effectiveTime.minute);
+          if (cancelled) return;
+          if (id) {
+            setTriggerRemindersEnabled(true);
+            await setPreference(PREF_TRIGGER_REMINDERS_ENABLED, '1');
+          } else {
+            await setPreference(PREF_TRIGGER_REMINDERS_ENABLED, '0');
+            setTriggerRemindersEnabled(false);
+          }
+        }
+      } catch (error) {
+        if (__DEV__) console.error('Error loading notification status:', error);
+        if (error instanceof Error) captureError(error, { context: 'notifications_load_status' });
+      } finally {
+        if (!cancelled) setIsLoading(false);
       }
-    } catch (error) {
-      if (__DEV__) console.error('Error loading notification status:', error);
-      if (error instanceof Error) captureError(error, { context: 'notifications_load_status' });
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    };
+
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const chooseTriggerReminderTime = async () => {
     const options: ReminderTime[] = [
