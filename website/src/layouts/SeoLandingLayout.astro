@@ -15,6 +15,14 @@ interface Props {
 	appStoreCtaLabel?: string;
 	campaignToken?: string;
 	lang?: 'en' | 'da' | 'sv' | 'no';
+	/**
+	 * Locales this SEO landing page is available in. Defaults to the page's
+	 * own `lang` only, since each SEO slug is locale-unique (EN slugs do not
+	 * exist under /da, /sv, /no and vice versa) — emitting hreflang for the
+	 * other locales would point crawlers to 404s. Pass an explicit list once
+	 * a page has real localized counterparts at translated slugs.
+	 */
+	availableLocales?: string[];
 }
 
 const {
@@ -28,7 +36,10 @@ const {
 	appStoreCtaLabel,
 	campaignToken,
 	lang = 'en',
+	availableLocales,
 } = Astro.props;
+
+const resolvedAvailableLocales = availableLocales ?? [lang];
 
 const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
 const defaultCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming soon on the App Store';
@@ -38,7 +49,7 @@ const finalCtaLabel = appStoreCtaLabel || defaultCtaLabel;
 const finalAppStoreUrl = getCampaignAppStoreUrl(campaignToken);
 ---
 
-<Layout title={title} description={description} canonicalPath={canonicalPath}>
+<Layout title={title} description={description} canonicalPath={canonicalPath} availableLocales={resolvedAvailableLocales}>
 	<article class="guide">
 		<div class="container">
 			<header class="guide__header">
