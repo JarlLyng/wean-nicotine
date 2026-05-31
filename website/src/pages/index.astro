@@ -3,7 +3,6 @@ import Layout from '../layouts/Layout.astro';
 import Button from '../components/Button.astro';
 import Card from '../components/Card.astro';
 import Section from '../components/Section.astro';
-import ScreenshotGallery from '../components/ScreenshotGallery.astro';
 import { APP_STORE_URL, isAppStoreUrlKnown, SITE_NAME } from '../lib/site';
 
 const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
@@ -326,7 +325,9 @@ const screenshots = [
 	.hero__aurora-orb--2 {
 		width: clamp(300px, 40vw, 600px);
 		height: clamp(300px, 40vw, 600px);
-		background: #8b5cf6;
+		/* Mix primary with a touch of secondary text so the orb sits inside
+		   the IAMJARL palette in both modes instead of a hardcoded #8b5cf6. */
+		background: color-mix(in oklab, var(--primary), var(--text-secondary) 35%);
 		bottom: -10%;
 		right: -5%;
 		animation: aurora-drift-2 20s ease-in-out infinite;
@@ -335,7 +336,7 @@ const screenshots = [
 	.hero__aurora-orb--3 {
 		width: clamp(250px, 35vw, 500px);
 		height: clamp(250px, 35vw, 500px);
-		background: #06b6d4;
+		background: color-mix(in oklab, var(--primary), var(--bg-app) 55%);
 		top: 30%;
 		left: 40%;
 		animation: aurora-drift-3 14s ease-in-out infinite;

@@ -3,7 +3,6 @@ import Layout from '../../layouts/Layout.astro';
 import Button from '../../components/Button.astro';
 import Card from '../../components/Card.astro';
 import Section from '../../components/Section.astro';
-import ScreenshotGallery from '../../components/ScreenshotGallery.astro';
 import { APP_STORE_URL, isAppStoreUrlKnown, SITE_NAME } from '../../lib/site';
 
 const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
@@ -58,36 +57,11 @@ const faqSchema = {
 };
 
 const screenshots = [
-	{
-		src: '/screenshots/v1.1/02.png',
-		alt: 'Startskjerm: Velg vanlige utløsere som stress, etter måltider, eller sosiale situasjoner.',
-		width: 590,
-		height: 1278,
-	},
-	{
-		src: '/screenshots/v1.1/03.png',
-		alt: 'Dagens skjerm: daglig kvote på 6 av 12 bokser/poser, med ett-trykks logging.',
-		width: 590,
-		height: 1278,
-	},
-	{
-		src: '/screenshots/v1.1/04.png',
-		alt: 'Fremskritt: Ukentlig statistikk over unngåtte poser og eventuelt sparte penger.',
-		width: 590,
-		height: 1278,
-	},
-	{
-		src: '/screenshots/v1.1/05.png',
-		alt: 'Støtteverktøy: Pusteøvelser, refleksjon og mestringsverktøy mot nikotinsug.',
-		width: 590,
-		height: 1278,
-	},
-	{
-		src: '/screenshots/v1.1/06.png',
-		alt: 'Pris per boks: Valgfri oversikt over penger du sparer framover.',
-		width: 590,
-		height: 1278,
-	},
+	{ src: '/screenshots/v1.2/04-triggers.png', alt: 'Startskjerm: Velg vanlige utløsere som stress, etter måltider, eller sosiale situasjoner.', width: 393, height: 852 },
+	{ src: '/screenshots/v1.2/05-today.png', alt: 'Dagens skjerm: daglig kvote med ett-trykks logging.', width: 393, height: 852 },
+	{ src: '/screenshots/v1.2/06-progress.png', alt: 'Fremskritt: Ukentlig statistikk over unngåtte poser og eventuelt sparte penger.', width: 393, height: 852 },
+	{ src: '/screenshots/v1.2/07-tools.png', alt: 'Støtteverktøy: Pusteøvelser, refleksjon og mestringsverktøy mot nikotinsug.', width: 393, height: 852 },
+	{ src: '/screenshots/v1.2/03-price.png', alt: 'Pris per boks: Valgfri oversikt over penger du sparer framover.', width: 393, height: 852 },
 ];
 ---
 
@@ -122,10 +96,10 @@ const screenshots = [
 			<div class="hero__visual reveal" aria-hidden="true">
 				<div class="hero__frame anim-float">
 					<img
-						src="/screenshots/v1.1/01.png"
+						src="/screenshots/v1.2/05-today.png"
 						alt="Wean Nicotine app. Idag skjermen."
-						width="780"
-						height="1691"
+						width="393"
+						height="852"
 						loading="eager"
 						decoding="async"
 						fetchpriority="high"
@@ -187,14 +161,12 @@ const screenshots = [
 
 	<Section id="faq" title="Vanlige Spørsmål" lede="Gjentatte spørsmål ved reduksjon og sporing av snus og nikotinposer.">
 		<div class="grid-2">
-			<Card as="article"><h3>{faqItems[0].question}</h3><p>{faqItems[0].answer}</p></Card>
-			<Card as="article"><h3>{faqItems[1].question}</h3><p>{faqItems[1].answer}</p></Card>
-			<Card as="article"><h3>{faqItems[2].question}</h3><p>{faqItems[2].answer}</p></Card>
-			<Card as="article"><h3>{faqItems[3].question}</h3><p>{faqItems[3].answer}</p></Card>
-			<Card as="article"><h3>{faqItems[4].question}</h3><p>{faqItems[4].answer}</p></Card>
-			<Card as="article"><h3>{faqItems[5].question}</h3><p>{faqItems[5].answer}</p></Card>
-			<Card as="article"><h3>{faqItems[6].question}</h3><p>{faqItems[6].answer}</p></Card>
-			<Card as="article"><h3>{faqItems[7].question}</h3><p>{faqItems[7].answer}</p></Card>
+			{faqItems.map((item) => (
+				<Card as="article">
+					<h3>{item.question}</h3>
+					<p>{item.answer}</p>
+				</Card>
+			))}
 		</div>
 	</Section>
 </Layout>
