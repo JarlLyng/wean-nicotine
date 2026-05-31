@@ -386,6 +386,10 @@ export default function ProgressScreen() {
                   <Text style={s.legendText}>Under limit</Text>
                   <View style={[s.legendDot, { backgroundColor: colors.error }]} />
                   <Text style={s.legendText}>Over</Text>
+                  <View style={[s.legendDot, { backgroundColor: colors.border.default }]} />
+                  <Text style={s.legendText}>No data</Text>
+                  <View style={[s.legendDot, { backgroundColor: colors.border.subtle }]} />
+                  <Text style={s.legendText}>Upcoming</Text>
                 </View>
               </View>
               <WeekBarChart data={chartData} colors={colors} />

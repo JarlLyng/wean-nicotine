@@ -214,7 +214,7 @@ export default function ReflectionScreen() {
             {journalCount > 0 && (
               <TouchableOpacity
                 style={s.journalLink}
-                onPress={() => router.push('/(tabs)/tools/reflection-journal' as any)}>
+                onPress={() => router.push('/(tabs)/tools/reflection-journal')}>
                 <Icon name="book-open" size={18} color={colors.primary} />
                 <Text style={s.journalLinkText}>
                   View Journal ({journalCount} {journalCount === 1 ? 'entry' : 'entries'})

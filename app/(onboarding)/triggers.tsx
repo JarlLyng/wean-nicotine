@@ -112,7 +112,7 @@ export default function TriggersScreen() {
         <View style={s.content}>
           {/* Question */}
           <View style={s.questionSection}>
-            <Text style={s.question}>
+            <Text accessibilityRole="header" style={s.question}>
               When do you usually reach for snus?
             </Text>
             <Text style={s.hint}>

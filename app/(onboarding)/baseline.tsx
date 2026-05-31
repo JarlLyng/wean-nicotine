@@ -50,7 +50,7 @@ export default function BaselineScreen() {
           <View style={s.content}>
             {/* Question */}
             <View style={s.questionSection}>
-              <Text style={s.question}>
+              <Text accessibilityRole="header" style={s.question}>
                 How many pouches do you use per day?
               </Text>
               <Text style={s.hint}>

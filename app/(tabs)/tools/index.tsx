@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, type Href } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { Screen } from '@/components/Screen';
 import { Card } from '@/components/ui/Card';
@@ -8,32 +8,44 @@ import { Icon } from '@/components/ui/Icon';
 import { spacing, typography, borderRadius, animations } from '@/lib/theme';
 import { useDesignTokens } from '@/lib/design';
 
+// `route` is typed against expo-router's typed-routes table so we don't
+// need an `as any` at the call site.
 const TOOLS = [
   {
     id: 'breathing',
+    route: '/(tabs)/tools/breathing',
     title: 'Breathing Exercise',
     description: 'A guided breathing exercise to help you pause and refocus',
     icon: 'wind' as const,
   },
   {
     id: 'reflection',
+    route: '/(tabs)/tools/reflection',
     title: 'Reflection Prompts',
     description: 'Thoughtful questions to help you understand your patterns',
     icon: 'brain' as const,
   },
   {
     id: 'urge-surfing',
+    route: '/(tabs)/tools/urge-surfing',
     title: 'Urge Surfing',
     description: 'Learn how to ride out cravings like a wave',
     icon: 'waves' as const,
   },
   {
     id: 'cost-savings',
+    route: '/(tabs)/tools/cost-savings',
     title: 'Cost Savings',
     description: "See how much money you're saving by cutting back",
     icon: 'piggy-bank' as const,
   },
-];
+] as const satisfies ReadonlyArray<{
+  id: string;
+  route: Href;
+  title: string;
+  description: string;
+  icon: 'wind' | 'brain' | 'waves' | 'piggy-bank';
+}>;
 
 export default function ToolsScreen() {
   const { colors } = useDesignTokens();
@@ -58,7 +70,7 @@ export default function ToolsScreen() {
                   accessibilityRole="button"
                   accessibilityLabel={tool.title}
                   accessibilityHint={tool.description}
-                  onPress={() => router.push(`/(tabs)/tools/${tool.id}` as any)}>
+                  onPress={() => router.push(tool.route)}>
                   <Card variant="elevated" style={toolsStyles.toolCard} padding="lg">
                     <View style={toolsStyles.iconContainer}>
                       <Icon name={tool.icon} size={48} color={colors.primary} weight="duotone" />

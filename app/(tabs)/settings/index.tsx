@@ -160,7 +160,7 @@ export default function SettingsScreen() {
           {/* ── Current Plan ── */}
           {settings && (
             <Card variant="elevated" style={s.card} padding="lg">
-              <Text style={s.sectionTitle}>Your Plan</Text>
+              <Text accessibilityRole="header" style={s.sectionTitle}>Your Plan</Text>
               <View style={s.planGrid}>
                 <View style={s.planItem}>
                   <Text style={s.planValue}>{settings.baselinePouchesPerDay}</Text>

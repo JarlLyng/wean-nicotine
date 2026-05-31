@@ -66,7 +66,7 @@ export default function PaceScreen() {
       >
         <View style={s.content}>
           <View style={s.questionSection}>
-            <Text style={s.question}>How fast do you want to reduce?</Text>
+            <Text accessibilityRole="header" style={s.question}>How fast do you want to reduce?</Text>
             <Text style={s.hint}>
               This is how much your daily allowance drops each week. You can change it later in Settings.
             </Text>

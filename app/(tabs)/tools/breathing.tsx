@@ -325,8 +325,13 @@ export default function BreathingExercise() {
               )}
               {isComplete && (
                 <Animated.View entering={FadeIn.duration(300)} style={s.completeContainer}>
-                  <Icon name="check-circle" size={36} color={colors.success} />
-                  <Text style={s.completeText}>Done!</Text>
+                  <Icon name="check-circle" size={48} color={colors.success} weight="duotone" />
+                  <Text style={s.completeText}>Nicely done.</Text>
+                  <Text style={s.completeSubtext}>
+                    {sessionCount + 1 === 1
+                      ? 'First session in the books.'
+                      : `That’s ${sessionCount + 1} sessions so far — keep going at your pace.`}
+                  </Text>
                 </Animated.View>
               )}
               {showSetup && (
@@ -445,7 +450,14 @@ const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) =>
     completeText: {
       fontSize: typography.sizes.xl,
       fontWeight: `${typography.weights.semibold}`,
-      color: colors.success,
+      color: colors.text.primary,
+      marginTop: spacing.sm,
+    },
+    completeSubtext: {
+      fontSize: typography.sizes.sm,
+      color: colors.text.secondary,
+      textAlign: 'center',
+      paddingHorizontal: spacing.lg,
     },
     buttonArea: {
       paddingTop: spacing.md,
