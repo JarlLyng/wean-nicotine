@@ -1,0 +1,104 @@
+---
+import { languages, defaultLang } from '../i18n/ui';
+import { getLangFromUrl, useTranslatedPath } from '../i18n/utils';
+
+interface Props {
+	/**
+	 * Locales the current page is available in. If a locale is not in this
+	 * list, the switcher links to that locale's home page instead of the
+	 * translated current path (which would 404).
+	 */
+	availableLocales?: string[];
+}
+
+const { availableLocales } = Astro.props;
+const supported = availableLocales ?? Object.keys(languages);
+
+const currentLang = getLangFromUrl(Astro.url);
+const translatePath = useTranslatedPath(currentLang);
+const pathname = Astro.url.pathname;
+
+const entries = Object.entries(languages).map(([code, label]) => {
+	const isCurrent = code === currentLang;
+	const isAvailable = supported.includes(code);
+	const href = isAvailable
+		? translatePath(pathname, code as keyof typeof languages)
+		: code === defaultLang
+			? '/'
+			: `/${code}/`;
+	return { code, label, href, isCurrent };
+});
+---
+
+<nav class="language-switcher" aria-label="Language">
+	<ul>
+		{entries.map(({ code, label, href, isCurrent }) => (
+			<li>
+				<a
+					href={href}
+					hreflang={code}
+					aria-current={isCurrent ? 'true' : undefined}
+					class={isCurrent ? 'is-current' : undefined}
+				>
+					<span class="lang-code">{code.toUpperCase()}</span>
+					<span class="lang-label">{label}</span>
+				</a>
+			</li>
+		))}
+	</ul>
+</nav>
+
+<style>
+	.language-switcher {
+		display: inline-flex;
+	}
+	.language-switcher ul {
+		display: inline-flex;
+		list-style: none;
+		margin: 0;
+		padding: 4px;
+		gap: 2px;
+		background: var(--bg-muted);
+		border-radius: var(--radius-full, 999px);
+		border: 1px solid var(--border-subtle);
+	}
+	.language-switcher a {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		padding: 6px 10px;
+		border-radius: 999px;
+		font-size: var(--font-size-xs);
+		font-weight: var(--font-weight-semibold);
+		color: var(--text-secondary);
+		text-decoration: none;
+		min-height: 32px;
+		min-width: 44px;
+		justify-content: center;
+		transition: color 0.15s ease, background-color 0.15s ease;
+	}
+	.language-switcher a:hover {
+		color: var(--text-primary);
+		background: var(--surface);
+	}
+	.language-switcher a:focus-visible {
+		outline: 2px solid var(--primary);
+		outline-offset: 2px;
+	}
+	.language-switcher a.is-current {
+		background: var(--surface);
+		color: var(--text-primary);
+		cursor: default;
+	}
+	.lang-label {
+		display: none;
+	}
+	@media (min-width: 768px) {
+		.lang-code {
+			display: none;
+		}
+		.lang-label {
+			display: inline;
+		}
+	}
+</style>
