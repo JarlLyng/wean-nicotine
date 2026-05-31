@@ -41,31 +41,35 @@
 	--font-weight-bold: 700;
 	--font-weight-extrabold: 800;
 
-	/* colors – light (Nordic Day) */
-	--primary: #CE63FF;
-	--primary-muted: color-mix(in oklab, var(--primary), transparent 85%);
+	/* colors – light (IAMJARL Day) */
+	--primary: #A435D2;
+	--primary-hover: #8E2BB8;
+	--primary-pressed: #7A2499;
+	--primary-subtle: rgba(164, 53, 210, 0.12);
+	--primary-muted: var(--primary-subtle);
 	--on-primary: #ffffff;
-	
+
 	--bg-app: #f8fafc;
 	--bg-muted: color-mix(in oklab, var(--bg-app), #000000 5%);
 	--surface: #ffffff;
 	--surface-raised: #ffffff;
-	
+
 	--text-primary: #0f172a;
 	--text-secondary: #475569;
 	--text-tertiary: #94a3b8;
 	--text-inverse: #ffffff;
-	
+
 	--border-subtle: rgba(15, 23, 42, 0.08);
 	--border-default: rgba(15, 23, 42, 0.12);
 	--border-glass: rgba(255, 255, 255, 0.4);
 
-	--success: #10b981;
-	--on-success: #ffffff;
-	--warning: #f59e0b;
-	--on-warning: #ffffff;
-	--error: #ef4444;
-	--on-error: #ffffff;
+	/* state — IAMJARL light */
+	--success: #2E7D32;
+	--on-success: #FFFFFF;
+	--warning: #C2410C;
+	--on-warning: #FFFFFF;
+	--error: #D70015;
+	--on-error: #FFFFFF;
 
 	/* Glassmorphism Tokens */
 	--glass-bg: rgba(255, 255, 255, 0.6);
@@ -76,24 +80,32 @@
 
 @media (prefers-color-scheme: dark) {
 	:root {
-		/* colors – dark (Nordic Night) */
+		/* colors – dark (IAMJARL Night) */
 		--primary: #D0FF00;
-		--primary-muted: color-mix(in oklab, var(--primary), transparent 90%);
+		--primary-hover: #B8E000;
+		--primary-pressed: #A0C400;
+		--primary-subtle: rgba(208, 255, 0, 0.15);
+		--primary-muted: var(--primary-subtle);
 		--on-primary: #000000;
-		
+
 		--bg-app: #020617;
 		--bg-muted: #0f172a;
 		--surface: #0f172a;
 		--surface-raised: #1e293b;
-		
+
 		--text-primary: #f8fafc;
 		--text-secondary: #94a3b8;
 		--text-tertiary: #64748b;
 		--text-inverse: #020617;
-		
+
 		--border-subtle: rgba(255, 255, 255, 0.08);
 		--border-default: rgba(255, 255, 255, 0.12);
 		--border-glass: rgba(255, 255, 255, 0.1);
+
+		/* state — IAMJARL dark */
+		--success: #4CAF50;
+		--warning: #FF6B35;
+		--error: #FF453A;
 
 		/* Glassmorphism Tokens Dark */
 		--glass-bg: rgba(15, 23, 42, 0.6);
