@@ -1,15 +1,16 @@
 import { Screen } from '@/components/Screen';
 import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
 import { OnboardingProgress } from '@/components/ui/OnboardingProgress';
 import { useDesignTokens, getColors, typography } from '@/lib/design';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { spacing } from '@/lib/theme';
 import { useRouter } from 'expo-router';
 import { useState, useMemo } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, TextStyle, View, ViewStyle } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native';
 
 export default function BaselineScreen() {
-  const { colors } = useDesignTokens();
+  useDesignTokens();
   const colorScheme = useColorScheme();
   const router = useRouter();
   const [baseline, setBaseline] = useState('');
@@ -59,23 +60,22 @@ export default function BaselineScreen() {
 
             {/* Input */}
             <View style={s.inputSection}>
-              <TextInput
-                style={s.input}
+              <Input
+                variant="display"
                 value={baseline}
                 onChangeText={(text) => {
                   setBaseline(text);
                   setError('');
                 }}
                 placeholder="0"
-                placeholderTextColor={colors.text.tertiary}
                 keyboardType="number-pad"
                 autoFocus
                 maxLength={3}
                 accessibilityLabel="Pouches per day"
                 accessibilityHint="Enter how many pouches you typically use per day."
+                suffix="pouches per day"
+                error={error || undefined}
               />
-              <Text style={s.inputLabel}>pouches per day</Text>
-              {error ? <Text style={s.error}>{error}</Text> : null}
             </View>
 
             {/* Spacer pushes button to bottom */}
@@ -130,29 +130,6 @@ const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) =>
       alignItems: 'center',
       marginBottom: spacing.xl,
     } as ViewStyle,
-    input: {
-      fontSize: 48,
-      lineHeight: 56,
-      fontWeight: `${typography.weights.bold}` as const,
-      color: colors.text.primary,
-      textAlign: 'center' as const,
-      width: '100%',
-      paddingVertical: spacing.lg,
-      borderBottomWidth: 2,
-      borderBottomColor: colors.border.subtle,
-    } as TextStyle,
-    inputLabel: {
-      fontSize: typography.sizes.sm,
-      lineHeight: typography.lineHeights.tight,
-      color: colors.text.secondary,
-      marginTop: spacing.sm,
-    } as TextStyle,
-    error: {
-      fontSize: typography.sizes.sm,
-      lineHeight: typography.lineHeights.tight,
-      color: colors.error,
-      marginTop: spacing.sm,
-    } as TextStyle,
 
     // Layout
     spacer: {
