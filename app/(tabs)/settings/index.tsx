@@ -75,7 +75,14 @@ export default function SettingsScreen() {
     if (!hasPermission) {
       const granted = await requestNotificationPermissions();
       if (!granted) {
-        Alert.alert('Permission Required', 'Enable notifications in your device settings.');
+        Alert.alert(
+          'Permission Required',
+          'Notifications are turned off in your device settings. Open Settings to enable them?',
+          [
+            { text: 'Cancel', style: 'cancel' },
+            { text: 'Open Settings', onPress: () => Linking.openSettings().catch(() => {}) },
+          ],
+        );
         return;
       }
       setHasPermission(true);
@@ -115,7 +122,7 @@ export default function SettingsScreen() {
                 value={dailyCheckInEnabled && hasPermission}
                 onValueChange={handleToggleDailyCheckIn}
                 disabled={isLoadingNotifications}
-                trackColor={{ false: colors.border.subtle, true: colors.primary }}
+                trackColor={{ false: colors.border.default, true: colors.primary }}
                 thumbColor={colors.surface.default}
                 accessibilityRole="switch"
                 accessibilityLabel="Daily check-in notification"
@@ -142,7 +149,7 @@ export default function SettingsScreen() {
               <Switch
                 value={colorScheme === 'light'}
                 onValueChange={(isLight) => setPreferredColorScheme(isLight ? 'light' : 'dark')}
-                trackColor={{ false: colors.border.subtle, true: colors.primary }}
+                trackColor={{ false: colors.border.default, true: colors.primary }}
                 thumbColor={colors.surface.default}
                 accessibilityRole="switch"
                 accessibilityLabel="Light mode"

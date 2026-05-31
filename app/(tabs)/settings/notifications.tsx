@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView, Switch, Alert, Pressable, TextStyle, ViewStyle } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Switch, Alert, Pressable, Linking, TextStyle, ViewStyle } from 'react-native';
 import { Screen } from '@/components/Screen';
 import { Card } from '@/components/ui/Card';
 import { Icon } from '@/components/ui/Icon';
@@ -174,7 +174,14 @@ export default function NotificationsScreen() {
     if (!hasPermission) {
       const granted = await requestNotificationPermissions();
       if (!granted) {
-        Alert.alert('Permission Required', 'Enable notifications in your device settings.');
+        Alert.alert(
+          'Permission Required',
+          'Notifications are turned off in your device settings. Open Settings to enable them?',
+          [
+            { text: 'Cancel', style: 'cancel' },
+            { text: 'Open Settings', onPress: () => Linking.openSettings().catch(() => {}) },
+          ],
+        );
         return;
       }
       setHasPermission(true);
@@ -202,7 +209,14 @@ export default function NotificationsScreen() {
     if (!hasPermission) {
       const granted = await requestNotificationPermissions();
       if (!granted) {
-        Alert.alert('Permission Required', 'Enable notifications in your device settings.');
+        Alert.alert(
+          'Permission Required',
+          'Notifications are turned off in your device settings. Open Settings to enable them?',
+          [
+            { text: 'Cancel', style: 'cancel' },
+            { text: 'Open Settings', onPress: () => Linking.openSettings().catch(() => {}) },
+          ],
+        );
         return;
       }
       setHasPermission(true);
@@ -260,7 +274,7 @@ export default function NotificationsScreen() {
               <Switch
                 value={dailyCheckInEnabled && hasPermission}
                 onValueChange={handleToggleDailyCheckIn}
-                trackColor={{ false: colors.border.subtle, true: colors.primary }}
+                trackColor={{ false: colors.border.default, true: colors.primary }}
                 thumbColor={colors.surface.default}
                 accessibilityRole="switch"
                 accessibilityLabel="Daily check-in"
@@ -286,7 +300,7 @@ export default function NotificationsScreen() {
               <Switch
                 value={triggerRemindersEnabled && hasPermission}
                 onValueChange={handleToggleTriggerReminders}
-                trackColor={{ false: colors.border.subtle, true: colors.primary }}
+                trackColor={{ false: colors.border.default, true: colors.primary }}
                 thumbColor={colors.surface.default}
                 accessibilityRole="switch"
                 accessibilityLabel="Trigger reminders"

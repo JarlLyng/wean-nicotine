@@ -1,5 +1,6 @@
-import { useState, useMemo } from 'react';
-import { View, Text, StyleSheet, ScrollView, Alert, TextStyle, ViewStyle } from 'react-native';
+import { useState, useMemo, useRef, useEffect } from 'react';
+import { Animated, Easing, Platform, Pressable, View, Text, StyleSheet, ScrollView, Alert, TextStyle, ViewStyle } from 'react-native';
+import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
 import { Screen } from '@/components/Screen';
 import { Button } from '@/components/ui/Button';
@@ -19,55 +20,108 @@ const DELETED_ITEMS = [
   { icon: 'bell' as const, label: 'Scheduled notifications' },
 ];
 
+// Hold-to-confirm duration. Long enough that an accidental tap-and-hold
+// won't trigger; short enough that an intentional user doesn't lose patience.
+const HOLD_MS = 2000;
+
 export default function ResetTaperScreen() {
   const router = useRouter();
   const { colors } = useDesignTokens();
   const s = useMemo(() => createStyles(colors), [colors]);
   const [isStartingOver, setIsStartingOver] = useState(false);
+  const [isHolding, setIsHolding] = useState(false);
 
-  const handleStartOver = async () => {
-    Alert.alert(
-      'Are you sure?',
-      'This permanently deletes all your data. You cannot undo this.',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Delete Everything',
-          style: 'destructive',
-          onPress: async () => {
-            setIsStartingOver(true);
-            try {
-              await cancelAllNotifications();
-              await resetAllData();
-              await deleteAllAnalytics();
+  // Drives the visual fill inside the delete button.
+  const holdProgress = useRef(new Animated.Value(0)).current;
+  const holdAnimationRef = useRef<Animated.CompositeAnimation | null>(null);
+  const holdTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-              const { getTaperSettings } = await import('@/lib/db-settings');
-              const { getUserPlan } = await import('@/lib/db-user-plan');
-              const verifySettings = await getTaperSettings();
-              const verifyPlan = await getUserPlan();
+  useEffect(() => {
+    return () => {
+      holdAnimationRef.current?.stop();
+      if (holdTimerRef.current) clearTimeout(holdTimerRef.current);
+    };
+  }, []);
 
-              if (verifySettings || verifyPlan) {
-                captureMessage('Reset: data still exists after deletion', 'warning');
-                Alert.alert('Warning', 'Some data may not have been cleared. Please try again.');
-                setIsStartingOver(false);
-                return;
-              }
+  const performReset = async () => {
+    setIsStartingOver(true);
+    try {
+      await cancelAllNotifications();
+      await resetAllData();
+      await deleteAllAnalytics();
 
-              Alert.alert('Done', 'All data has been cleared.', [
-                { text: 'OK', onPress: () => router.replace('/(onboarding)/welcome') },
-              ]);
-            } catch (error) {
-              if (__DEV__) console.error('Error starting over:', error);
-              if (error instanceof Error) captureError(error, { context: 'reset_taper_start_over' });
-              Alert.alert('Error', 'Failed to clear data. Please try again.');
-            } finally {
-              setIsStartingOver(false);
-            }
-          },
-        },
-      ]
-    );
+      const { getTaperSettings } = await import('@/lib/db-settings');
+      const { getUserPlan } = await import('@/lib/db-user-plan');
+      const verifySettings = await getTaperSettings();
+      const verifyPlan = await getUserPlan();
+
+      if (verifySettings || verifyPlan) {
+        captureMessage('Reset: data still exists after deletion', 'warning');
+        Alert.alert('Warning', 'Some data may not have been cleared. Please try again.');
+        setIsStartingOver(false);
+        return;
+      }
+
+      if (Platform.OS === 'ios') {
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
+      }
+      Alert.alert('Done', 'All data has been cleared.', [
+        { text: 'OK', onPress: () => router.replace('/(onboarding)/welcome') },
+      ]);
+    } catch (error) {
+      if (__DEV__) console.error('Error starting over:', error);
+      if (error instanceof Error) captureError(error, { context: 'reset_taper_start_over' });
+      Alert.alert('Error', 'Failed to clear data. Please try again.');
+    } finally {
+      setIsStartingOver(false);
+    }
   };
+
+  const cancelHold = () => {
+    holdAnimationRef.current?.stop();
+    holdAnimationRef.current = null;
+    if (holdTimerRef.current) {
+      clearTimeout(holdTimerRef.current);
+      holdTimerRef.current = null;
+    }
+    Animated.timing(holdProgress, {
+      toValue: 0,
+      duration: 180,
+      easing: Easing.out(Easing.quad),
+      useNativeDriver: false,
+    }).start();
+    setIsHolding(false);
+  };
+
+  const startHold = () => {
+    if (isStartingOver) return;
+    setIsHolding(true);
+    if (Platform.OS === 'ios') {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+    }
+    holdProgress.setValue(0);
+    holdAnimationRef.current = Animated.timing(holdProgress, {
+      toValue: 1,
+      duration: HOLD_MS,
+      easing: Easing.linear,
+      useNativeDriver: false,
+    });
+    holdAnimationRef.current.start();
+    holdTimerRef.current = setTimeout(() => {
+      holdTimerRef.current = null;
+      holdAnimationRef.current = null;
+      setIsHolding(false);
+      if (Platform.OS === 'ios') {
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning).catch(() => {});
+      }
+      void performReset();
+    }, HOLD_MS);
+  };
+
+  const fillWidth = holdProgress.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0%', '100%'],
+  });
 
   return (
     <Screen>
@@ -98,16 +152,31 @@ export default function ResetTaperScreen() {
           {/* Spacer */}
           <View style={s.spacer} />
 
-          {/* Actions */}
-          <Button
-            title={isStartingOver ? 'Deleting...' : 'Delete All Data'}
-            onPress={handleStartOver}
+          {/* Hold-to-confirm destructive action.
+              A single tap won't fire the reset — the user has to hold for
+              ~2 seconds, watching a primary-coloured fill sweep across the
+              button. Releasing early cancels the action cleanly. */}
+          <Pressable
+            onPressIn={startHold}
+            onPressOut={cancelHold}
             disabled={isStartingOver}
-            loading={isStartingOver}
-            variant="secondary"
-            style={s.deleteButton}
-            textStyle={{ color: colors.error }}
-          />
+            accessibilityRole="button"
+            accessibilityLabel="Hold to delete all data"
+            accessibilityHint="Press and hold for two seconds to confirm and permanently delete all data."
+            style={[s.holdButton, isHolding && s.holdButtonActive]}
+          >
+            <Animated.View
+              style={[s.holdFill, { width: fillWidth, backgroundColor: colors.error + '22' }]}
+              pointerEvents="none"
+            />
+            <Text style={s.holdButtonText}>
+              {isStartingOver
+                ? 'Deleting…'
+                : isHolding
+                  ? 'Keep holding to confirm…'
+                  : 'Hold to delete all data'}
+            </Text>
+          </Pressable>
           <Button
             title="Cancel"
             onPress={() => router.back()}
@@ -185,8 +254,32 @@ const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) =>
       flex: 1,
       minHeight: spacing.xxl,
     } as ViewStyle,
-    deleteButton: {
+    holdButton: {
+      position: 'relative',
+      overflow: 'hidden',
+      minHeight: 52,
+      paddingHorizontal: spacing.lg,
+      paddingVertical: spacing.md,
+      borderRadius: 12,
+      borderWidth: 2,
       borderColor: colors.error,
+      backgroundColor: colors.background.app,
+      alignItems: 'center',
+      justifyContent: 'center',
       marginBottom: spacing.sm,
     } as ViewStyle,
+    holdButtonActive: {
+      borderColor: colors.error,
+    } as ViewStyle,
+    holdFill: {
+      position: 'absolute',
+      left: 0,
+      top: 0,
+      bottom: 0,
+    } as ViewStyle,
+    holdButtonText: {
+      fontSize: typography.sizes.base,
+      fontWeight: `${typography.weights.semibold}` as const,
+      color: colors.error,
+    } as TextStyle,
   });
