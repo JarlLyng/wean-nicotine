@@ -38,37 +38,98 @@ let initPromise: Promise<SQLiteDatabase> | null = null;
 
 interface Migration {
   version: number;
-  sql: string;
-  /** True for legacy migrations that may already have run on existing installs */
-  ignoreError?: boolean;
+  /**
+   * Migration body. Receives the db and must perform all SQL inside the
+   * provided transaction. Throwing rolls the migration back AND prevents
+   * `schema_version` from being advanced — so the next launch retries.
+   */
+  up: (db: SQLiteDatabase) => Promise<void>;
+}
+
+/**
+ * Returns true if `table` has a column named `column`. Used by legacy ALTER
+ * migrations (versions 1 and 2) so they can be skipped idempotently on
+ * databases where the column was already added before the migration system
+ * was introduced — without resorting to swallow-all-errors `ignoreError`.
+ */
+async function hasColumn(db: SQLiteDatabase, table: string, column: string): Promise<boolean> {
+  type ColumnInfo = { name: string };
+  const cols = await db.getAllAsync<ColumnInfo>(`PRAGMA table_info(${table})`);
+  return cols.some((c) => c.name === column);
 }
 
 const MIGRATIONS: Migration[] = [
-  { version: 1, sql: `ALTER TABLE taper_settings ADD COLUMN triggers TEXT`, ignoreError: true },
-  { version: 2, sql: `ALTER TABLE taper_settings ADD COLUMN currency TEXT`, ignoreError: true },
-  { version: 3, sql: `CREATE TABLE IF NOT EXISTS breathing_sessions (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    pattern TEXT NOT NULL,
-    duration_seconds INTEGER NOT NULL,
-    completed_at INTEGER NOT NULL,
-    created_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now') * 1000)
-  )` },
-  { version: 4, sql: `CREATE TABLE IF NOT EXISTS reflections (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    prompt_id TEXT NOT NULL,
-    category TEXT NOT NULL,
-    prompt_text TEXT NOT NULL,
-    note TEXT NOT NULL,
-    created_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now') * 1000)
-  )` },
-  { version: 5, sql: `CREATE INDEX IF NOT EXISTS idx_reflections_created_at ON reflections(created_at)` },
-  // Drop the redundant `user_plan` cache table — its `current_daily_allowance`
-  // column was never read for display; the Today screen recomputes it from
-  // settings on every focus. See #11.
-  //
-  // Numbered v7 so it lands after the v6 analytics migration introduced by
-  // #114 (PR #159), regardless of merge order.
-  { version: 7, sql: `DROP TABLE IF EXISTS user_plan` },
+  {
+    version: 1,
+    up: async (db) => {
+      if (!(await hasColumn(db, 'taper_settings', 'triggers'))) {
+        await db.execAsync(`ALTER TABLE taper_settings ADD COLUMN triggers TEXT`);
+      }
+    },
+  },
+  {
+    version: 2,
+    up: async (db) => {
+      if (!(await hasColumn(db, 'taper_settings', 'currency'))) {
+        await db.execAsync(`ALTER TABLE taper_settings ADD COLUMN currency TEXT`);
+      }
+    },
+  },
+  {
+    version: 3,
+    up: async (db) => {
+      await db.execAsync(`CREATE TABLE IF NOT EXISTS breathing_sessions (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        pattern TEXT NOT NULL,
+        duration_seconds INTEGER NOT NULL,
+        completed_at INTEGER NOT NULL,
+        created_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now') * 1000)
+      )`);
+    },
+  },
+  {
+    version: 4,
+    up: async (db) => {
+      await db.execAsync(`CREATE TABLE IF NOT EXISTS reflections (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        prompt_id TEXT NOT NULL,
+        category TEXT NOT NULL,
+        prompt_text TEXT NOT NULL,
+        note TEXT NOT NULL,
+        created_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now') * 1000)
+      )`);
+    },
+  },
+  {
+    version: 5,
+    up: async (db) => {
+      await db.execAsync(`CREATE INDEX IF NOT EXISTS idx_reflections_created_at ON reflections(created_at)`);
+    },
+  },
+  {
+    // Moved here from analytics.ts so the schema is owned in one place and
+    // gets recorded in schema_version.
+    version: 6,
+    up: async (db) => {
+      await db.execAsync(`CREATE TABLE IF NOT EXISTS analytics (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        event_type TEXT NOT NULL,
+        timestamp INTEGER NOT NULL,
+        data TEXT
+      )`);
+      await db.execAsync(`CREATE INDEX IF NOT EXISTS idx_analytics_event_type ON analytics(event_type)`);
+      await db.execAsync(`CREATE INDEX IF NOT EXISTS idx_analytics_timestamp ON analytics(timestamp)`);
+    },
+  },
+  {
+    // Drop the redundant `user_plan` cache table — its `current_daily_allowance`
+    // column was never read for display; the Today screen recomputes it from
+    // settings on every focus. See #11.
+    version: 7,
+    up: async (db) => {
+      await db.execAsync(`DROP TABLE IF EXISTS user_plan`);
+    },
+  },
 ];
 
 async function runMigrations(database: SQLiteDatabase): Promise<void> {
@@ -82,15 +143,22 @@ async function runMigrations(database: SQLiteDatabase): Promise<void> {
 
   for (const migration of MIGRATIONS) {
     if (migration.version <= currentVersion) continue;
+
+    // Run each migration in its own transaction. If `up` throws, the SQL is
+    // rolled back AND we do NOT advance `schema_version` — so the next launch
+    // retries this migration cleanly instead of skipping a half-applied one.
+    await database.runAsync('BEGIN');
     try {
-      await database.execAsync(migration.sql);
+      await migration.up(database);
+      await database.runAsync(
+        'INSERT OR REPLACE INTO schema_version (version) VALUES (?)',
+        [migration.version]
+      );
+      await database.runAsync('COMMIT');
     } catch (error) {
-      if (!migration.ignoreError) throw error;
+      await database.runAsync('ROLLBACK');
+      throw error;
     }
-    await database.runAsync(
-      'INSERT OR REPLACE INTO schema_version (version) VALUES (?)',
-      [migration.version]
-    );
   }
 }
 

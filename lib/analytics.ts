@@ -14,21 +14,16 @@ export interface AnalyticsEvent {
 }
 
 /**
- * Initialize analytics table
+ * Initialize analytics — no-op kept for backward-compatible callers.
+ *
+ * The `analytics` table and its indexes are now created by the centralized
+ * migration runner in `lib/db.ts` (migration v6). Calling this function only
+ * needs to ensure the database is initialized so callers don't crash on a
+ * fresh launch.
  */
 export async function initAnalytics(): Promise<void> {
-  const db = await getDatabase();
-  await db.execAsync(`
-    CREATE TABLE IF NOT EXISTS analytics (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      event_type TEXT NOT NULL,
-      timestamp INTEGER NOT NULL,
-      data TEXT
-    );
-    
-    CREATE INDEX IF NOT EXISTS idx_analytics_event_type ON analytics(event_type);
-    CREATE INDEX IF NOT EXISTS idx_analytics_timestamp ON analytics(timestamp);
-  `);
+  // Touch the DB so the migration system runs if it hasn't yet.
+  await getDatabase();
 }
 
 /**
