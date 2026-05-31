@@ -9,13 +9,13 @@ import { spacing, borderRadius } from '@/lib/theme';
 import { useDesignTokens, typography } from '@/lib/design';
 import { getTaperSettings } from '@/lib/db-settings';
 import { calculateCostSavings, type CostSavingsData } from '@/lib/cost-savings';
-import { formatMoney } from '@/lib/currency';
+import { formatMoney, type CurrencyCode } from '@/lib/currency';
 import { captureError } from '@/lib/sentry';
 
 export default function CostSavingsScreen() {
   const { colors } = useDesignTokens();
   const [data, setData] = useState<CostSavingsData | null>(null);
-  const [currency, setCurrency] = useState<string>('DKK');
+  const [currency, setCurrency] = useState<CurrencyCode>('DKK');
   const [noPrice, setNoPrice] = useState(false);
   const [startDate, setStartDate] = useState<Date | null>(null);
   const s = useMemo(() => createStyles(colors), [colors]);
@@ -57,7 +57,7 @@ export default function CostSavingsScreen() {
 
   if (!data) return <Screen><View /></Screen>;
 
-  const fmt = (cents: number) => formatMoney(cents, currency as any);
+  const fmt = (cents: number) => formatMoney(cents, currency);
 
   // Show last 6 weeks max
   const recentWeeks = data.weeklySavings.slice(-6);

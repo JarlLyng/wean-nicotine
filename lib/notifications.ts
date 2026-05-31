@@ -101,39 +101,6 @@ export async function cancelDailyCheckIn(): Promise<void> {
 }
 
 /**
- * Schedule trigger-based reminder
- */
-export async function scheduleTriggerReminder(
-  trigger: string,
-  hour: number,
-  minute: number
-): Promise<string | null> {
-  try {
-    const notificationId = await Notifications.scheduleNotificationAsync({
-      content: {
-        title: 'Reminder',
-        body: `Remember your plan. You've got this!`,
-        sound: true,
-        data: { type: 'trigger_reminder', trigger },
-      },
-      trigger: {
-        type: 'daily' as const,
-        hour,
-        minute,
-      } as DailyTriggerInput,
-    });
-
-    return notificationId;
-  } catch (error) {
-    if (__DEV__) console.error('Error scheduling trigger reminder:', error);
-    if (error instanceof Error) {
-      captureError(error, { context: 'schedule_trigger_reminder' });
-    }
-    return null;
-  }
-}
-
-/**
  * Schedule a single trigger reminders notification (MVP).
  *
  * We only schedule ONE reminder per day to avoid spam.

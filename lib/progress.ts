@@ -386,17 +386,6 @@ export async function getDailyBreakdown(
   });
 }
 
-/** @deprecated Use calculateTotalProgressAndMilestones instead */
-export async function calculateTotalProgress(settings: TaperSettings): Promise<TotalProgress> {
-  const { progress } = await calculateTotalProgressAndMilestones(settings);
-  return progress;
-}
-
-/** @deprecated Use calculateTotalProgressAndMilestones instead */
-export async function detectMilestones(settings: TaperSettings): Promise<Milestone[]> {
-  const { milestones } = await calculateTotalProgressAndMilestones(settings);
-  return milestones;
-}
 
 /**
  * Get current week start and end dates

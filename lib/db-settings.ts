@@ -7,6 +7,7 @@ import { getDatabase } from './db';
 import { getDummySettings } from './db-web-dummy';
 import { captureError } from './sentry';
 import type { TaperSettings } from './models';
+import { parseCurrency } from './currency';
 
 /**
  * Create or update taper settings
@@ -145,14 +146,7 @@ export async function getTaperSettings(): Promise<TaperSettings | null> {
     id: result.id,
     baselinePouchesPerDay: result.baseline_pouches_per_day,
     pricePerCan: result.price_per_can ?? undefined,
-    currency:
-      result.currency === 'DKK' ||
-        result.currency === 'SEK' ||
-        result.currency === 'NOK' ||
-        result.currency === 'EUR' ||
-        result.currency === 'USD'
-        ? result.currency
-        : 'DKK',
+    currency: parseCurrency(result.currency),
     weeklyReductionPercent: result.weekly_reduction_percent,
     startDate: result.start_date,
     triggers,
@@ -173,10 +167,5 @@ export async function hasTaperSettings(): Promise<boolean> {
   return settings !== null;
 }
 
-/**
- * Delete all taper settings (for testing/resetting onboarding)
- */
-export async function deleteTaperSettings(): Promise<void> {
-  const db = await getDatabase();
-  await db.runAsync('DELETE FROM taper_settings');
-}
+// `deleteTaperSettings` removed — replaced by `resetAllData()` in lib/db.ts,
+// which clears settings (and all other tables) inside a single transaction.
