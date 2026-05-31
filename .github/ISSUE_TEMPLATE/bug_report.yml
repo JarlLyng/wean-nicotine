@@ -1,0 +1,100 @@
+name: Bug report
+description: Something in the Wean Nicotine app or marketing site is broken or behaves unexpectedly.
+title: '[Bug] '
+labels: ['bug']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug. The more concrete the details, the faster it can be fixed.
+        For security vulnerabilities, **do not file a public issue** — see [SECURITY.md](https://github.com/JarlLyng/wean-nicotine/blob/main/SECURITY.md) for the private reporting channel.
+
+  - type: input
+    id: summary
+    attributes:
+      label: Summary
+      description: A one-line description of what's wrong.
+      placeholder: 'Daily allowance shows 0 after editing my plan'
+    validations:
+      required: true
+
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Where did this happen?
+      description: Which part of the project does the bug live in?
+      options:
+        - iOS app
+        - Marketing website (weannicotine.iamjarl.com)
+        - Both
+        - Other / unsure
+    validations:
+      required: true
+
+  - type: input
+    id: app_version
+    attributes:
+      label: App version
+      description: From the iOS App Store listing or `Settings → About` inside the app. Leave blank if the bug is on the marketing site.
+      placeholder: '1.3.1'
+
+  - type: input
+    id: ios_version
+    attributes:
+      label: iOS version
+      description: From iOS `Settings → General → About → Software Version`.
+      placeholder: 'iOS 18.2'
+
+  - type: input
+    id: device
+    attributes:
+      label: Device
+      description: iPhone model.
+      placeholder: 'iPhone 15 Pro'
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: List the exact steps needed to see the bug. Numbered list is fine.
+      placeholder: |
+        1. Open the app
+        2. Tap "Settings"
+        3. Tap "Edit plan"
+        4. Change baseline from 12 to 10
+        5. Tap Save
+        6. Go back to Today — daily allowance shows 0
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect to happen?
+      placeholder: 'Daily allowance should update to reflect the new baseline (around 9 or 10).'
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: What actually happened?
+      placeholder: 'Daily allowance is 0. Pouches Used still increments correctly but the ring is empty.'
+    validations:
+      required: true
+
+  - type: textarea
+    id: media
+    attributes:
+      label: Screenshots or screen recording (optional)
+      description: Drag and drop images / videos here. Crops and short clips help a lot for visual bugs.
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Pre-submit checks
+      options:
+        - label: I searched existing issues and didn't find a duplicate
+          required: true
+        - label: This is a public bug report (security issues go to SECURITY.md)
+          required: true

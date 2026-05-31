@@ -1,0 +1,34 @@
+# Build output / generated
+dist/
+.expo/
+.astro/
+website/dist/
+website/.astro/
+ios/
+android/
+
+# Dependencies
+node_modules/
+
+# Large generated lockfiles — npm formats these its own way
+package-lock.json
+website/package-lock.json
+
+# Astro components — require `prettier-plugin-astro` which is not installed
+# yet. Add the plugin and remove this line in a follow-up if/when we decide
+# to format .astro files automatically.
+*.astro
+
+# Documentation / inputs we don't want auto-reformatted
+CHANGELOG.md
+
+# Binary assets
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
+*.avif
+*.ico
+*.icns
+*.pdf

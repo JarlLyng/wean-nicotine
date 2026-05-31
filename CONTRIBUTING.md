@@ -71,6 +71,19 @@ See [`docs/AI_CONTEXT.md`](./docs/AI_CONTEXT.md) for the full architecture overv
 - Features that turn the app into a generic habit tracker (it's deliberately specific to nicotine reduction)
 - Major design system overrides — the IAMJARL tokens are the source of truth
 
+## Issue triage and priority
+
+Open issues use a four-level priority taxonomy. Outside contributors can self-triage with these definitions:
+
+| Label  | Meaning                                                                                                                                                                 | Typical response time      |
+| ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- |
+| **P0** | Incident — something is broken in production or actively harming users. The app crashes on launch, a privacy regression ships, data loss is observed. Drop everything.  | Same day                   |
+| **P1** | High priority — meaningful bug, regression, or user-visible quality issue, but the app still works. Significant ASO/SEO blockers (e.g. broken hreflang) also live here. | Within a week              |
+| **P2** | Medium priority — defensible improvement that the product benefits from but isn't blocking. Most quality polish, design-system cleanup, and refactors.                  | Within the current quarter |
+| **P3** | Low priority — backlog ideas, future features, marketing tasks, blog posts, content work. No fixed timeline; revisited when adjacent work happens.                      | When it naturally fits     |
+
+PRs can reference these labels too — `fix(P0): …` etc. — but the labels on the issue are the source of truth. Multiple priorities on the same issue means the highest one wins.
+
 ## Reviews and timing
 
 I aim to respond within a week, often faster. Sometimes life takes precedence — this is a side project. Please be patient and feel free to ping the issue if it's been silent for a fortnight.
