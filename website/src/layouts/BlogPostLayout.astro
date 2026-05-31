@@ -1,0 +1,172 @@
+---
+import Layout from './Layout.astro';
+import { SITE_NAME } from '../lib/site';
+
+interface Props {
+	title: string;
+	description: string;
+	pubDate: Date;
+	updatedDate?: Date;
+	author: string;
+	tags: string[];
+	canonicalPath: string;
+	coverImage?: string;
+}
+
+const { title, description, pubDate, updatedDate, author, tags, canonicalPath, coverImage } = Astro.props;
+
+const isoPub = pubDate.toISOString();
+const isoUpdated = updatedDate?.toISOString();
+
+const blogPostingJsonLd = {
+	'@context': 'https://schema.org',
+	'@type': 'BlogPosting',
+	headline: title,
+	description,
+	datePublished: isoPub,
+	...(isoUpdated ? { dateModified: isoUpdated } : {}),
+	author: { '@type': 'Person', name: author },
+	publisher: { '@type': 'Organization', name: SITE_NAME },
+	mainEntityOfPage: {
+		'@type': 'WebPage',
+		'@id': new URL(canonicalPath, Astro.site).toString(),
+	},
+	...(coverImage ? { image: new URL(coverImage, Astro.site).toString() } : {}),
+};
+
+const formattedPubDate = pubDate.toLocaleDateString('en-US', {
+	year: 'numeric',
+	month: 'long',
+	day: 'numeric',
+});
+---
+
+<Layout
+	title={title}
+	description={description}
+	canonicalPath={canonicalPath}
+	availableLocales={['en']}
+>
+	<script type="application/ld+json" set:html={JSON.stringify(blogPostingJsonLd)} />
+
+	<article class="blog-post">
+		<header class="blog-post__header">
+			<p class="blog-post__breadcrumb"><a href="/blog/">← All posts</a></p>
+			<h1>{title}</h1>
+			<p class="blog-post__lede">{description}</p>
+			<div class="blog-post__meta">
+				<time datetime={isoPub}>{formattedPubDate}</time>
+				<span aria-hidden="true">·</span>
+				<span>{author}</span>
+				{tags.length > 0 && (
+					<>
+						<span aria-hidden="true">·</span>
+						<ul class="blog-post__tags">
+							{tags.map((tag) => (
+								<li>#{tag}</li>
+							))}
+						</ul>
+					</>
+				)}
+			</div>
+		</header>
+
+		<div class="blog-post__body">
+			<slot />
+		</div>
+	</article>
+</Layout>
+
+<style>
+	.blog-post {
+		max-width: 720px;
+		margin: 0 auto;
+		padding: var(--space-xxxl) var(--space-lg);
+	}
+	.blog-post__breadcrumb {
+		margin: 0 0 var(--space-lg);
+		font-size: var(--font-size-sm);
+		color: var(--text-secondary);
+	}
+	.blog-post__breadcrumb a {
+		color: inherit;
+		text-decoration: none;
+	}
+	.blog-post__breadcrumb a:hover {
+		color: var(--text-primary);
+	}
+	.blog-post__header h1 {
+		font-family: var(--font-display);
+		font-size: var(--font-size-hero);
+		line-height: var(--line-height-tight);
+		margin: 0 0 var(--space-lg);
+		color: var(--text-primary);
+	}
+	.blog-post__lede {
+		font-size: var(--font-size-lg);
+		line-height: var(--line-height-relaxed);
+		color: var(--text-secondary);
+		margin: 0 0 var(--space-xl);
+	}
+	.blog-post__meta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-sm);
+		align-items: center;
+		font-size: var(--font-size-sm);
+		color: var(--text-tertiary);
+		padding-bottom: var(--space-xl);
+		border-bottom: 1px solid var(--border-subtle);
+	}
+	.blog-post__tags {
+		display: inline-flex;
+		gap: var(--space-sm);
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	.blog-post__body {
+		padding-top: var(--space-xl);
+		font-size: var(--font-size-base);
+		line-height: var(--line-height-relaxed);
+		color: var(--text-primary);
+	}
+	.blog-post__body :global(h2) {
+		font-family: var(--font-display);
+		font-size: var(--font-size-xl);
+		line-height: var(--line-height-snug);
+		margin: var(--space-xxl) 0 var(--space-md);
+	}
+	.blog-post__body :global(h3) {
+		font-size: var(--font-size-lg);
+		margin: var(--space-xl) 0 var(--space-sm);
+	}
+	.blog-post__body :global(p) {
+		margin: 0 0 var(--space-lg);
+	}
+	.blog-post__body :global(ul),
+	.blog-post__body :global(ol) {
+		margin: 0 0 var(--space-lg);
+		padding-left: var(--space-xl);
+	}
+	.blog-post__body :global(li) {
+		margin-bottom: var(--space-sm);
+	}
+	.blog-post__body :global(a) {
+		color: var(--primary);
+	}
+	.blog-post__body :global(blockquote) {
+		margin: var(--space-xl) 0;
+		padding-left: var(--space-lg);
+		border-left: 3px solid var(--primary);
+		color: var(--text-secondary);
+		font-style: italic;
+	}
+	.blog-post__body :global(code) {
+		font-family: var(--font-mono);
+		font-size: 0.9em;
+		background: var(--bg-muted);
+		padding: 2px 6px;
+		border-radius: var(--radius-sm);
+	}
+</style>
