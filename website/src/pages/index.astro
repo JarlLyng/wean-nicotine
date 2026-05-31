@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import Button from '../components/Button.astro';
 import Card from '../components/Card.astro';
 import Section from '../components/Section.astro';
+import AppStoreBadge from '../components/AppStoreBadge.astro';
 import { APP_STORE_URL, isAppStoreUrlKnown, SITE_NAME } from '../lib/site';
 
 const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
@@ -115,10 +116,14 @@ const screenshots = [
 				</p>
 
 				<div class="hero__cta">
-					<Button variant="primary" href={APP_STORE_URL} disabled={!appStoreKnown} external={true} trackSource="hero">
-						{appStoreCtaLabel}
-					</Button>
-					<Button variant="secondary" href="#screenshots">See the app</Button>
+					{appStoreKnown ? (
+						<AppStoreBadge href={APP_STORE_URL} lang="en" />
+					) : (
+						<Button variant="primary" href={APP_STORE_URL} disabled={!appStoreKnown} external={true} trackSource="hero">
+							{appStoreCtaLabel}
+						</Button>
+					)}
+					<a class="hero__cta-secondary" href="#screenshots">See the app</a>
 				</div>
 
 				<p class="hero__fineprint">
@@ -419,6 +424,22 @@ const screenshots = [
 		display: flex;
 		gap: var(--space-lg);
 		flex-wrap: wrap;
+		align-items: center;
+	}
+	.hero__cta-secondary {
+		color: var(--text-secondary);
+		text-decoration: none;
+		font-size: var(--font-size-base);
+		font-weight: var(--font-weight-semibold);
+		padding: var(--space-sm) 0;
+	}
+	.hero__cta-secondary:hover {
+		color: var(--text-primary);
+	}
+	.hero__cta-secondary:focus-visible {
+		outline: 2px solid var(--primary);
+		outline-offset: 4px;
+		border-radius: 4px;
 	}
 
 	.hero__fineprint {

@@ -67,10 +67,16 @@ const lastUpdated = '2026-01-21';
 			<h2>Website analytics</h2>
 			<p>
 				This website (<a href={SITE_URL}>{SITE_URL}</a>) uses <strong>Umami</strong>, a privacy‑friendly
-				web analytics tool, to understand which pages are visited and which referrers send traffic. Umami does
-				not set cookies, does not collect personal data, and does not track users across sites. It does not
-				affect the app itself — only this marketing website.
+				web analytics tool, to understand which pages are visited and which referrers send traffic. It is
+				loaded on every page of this site only — never inside the app.
 			</p>
+			<ul>
+				<li><strong>No cookies.</strong> Umami does not store any cookie or local-storage entry on your device.</li>
+				<li><strong>No personal data.</strong> No IP addresses, fingerprints, or unique IDs are collected. Page-view counts and referrer hostnames are recorded in aggregate.</li>
+				<li><strong>No cross-site tracking.</strong> Umami cannot follow you to other sites and does not feed any ad network.</li>
+				<li><strong>No GDPR consent banner.</strong> Because nothing personal is collected and no cookie is set, no consent is required under GDPR / ePrivacy. We deliberately avoid the cookie wall.</li>
+				<li><strong>Self-hosted instance</strong> at <a href="https://umami-iamjarl.vercel.app/" rel="noopener noreferrer" target="_blank">umami-iamjarl.vercel.app</a>. No third party receives the data.</li>
+			</ul>
 
 			<h2>Data retention</h2>
 			<p>
