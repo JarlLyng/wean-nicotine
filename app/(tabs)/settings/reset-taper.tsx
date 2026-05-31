@@ -51,11 +51,9 @@ export default function ResetTaperScreen() {
       await deleteAllAnalytics();
 
       const { getTaperSettings } = await import('@/lib/db-settings');
-      const { getUserPlan } = await import('@/lib/db-user-plan');
       const verifySettings = await getTaperSettings();
-      const verifyPlan = await getUserPlan();
 
-      if (verifySettings || verifyPlan) {
+      if (verifySettings) {
         captureMessage('Reset: data still exists after deletion', 'warning');
         Alert.alert('Warning', 'Some data may not have been cleared. Please try again.');
         setIsStartingOver(false);

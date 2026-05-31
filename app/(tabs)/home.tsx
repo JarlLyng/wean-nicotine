@@ -29,6 +29,7 @@ export default function HomeScreen() {
   const {
     data,
     isLoading,
+    status,
     reload,
     incrementPouches,
     decrementPouches,
@@ -174,6 +175,18 @@ export default function HomeScreen() {
         {isLoading ? (
           <Card variant="elevated" style={styles.card} padding="lg">
             <ActivityIndicator size="large" color={colors.primary} />
+          </Card>
+        ) : status === 'error' ? (
+          <Card variant="elevated" style={styles.card} padding="lg">
+            <Text style={styles.placeholderText}>
+              Couldn{'’'}t load your data right now.
+            </Text>
+            <Button
+              title="Try again"
+              onPress={() => reload({ showLoading: true })}
+              variant="secondary"
+              style={styles.logButton}
+            />
           </Card>
         ) : dailyAllowance !== null ? (
           <View style={styles.mainContent}>

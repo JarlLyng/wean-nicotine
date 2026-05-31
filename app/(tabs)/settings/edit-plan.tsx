@@ -15,8 +15,6 @@ import { Card } from '@/components/ui/Card';
 import { useDesignTokens } from '@/lib/design';
 import { captureError } from '@/lib/sentry';
 import { getTaperSettings, saveTaperSettings } from '@/lib/db-settings';
-import { saveUserPlan } from '@/lib/db-user-plan';
-import { calculateDailyAllowance } from '@/lib/taper-plan';
 import { spacing, borderRadius, typography, fontWeights } from '@/lib/theme';
 import { useRouter } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
@@ -112,19 +110,10 @@ export default function EditPlanScreen() {
         triggers: existing?.triggers,
       });
 
-      // Recalculate the user plan so the Today screen reflects the new baseline immediately
-      const updated = await getTaperSettings();
-      if (updated) {
-        const allowance = calculateDailyAllowance(updated, today);
-        await saveUserPlan(
-          {
-            settingsId: updated.id,
-            currentDailyAllowance: allowance,
-            lastCalculatedDate: Date.now(),
-          },
-          true,
-        );
-      }
+      // The Today screen recomputes allowance from settings whenever it
+      // gains focus (useHomeData -> calculateDailyAllowance), so simply
+      // saving the new settings here is enough — no separate cache to keep
+      // in sync. (The `user_plan` cache was removed in #11.)
 
       router.back();
     } catch (err) {

@@ -62,6 +62,13 @@ const MIGRATIONS: Migration[] = [
     created_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now') * 1000)
   )` },
   { version: 5, sql: `CREATE INDEX IF NOT EXISTS idx_reflections_created_at ON reflections(created_at)` },
+  // Drop the redundant `user_plan` cache table — its `current_daily_allowance`
+  // column was never read for display; the Today screen recomputes it from
+  // settings on every focus. See #11.
+  //
+  // Numbered v7 so it lands after the v6 analytics migration introduced by
+  // #114 (PR #159), regardless of merge order.
+  { version: 7, sql: `DROP TABLE IF EXISTS user_plan` },
 ];
 
 async function runMigrations(database: SQLiteDatabase): Promise<void> {
@@ -144,17 +151,10 @@ export async function initDatabase(): Promise<SQLiteDatabase> {
     );
   `);
 
-      await db.execAsync(`
-    CREATE TABLE IF NOT EXISTS user_plan (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      settings_id INTEGER NOT NULL,
-      current_daily_allowance REAL NOT NULL,
-      last_calculated_date INTEGER NOT NULL,
-      created_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now') * 1000),
-      updated_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now') * 1000),
-      FOREIGN KEY (settings_id) REFERENCES taper_settings(id)
-    );
-  `);
+      // `user_plan` table existed before #11 to cache the daily allowance,
+      // but it was never read for display — the allowance is always recomputed
+      // from settings. Migration v7 (below) drops the table on existing
+      // installs.
 
       await db.execAsync(`CREATE INDEX IF NOT EXISTS idx_log_entries_timestamp ON log_entries(timestamp);`);
       await db.execAsync(`CREATE INDEX IF NOT EXISTS idx_log_entries_type ON log_entries(type);`);
@@ -194,7 +194,6 @@ export async function resetAllData(): Promise<void> {
     await database.runAsync('BEGIN');
     await database.runAsync('DELETE FROM log_entries');
     await database.runAsync('DELETE FROM taper_settings');
-    await database.runAsync('DELETE FROM user_plan');
     await database.runAsync('DELETE FROM app_preferences');
     await database.runAsync('DELETE FROM breathing_sessions');
     await database.runAsync('DELETE FROM reflections');

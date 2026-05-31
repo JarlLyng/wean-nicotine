@@ -1,26 +1,38 @@
 /**
  * useHomeData — loads and maintains the Today screen's data.
  *
- * Encapsulates:
- *  - Reading taper settings + user plan from the DB
- *  - Recreating a missing user plan (self-healing)
- *  - Calculating today's allowance via taper-plan math
- *  - Counting today's pouches and cravings resisted
- *  - Reloading when the screen comes back into focus
+ * Reads taper settings, recomputes today's allowance from the taper-plan
+ * math, and counts today's pouches + cravings resisted. The DB is reread
+ * whenever the screen comes back into focus.
  *
- * Exposes both a reload function and optimistic mutators so the UI layer
- * can update counters instantly (one-tap logging) and reconcile with the
- * DB in the background. Errors are swallowed into EMPTY_DATA and reported
- * to Sentry — the screen always renders something.
+ * Exposes optimistic counter mutators so one-tap logging can update the UI
+ * instantly while the DB write happens in the background.
+ *
+ * Load outcomes are modelled explicitly via `status`:
+ *  - `'loading'`  — first load in progress, no result yet
+ *  - `'no-settings'` — DB read succeeded but the user has not completed
+ *                     onboarding. The Today screen renders the "complete
+ *                     onboarding" CTA.
+ *  - `'ready'`    — settings loaded; counters reflect today's state
+ *  - `'error'`    — load threw. The screen surfaces a calmer "couldn't
+ *                   load right now" message instead of the onboarding CTA,
+ *                   so a parse failure / transient SQLite error never
+ *                   tricks the user into thinking they have no plan.
+ *
+ * (Previously this hook also maintained a `user_plan` row that cached the
+ *  daily allowance. The cache was never read for display — the allowance is
+ *  always recomputed from settings — so the table was redundant and has
+ *  been dropped. See #11.)
  */
 
 import { useState, useRef, useCallback } from 'react';
 import { useFocusEffect } from 'expo-router';
-import { getUserPlan, saveUserPlan } from '@/lib/db-user-plan';
 import { getTaperSettings } from '@/lib/db-settings';
 import { calculateDailyAllowance } from '@/lib/taper-plan';
 import { getLogEntriesForDay } from '@/lib/db-log-entries';
 import { captureError } from '@/lib/sentry';
+
+export type HomeStatus = 'loading' | 'no-settings' | 'ready' | 'error';
 
 export interface HomeData {
   dailyAllowance: number | null;
@@ -40,6 +52,8 @@ const EMPTY_DATA: HomeData = {
 
 export interface UseHomeDataResult {
   data: HomeData;
+  status: HomeStatus;
+  /** @deprecated Use `status === 'loading'`. Kept for callers mid-migration. */
   isLoading: boolean;
   reload: (options?: { showLoading?: boolean }) => Promise<void>;
   incrementPouches: () => void;
@@ -50,7 +64,7 @@ export interface UseHomeDataResult {
 
 export function useHomeData(): UseHomeDataResult {
   const [data, setData] = useState<HomeData>(EMPTY_DATA);
-  const [isLoading, setIsLoading] = useState(true);
+  const [status, setStatus] = useState<HomeStatus>('loading');
   const isLoadingRef = useRef(false);
 
   const reload = useCallback(
@@ -58,36 +72,18 @@ export function useHomeData(): UseHomeDataResult {
       if (isLoadingRef.current) return;
       isLoadingRef.current = true;
       try {
-        if (showLoading) setIsLoading(true);
+        if (showLoading) setStatus('loading');
 
         const settings = await getTaperSettings();
         if (!settings) {
+          // Genuine "user has not finished onboarding" — distinct from a
+          // load failure below, so the UI can confidently route to onboarding
+          // without risking data wipe on a parse error.
           setData(EMPTY_DATA);
+          setStatus('no-settings');
           return;
         }
 
-        // Self-heal: if user_plan is missing, recreate it from settings
-        let userPlan = await getUserPlan();
-        if (!userPlan) {
-          const today = new Date();
-          today.setHours(0, 0, 0, 0);
-          const allowance = calculateDailyAllowance(settings, today);
-          await saveUserPlan(
-            {
-              settingsId: settings.id,
-              currentDailyAllowance: allowance,
-              lastCalculatedDate: Date.now(),
-            },
-            true,
-          );
-          userPlan = await getUserPlan();
-          if (!userPlan) {
-            setData(EMPTY_DATA);
-            return;
-          }
-        }
-
-        // Always recalculate allowance from settings — especially after reset/onboarding
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         const calculatedAllowance = calculateDailyAllowance(settings, today);
@@ -103,14 +99,19 @@ export function useHomeData(): UseHomeDataResult {
           baselinePouchesPerDay: settings.baselinePouchesPerDay,
           settingsId: settings.id,
         });
+        setStatus('ready');
       } catch (error) {
         captureError(
           error instanceof Error ? error : new Error(String(error)),
           { context: 'home_load_data' },
         );
-        setData(EMPTY_DATA);
+        // IMPORTANT: do NOT clear `data` to EMPTY_DATA on error. Doing so
+        // looks indistinguishable from "no settings" and could push the user
+        // back through onboarding (which wipes everything). Keep whatever we
+        // last rendered and surface 'error' so the screen can show a calm
+        // retry affordance instead.
+        setStatus('error');
       } finally {
-        setIsLoading(false);
         isLoadingRef.current = false;
       }
     },
@@ -144,7 +145,8 @@ export function useHomeData(): UseHomeDataResult {
 
   return {
     data,
-    isLoading,
+    status,
+    isLoading: status === 'loading',
     reload,
     incrementPouches,
     decrementPouches,
