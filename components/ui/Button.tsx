@@ -136,9 +136,29 @@ export function Button({
     onPress();
   };
 
+  // IAMJARL focus ring: 2px outline, 2px offset.
+  //
+  // React Native core types only expose `pressed` from the Pressable style
+  // callback, but `react-native-web` (and the Pressable polyfill on TV /
+  // hardware-keyboard targets) does pass `focused` and `hovered`. We cast
+  // the callback arg so we can render the ring on those targets without
+  // breaking iOS, where the property is simply undefined.
+  type PressableState = { pressed: boolean; focused?: boolean; hovered?: boolean };
+  const focusRing = (focused: boolean | undefined): ViewStyle =>
+    focused
+      ? {
+          borderWidth: 2,
+          borderColor: colors.primary,
+          // Inflate the visual outset so the ring sits 2pt outside the
+          // button rather than eating into the padding.
+          marginVertical: -2,
+          marginHorizontal: -2,
+        }
+      : {};
+
   return (
     <AnimatedPressable
-      style={[getButtonStyle(), animatedStyle, style]}
+      style={(state: PressableState) => [getButtonStyle(), animatedStyle, focusRing(state.focused), style]}
       onPress={handlePress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}

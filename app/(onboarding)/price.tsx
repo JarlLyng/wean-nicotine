@@ -64,7 +64,7 @@ export default function PriceScreen() {
           <View style={s.content}>
             {/* Question */}
             <View style={s.questionSection}>
-              <Text style={s.question}>
+              <Text accessibilityRole="header" style={s.question}>
                 What do you pay per can?
               </Text>
               <Text style={s.hint}>
