@@ -1,0 +1,58 @@
+---
+description: Project-wide conventions for Wean Nicotine. Apply to every change in this repo.
+globs: ['**/*']
+alwaysApply: true
+---
+
+# Wean Nicotine — project conventions
+
+## Architecture
+
+- **Local-first.** No accounts, no cloud sync. SQLite via `expo-sqlite`. The web build renders the UI for design preview only — DB calls are stubbed.
+- **iOS-first.** Web exists as a limited fallback; Android is a future goal (issue #45). When in doubt about cross-platform behaviour, prefer iOS.
+- **No external user analytics from the app.** Local SQLite analytics only. Umami runs only on the marketing website. Sentry is on but scrubs PII via `lib/sentry.ts`.
+
+## Design system
+
+- Tokens are the **IAMJARL design system** (see <https://github.com/JarlLyng/iamjarl-design>). The local mirror lives in `lib/design.ts`; `lib/theme.ts` bridges them into the legacy `spacing` / `typography` / `colors` exports used by older screens.
+- **Never hardcode** hex colors, font weights, or spacing values outside `lib/design.ts`. New code should use `useDesignTokens()` (returns mode-aware colors) rather than the static `colors` export from `theme.ts`.
+- Allowed font weights: **400, 600, 700**. No `500`. No `300`/`800`/`900`.
+- Color modes: **light + dark are mandatory**. `useDesignTokens()` handles the switch automatically.
+- Icons come from **`phosphor-react-native`** (regular weight by default). Render via `components/ui/Icon.tsx`. No emoji in UI.
+- Touch targets: **≥ 44pt** per Apple HIG and IAMJARL. Add `minHeight: 44` to any Pressable/TouchableOpacity that doesn't already get there via padding.
+
+## TypeScript
+
+- Strict mode is on. Avoid `any` and `as any` — type at the boundary instead. The `Currency` parse pattern (`lib/currency.ts → parseCurrency`) is the reference shape.
+- Domain types live in `lib/models.ts`. Don't redeclare a type that already exists there.
+- Router pushes use `Href` from `expo-router`; if typed-routes complains, fix the route literal rather than reaching for `as any`.
+
+## Database
+
+- All SQLite work goes through `lib/db.ts → getDatabase()`. Don't open a second handle.
+- Schema changes go through the **`MIGRATIONS` array** in `lib/db.ts`. Each migration is one-way, idempotent, and bumps `schema_version`. Don't write `CREATE TABLE IF NOT EXISTS` outside the migration runner.
+- `resetAllData()` clears every table inside one transaction. Add new tables there too when introducing them.
+
+## Privacy in Sentry
+
+- `captureError(error, { context })` is OK; the `context` value is the only thing user-visible in Sentry.
+- **Never** include user values (pouch counts, baseline, price, currency, triggers, notes) in error messages, breadcrumbs, or extras. The scrubber in `lib/sentry.ts` is a safety net, not a substitute for not sending data in the first place.
+
+## Testing
+
+- Pure helpers in `lib/` get Jest unit tests in `lib/__tests__/`.
+- Mock the DB layer (`jest.mock('../db-log-entries', () => …)`); never hit real SQLite from tests.
+- `npm run check` = lint + typecheck + tests. Run before every PR.
+
+## Tone of voice
+
+- "Wean, don't punish." No shaming, no streak anxiety, no exclamation marks in copy.
+- No medical advice. The app is a self-help tracking tool.
+- Empty states should feel calm, not alarming.
+
+## Repo hygiene
+
+- One issue per change. Open PRs reference the issue number with `Closes #N`.
+- Conventional commit prefixes: `feat`, `fix`, `refactor`, `chore`, `docs`, `test`, `perf`.
+- Priority labels P0/P1/P2/P3 — see `CONTRIBUTING.md` for definitions.
+- Keep `CHANGELOG.md` in sync at release time.
