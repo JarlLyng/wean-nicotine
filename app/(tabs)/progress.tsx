@@ -571,7 +571,7 @@ const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => S
   } as ViewStyle,
   segmentText: {
     ...typography.sm,
-    fontWeight: '500',
+    fontWeight: '600',
     color: colors.text.secondary,
   } as TextStyle,
   segmentTextActive: {

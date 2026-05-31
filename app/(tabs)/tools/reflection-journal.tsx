@@ -133,14 +133,14 @@ const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) =>
     },
     categoryText: {
       fontSize: typography.sizes.xs,
-      fontWeight: '500' as const,
+      fontWeight: '600' as const,
       color: colors.primary,
       textTransform: 'uppercase',
       letterSpacing: 0.5,
     },
     prompt: {
       fontSize: typography.sizes.base,
-      fontWeight: '500' as const,
+      fontWeight: '600' as const,
       color: colors.text.primary,
       marginBottom: spacing.xs,
     },

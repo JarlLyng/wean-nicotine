@@ -401,7 +401,7 @@ const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) =>
     },
     pillText: {
       fontSize: typography.sizes.sm,
-      fontWeight: '500' as const,
+      fontWeight: '600' as const,
       color: colors.text.secondary,
     },
     pillTextActive: {

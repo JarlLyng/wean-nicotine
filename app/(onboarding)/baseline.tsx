@@ -1,5 +1,6 @@
 import { Screen } from '@/components/Screen';
 import { Button } from '@/components/ui/Button';
+import { OnboardingProgress } from '@/components/ui/OnboardingProgress';
 import { useDesignTokens, getColors, typography } from '@/lib/design';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { spacing } from '@/lib/theme';
@@ -35,6 +36,7 @@ export default function BaselineScreen() {
 
   return (
     <Screen>
+      <OnboardingProgress current={1} total={4} />
       <KeyboardAvoidingView
         style={s.flex}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}

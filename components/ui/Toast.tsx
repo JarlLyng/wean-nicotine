@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
   },
   message: {
     flex: 1,
-    fontWeight: '500',
+    fontWeight: '600',
   },
   action: {
     paddingVertical: spacing.xs,
