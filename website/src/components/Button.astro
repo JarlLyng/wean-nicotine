@@ -65,6 +65,13 @@ const resolvedEvent = trackEvent ?? (isAppStoreLink ? 'app-store-click' : undefi
 		transform: scale(0.96);
 	}
 
+	/* IAMJARL focus ring: 2px outline, 2px offset. Visible only for keyboard /
+	   assistive nav, not mouse clicks. */
+	.btn:focus-visible {
+		outline: 2px solid var(--primary);
+		outline-offset: 2px;
+	}
+
 	.btn--primary {
 		background: var(--primary);
 		color: var(--on-primary);
