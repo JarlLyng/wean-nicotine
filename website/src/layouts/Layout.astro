@@ -167,6 +167,7 @@ const structuredData: Record<string, unknown> = {
 				</button>
 
 				<nav class="nav" aria-label="Primary">
+					<a class="nav__link" href="/blog/">Blog</a>
 					<a class="nav__link" href={translatePath('/privacy')}>{t('nav.privacy')}</a>
 					<a class="nav__link" href={translatePath('/support')}>{t('nav.support')}</a>
 					<LanguageSwitcher availableLocales={localesForHreflang} />
@@ -211,6 +212,7 @@ const structuredData: Record<string, unknown> = {
 			<div class="container site-footer__grid">
 				<div class="site-footer__col">
 					<p class="footer-heading">{SITE_NAME}</p>
+					<a href="/blog/">Blog</a>
 					<a href={translatePath('/privacy')}>{t('nav.privacy')}</a>
 					<a href={translatePath('/support')}>{t('nav.support')}</a>
 					{appStoreKnown ? (
