@@ -175,12 +175,15 @@ const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) =>
       marginBottom: spacing.xxl,
     } as ViewStyle,
     currencyPill: {
+      // 44pt minimum touch target per IAMJARL / Apple HIG.
+      minHeight: 44,
       paddingHorizontal: spacing.lg,
       paddingVertical: spacing.sm,
       borderRadius: borderRadius.full,
       borderWidth: 1.5,
       borderColor: colors.border.subtle,
       backgroundColor: colors.surface.default,
+      justifyContent: 'center',
     } as ViewStyle,
     currencyPillSelected: {
       borderColor: colors.primary,

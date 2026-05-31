@@ -255,23 +255,32 @@ export default function ProgressScreen() {
       settingsIdRef.current = currentSettings.id;
 
       const { start: currentStart, end: currentEnd } = getCurrentWeek();
-      const currentWeekData = await calculateWeeklyProgress(currentSettings, currentStart, currentEnd);
-      setCurrentWeek(currentWeekData);
-
-      const currentBreakdown = await getDailyBreakdown(currentSettings, currentStart, currentEnd);
-      setDailyBreakdown(currentBreakdown);
-
       const { start: prevStart, end: prevEnd } = getPreviousWeek();
-      const previousWeekData = await calculateWeeklyProgress(currentSettings, prevStart, prevEnd);
+
+      // Five independent reads hit the same DB; running them sequentially used
+      // to add up to ~5× the DB round-trip latency. Promise.all lets the SQLite
+      // driver pipeline them — each call still goes through the migration-
+      // gated init, but the awaits no longer block each other.
+      const [
+        currentWeekData,
+        currentBreakdown,
+        previousWeekData,
+        prevBreakdown,
+        totalAndMilestones,
+      ] = await Promise.all([
+        calculateWeeklyProgress(currentSettings, currentStart, currentEnd),
+        getDailyBreakdown(currentSettings, currentStart, currentEnd),
+        calculateWeeklyProgress(currentSettings, prevStart, prevEnd),
+        getDailyBreakdown(currentSettings, prevStart, prevEnd),
+        calculateTotalProgressAndMilestones(currentSettings),
+      ]);
+
+      setCurrentWeek(currentWeekData);
+      setDailyBreakdown(currentBreakdown);
       setPreviousWeek(previousWeekData);
-
-      const prevBreakdown = await getDailyBreakdown(currentSettings, prevStart, prevEnd);
       setPrevDailyBreakdown(prevBreakdown);
-
-      const { progress: total, milestones: detectedMilestones } =
-        await calculateTotalProgressAndMilestones(currentSettings);
-      setTotalProgress(total);
-      setMilestones(detectedMilestones);
+      setTotalProgress(totalAndMilestones.progress);
+      setMilestones(totalAndMilestones.milestones);
       lastLoadedRef.current = Date.now();
     } catch (error) {
       if (__DEV__) console.error('Error loading progress:', error);
@@ -558,8 +567,12 @@ const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => S
   } as ViewStyle,
   segment: {
     flex: 1,
+    // 44pt minimum touch target per IAMJARL / Apple HIG. Previously paddingVertical:
+    // spacing.sm produced ~32-36pt rows which fail accessibility on phone-only.
+    minHeight: 44,
     paddingVertical: spacing.sm,
     alignItems: 'center',
+    justifyContent: 'center',
     borderRadius: borderRadius.sm - 2,
   } as ViewStyle,
   segmentActive: {
