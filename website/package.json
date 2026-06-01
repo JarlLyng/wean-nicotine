@@ -13,10 +13,10 @@
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.18",
-    "@astrojs/sitemap": "^3.7.2",
+    "@astrojs/sitemap": "^3.7.3",
     "@fontsource/inter": "^5.2.8",
     "@fontsource/outfit": "^5.2.8",
-    "astro": "^6.3.7"
+    "astro": "^6.4.2"
   },
   "devDependencies": {
     "@types/react": "~19.2.15",
