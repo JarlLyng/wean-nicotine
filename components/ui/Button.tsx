@@ -1,6 +1,19 @@
 import React from 'react';
-import { Text, ActivityIndicator, ViewStyle, TextStyle, Pressable, StyleProp, Platform } from 'react-native';
-import Animated, { useSharedValue, useAnimatedStyle, withSpring, withTiming } from 'react-native-reanimated';
+import {
+  Text,
+  ActivityIndicator,
+  ViewStyle,
+  TextStyle,
+  Pressable,
+  StyleProp,
+  Platform,
+} from 'react-native';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 import { spacing, borderRadius, shadows, animations } from '@/lib/theme';
 import { useDesignTokens, typography } from '@/lib/design';
@@ -136,29 +149,17 @@ export function Button({
     onPress();
   };
 
-  // IAMJARL focus ring: 2px outline, 2px offset.
-  //
-  // React Native core types only expose `pressed` from the Pressable style
-  // callback, but `react-native-web` (and the Pressable polyfill on TV /
-  // hardware-keyboard targets) does pass `focused` and `hovered`. We cast
-  // the callback arg so we can render the ring on those targets without
-  // breaking iOS, where the property is simply undefined.
-  type PressableState = { pressed: boolean; focused?: boolean; hovered?: boolean };
-  const focusRing = (focused: boolean | undefined): ViewStyle =>
-    focused
-      ? {
-          borderWidth: 2,
-          borderColor: colors.primary,
-          // Inflate the visual outset so the ring sits 2pt outside the
-          // button rather than eating into the padding.
-          marginVertical: -2,
-          marginHorizontal: -2,
-        }
-      : {};
-
+  // Focus ring (#36) was implemented with a `style` callback returning the
+  // focused state, but `Animated.createAnimatedComponent(Pressable)` doesn't
+  // forward style callbacks the same way plain Pressable does — passing a
+  // function silently disables press handling on native, which made every
+  // Button (including "Get Started" on the welcome screen) unresponsive in
+  // build 18. Reverted to an array-style. Re-implement the focus ring with
+  // an explicit `onFocus` / `onBlur` + local state if it's ever needed on
+  // web; iOS doesn't have a keyboard-focus state for this anyway.
   return (
     <AnimatedPressable
-      style={(state: PressableState) => [getButtonStyle(), animatedStyle, focusRing(state.focused), style]}
+      style={[getButtonStyle(), animatedStyle, style]}
       onPress={handlePress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
@@ -166,7 +167,8 @@ export function Button({
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel || title}
       accessibilityHint={accessibilityHint}
-      accessibilityState={{ disabled: isDisabled }}>
+      accessibilityState={{ disabled: isDisabled }}
+    >
       {loading ? (
         <ActivityIndicator
           size="small"

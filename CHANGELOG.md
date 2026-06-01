@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.1] - 2026-06-01
+
+iOS build 19. Hotfix for build 18 — Buttons were unresponsive across the entire app, including the welcome-screen "Get Started" CTA which blocked onboarding completely.
+
+### Fixed
+- Buttons not responding to taps. The 2px focus-ring landed in 1.4.0 wrapped the `Pressable` style in a callback, but `Animated.createAnimatedComponent(Pressable)` silently disables press handling when given a callback style. Reverted to an array style. Focus-ring re-implementation deferred to a future iteration that uses `onFocus`/`onBlur` state instead — iOS does not surface keyboard-focus state anyway.
+
 ## [1.4.0] - 2026-05-31
 
 User-visible changes shipped with iOS build 18.
@@ -98,7 +105,8 @@ User-visible changes shipped with iOS build 18.
 
 ---
 
-[Unreleased]: https://github.com/JarlLyng/wean-nicotine/compare/v1.4.0...HEAD
+[Unreleased]: https://github.com/JarlLyng/wean-nicotine/compare/v1.4.1...HEAD
+[1.4.1]: https://github.com/JarlLyng/wean-nicotine/compare/v1.4.0...v1.4.1
 [1.4.0]: https://github.com/JarlLyng/wean-nicotine/compare/v1.3.1...v1.4.0
 [1.3.1]: https://github.com/JarlLyng/wean-nicotine/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/JarlLyng/wean-nicotine/compare/v1.2.0...v1.3.0
