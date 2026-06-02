@@ -1,21 +1,26 @@
 # App Store metadata — Wean Nicotine (copy/paste)
 
 Purpose:
+
 - Canonical copy bank for App Store Connect metadata fields
 
 Audience:
+
 - Maintainers preparing App Store submissions
 - LLMs helping with release or metadata workflows
 
 Source of truth:
+
 - App Store Connect is the final published state
 - Product positioning should stay aligned with [`AI_CONTEXT.md`](./AI_CONTEXT.md) and [`SEO_STRATEGY.md`](./SEO_STRATEGY.md)
 
 Related files:
+
 - [`docs/PRIVACY_APP_STORE.md`](./PRIVACY_APP_STORE.md)
 - [`website/src/lib/site.ts`](../website/src/lib/site.ts)
 
 Update when:
+
 - App Store positioning changes
 - Support, marketing, or privacy URLs change
 - Apple metadata requirements change
@@ -27,20 +32,130 @@ Brug felterne nedenfor i App Store Connect. Screenshots tilføjer du selv under 
 ## App Information (General)
 
 ### Subtitle (max 30 tegn)
+
 ```
 Reduce nicotine at your pace
 ```
 
 Alternativer:
+
 - `Wean off snus & nicotine daily`
 - `Track & reduce nicotine use`
+
+---
+
+## iOS App Version 1.4.1 — Submitted for review 2026-06-01 (build 19)
+
+Hotfix release on top of v1.4.0/build 18 — see "Known regression in 1.4.0" at the bottom of this section.
+
+### Promotional Text (valgfrit, max 170 tegn)
+
+Kan ændres uden ny version. Evergreen-versioner anbefales — release-specifikke kan rotate ind 14 dage efter approval.
+
+**English (evergreen):**
+
+```
+A gentler way to reduce nicotine pouches. No accounts, no cloud, no streak anxiety — just your pace, your data, your phone.
+```
+
+**Danish (evergreen):**
+
+```
+En blidere måde at trappe ned for snus og nikotinposer. Ingen konto, ingen sky, ingen streak-angst — bare dit tempo, dine data, din iPhone.
+```
+
+**Swedish (evergreen):**
+
+```
+Ett mildare sätt att minska snus och nikotinpåsar. Inget konto, inget moln, ingen streak-ångest — bara din takt, dina data, din iPhone.
+```
+
+**Norwegian (evergreen):**
+
+```
+En mildere måte å trappe ned snus og nikotinposer. Ingen konto, ingen sky, ingen streak-angst — bare ditt tempo, dine data, din iPhone.
+```
+
+**English (release-specific, optional rotation):**
+
+```
+Now with onboarding progress, safer reset, and a warmer breathing finish. Calm, private, no streak shame — just step-by-step reduction at your pace.
+```
+
+### What's New (v1.4.1)
+
+**English:**
+
+```
+A calmer onboarding, safer reset, warmer support tools.
+
+• Onboarding now shows your progress through the 4-step setup
+• Hold-to-confirm replaces the easy-to-mistap "Delete Everything" alert
+• Breathing exercise ends with a warm "Nicely done" celebration
+• "Open Settings" shortcut when notifications need permission
+• Bar chart legend now documents every state (Under / Over / No data / Upcoming)
+• Better contrast on dark-mode switches; bigger touch targets across the app
+• Faster Progress screen load
+• Bug fixes and reliability improvements behind the scenes
+```
+
+**Danish:**
+
+```
+Roligere onboarding, tryggere nulstilling, varmere støtteværktøjer.
+
+• Onboarding viser nu din fremgang gennem de 4 trin
+• Hold-for-at-bekræfte erstatter den nemt-uheldige "Slet alt"-besked
+• Vejrtrækningsøvelsen slutter nu med et varmt "Flot klaret"
+• "Åbn Indstillinger"-genvej når notifikationer mangler tilladelse
+• Søjlediagrammet dokumenterer nu alle 4 tilstande (Under / Over / Ingen data / Kommende)
+• Bedre kontrast på switches i mørk tilstand; større trykflader overalt
+• Hurtigere fremgang-skærm
+• Fejlrettelser og pålidelighedsforbedringer bag kulisserne
+```
+
+**Swedish:**
+
+```
+Lugnare onboarding, säkrare återställning, varmare stödverktyg.
+
+• Onboarding visar nu dina framsteg genom de 4 stegen
+• Håll-för-att-bekräfta ersätter den lätt-att-tryck-fel-på "Radera allt"-varningen
+• Andningsövningen avslutas nu med ett varmt "Snyggt jobbat"
+• "Öppna Inställningar"-genväg när aviseringar saknar tillstånd
+• Stapeldiagrammets förklaring dokumenterar nu alla 4 lägen (Under / Över / Ingen data / Kommande)
+• Bättre kontrast på reglage i mörkt läge; större tryckytor i hela appen
+• Snabbare Framsteg-skärm
+• Buggfixar och pålitlighetsförbättringar bakom kulisserna
+```
+
+**Norwegian:**
+
+```
+Roligere onboarding, tryggere tilbakestilling, varmere støtteverktøy.
+
+• Onboarding viser nå fremgangen din gjennom de 4 trinnene
+• Hold-for-å-bekrefte erstatter den lett-å-trykke-feil-på "Slett alt"-varselet
+• Pusteøvelsen avsluttes nå med en varm "Bra jobbet"
+• "Åpne Innstillinger"-snarvei når varsler mangler tillatelse
+• Søylediagrammets forklaring dokumenterer nå alle 4 tilstander (Under / Over / Ingen data / Kommende)
+• Bedre kontrast på brytere i mørk modus; større trykkpunkter overalt
+• Raskere Fremgang-skjerm
+• Feilrettinger og pålitelighetsforbedringer bak kulissene
+```
+
+### Known regression in 1.4.0 (build 18)
+
+- Build 18 shipped to TestFlight with unresponsive Buttons across the entire app (welcome-screen "Get Started" CTA blocked onboarding). Root cause: a focus-ring `style` callback added in #166 silently disabled press handling on `Animated.createAnimatedComponent(Pressable)`. Reverted in 1.4.1 (#174). Build 18 was never submitted to the App Store; only build 19 went to review.
 
 ---
 
 ## iOS App Version 1.3.1 — Distribution
 
 ### Promotional Text (valgfrit, max 170 tegn)
+
 Kan ændres uden ny version:
+
 ```
 Pick your own taper pace. Edit your plan anytime. Undo accidental logs. All data stays on your iPhone — no cloud, no accounts, no subscriptions.
 ```
@@ -48,6 +163,7 @@ Pick your own taper pace. Edit your plan anytime. Undo accidental logs. All data
 ### What's New (v1.3.1)
 
 **English:**
+
 ```
 • Undo toast now appears at the top with stronger contrast — easier to see and tap
 • Cleaner inputs on the Edit Plan screen
@@ -57,6 +173,7 @@ Pick your own taper pace. Edit your plan anytime. Undo accidental logs. All data
 ```
 
 **Danish:**
+
 ```
 • Fortryd-toasten kommer nu fra toppen med bedre kontrast — lettere at se og trykke på
 • Klarere inputfelter på "Ret plan"-skærmen
@@ -66,6 +183,7 @@ Pick your own taper pace. Edit your plan anytime. Undo accidental logs. All data
 ```
 
 **Swedish:**
+
 ```
 • Ångra-toasten visas nu från toppen med bättre kontrast — lättare att se och trycka på
 • Tydligare inmatningsfält på Ändra plan-skärmen
@@ -75,6 +193,7 @@ Pick your own taper pace. Edit your plan anytime. Undo accidental logs. All data
 ```
 
 **Norwegian:**
+
 ```
 • Angre-toasten vises nå fra toppen med bedre kontrast — lettere å se og trykke på
 • Tydeligere inntastingsfelt på Endre plan-skjermen
@@ -88,11 +207,13 @@ Pick your own taper pace. Edit your plan anytime. Undo accidental logs. All data
 ## iOS App Version 1.3 — Distribution (submitted 2026-04-24, live)
 
 ### Promotional Text (valgfrit, max 170 tegn)
+
 ```
 Pick your own taper pace. Edit your plan anytime. Undo accidental logs. All data stays on your iPhone — no cloud, no accounts, no subscriptions.
 ```
 
 ### What's New (v1.3)
+
 ```
 • Pick your own taper pace during onboarding — 3%, 5%, 7%, 10%, or 15% weekly reduction
 • Edit your plan anytime from Settings — change baseline, pace, or price without losing your log history
@@ -139,21 +260,25 @@ nicotine,snus,wean,quit,reduce,cessation,habit,tracking,pouches,progress,velvær
 ```
 
 Alternativ (mere engelsk fokus):
+
 ```
 nicotine,snus,wean,quit,reduce,cessation,habit,tracking,pouches,daily,progress,health,taper
 ```
 
 ### Support URL
+
 ```
 https://weannicotine.iamjarl.com/support
 ```
 
 ### Marketing URL
+
 ```
 https://weannicotine.iamjarl.com/
 ```
 
 ### Copyright
+
 ```
 2026 Jarl Lyng
 ```
@@ -177,7 +302,7 @@ Appen er kun til iPhone (`ios.supportsTablet: false`). Udfyld kun "Phone" med iP
 
 ## Localized Storefronts (submitted 2026-04-24)
 
-Endelige tekster som er indsendt til App Store Connect for v1.3 på dansk, svensk og norsk. Disse subtitles, promo-tekster, descriptions og keywords er stadig aktuelle for v1.3.1 (kun "What's New" ændres mellem patch-releases — find 1.3.1 release notes længere oppe).
+Endelige tekster som er indsendt til App Store Connect for v1.3 på dansk, svensk og norsk. Disse subtitles, promo-tekster, descriptions og keywords er stadig aktuelle for v1.4.x (kun "What's New" ændres mellem patch-releases — find 1.4.1 og 1.3.1 release notes længere oppe). Promo-tekster for v1.4.x findes længere oppe i denne fil.
 
 ### Danish (da-DK)
 
@@ -186,6 +311,7 @@ Endelige tekster som er indsendt til App Store Connect for v1.3 på dansk, svens
 - **Keywords:** `snus,nikotin,nedtrapning,stoppe,afvænning,trang,nikotinposer,trappe,sundhed,velvære,sporing,vane`
 
 **Description:**
+
 ```
 Wean Nicotine hjælper dig med at skære ned på snus og nikotinposer i dit eget tempo. Angiv dit udgangspunkt, vælg dit ugentlige tempo, og lad appen guide dig skridt for skridt. Al data bliver på din iPhone.
 
@@ -215,6 +341,7 @@ Denne app er til skadesreduktion og personlig tracking. Den erstatter ikke læge
 ```
 
 **What's New:**
+
 ```
 • Vælg dit eget tempo under onboarding — 3, 5, 7, 10 eller 15 % ugentlig nedtrapning
 • Ret din plan når som helst i Indstillinger — juster udgangspunkt, tempo eller pris uden at miste loghistorik
@@ -229,6 +356,7 @@ Denne app er til skadesreduktion og personlig tracking. Den erstatter ikke læge
 - **Keywords:** `snus,snusa,sluta,minska,nedtrappning,nikotin,prilla,portionssnus,vitsnus,nikotinpåsar,sug,hälsa`
 
 **Description:**
+
 ```
 Wean Nicotine hjälper dig att minska på snus och nikotinpåsar i din egen takt. Ange din baslinje, välj din veckovisa takt, och låt appen guida dig steg för steg. All data stannar på din iPhone.
 
@@ -258,6 +386,7 @@ Den här appen är till för skadereducering och personlig tracking. Den ersätt
 ```
 
 **What's New:**
+
 ```
 • Välj din egen takt under introduktionen — 3, 5, 7, 10 eller 15 % veckovis nedtrappning
 • Ändra planen när som helst i Inställningar — justera baslinje, takt eller pris utan att förlora logghistoriken
@@ -272,6 +401,7 @@ Den här appen är till för skadereducering och personlig tracking. Den ersätt
 - **Keywords:** `snus,snuse,slutte,redusere,nedtrapping,nikotin,nikotinposer,snusposer,sug,vane,helse,avvenning`
 
 **Description:**
+
 ```
 Wean Nicotine hjelper deg med å redusere snusbruken og nikotinposene i ditt eget tempo. Sett utgangspunktet, velg ditt ukentlige tempo, og la appen guide deg steg for steg. All data blir på iPhonen din.
 
@@ -301,6 +431,7 @@ Denne appen er til skadereduksjon og personlig sporing. Den erstatter ikke medis
 ```
 
 **What's New:**
+
 ```
 • Velg ditt eget tempo under introduksjonen — 3, 5, 7, 10 eller 15 % ukentlig nedtrapping
 • Endre planen når som helst i Innstillinger — juster utgangspunkt, tempo eller pris uten å miste logghistorikken

@@ -3,17 +3,21 @@
 This file is the canonical fast-path for understanding the repository.
 
 Purpose:
+
 - Provide a canonical repo overview for humans and LLMs
 
 Audience:
+
 - Maintainers onboarding to the codebase
 - LLMs performing implementation, review, or planning tasks
 
 Source of truth:
+
 - Code remains canonical for exact runtime behavior
 - This document is the top-level architectural summary
 
 Related files:
+
 - [`docs/README.md`](./README.md)
 - [`README.md`](../README.md)
 - [`app/_layout.tsx`](../app/_layout.tsx)
@@ -21,6 +25,7 @@ Related files:
 - [`lib/db.ts`](../lib/db.ts)
 
 Update when:
+
 - The repo structure changes
 - A subsystem is added or removed
 - Core business rules or runtime assumptions change
@@ -32,7 +37,7 @@ Update when:
 - The app is local-first by design. No backend, no account system, no cloud sync.
 - The mobile app uses Expo SDK 55, Expo Router, SQLite, Expo Notifications, Sentry, and React Compiler.
 - The website uses Astro and contains SEO landing pages in EN/DA/SV/NO.
-- Latest live App Store version: **1.3.1**.
+- Latest live App Store version: **1.3.1**. **v1.4.1** (iOS build 19) submitted for review on 2026-06-01; v1.4.0 / build 18 was a TestFlight-only release blocked by an unresponsive-Button regression — see [CHANGELOG.md](../CHANGELOG.md#141---2026-06-01).
 
 ## What Exists In This Repo
 
@@ -99,7 +104,7 @@ Update when:
 
 ### UI system
 
-- [`lib/design.ts`](../lib/design.ts) defines the IAMJARL Design System tokens (v0.1.3).
+- [`lib/design.ts`](../lib/design.ts) defines the IAMJARL Design System tokens (aligned with the upstream v1.x source of truth at <https://github.com/JarlLyng/iamjarl-design>).
 - [`lib/theme.ts`](../lib/theme.ts) exposes backward-compatible theme helpers.
 - [`components/Screen.tsx`](../components/Screen.tsx) is a content wrapper (no title/SafeAreaView — native headers handle that).
 - `components/ui/` contains reusable primitives: `Button` (with haptics), `Card`, `ProgressRing`, `Icon` (Phosphor), `StatCard`, `IconSymbol` (SF Symbols for tabs), `Toast` (transient notification with optional action).
@@ -123,16 +128,6 @@ Represents the user’s taper setup.
 
 There is effectively one active settings row in the app.
 
-### `UserPlan`
-
-Stores derived plan state.
-
-- `settingsId`: link back to `TaperSettings`
-- `currentDailyAllowance`: calculated allowance for the current day
-- `lastCalculatedDate`: timestamp of last plan refresh
-
-There is effectively one active plan row in the app.
-
 ### `LogEntry`
 
 Tracks timestamped user actions.
@@ -154,10 +149,13 @@ Primary implementation lives in [`lib/db.ts`](../lib/db.ts).
 
 - `log_entries`
 - `taper_settings`
-- `user_plan`
 - `app_preferences`
+- `breathing_sessions`
+- `reflections`
 - `schema_version`
 - `analytics`
+
+The `user_plan` cache table was dropped in v1.4.0 (migration v7). The daily allowance is recomputed from `TaperSettings` on every focus; no cache needed.
 
 ### Storage rules
 
@@ -189,7 +187,7 @@ Important details:
 
 - The home screen compares today’s `pouch_used` count with the current allowance.
 - “Avoided” values are derived relative to the user’s baseline, not from an externally stored target.
-- Missing `user_plan` state can be regenerated from settings.
+- All allowance computation reads `TaperSettings` directly via `lib/taper-plan.ts` — there is no cached plan row to regenerate.
 
 ### Notifications
 
@@ -226,11 +224,13 @@ Canonical implementation: [`lib/notifications.ts`](../lib/notifications.ts)
 - `website/src/pages/support.astro`: support page
 - `website/src/pages/*/index.astro`: SEO landing pages
 - `website/src/pages/da`, `website/src/pages/no`, `website/src/pages/sv`: localized folders with SEO-optimized pathnames
+
 ### Strategy linkage
 
 ### Scale-out logic
 
 The website uses a **programmatic SEO approach**:
+
 1.  New landing pages are created in localized folders (e.g., `/da/stop-med-snus-app/`).
 2.  Each page uses `SeoLandingLayout.astro`, which handles standard headers, CTAs, and SEO metadata.
 3.  Each layout instance is provided a `campaignToken` (e.g., `seo_da_app`), which is used by `getCampaignAppStoreUrl` to append Apple Search Ads / App Store Connect metrics (`pt` and `ct` parameters).
