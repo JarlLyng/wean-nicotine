@@ -33,6 +33,7 @@ If you need to understand the repository quickly:
 Quitting snus doesn’t have to be all or nothing.
 
 Wean helps users:
+
 - set a realistic baseline
 - follow a gradual reduction plan
 - track progress without shame
@@ -51,10 +52,10 @@ Wean helps users:
 
 ## 🧠 Product principles
 
-- **Wean, don't punish**  
-- **Progress over perfection**  
-- **No shame, no streak anxiety**  
-- **Offline‑first & private by default**  
+- **Wean, don't punish**
+- **Progress over perfection**
+- **No shame, no streak anxiety**
+- **Offline‑first & private by default**
 - **Simple enough to use in 2 seconds**
 
 ---
@@ -62,32 +63,38 @@ Wean helps users:
 ## 📱 Feature set
 
 ### Onboarding
+
 - Set baseline usage (pouches per day)
 - Optional price per can (for savings tracking)
 - Select common triggers (stress, coffee, after meals, etc.)
 
 ### Daily tracking
-- One‑tap log: *Used a pouch*
-- One‑tap log: *Craving resisted*
+
+- One‑tap log: _Used a pouch_
+- One‑tap log: _Craving resisted_
 - Daily allowance based on taper plan
 - Calm, non-judgmental UI even if you go over the limit
 
 ### Taper plan
+
 - Automatic weekly reduction with user-selectable pace (3% to 15%)
 - Edit baseline, pace, or price anytime from Settings without losing log history
 - Undo accidental logs within a 5-second window
 
 ### Progress & motivation
+
 - Pouches avoided vs baseline
 - Money saved
 - Small, supportive milestones (not aggressive streaks)
 
 ### Support tools
+
 - Short breathing exercises
 - Urge‑surfing guidance
 - Simple reflection prompts
 
 ### Notifications (optional)
+
 - Daily check‑in
 - Trigger‑based reminders
 - Gentle encouragement — never guilt
@@ -107,7 +114,6 @@ Wean helps users:
 Initial release focus is **iPhone**.
 
 **New Architecture:** This app runs on React Native's New Architecture by default in Expo SDK 55, which is required by `react-native-reanimated` 4.x.
-
 
 ## 🔗 Links
 
@@ -192,6 +198,7 @@ npx expo start
 ### Environment Variables
 
 #### Development (local)
+
 Copy `.env.example` to `.env` and fill in the values. Relevant for Sentry:
 
 - **EXPO_PUBLIC_SENTRY_DSN** — DSN from Sentry (Client Keys). Used by the app to send errors.
@@ -200,6 +207,7 @@ Copy `.env.example` to `.env` and fill in the values. Relevant for Sentry:
 Sentry events are **not** sent in development mode — they are only logged to the console.
 
 #### Production (EAS Build — local or cloud)
+
 With `eas build` (both `--local` and cloud), **EAS Secrets** are used — not `.env`. Create the secret before building:
 
 ```bash
@@ -215,11 +223,13 @@ Local `.env` is for dev and other tooling; EAS only injects variables from EAS S
 Notifications require a development build and do not work in Expo Go. To test notifications:
 
 **iOS:**
+
 ```bash
 npx expo run:ios
 ```
 
 **Android:**
+
 ```bash
 npx expo run:android
 ```
@@ -232,7 +242,7 @@ npx expo run:android
 
 - **Bundle ID:** `com.iamjarl.taper`
 - **Local build (IPA) — Expo from terminal:**
-  1. **Build number:** In `app.config.js`, `ios.buildNumber` must be higher than the last build uploaded to App Store Connect. `version` is user-visible (currently `1.3.1`) and only bumped for an actual app update.
+  1. **Build number:** In `app.config.js`, `ios.buildNumber` must be higher than the last build uploaded to App Store Connect. `version` is user-visible (currently `1.4.1`) and only bumped for an actual app update.
   2. **Sentry:** Create the EAS Secret so the DSN is embedded in the build:
      `eas env:create --name EXPO_PUBLIC_SENTRY_DSN --value "https://your-dsn@xxx.ingest.sentry.io/xxx" --environment production --visibility plaintext`
   3. From the project root:
@@ -267,4 +277,3 @@ See [`CHANGELOG.md`](./CHANGELOG.md) for the version history.
 ---
 
 Built with care under the **IAMJARL** project.
-
