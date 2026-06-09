@@ -209,7 +209,7 @@ const structuredData: Record<string, unknown> = {
 		</main>
 
 		<footer class="site-footer">
-			<div class="container site-footer__grid">
+			<div class:list={['container', 'site-footer__grid', { 'site-footer__grid--compact': lang !== 'en' }]}>
 				<div class="site-footer__col">
 					<p class="footer-heading">{SITE_NAME}</p>
 					<a href="/blog/">Blog</a>
@@ -221,22 +221,29 @@ const structuredData: Record<string, unknown> = {
 						<span class="disabled-link" aria-disabled="true">App Store</span>
 					)}
 				</div>
-				<div class="site-footer__col">
-					<p class="footer-heading">Resources</p>
-					<a href="/snus-reduction-app/">Snus Reduction App</a>
-					<a href="/nicotine-pouch-reduction-app/">Nicotine Pouch Reduction</a>
-					<a href="/how-to-reduce-snus/">How to Reduce Snus</a>
-					<a href="/how-to-quit-nicotine-pouches/">How to Quit Nicotine Pouches</a>
-					<a href="/wean-vs-habit-tracker/">Wean vs. Habit Tracker</a>
-				</div>
-				<div class="site-footer__col">
-					<p class="footer-heading">Guides</p>
-					<a href="/how-to-handle-nicotine-cravings/">Handle Nicotine Cravings</a>
-					<a href="/taper-nicotine/">Taper Nicotine</a>
-					<a href="/gradual-reduction-vs-cold-turkey/">Gradual vs. Cold Turkey</a>
-					<a href="/track-snus-use/">Track Snus Use</a>
-					<a href="/private-quit-nicotine-app/">Private Quit App</a>
-				</div>
+				{/* Resources/Guides link to EN-only SEO landing pages (see #98),
+				    so they're hidden on DA/SV/NO to avoid yanking the user back
+				    to English. Localize these pages first to surface them here. */}
+				{lang === 'en' && (
+					<Fragment>
+						<div class="site-footer__col">
+							<p class="footer-heading">Resources</p>
+							<a href="/snus-reduction-app/">Snus Reduction App</a>
+							<a href="/nicotine-pouch-reduction-app/">Nicotine Pouch Reduction</a>
+							<a href="/how-to-reduce-snus/">How to Reduce Snus</a>
+							<a href="/how-to-quit-nicotine-pouches/">How to Quit Nicotine Pouches</a>
+							<a href="/wean-vs-habit-tracker/">Wean vs. Habit Tracker</a>
+						</div>
+						<div class="site-footer__col">
+							<p class="footer-heading">Guides</p>
+							<a href="/how-to-handle-nicotine-cravings/">Handle Nicotine Cravings</a>
+							<a href="/taper-nicotine/">Taper Nicotine</a>
+							<a href="/gradual-reduction-vs-cold-turkey/">Gradual vs. Cold Turkey</a>
+							<a href="/track-snus-use/">Track Snus Use</a>
+							<a href="/private-quit-nicotine-app/">Private Quit App</a>
+						</div>
+					</Fragment>
+				)}
 				<div class="site-footer__col">
 					<p class="footer-heading">More from IAMJARL</p>
 					<a href="https://iamjarl.com" target="_blank" rel="noopener noreferrer">IAMJARL Portfolio</a>
@@ -423,6 +430,13 @@ const structuredData: Record<string, unknown> = {
 		padding-bottom: var(--space-xxl);
 		border-bottom: 1px solid var(--border-subtle);
 		margin-bottom: var(--space-xl);
+	}
+
+	/* Non-EN locales drop the two EN-only link columns (see footer markup),
+	   leaving brand + "More from IAMJARL" — keep them balanced, not stranded
+	   in the first two of four tracks. */
+	.site-footer__grid--compact {
+		grid-template-columns: repeat(2, 1fr);
 	}
 
 	.site-footer__col {
