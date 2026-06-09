@@ -16,11 +16,11 @@ version: 2
 updates:
   # Mobile app (Expo / React Native)
   - package-ecosystem: npm
-    directory: "/"
+    directory: '/'
     schedule:
       interval: weekly
       day: monday
-      time: "07:00"
+      time: '07:00'
       timezone: Europe/Copenhagen
     open-pull-requests-limit: 5
     labels:
@@ -29,43 +29,111 @@ updates:
     groups:
       app-minor-and-patch:
         patterns:
-          - "*"
+          - '*'
         update-types:
           - minor
           - patch
-    # Expo SDK, React Native, and React majors require manual upgrade dance.
-    # React Native minor bumps (0.83 → 0.85 etc.) are also breaking in practice
-    # because of native code + jest preset migrations, even though semver
-    # technically calls them minor. Block both to avoid surprise CI failures.
+    # Expo SDK manages a tight matrix of compatible package versions across
+    # `expo`, `expo-*`, `react`, `react-dom`, `react-native`, and the major
+    # `react-native-*` libraries (reanimated, worklets, gesture-handler,
+    # screens, safe-area-context, svg). Patch bumps that look harmless on
+    # semver have broken iOS codegen for us in the past (v1.4.0 codegen bug
+    # came from drift between `react-native@0.83.9` and the SDK 55 manifest
+    # — see #170, #172, #174). Pinning these to whatever `npx expo install
+    # --fix` chose, and only bumping when the Expo SDK manifest changes,
+    # is the only configuration that holds up.
+    #
+    # When you DO want to bump them, the manual procedure is:
+    #   rm -rf node_modules package-lock.json
+    #   npm install
+    #   CI=1 npx expo install --fix
+    #   (then commit + verify with a local EAS build)
     ignore:
-      - dependency-name: "expo"
+      # Expo platform — every level requires manual handling.
+      - dependency-name: 'expo'
         update-types:
-          - "version-update:semver-major"
-          - "version-update:semver-minor"
-      - dependency-name: "react-native"
+          - 'version-update:semver-major'
+          - 'version-update:semver-minor'
+          - 'version-update:semver-patch'
+      - dependency-name: 'expo-*'
         update-types:
-          - "version-update:semver-major"
-          - "version-update:semver-minor"
-      - dependency-name: "react"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "react-dom"
-        update-types: ["version-update:semver-major"]
-      # Major-version bumps for these dev tools are tracked manually too —
-      # they tend to require config migrations.
-      - dependency-name: "eslint"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "jest"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "typescript"
-        update-types: ["version-update:semver-major"]
+          - 'version-update:semver-major'
+          - 'version-update:semver-minor'
+          - 'version-update:semver-patch'
+      - dependency-name: 'babel-preset-expo'
+        update-types:
+          - 'version-update:semver-major'
+          - 'version-update:semver-minor'
+          - 'version-update:semver-patch'
+      # React / React Native — patch bumps drift past Expo SDK's tested matrix.
+      - dependency-name: 'react'
+        update-types:
+          - 'version-update:semver-major'
+          - 'version-update:semver-minor'
+          - 'version-update:semver-patch'
+      - dependency-name: 'react-dom'
+        update-types:
+          - 'version-update:semver-major'
+          - 'version-update:semver-minor'
+          - 'version-update:semver-patch'
+      - dependency-name: 'react-native'
+        update-types:
+          - 'version-update:semver-major'
+          - 'version-update:semver-minor'
+          - 'version-update:semver-patch'
+      # Critical native libs that Expo SDK pins specific versions of. Patch
+      # bumps here have broken pod install or runtime in the past.
+      - dependency-name: 'react-native-reanimated'
+        update-types:
+          - 'version-update:semver-major'
+          - 'version-update:semver-minor'
+          - 'version-update:semver-patch'
+      - dependency-name: 'react-native-worklets'
+        update-types:
+          - 'version-update:semver-major'
+          - 'version-update:semver-minor'
+          - 'version-update:semver-patch'
+      - dependency-name: 'react-native-gesture-handler'
+        update-types:
+          - 'version-update:semver-major'
+          - 'version-update:semver-minor'
+          - 'version-update:semver-patch'
+      - dependency-name: 'react-native-screens'
+        update-types:
+          - 'version-update:semver-major'
+          - 'version-update:semver-minor'
+          - 'version-update:semver-patch'
+      - dependency-name: 'react-native-safe-area-context'
+        update-types:
+          - 'version-update:semver-major'
+          - 'version-update:semver-minor'
+          - 'version-update:semver-patch'
+      - dependency-name: 'react-native-svg'
+        update-types:
+          - 'version-update:semver-major'
+          - 'version-update:semver-minor'
+          - 'version-update:semver-patch'
+      # @types/react is paired with react itself.
+      - dependency-name: '@types/react'
+        update-types:
+          - 'version-update:semver-major'
+          - 'version-update:semver-minor'
+          - 'version-update:semver-patch'
+      # Major-version bumps for dev tools require config migrations.
+      - dependency-name: 'eslint'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'jest'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'typescript'
+        update-types: ['version-update:semver-major']
 
   # Marketing website (Astro)
   - package-ecosystem: npm
-    directory: "/website"
+    directory: '/website'
     schedule:
       interval: weekly
       day: monday
-      time: "07:00"
+      time: '07:00'
       timezone: Europe/Copenhagen
     open-pull-requests-limit: 5
     labels:
@@ -74,15 +142,15 @@ updates:
     groups:
       website-all:
         patterns:
-          - "*"
+          - '*'
 
   # GitHub Actions workflow versions
   - package-ecosystem: github-actions
-    directory: "/"
+    directory: '/'
     schedule:
       interval: weekly
       day: monday
-      time: "07:00"
+      time: '07:00'
       timezone: Europe/Copenhagen
     open-pull-requests-limit: 3
     labels:
