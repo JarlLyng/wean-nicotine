@@ -65,6 +65,20 @@ updates:
           - 'version-update:semver-major'
           - 'version-update:semver-minor'
           - 'version-update:semver-patch'
+      # Expo tooling that the `expo-*` glob misses (names don't start with
+      # `expo-`). These track the SDK major: jest-expo@56 / eslint-config-expo@56
+      # belong to SDK 56 and break CI on an SDK 55 tree (#185, #186). Bump them
+      # only as part of a deliberate SDK upgrade via `npx expo install --fix`.
+      - dependency-name: 'jest-expo'
+        update-types:
+          - 'version-update:semver-major'
+          - 'version-update:semver-minor'
+          - 'version-update:semver-patch'
+      - dependency-name: 'eslint-config-expo'
+        update-types:
+          - 'version-update:semver-major'
+          - 'version-update:semver-minor'
+          - 'version-update:semver-patch'
       # React / React Native — patch bumps drift past Expo SDK's tested matrix.
       - dependency-name: 'react'
         update-types:
