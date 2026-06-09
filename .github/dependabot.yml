@@ -127,6 +127,17 @@ updates:
           - 'version-update:semver-major'
           - 'version-update:semver-minor'
           - 'version-update:semver-patch'
+      # React Navigation is pinned by the Expo SDK manifest. `expo doctor`
+      # reports a version mismatch when Dependabot bumps these past the SDK's
+      # tested matrix, and minor bumps here can pull `babel-preset-expo@56`
+      # into the tree (see docs/AI_CONTEXT.md "Known Pitfalls" #2). A local EAS
+      # build of the 7.17.2 bump (#184) succeeded but left `expo doctor` red —
+      # so track the SDK manifest instead, bumping via `npx expo install --fix`.
+      - dependency-name: '@react-navigation/*'
+        update-types:
+          - 'version-update:semver-major'
+          - 'version-update:semver-minor'
+          - 'version-update:semver-patch'
       # @types/react is paired with react itself.
       - dependency-name: '@types/react'
         update-types:
