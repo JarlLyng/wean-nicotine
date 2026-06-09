@@ -44,7 +44,7 @@ Alternativer:
 
 ---
 
-## iOS App Version 1.4.1 — Submitted for review 2026-06-01 (build 19)
+## iOS App Version 1.4.1 — Live in App Store (build 19, approved June 2026)
 
 Hotfix release on top of v1.4.0/build 18 — see "Known regression in 1.4.0" at the bottom of this section.
 
