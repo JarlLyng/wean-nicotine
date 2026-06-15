@@ -157,6 +157,7 @@ lib/                    # Business logic & utilities
   notifications.ts      # Local notification scheduling
 docs/                   # Documentation
 website/                # Astro marketing site
+scripts/                # Maintainer CLIs (App Store Connect downloads)
 ```
 
 See [`docs/README.md`](./docs/README.md) for the documentation index and [`docs/decisions/storage.md`](./docs/decisions/storage.md) for storage architecture details.
