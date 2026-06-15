@@ -14,4 +14,4 @@ The blog will cover three things over time:
 2. **Privacy and health apps.** Why an app that tracks an addiction needs to be offline-first by default — and the design choices that keep the data on your phone.
 3. **Building Wean as a solo indie project.** Notes on shipping iteratively, working with the App Store, and using AI tools to ship faster without losing the craft.
 
-If any of that sounds interesting, the [App Store listing](https://apps.apple.com/app/wean-nicotine/id6745262907) is the fastest way to try the app itself. Otherwise, more posts will land here as work progresses.
+If any of that sounds interesting, the [App Store listing](https://apps.apple.com/app/wean-nicotine/id6758867485) is the fastest way to try the app itself. Otherwise, more posts will land here as work progresses.
