@@ -16,7 +16,7 @@
     "@astrojs/sitemap": "^3.7.3",
     "@fontsource/inter": "^5.2.8",
     "@fontsource/outfit": "^5.2.8",
-    "astro": "^6.4.5"
+    "astro": "^6.4.6"
   },
   "devDependencies": {
     "@types/react": "~19.2.17",
