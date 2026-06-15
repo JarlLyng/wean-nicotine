@@ -59,6 +59,12 @@ Update when:
 - Path: `docs/`
 - Purpose: architecture summaries, strategy, release ops, App Store material
 
+### 4. Maintainer scripts
+
+- Path: `scripts/`
+- Runtime: Python (one dependency, `pyjwt[crypto]`, in a gitignored `.venv`)
+- Purpose: local tooling. `asc_downloads.py` pulls App Store Connect download/sales numbers from the command line. No secrets in the repo — credentials come from a gitignored `.env` and the `.p8` key stays out of git. See [`scripts/README.md`](../scripts/README.md).
+
 ## System Boundaries
 
 ### In scope
@@ -203,6 +209,9 @@ Canonical implementation: [`lib/notifications.ts`](../lib/notifications.ts)
 - Unit tests live under `lib/__tests__/`.
   - [`taper-plan.test.ts`](../lib/__tests__/taper-plan.test.ts): allowance math, default plan generation, edge cases.
   - [`progress.test.ts`](../lib/__tests__/progress.test.ts): weekly progress, total + milestone detection, week boundaries. DB layer (`getLogEntries`) is mocked.
+  - [`cost-savings.test.ts`](../lib/__tests__/cost-savings.test.ts): currency-aware savings projections.
+  - [`notifications.test.ts`](../lib/__tests__/notifications.test.ts): reminder scheduling and cancel logic.
+  - [`sentry-scrubber.test.ts`](../lib/__tests__/sentry-scrubber.test.ts): PII scrubbing.
 - Run tests: `npm test` or `npm run test:watch`.
 - Target: pure functions in `lib/` are fully covered. Screen and hook tests are not part of the baseline.
 
@@ -246,7 +255,7 @@ SEO intent and landing-page plan are described in [`SEO_STRATEGY.md`](./SEO_STRA
 - Home screen data layer: [`hooks/useHomeData.ts`](../hooks/useHomeData.ts)
 - Notifications: [`lib/notifications.ts`](../lib/notifications.ts)
 - Error reporting: [`lib/sentry.ts`](../lib/sentry.ts) — includes the PII scrubber and `sendDefaultPii: false`. Privacy hardening details in [`SENTRY.md`](./SENTRY.md).
-- Tests: `lib/__tests__/` (jest-expo, 43 tests across 3 suites). Run via `npm test` or `npm run check`.
+- Tests: `lib/__tests__/` (jest-expo, 60 tests across 5 suites). Run via `npm test` or `npm run check`.
 - Task tracking: [GitHub Issues](https://github.com/JarlLyng/wean-nicotine/issues) with labels `P1`/`P2`/`P3`, `seo`, `aso`, `website`, `marketing`, `enhancement`.
 - Outside contributions: [`CONTRIBUTING.md`](../CONTRIBUTING.md) sets expectations for bug reports, feature requests, and PRs.
 - Security: [`SECURITY.md`](../SECURITY.md) for vulnerability disclosure. Repo has CodeQL + Dependabot + secret scanning enabled.
@@ -278,7 +287,8 @@ The single most important pitfall this repo has hit. Three separate symptoms —
 
 The fix that holds up:
 
-- `.github/dependabot.yml` blocks **all** semver levels (major, minor, **and patch**) for `expo`, `expo-*`, `babel-preset-expo`, `react`, `react-dom`, `react-native`, `@types/react`, and the major `react-native-*` libs (`reanimated`, `worklets`, `gesture-handler`, `screens`, `safe-area-context`, `svg`). Don't loosen this without a deliberate SDK upgrade.
+- `.github/dependabot.yml` blocks **all** semver levels (major, minor, **and patch**) for `expo`, `expo-*`, `babel-preset-expo`, `react`, `react-dom`, `react-native`, `@types/react`, the major `react-native-*` libs (`reanimated`, `worklets`, `gesture-handler`, `screens`, `safe-area-context`, `svg`), `@react-navigation/*`, and the Expo tooling the `expo-*` glob misses because the names don't start with `expo-`: `jest-expo` and `eslint-config-expo`. Don't loosen this without a deliberate SDK upgrade.
+- Mind the glob gaps. `jest-expo@56` / `eslint-config-expo@56` belong to SDK 56 and fail CI on an SDK 55 tree (#185, #186). React Navigation is subtler: a local EAS build of the `@react-navigation/bottom-tabs@7.17.2` bump (#184) _built fine_ and didn't leak `babel-preset-expo@56`, but `expo doctor` went red on the version mismatch. "It builds" is not the bar — matching the SDK manifest (whatever `npx expo install --fix` chooses) is.
 - When Expo ships a new SDK (or you want to bump intentionally):
   ```bash
   rm -rf node_modules package-lock.json
@@ -293,54 +303,16 @@ The fix that holds up:
 
 `Animated.createAnimatedComponent(Pressable)` accepts an array/object `style` prop but silently disables press handling if the style is a callback `({ pressed, focused }) => ...`. This blocked all Buttons in v1.4.0 build 18. If you need press-state-driven styling on an AnimatedPressable, use explicit `onPress{In,Out}` + animated SharedValue instead. The focus-ring feature for primitives lives in #136 with this constraint documented.
 
-## Current state (handoff snapshot — June 2026)
+## Where "current state" lives
 
-This section helps future sessions pick up cleanly. Move stale items out as they're addressed; don't let it grow stale.
+This file deliberately does **not** track live project status (recently shipped,
+deferred work, current priorities). That information churns and goes stale fast,
+so its source of truth lives where it stays current on its own:
 
-### What's recently shipped
+- **In progress / deferred / prioritized:** the [GitHub issue tracker](https://github.com/JarlLyng/wean-nicotine/issues), using the P0–P3 labels (taxonomy in [`CONTRIBUTING.md`](../CONTRIBUTING.md)).
+- **What shipped, and when:** [`CHANGELOG.md`](../CHANGELOG.md) and the git log.
+- **What the App Store sees:** `npx eas build` history, and download/sales numbers via [`scripts/asc_downloads.py`](../scripts/asc_downloads.py).
 
-- **v1.4.1 live in App Store** (iOS build 19). Hotfix for the v1.4.0 unresponsive-Button regression. Brings: onboarding progress dots, hold-to-confirm reset, breathing celebration, error-vs-no-settings distinction in `useHomeData`, bar-chart legend completeness, 44pt touch targets, dark-mode switch contrast, IAMJARL token alignment, transactional SQLite migrations (v6 analytics, v7 drop `user_plan`), notifications race fix, and 17 new unit tests (60 total).
-- **Blog launched** with three long-form articles at `/blog/`:
-  - [5 tips for reducing snus](/blog/five-tips-reducing-snus-without-cold-turkey/) — action-intent
-  - [How tapering works](/blog/how-the-tapering-approach-works/) — research-intent
-  - [Why privacy matters in health apps](/blog/why-privacy-matters-in-health-apps/) — positioning
-  - Content collection schema in `website/src/content.config.ts`, RSS at `/rss.xml`, BlogPosting JSON-LD per post.
-- **Website foundations** complete: language switcher (header + footer), self-hosted Inter/Outfit, sitemap i18n alternates, hreflang fix on SEO landings, IAMJARL primary color `#A435D2`, per-page OG support.
-- **Repo professionalism**: CHANGELOG with back-tagged 1.0.0 → 1.4.1, Prettier + husky + lint-staged, GitHub Issue Forms (YAML), `.cursor/rules/project-conventions.mdc`, P0–P3 priority taxonomy, CodeQL configured.
-- **GSC**: site is verified at `https://weannicotine.iamjarl.com/`; sitemap re-submitted June 2026 after adding blog. Baseline as of submit: 37 impressions / 0 clicks / position 10.9 over 28 days. Next checkpoint: 7+ days after submit to see if the new pages indexed.
-
-### What's deliberately deferred
-
-- **Issue #136 — 2px focus-ring on UI primitives.** First attempt regressed every Button (see "AnimatedPressable" pitfall above). Re-implement with `onFocus`/`onBlur` + local state. iOS doesn't surface keyboard focus state, so this is web/hardware-keyboard only — not urgent.
-- **Issue #142 — full AVIF/WebP hero image.** Preload landed in #160 but the actual format conversion needs `astro:assets` plus moving screenshots from `public/` to `src/assets/`. Higher-effort follow-up.
-- **Issue #117/#118 follow-on migrations.** UI primitives (`Input`, `Chip`, `ListItem`, `OnboardingProgress`) exist; baseline.tsx uses Input. Remaining call sites (pace radios, price currency pills, triggers chips, settings rows, reflection inputs) are tracked but not migrated.
-- **Localizing blog articles to DA/SV/NO.** Not started. ~4500 words × 3 languages of nuanced translation. Wait until external traffic data justifies it.
-- **Marketing distribution (#29 / #33 / #34 / #36 / #47).** No external link shares yet. The blog articles are good inventory but unposted. The leverage there is much higher than more content right now.
-
-### Open priorities by impact
-
-1. **Wait + observe.** GSC re-fetched sitemap June 2026. New blog URLs should index within a week. Recheck before adding more content.
-2. **Distribution, not production.** One organic Reddit/X share of the privacy article (#32) is probably worth more right now than any code change.
-3. **Maker story (#61).** Now timely with v1.4.1 live as a narrative anchor — worth writing once you have 1–2 weeks of post-launch data.
-4. **App-tech-debt P2/P3 backlog.** Issues remaining: #12 (unify milestone algo), #14 (Index screen simplify), #15 (split progress.tsx), #16 (notification cancel race), plus the UI primitive migrations above. None are blocking.
-
-### How to verify nothing's drifted before next release
-
-```bash
-# Tree health
-npm run check                       # lint + typecheck + tests (should be 60 passing)
-CI=1 npx expo install --fix         # should report "Dependencies are up to date"
-npx expo doctor                     # should be 19/19 checks passed
-
-# Release procedure (when bumping version)
-# 1. Bump version + buildNumber in app.config.js
-# 2. Bump version in package.json
-# 3. Add CHANGELOG section
-# 4. Commit, push, merge to main
-# 5. From main:
-pod repo update
-rm -rf ios android .expo
-npx eas build --profile production --platform ios --local
-npx eas submit --platform ios --latest
-# 6. Tag + GitHub Release after Apple approval
-```
+Keep this document to the durable parts above (architecture, business rules,
+and especially the hard-won pitfalls). When in doubt, prefer a pointer to the
+canonical source over a restated copy that can drift.
