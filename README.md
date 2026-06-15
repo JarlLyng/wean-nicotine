@@ -3,7 +3,7 @@
 [![CI](https://github.com/JarlLyng/wean-nicotine/actions/workflows/ci.yml/badge.svg)](https://github.com/JarlLyng/wean-nicotine/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/github/license/JarlLyng/wean-nicotine)](./LICENSE)
 [![Version](https://img.shields.io/github/package-json/v/JarlLyng/wean-nicotine)](./CHANGELOG.md)
-[![Platform](https://img.shields.io/badge/platform-iOS-blue)](https://apps.apple.com/app/wean-nicotine/id6745262907)
+[![Platform](https://img.shields.io/badge/platform-iOS-blue)](https://apps.apple.com/app/wean-nicotine/id6758867485)
 [![Expo SDK](https://img.shields.io/badge/Expo%20SDK-55-000020?logo=expo)](https://docs.expo.dev/)
 [![Co-created with AI](https://madebyhuman.iamjarl.com/badges/co-created-white.svg)](https://madebyhuman.iamjarl.com)
 
