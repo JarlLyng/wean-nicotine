@@ -59,3 +59,13 @@ CODEX_ANBEFALINGER.md
 
 # Claude Code local config (not portable across machines)
 .claude/
+
+# Secrets — never commit. App Store Connect API keys and env files.
+*.p8
+.env
+.env.*
+!.env.example
+
+# Python virtualenv for scripts/
+.venv/
+__pycache__/
