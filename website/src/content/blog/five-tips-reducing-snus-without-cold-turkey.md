@@ -18,7 +18,7 @@ The most common mistake people make on day one is choosing a baseline that flatt
 
 This matters because the whole taper is calculated from the baseline. Pick a number that's lower than reality and the first weeks feel impossible — you're already over the limit before noon, and you start the cycle of "I failed today, I might as well have another." Pick an honest number and the first week feels almost easy. That early win is what carries you through week three when the math actually starts to bite.
 
-Track your real usage for a couple of days first if you're not sure. The [Wean Nicotine app](https://apps.apple.com/app/wean-nicotine/id6745262907) is built for this — log every pouch with one tap, no judgment. After two days you'll know your actual number.
+Track your real usage for a couple of days first if you're not sure. The [Wean Nicotine app](https://apps.apple.com/app/wean-nicotine/id6758867485) is built for this — log every pouch with one tap, no judgment. After two days you'll know your actual number.
 
 ## 2. Choose a sustainable pace, not an aggressive one
 
@@ -72,4 +72,4 @@ It's not glamorous, but it's the version that works.
 
 ---
 
-_If you want to try this approach, [Wean Nicotine](https://apps.apple.com/app/wean-nicotine/id6745262907) is a one-time-purchase iOS app built around exactly this method. No accounts, no cloud, no subscription — your data stays on your phone. There's also a longer write-up of the underlying method at [How to reduce snus](/how-to-reduce-snus/) if you want the full version._
+_If you want to try this approach, [Wean Nicotine](https://apps.apple.com/app/wean-nicotine/id6758867485) is a one-time-purchase iOS app built around exactly this method. No accounts, no cloud, no subscription — your data stays on your phone. There's also a longer write-up of the underlying method at [How to reduce snus](/how-to-reduce-snus/) if you want the full version._

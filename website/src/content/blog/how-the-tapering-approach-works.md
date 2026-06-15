@@ -80,4 +80,4 @@ Tapering works because it's small enough to fit into a normal life and structure
 
 ---
 
-_Wean Nicotine is built around this method specifically. You can read the [practical 5-tip version](/blog/five-tips-reducing-snus-without-cold-turkey/) of the same idea, or [try the app](https://apps.apple.com/app/wean-nicotine/id6745262907) — one-time purchase, no accounts, all your data stays on your phone._
+_Wean Nicotine is built around this method specifically. You can read the [practical 5-tip version](/blog/five-tips-reducing-snus-without-cold-turkey/) of the same idea, or [try the app](https://apps.apple.com/app/wean-nicotine/id6758867485) — one-time purchase, no accounts, all your data stays on your phone._
