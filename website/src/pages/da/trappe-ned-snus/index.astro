@@ -1,0 +1,121 @@
+---
+import SeoLandingLayout from '../../../layouts/SeoLandingLayout.astro';
+import Card from '../../../components/Card.astro';
+import Section from '../../../components/Section.astro';
+import { APP_STORE_URL, isAppStoreUrlKnown } from '../../../lib/site';
+
+const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
+const appStoreCtaLabel = appStoreKnown ? 'Hent i App Store' : 'Kommer snart i App Store';
+---
+
+<SeoLandingLayout
+	title="Trappe ned snus — skær ned skridt for skridt"
+	description="Vil du trappe ned på snus gradvist? Sådan gør du det skridt for skridt, og hvordan Wean Nicotine sænker din daglige kvote automatisk — privat, uden konto og uden cloud-synk."
+	canonicalPath="/da/trappe-ned-snus/"
+	h1="Trappe ned snus – skridt for skridt"
+	lede="At trappe ned på snus gradvist er en skånsom måde at reducere nikotinindtaget på, og forskning viser, at det er lige så effektivt som at stoppe brat (Lindson et al., Cochrane Review 2019). Her er en enkel metode til at trappe ned — og hvordan Wean Nicotine gør processen automatisk og privat."
+	bottomCtaHeading="Klar til at trappe ned på snus?"
+	bottomCtaText="Start med dit nuværende forbrug og lad Wean Nicotine sænke din kvote skridt for skridt."
+	appStoreCtaLabel={appStoreCtaLabel}
+	campaignToken="seo_da_taper"
+	lang="da"
+>
+	<script type="application/ld+json" slot="after-guide">
+		{
+			"@context": "https://schema.org",
+			"@type": "BreadcrumbList",
+			"itemListElement": [
+				{
+					"@type": "ListItem",
+					"position": 1,
+					"name": "Home",
+					"item": "https://weannicotine.iamjarl.com"
+				},
+				{
+					"@type": "ListItem",
+					"position": 2,
+					"name": "Trappe ned snus",
+					"item": "https://weannicotine.iamjarl.com/da/trappe-ned-snus/"
+				}
+			]
+		}
+	</script>
+
+	<section class="guide__section">
+		<h2>Hvorfor trappe ned i stedet for at stoppe brat?</h2>
+		<p>Brat stop giver ofte kraftige abstinenser og høj risiko for tilbagefald. At trappe ned giver kroppen tid til at vænne sig til mindre nikotin, mens du beholder følelsen af kontrol undervejs.</p>
+		<div class="grid-2">
+			<Card as="article">
+				<h3>Lige så effektivt som brat stop</h3>
+				<p>En gennemgang af forskningen fandt, at gradvis nedtrapning og brat stop giver lige gode resultater (Lindson et al., Cochrane Review 2019). Forskellen er, at nedtrapning føles mere overkommelig for mange.</p>
+			</Card>
+			<Card as="article">
+				<h3>Mildere abstinenser</h3>
+				<p>Når du sænker forbruget lidt ad gangen, bliver trangen mildere end ved at skære det hele væk på én dag. Det gør det lettere at holde ud over tid.</p>
+			</Card>
+		</div>
+	</section>
+
+	<section class="guide__section">
+		<h2>Sådan trapper du ned på snus skridt for skridt</h2>
+		<p>En enkel metode, du kan følge uge for uge.</p>
+		<div class="grid-3">
+			<Card as="article">
+				<h3>1) Find dit udgangspunkt</h3>
+				<p>Tæl hvor mange poser du faktisk bruger om dagen i et par dage. Det ærlige tal er startpunktet — gæt ikke.</p>
+			</Card>
+			<Card as="article">
+				<h3>2) Sæt et ugentligt mål</h3>
+				<p>Reducer med 5–10 % om ugen. Bruger du fx 12 poser om dagen, bliver næste uges mål omkring 11. Et lille, konkret kut ad gangen.</p>
+			</Card>
+			<Card as="article">
+				<h3>3) Spor og hold dig til planen</h3>
+				<p>Registrér hver pose, så du ser, hvor du faktisk ligger. Selvmonitorering alene kan reducere forbruget med 15–20 % (Burke et al., Journal of the American Dietetic Association).</p>
+			</Card>
+		</div>
+	</section>
+
+	<section class="guide__section">
+		<h2>Hvordan Wean Nicotine gør nedtrapningen nem</h2>
+		<p>At regne kvoter ud og holde styr manuelt er besværligt. Wean Nicotine gør hele nedtrapningen automatisk.</p>
+		<div class="grid-2">
+			<Card as="article">
+				<h3>Automatisk daglig kvote</h3>
+				<p>Fortæl appen hvor mange poser du bruger, så laver den en plan og sænker din kvote gradvist — som standard 5 % om ugen, justerbart mellem 3 og 15 %.</p>
+			</Card>
+			<Card as="article">
+				<h3>Registrering med ét tryk</h3>
+				<p>Registrér hver pose med ét tryk. Det tager under 2 sekunder, og du ser med det samme, om du holder dig inden for dagens kvote.</p>
+			</Card>
+			<Card as="article">
+				<h3>Støtteværktøjer mod trang</h3>
+				<p>Trangen topper typisk inden for 3–5 minutter. Indbyggede vejrtrækningsøvelser og refleksionsværktøjer hjælper dig igennem de øjeblikke.</p>
+			</Card>
+			<Card as="article">
+				<h3>Privat og lokalt</h3>
+				<p>Ingen konto, ingen cloud-synk og ingen deling. Dine data gemmes lokalt på din iPhone. Læs mere på siden om <a href="/da/stop-med-snus-app/">appen til nedtrapning af snus</a>.</p>
+			</Card>
+		</div>
+	</section>
+
+	<Section id="faq" title="Ofte stillede spørgsmål om at trappe ned på snus" slot="after-guide">
+		<div class="grid-2">
+			<Card as="article">
+				<h3>Hvor meget bør jeg trappe ned om ugen?</h3>
+				<p>5–10 % om ugen er et trygt og overkommeligt tempo for de fleste. Wean Nicotine bruger 5 % som standard, men du kan vælge mellem 3 og 15 % alt efter, hvor hurtigt du vil gå.</p>
+			</Card>
+			<Card as="article">
+				<h3>Virker det at trappe ned gradvist?</h3>
+				<p>Ja. Forskning viser, at gradvis nedtrapning er lige så effektiv som at stoppe brat (Lindson et al., Cochrane Review 2019), og mange oplever den som lettere at gennemføre.</p>
+			</Card>
+			<Card as="article">
+				<h3>Hvor lang tid tager nedtrapningen?</h3>
+				<p>Det afhænger af dit udgangspunkt og det tempo, du vælger. Med 5 % reduktion om ugen fra et moderat forbrug tager det typisk nogle måneder — og du ser fremgangen tydeligt hele vejen.</p>
+			</Card>
+			<Card as="article">
+				<h3>Hvad koster Wean Nicotine?</h3>
+				<p>Wean Nicotine er et engangskøb til 29 kr. — ingen abonnementer, ingen reklamer og intet salg af data. Du betaler én gang og får alle funktioner.</p>
+			</Card>
+		</div>
+	</Section>
+</SeoLandingLayout>

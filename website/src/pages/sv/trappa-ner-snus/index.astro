@@ -1,0 +1,121 @@
+---
+import SeoLandingLayout from '../../../layouts/SeoLandingLayout.astro';
+import Card from '../../../components/Card.astro';
+import Section from '../../../components/Section.astro';
+import { APP_STORE_URL, isAppStoreUrlKnown } from '../../../lib/site';
+
+const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
+const appStoreCtaLabel = appStoreKnown ? 'Hämta i App Store' : 'Kommer snart i App Store';
+---
+
+<SeoLandingLayout
+	title="Trappa ner snus — minska snusandet steg för steg"
+	description="Vill du trappa ner snusandet gradvis? Så här gör du det steg för steg, och hur Wean Nicotine sänker din dagliga ranson automatiskt — privat, utan konto och utan molnsynk."
+	canonicalPath="/sv/trappa-ner-snus/"
+	h1="Trappa ner snus – steg för steg"
+	lede="Att trappa ner snuset gradvis är ett skonsamt sätt att minska nikotinintaget, och forskning visar att det är lika effektivt som att sluta tvärt (Lindson et al., Cochrane Review 2019). Här är en enkel metod för att trappa ner — och hur Wean Nicotine gör processen automatisk och privat."
+	bottomCtaHeading="Redo att trappa ner snusandet?"
+	bottomCtaText="Börja med din nuvarande förbrukning och låt Wean Nicotine sänka din ranson steg för steg."
+	appStoreCtaLabel={appStoreCtaLabel}
+	campaignToken="seo_sv_taper"
+	lang="sv"
+>
+	<script type="application/ld+json" slot="after-guide">
+		{
+			"@context": "https://schema.org",
+			"@type": "BreadcrumbList",
+			"itemListElement": [
+				{
+					"@type": "ListItem",
+					"position": 1,
+					"name": "Home",
+					"item": "https://weannicotine.iamjarl.com"
+				},
+				{
+					"@type": "ListItem",
+					"position": 2,
+					"name": "Trappa ner snus",
+					"item": "https://weannicotine.iamjarl.com/sv/trappa-ner-snus/"
+				}
+			]
+		}
+	</script>
+
+	<section class="guide__section">
+		<h2>Varför trappa ner i stället för att sluta tvärt?</h2>
+		<p>Att sluta tvärt ger ofta starka abstinensbesvär och hög risk för återfall. Att trappa ner ger kroppen tid att vänja sig vid mindre nikotin, samtidigt som du behåller känslan av kontroll längs vägen.</p>
+		<div class="grid-2">
+			<Card as="article">
+				<h3>Lika effektivt som att sluta tvärt</h3>
+				<p>En genomgång av forskningen fann att gradvis nedtrappning och abrupt stopp ger lika goda resultat (Lindson et al., Cochrane Review 2019). Skillnaden är att nedtrappning känns mer hanterbar för många.</p>
+			</Card>
+			<Card as="article">
+				<h3>Mildare abstinensbesvär</h3>
+				<p>När du sänker förbrukningen lite i taget blir suget mildare än om du kapar allt på en dag. Det gör det lättare att hålla ut över tid.</p>
+			</Card>
+		</div>
+	</section>
+
+	<section class="guide__section">
+		<h2>Så här trappar du ner snusandet steg för steg</h2>
+		<p>En enkel metod du kan följa vecka för vecka.</p>
+		<div class="grid-3">
+			<Card as="article">
+				<h3>1) Hitta din utgångspunkt</h3>
+				<p>Räkna hur många prillor du faktiskt använder per dag i ett par dagar. Det ärliga talet är startpunkten — gissa inte.</p>
+			</Card>
+			<Card as="article">
+				<h3>2) Sätt ett veckomål</h3>
+				<p>Minska med 5–10 % per vecka. Använder du till exempel 12 prillor om dagen blir nästa veckas mål runt 11. En liten, konkret minskning i taget.</p>
+			</Card>
+			<Card as="article">
+				<h3>3) Logga och håll dig till planen</h3>
+				<p>Logga varje prilla så du ser var du faktiskt ligger. Självövervakning kan minska konsumtionen med 15–20 % (Burke et al., Journal of the American Dietetic Association).</p>
+			</Card>
+		</div>
+	</section>
+
+	<section class="guide__section">
+		<h2>Hur Wean Nicotine gör nedtrappningen enkel</h2>
+		<p>Att räkna ut kvoter och hålla koll manuellt är omständligt. Wean Nicotine gör hela nedtrappningen automatisk.</p>
+		<div class="grid-2">
+			<Card as="article">
+				<h3>Automatisk daglig ranson</h3>
+				<p>Berätta hur många prillor du använder, så skapar appen en plan och sänker din ranson gradvis — som standard 5 % per vecka, justerbart mellan 3 och 15 %.</p>
+			</Card>
+			<Card as="article">
+				<h3>Loggning med ett tryck</h3>
+				<p>Logga varje prilla med ett tryck. Det tar under 2 sekunder, och du ser direkt om du håller dig inom dagens ranson.</p>
+			</Card>
+			<Card as="article">
+				<h3>Stöd för suget</h3>
+				<p>Suget toppar oftast inom 3–5 minuter. Inbyggda andningsövningar och reflektionsverktyg hjälper dig genom de stunderna.</p>
+			</Card>
+			<Card as="article">
+				<h3>Privat och lokalt</h3>
+				<p>Ingen konto, ingen molnsynk och ingen delning. Din data lagras lokalt på din iPhone. Läs mer på sidan om <a href="/sv/sluta-snusa-app/">appen för att minska snus</a>.</p>
+			</Card>
+		</div>
+	</section>
+
+	<Section id="faq" title="Vanliga frågor om att trappa ner snus" slot="after-guide">
+		<div class="grid-2">
+			<Card as="article">
+				<h3>Hur mycket bör jag trappa ner per vecka?</h3>
+				<p>5–10 % per vecka är ett tryggt och hanterbart tempo för de flesta. Wean Nicotine använder 5 % som standard, men du kan välja mellan 3 och 15 % beroende på hur snabbt du vill gå.</p>
+			</Card>
+			<Card as="article">
+				<h3>Fungerar det att trappa ner gradvis?</h3>
+				<p>Ja. Forskning visar att gradvis nedtrappning är lika effektiv som att sluta tvärt (Lindson et al., Cochrane Review 2019), och många upplever den som lättare att genomföra.</p>
+			</Card>
+			<Card as="article">
+				<h3>Hur lång tid tar nedtrappningen?</h3>
+				<p>Det beror på din utgångspunkt och takten du väljer. Med 5 % minskning per vecka från en måttlig förbrukning tar det oftast några månader — och du ser framstegen tydligt hela vägen.</p>
+			</Card>
+			<Card as="article">
+				<h3>Vad kostar Wean Nicotine?</h3>
+				<p>Wean Nicotine är ett engångsköp för 29 DKK (ca 40 SEK) — inga prenumerationer, ingen reklam och ingen försäljning av data. Du betalar en gång och får alla funktioner.</p>
+			</Card>
+		</div>
+	</Section>
+</SeoLandingLayout>
