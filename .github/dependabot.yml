@@ -168,6 +168,13 @@ updates:
       website-all:
         patterns:
           - '*'
+    ignore:
+      # Astro major versions are breaking migrations (7.x moved to the
+      # rolldown compiler, which fails to build the current site — see #206,
+      # #207). Bump deliberately when there's time to handle the changes, not
+      # via Dependabot.
+      - dependency-name: 'astro'
+        update-types: ['version-update:semver-major']
 
   # GitHub Actions workflow versions
   - package-ecosystem: github-actions
