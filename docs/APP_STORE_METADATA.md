@@ -12,7 +12,7 @@ Audience:
 Source of truth:
 
 - App Store Connect is the final published state
-- Product positioning should stay aligned with [`AI_CONTEXT.md`](./AI_CONTEXT.md) and [`SEO_STRATEGY.md`](./SEO_STRATEGY.md)
+- Product positioning should stay aligned with [`AI_CONTEXT.md`](./AI_CONTEXT.md). Marketing positioning, SEO/ASO playbooks, competitive analysis, and channel plans live in the private IAMJARL strategy hub (not in this public repo) — see `WeanNicotine/` in [JarlLyng/iamjarl-strategy](https://github.com/JarlLyng/iamjarl-strategy) (access-restricted).
 
 Related files:
 
