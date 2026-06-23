@@ -244,7 +244,7 @@ The website uses a **programmatic SEO approach**:
 2.  Each page uses `SeoLandingLayout.astro`, which handles standard headers, CTAs, and SEO metadata.
 3.  Each layout instance is provided a `campaignToken` (e.g., `seo_da_app`), which is used by `getCampaignAppStoreUrl` to append Apple Search Ads / App Store Connect metrics (`pt` and `ct` parameters).
 
-SEO intent and landing-page plan are described in [`SEO_STRATEGY.md`](./SEO_STRATEGY.md).
+SEO/ASO strategy, keyword targets, competitive positioning, and channel plans are tracked in the private IAMJARL strategy hub — see `WeanNicotine/` in [JarlLyng/iamjarl-strategy](https://github.com/JarlLyng/iamjarl-strategy) (access-restricted). Anything you wouldn't want a competitor reading lives there, not here.
 
 ## Source Of Truth By Concern
 

@@ -55,23 +55,23 @@ This makes the docs easier for LLMs to classify correctly and reduces accidental
 
 ## Source Of Truth Map
 
-| Area                              | Primary source                                   | Notes                                                           |
-| --------------------------------- | ------------------------------------------------ | --------------------------------------------------------------- |
-| App routing and screen ownership  | `app/`                                           | Expo Router file structure is canonical.                        |
-| UI tokens and visual language     | `lib/design.ts`, `lib/theme.ts`                  | Docs may summarize, but code defines exact values.              |
-| Shared UI primitives              | `components/`, `components/ui/`                  | Reusable building blocks used by routes.                        |
-| Domain types                      | `lib/models.ts`                                  | Canonical TypeScript model definitions.                         |
-| Tapering formula                  | `lib/taper-plan.ts`                              | Use code for exact rounding and clamping behavior.              |
-| Storage schema and initialization | `lib/db.ts`                                      | Includes tables, indexes, and migrations.                       |
-| Storage operations                | `lib/db-*.ts`                                    | Behavior is split by domain table.                              |
-| Notifications                     | `lib/notifications.ts`                           | Includes Expo Go limitation and scheduling behavior.            |
-| Error reporting                   | `lib/sentry.ts`                                  | DSN resolution and production/dev behavior live here.           |
-| Marketing site structure          | `website/src/`                                   | Astro pages and shared site metadata.                           |
-| SEO Components & Layouts          | `SeoLandingLayout.astro`                         | Standardized wrapper for high-intent pages.                     |
-| App Store Tracking                | `website/src/lib/site.ts`                        | `getCampaignAppStoreUrl` logic for PT/CT tokens.                |
-| SEO direction                     | [`SEO_STRATEGY.md`](./SEO_STRATEGY.md)           | Strategic guidance and technical scale-out rules.               |
-| Target audience & positioning     | [`TARGET_AUDIENCE.md`](./TARGET_AUDIENCE.md)     | Personas and market research; hypotheses to validate with data. |
-| Storage rationale                 | [`decisions/storage.md`](./decisions/storage.md) | Why SQLite was chosen.                                          |
+| Area                              | Primary source                                   | Notes                                                                                                                                                                                                                                                                   |
+| --------------------------------- | ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| App routing and screen ownership  | `app/`                                           | Expo Router file structure is canonical.                                                                                                                                                                                                                                |
+| UI tokens and visual language     | `lib/design.ts`, `lib/theme.ts`                  | Docs may summarize, but code defines exact values.                                                                                                                                                                                                                      |
+| Shared UI primitives              | `components/`, `components/ui/`                  | Reusable building blocks used by routes.                                                                                                                                                                                                                                |
+| Domain types                      | `lib/models.ts`                                  | Canonical TypeScript model definitions.                                                                                                                                                                                                                                 |
+| Tapering formula                  | `lib/taper-plan.ts`                              | Use code for exact rounding and clamping behavior.                                                                                                                                                                                                                      |
+| Storage schema and initialization | `lib/db.ts`                                      | Includes tables, indexes, and migrations.                                                                                                                                                                                                                               |
+| Storage operations                | `lib/db-*.ts`                                    | Behavior is split by domain table.                                                                                                                                                                                                                                      |
+| Notifications                     | `lib/notifications.ts`                           | Includes Expo Go limitation and scheduling behavior.                                                                                                                                                                                                                    |
+| Error reporting                   | `lib/sentry.ts`                                  | DSN resolution and production/dev behavior live here.                                                                                                                                                                                                                   |
+| Marketing site structure          | `website/src/`                                   | Astro pages and shared site metadata.                                                                                                                                                                                                                                   |
+| SEO Components & Layouts          | `SeoLandingLayout.astro`                         | Standardized wrapper for high-intent pages.                                                                                                                                                                                                                             |
+| App Store Tracking                | `website/src/lib/site.ts`                        | `getCampaignAppStoreUrl` logic for PT/CT tokens.                                                                                                                                                                                                                        |
+| SEO direction & playbooks         | _private IAMJARL strategy hub_                   | See `WeanNicotine/SEO_STRATEGY.md` in [JarlLyng/iamjarl-strategy](https://github.com/JarlLyng/iamjarl-strategy) (access-restricted). Not in this public repo per the [strategy hub conventions](https://github.com/JarlLyng/iamjarl-strategy/blob/main/CONVENTIONS.md). |
+| Target audience & positioning     | _private IAMJARL strategy hub_                   | See `WeanNicotine/targetaudience.md` in [JarlLyng/iamjarl-strategy](https://github.com/JarlLyng/iamjarl-strategy) (access-restricted).                                                                                                                                  |
+| Storage rationale                 | [`decisions/storage.md`](./decisions/storage.md) | Why SQLite was chosen.                                                                                                                                                                                                                                                  |
 
 ## Repository Map
 
@@ -81,7 +81,7 @@ This makes the docs easier for LLMs to classify correctly and reduces accidental
 - `lib/`: Business logic, storage, notifications, analytics, design tokens.
 - `plugins/`: Expo config plugins for native build behavior.
 - `website/`: Astro marketing site and SEO landing pages.
-- `docs/`: Product, operational, architectural, and strategy documentation.
+- `docs/`: Product, operational, and architectural documentation. **Strategic material** (target audience, positioning, SEO/ASO playbooks, competitive analysis, channel plans) lives in the private IAMJARL strategy hub at [JarlLyng/iamjarl-strategy](https://github.com/JarlLyng/iamjarl-strategy) — not here. See its `CONVENTIONS.md` for what goes where.
 
 ## Document Catalog
 
@@ -89,8 +89,6 @@ This makes the docs easier for LLMs to classify correctly and reduces accidental
 
 - [`AI_CONTEXT.md`](./AI_CONTEXT.md): Canonical repo overview for fast machine and human orientation.
 - [`design.md`](./design.md): Design-system principles and token usage.
-- [`SEO_STRATEGY.md`](./SEO_STRATEGY.md): SEO positioning and content architecture for the website.
-- [`TARGET_AUDIENCE.md`](./TARGET_AUDIENCE.md): Who the app is for — personas, market research, and product/marketing implications.
 - [`SENTRY.md`](./SENTRY.md): Sentry setup, privacy hardening, and troubleshooting.
 - [`APP_STORE_METADATA.md`](./APP_STORE_METADATA.md): App Store listing copy and metadata for all storefronts.
 - [`PRIVACY_APP_STORE.md`](./PRIVACY_APP_STORE.md): App privacy answers for App Store Connect.
