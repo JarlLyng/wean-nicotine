@@ -12,6 +12,62 @@ A nicotine usage log is squarely in that second category. So is anything that lo
 
 This piece is the case for local-first health apps in general, and what to actually look for if you care.
 
+<figure class="taper-figure">
+<svg viewBox="0 0 800 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="privacy-diagram-title privacy-diagram-desc" class="privacy-diagram">
+	<title id="privacy-diagram-title">Local-first versus cloud-based data flow for a health app</title>
+	<desc id="privacy-diagram-desc">Two side-by-side diagrams. On the left, a typical cloud health app: the phone sends data through the network to a company server, which then exposes it to backups, analytics providers, insurance queries, subpoenas, and breaches. On the right, a local-first app: the phone stores data in an on-device database, and no data leaves the device.</desc>
+	<g font-family="var(--font-body)" font-size="13" fill="var(--text-primary)">
+		<text x="200" y="30" text-anchor="middle" font-weight="600" fill="var(--text-secondary)">Typical cloud health app</text>
+		<text x="600" y="30" text-anchor="middle" font-weight="600" fill="var(--primary)">Local-first (Wean)</text>
+	</g>
+	<line x1="400" y1="20" x2="400" y2="300" stroke="var(--border-subtle)" stroke-width="1" stroke-dasharray="4 4" />
+	<g>
+		<rect x="140" y="60" width="120" height="60" rx="10" fill="var(--bg-muted)" stroke="var(--border-subtle)" stroke-width="1.5" />
+		<text x="200" y="88" text-anchor="middle" font-family="var(--font-body)" font-size="13" fill="var(--text-primary)" font-weight="600">Your phone</text>
+		<text x="200" y="106" text-anchor="middle" font-family="var(--font-body)" font-size="11" fill="var(--text-secondary)">app + data entry</text>
+		<line x1="200" y1="120" x2="200" y2="150" stroke="var(--text-secondary)" stroke-width="2" marker-end="url(#arrow-secondary)" />
+		<rect x="140" y="155" width="120" height="50" rx="10" fill="none" stroke="var(--text-secondary)" stroke-width="1.5" stroke-dasharray="4 4" />
+		<text x="200" y="185" text-anchor="middle" font-family="var(--font-body)" font-size="12" fill="var(--text-secondary)">Company server</text>
+		<g font-family="var(--font-body)" font-size="11" fill="var(--text-tertiary)">
+			<line x1="200" y1="205" x2="200" y2="225" stroke="var(--text-tertiary)" stroke-width="1" />
+			<line x1="60" y1="225" x2="340" y2="225" stroke="var(--text-tertiary)" stroke-width="1" />
+			<line x1="80" y1="225" x2="80" y2="245" stroke="var(--text-tertiary)" stroke-width="1" />
+			<line x1="160" y1="225" x2="160" y2="245" stroke="var(--text-tertiary)" stroke-width="1" />
+			<line x1="240" y1="225" x2="240" y2="245" stroke="var(--text-tertiary)" stroke-width="1" />
+			<line x1="320" y1="225" x2="320" y2="245" stroke="var(--text-tertiary)" stroke-width="1" />
+			<text x="80" y="260" text-anchor="middle">Backups</text>
+			<text x="160" y="260" text-anchor="middle">Analytics</text>
+			<text x="240" y="260" text-anchor="middle">Subpoena</text>
+			<text x="320" y="260" text-anchor="middle">Breach</text>
+			<text x="80" y="275" text-anchor="middle" fill="var(--text-secondary)">forever</text>
+			<text x="160" y="275" text-anchor="middle" fill="var(--text-secondary)">3rd party</text>
+			<text x="240" y="275" text-anchor="middle" fill="var(--text-secondary)">legal</text>
+			<text x="320" y="275" text-anchor="middle" fill="var(--text-secondary)">risk</text>
+		</g>
+	</g>
+	<g>
+		<rect x="540" y="60" width="120" height="60" rx="10" fill="var(--primary-subtle)" stroke="var(--primary)" stroke-width="1.5" />
+		<text x="600" y="88" text-anchor="middle" font-family="var(--font-body)" font-size="13" fill="var(--text-primary)" font-weight="600">Your phone</text>
+		<text x="600" y="106" text-anchor="middle" font-family="var(--font-body)" font-size="11" fill="var(--text-secondary)">app + data entry</text>
+		<line x1="600" y1="120" x2="600" y2="150" stroke="var(--primary)" stroke-width="2" marker-end="url(#arrow-primary)" />
+		<rect x="540" y="155" width="120" height="50" rx="10" fill="var(--primary-subtle)" stroke="var(--primary)" stroke-width="1.5" />
+		<text x="600" y="180" text-anchor="middle" font-family="var(--font-body)" font-size="12" fill="var(--text-primary)" font-weight="600">SQLite on device</text>
+		<text x="600" y="196" text-anchor="middle" font-family="var(--font-body)" font-size="11" fill="var(--text-secondary)">encrypted with your phone</text>
+		<text x="600" y="245" text-anchor="middle" font-family="var(--font-body)" font-size="12" fill="var(--primary)" font-weight="600">No network. No account.</text>
+		<text x="600" y="264" text-anchor="middle" font-family="var(--font-body)" font-size="12" fill="var(--primary)" font-weight="600">No copy elsewhere.</text>
+	</g>
+	<defs>
+		<marker id="arrow-secondary" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+			<path d="M0,0 L10,5 L0,10 z" fill="var(--text-secondary)" />
+		</marker>
+		<marker id="arrow-primary" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+			<path d="M0,0 L10,5 L0,10 z" fill="var(--primary)" />
+		</marker>
+	</defs>
+</svg>
+<figcaption>Every arrow leaving your phone in the left diagram is a data path a cloud health app is subject to. Wean removes all of them by never having the arrows in the first place.</figcaption>
+</figure>
+
 ## What "local-first" means and why it matters
 
 A local-first app stores your data on the device you used to enter it. There's no server-side copy. There's no account. There's no sync. If you delete the app, the data is gone with it.
