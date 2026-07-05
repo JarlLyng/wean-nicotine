@@ -35,6 +35,7 @@ const PII_KEYS = new Set<string>([
   'pricePerCan',
   'currency',
   'triggers',
+  'trigger',
   'raw',
   'pouchesUsedToday',
   'cravingsResistedToday',
@@ -49,7 +50,9 @@ const PII_KEYS = new Set<string>([
 /**
  * Strip known PII keys from a Sentry `extra` payload. Exported for unit testing.
  */
-export function scrubExtra(extra: Record<string, unknown> | undefined): Record<string, unknown> | undefined {
+export function scrubExtra(
+  extra: Record<string, unknown> | undefined,
+): Record<string, unknown> | undefined {
   if (!extra) return extra;
   const cleaned: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(extra)) {
@@ -69,9 +72,10 @@ let sentryInitialized = false;
  * React Navigation integration instance — created once so the root layout can call
  * `registerNavigationContainer()` on it after the navigation ref is ready.
  */
-export const navigationIntegration = Platform.OS !== 'web'
-  ? reactNavigationIntegration({ enableTimeToInitialDisplay: true })
-  : undefined;
+export const navigationIntegration =
+  Platform.OS !== 'web'
+    ? reactNavigationIntegration({ enableTimeToInitialDisplay: true })
+    : undefined;
 
 /**
  * Whether Sentry was initialized with a DSN in this build (for Diagnostics UI).
@@ -117,11 +121,17 @@ export function initSentry(): void {
     sendDefaultPii: false,
     // Attach app version and build info
     release: Constants.expoConfig?.version || '1.0.0',
-    dist: Constants.expoConfig?.ios?.buildNumber || Constants.expoConfig?.android?.versionCode?.toString() || undefined,
+    dist:
+      Constants.expoConfig?.ios?.buildNumber ||
+      Constants.expoConfig?.android?.versionCode?.toString() ||
+      undefined,
     beforeSend(event) {
       // In development, log but don't send
       if (__DEV__) {
-        console.log('Sentry event (dev mode - not sent):', event.exception?.values?.[0]?.value ?? event.message);
+        console.log(
+          'Sentry event (dev mode - not sent):',
+          event.exception?.values?.[0]?.value ?? event.message,
+        );
         return null;
       }
 

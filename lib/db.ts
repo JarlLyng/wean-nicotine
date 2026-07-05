@@ -1,6 +1,6 @@
 /**
  * SQLite database setup and operations for Wean Nicotine
- * 
+ *
  * NOTE: expo-sqlite does not work on web. This app is designed for mobile (iOS/Android) only.
  */
 
@@ -13,7 +13,10 @@ type SQLiteDatabase = {
   execAsync: (sql: string) => Promise<void>;
   runAsync: (sql: string, params?: SQLiteParam[]) => Promise<{ lastInsertRowId: number }>;
   getAllAsync: <T = Record<string, unknown>>(sql: string, params?: SQLiteParam[]) => Promise<T[]>;
-  getFirstAsync: <T = Record<string, unknown>>(sql: string, params?: SQLiteParam[]) => Promise<T | null>;
+  getFirstAsync: <T = Record<string, unknown>>(
+    sql: string,
+    params?: SQLiteParam[],
+  ) => Promise<T | null>;
 };
 
 // Lazy load expo-sqlite only on native platforms to avoid web bundling issues
@@ -103,7 +106,9 @@ const MIGRATIONS: Migration[] = [
   {
     version: 5,
     up: async (db) => {
-      await db.execAsync(`CREATE INDEX IF NOT EXISTS idx_reflections_created_at ON reflections(created_at)`);
+      await db.execAsync(
+        `CREATE INDEX IF NOT EXISTS idx_reflections_created_at ON reflections(created_at)`,
+      );
     },
   },
   {
@@ -117,8 +122,12 @@ const MIGRATIONS: Migration[] = [
         timestamp INTEGER NOT NULL,
         data TEXT
       )`);
-      await db.execAsync(`CREATE INDEX IF NOT EXISTS idx_analytics_event_type ON analytics(event_type)`);
-      await db.execAsync(`CREATE INDEX IF NOT EXISTS idx_analytics_timestamp ON analytics(timestamp)`);
+      await db.execAsync(
+        `CREATE INDEX IF NOT EXISTS idx_analytics_event_type ON analytics(event_type)`,
+      );
+      await db.execAsync(
+        `CREATE INDEX IF NOT EXISTS idx_analytics_timestamp ON analytics(timestamp)`,
+      );
     },
   },
   {
@@ -130,14 +139,25 @@ const MIGRATIONS: Migration[] = [
       await db.execAsync(`DROP TABLE IF EXISTS user_plan`);
     },
   },
+  {
+    // Per-entry trigger tagging (#220). Nullable — existing history and
+    // untagged one-tap logs stay valid. Fresh installs get the column from
+    // the base CREATE TABLE, hence the hasColumn guard (same pattern as v1/v2).
+    version: 8,
+    up: async (db) => {
+      if (!(await hasColumn(db, 'log_entries', 'trigger'))) {
+        await db.execAsync(`ALTER TABLE log_entries ADD COLUMN trigger TEXT`);
+      }
+    },
+  },
 ];
 
 async function runMigrations(database: SQLiteDatabase): Promise<void> {
   await database.execAsync(
-    `CREATE TABLE IF NOT EXISTS schema_version (version INTEGER PRIMARY KEY)`
+    `CREATE TABLE IF NOT EXISTS schema_version (version INTEGER PRIMARY KEY)`,
   );
   const row = await database.getFirstAsync<{ version: number }>(
-    'SELECT version FROM schema_version ORDER BY version DESC LIMIT 1'
+    'SELECT version FROM schema_version ORDER BY version DESC LIMIT 1',
   );
   const currentVersion = row?.version ?? 0;
 
@@ -150,10 +170,9 @@ async function runMigrations(database: SQLiteDatabase): Promise<void> {
     await database.runAsync('BEGIN');
     try {
       await migration.up(database);
-      await database.runAsync(
-        'INSERT OR REPLACE INTO schema_version (version) VALUES (?)',
-        [migration.version]
-      );
+      await database.runAsync('INSERT OR REPLACE INTO schema_version (version) VALUES (?)', [
+        migration.version,
+      ]);
       await database.runAsync('COMMIT');
     } catch (error) {
       await database.runAsync('ROLLBACK');
@@ -194,6 +213,7 @@ export async function initDatabase(): Promise<SQLiteDatabase> {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       type TEXT NOT NULL CHECK(type IN ('pouch_used', 'craving_resisted')),
       timestamp INTEGER NOT NULL,
+      trigger TEXT,
       created_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now') * 1000)
     );
   `);
@@ -224,7 +244,9 @@ export async function initDatabase(): Promise<SQLiteDatabase> {
       // from settings. Migration v7 (below) drops the table on existing
       // installs.
 
-      await db.execAsync(`CREATE INDEX IF NOT EXISTS idx_log_entries_timestamp ON log_entries(timestamp);`);
+      await db.execAsync(
+        `CREATE INDEX IF NOT EXISTS idx_log_entries_timestamp ON log_entries(timestamp);`,
+      );
       await db.execAsync(`CREATE INDEX IF NOT EXISTS idx_log_entries_type ON log_entries(type);`);
 
       await runMigrations(db);

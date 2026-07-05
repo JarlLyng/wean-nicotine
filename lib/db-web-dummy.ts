@@ -8,8 +8,8 @@ import type { TaperSettings, LogEntry, LogEntryType } from './models';
 // Generate dummy settings
 export function getDummySettings(): TaperSettings {
   const now = Date.now();
-  const startDate = now - (14 * 24 * 60 * 60 * 1000); // 14 days ago
-  
+  const startDate = now - 14 * 24 * 60 * 60 * 1000; // 14 days ago
+
   return {
     id: 1,
     baselinePouchesPerDay: 12,
@@ -47,34 +47,34 @@ function ensureBaseDummyEntries(): LogEntry[] {
 
   const now = Date.now();
   const entries: LogEntry[] = [];
-  
+
   // Use a simple seeded random for deterministic results
   // Seed based on a fixed date to ensure consistency
   const seedDate = new Date('2024-01-01').getTime();
   let seed = Math.floor(seedDate / 1000);
-  
+
   // Simple seeded random function
   const seededRandom = () => {
     seed = (seed * 9301 + 49297) % 233280;
     return seed / 233280;
   };
-  
+
   // Generate logs for the last 14 days
   for (let day = 0; day < 14; day++) {
-    const date = new Date(now - (day * 24 * 60 * 60 * 1000));
+    const date = new Date(now - day * 24 * 60 * 60 * 1000);
     date.setHours(0, 0, 0, 0);
     const dayStart = date.getTime();
-    
+
     // Random number of pouches used per day (between 6-11, trending downward)
-    const baseUsage = 12 - (day * 0.3); // Gradually decreasing
+    const baseUsage = 12 - day * 0.3; // Gradually decreasing
     const pouchesUsed = Math.max(6, Math.floor(baseUsage + (seededRandom() * 2 - 1)));
-    
+
     // Distribute pouches throughout the day
     const hours = [8, 10, 12, 14, 16, 18, 20]; // Common times
     const usedHours = hours.slice(0, pouchesUsed);
-    
+
     usedHours.forEach((hour, index) => {
-      const timestamp = dayStart + (hour * 60 * 60 * 1000) + (index * 15 * 60 * 1000);
+      const timestamp = dayStart + hour * 60 * 60 * 1000 + index * 15 * 60 * 1000;
       entries.push({
         id: entries.length + 1,
         type: 'pouch_used',
@@ -82,10 +82,10 @@ function ensureBaseDummyEntries(): LogEntry[] {
         createdAt: timestamp,
       });
     });
-    
+
     // Add some cravings resisted (about 1-2 per day)
     if (seededRandom() > 0.3) {
-      const cravingTime = dayStart + (14 * 60 * 60 * 1000) + (seededRandom() * 4 * 60 * 60 * 1000);
+      const cravingTime = dayStart + 14 * 60 * 60 * 1000 + seededRandom() * 4 * 60 * 60 * 1000;
       entries.push({
         id: entries.length + 1,
         type: 'craving_resisted',
@@ -94,7 +94,7 @@ function ensureBaseDummyEntries(): LogEntry[] {
       });
     }
   }
-  
+
   // Sort by timestamp descending (most recent first)
   cachedBaseDummyEntries = entries.sort((a, b) => b.timestamp - a.timestamp);
   nextSessionId = cachedBaseDummyEntries.length + 1;
@@ -105,7 +105,7 @@ function ensureBaseDummyEntries(): LogEntry[] {
  * Add a log entry to the in-memory web preview store so UI updates instantly.
  * This is ONLY for web preview; native platforms use SQLite.
  */
-export function addDummyLogEntry(type: LogEntryType, timestamp?: number): number {
+export function addDummyLogEntry(type: LogEntryType, timestamp?: number, trigger?: string): number {
   const base = ensureBaseDummyEntries();
   if (nextSessionId === null) {
     nextSessionId = base.length + 1;
@@ -120,8 +120,19 @@ export function addDummyLogEntry(type: LogEntryType, timestamp?: number): number
     id,
     type,
     timestamp: entryTimestamp,
+    trigger,
     createdAt: now,
   });
 
   return id;
+}
+
+/**
+ * Set or clear the trigger tag on a session-added entry (web preview only).
+ */
+export function setDummyLogEntryTrigger(id: number, trigger: string | null): void {
+  const entry = sessionAddedEntries.find((e) => e.id === id);
+  if (entry) {
+    entry.trigger = trigger ?? undefined;
+  }
 }
