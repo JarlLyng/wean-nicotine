@@ -10,6 +10,7 @@ import { spacing, typography } from '@/lib/theme';
 import { useDesignTokens } from '@/lib/design';
 import { createLogEntry, deleteLogEntry, setLogEntryTrigger } from '@/lib/db-log-entries';
 import { getDisplayAllowance } from '@/lib/taper-plan';
+import { GoalReachedCard } from '@/components/GoalReachedCard';
 import { PaceNudge } from '@/components/PaceNudge';
 import { TriggerTagRow } from '@/components/TriggerTagRow';
 import { captureError } from '@/lib/sentry';
@@ -48,6 +49,7 @@ export default function HomeScreen() {
     incrementCravings,
     decrementCravings,
     dismissPaceNudge,
+    dismissGoalCelebration,
   } = useHomeData();
   const {
     dailyAllowance,
@@ -57,6 +59,8 @@ export default function HomeScreen() {
     settingsId,
     triggers,
     showPaceNudge,
+    showGoalCelebration,
+    goalPouchesAvoided,
   } = data;
 
   // Whole-pouch target for display (#219) — the precise decimal allowance
@@ -253,56 +257,64 @@ export default function HomeScreen() {
           </Card>
         ) : dailyAllowance !== null ? (
           <View style={styles.mainContent}>
-            <Card variant="elevated" style={styles.card} padding="lg">
-              <Text style={styles.label}>Your Daily Allowance</Text>
+            {showGoalCelebration ? (
+              <GoalReachedCard
+                totalPouchesAvoided={goalPouchesAvoided}
+                onDismiss={dismissGoalCelebration}
+                style={styles.card}
+              />
+            ) : (
+              <Card variant="elevated" style={styles.card} padding="lg">
+                <Text style={styles.label}>Your Daily Allowance</Text>
 
-              <View style={styles.progressContainer}>
-                <ProgressRing
-                  progress={
-                    displayAllowance > 0 ? Math.min(pouchesUsedToday / displayAllowance, 1) : 0
-                  }
-                  size={140}
-                  strokeWidth={14}
-                  color={colors.primary}
-                  useGradient={true}
-                  showLabel={true}
-                  label={`${pouchesUsedToday}/${displayAllowance}`}
-                  sublabel="pouches"
-                />
-              </View>
-
-              <View style={styles.statsContainer}>
-                <View style={styles.statsRow}>
-                  <View style={styles.statItem}>
-                    <Text style={styles.statValue}>{pouchesUsedToday}</Text>
-                    <Text style={styles.statLabel}>Used</Text>
-                  </View>
-                  <View style={styles.statDivider} />
-                  <View style={styles.statItem}>
-                    <Text style={styles.statValue}>
-                      {baselinePouchesPerDay !== null
-                        ? Math.max(0, baselinePouchesPerDay - pouchesUsedToday)
-                        : 0}
-                    </Text>
-                    <Text style={styles.statLabel}>Avoided</Text>
-                  </View>
+                <View style={styles.progressContainer}>
+                  <ProgressRing
+                    progress={
+                      displayAllowance > 0 ? Math.min(pouchesUsedToday / displayAllowance, 1) : 0
+                    }
+                    size={140}
+                    strokeWidth={14}
+                    color={colors.primary}
+                    useGradient={true}
+                    showLabel={true}
+                    label={`${pouchesUsedToday}/${displayAllowance}`}
+                    sublabel="pouches"
+                  />
                 </View>
 
-                <View style={styles.statsRow}>
-                  <View style={styles.statItem}>
-                    <Text style={styles.statValue}>
-                      {Math.max(0, displayAllowance - pouchesUsedToday)}
-                    </Text>
-                    <Text style={styles.statLabel}>Remaining</Text>
+                <View style={styles.statsContainer}>
+                  <View style={styles.statsRow}>
+                    <View style={styles.statItem}>
+                      <Text style={styles.statValue}>{pouchesUsedToday}</Text>
+                      <Text style={styles.statLabel}>Used</Text>
+                    </View>
+                    <View style={styles.statDivider} />
+                    <View style={styles.statItem}>
+                      <Text style={styles.statValue}>
+                        {baselinePouchesPerDay !== null
+                          ? Math.max(0, baselinePouchesPerDay - pouchesUsedToday)
+                          : 0}
+                      </Text>
+                      <Text style={styles.statLabel}>Avoided</Text>
+                    </View>
                   </View>
-                  <View style={styles.statDivider} />
-                  <View style={styles.statItem}>
-                    <Text style={styles.statValue}>{cravingsResistedToday}</Text>
-                    <Text style={styles.statLabel}>Resisted</Text>
+
+                  <View style={styles.statsRow}>
+                    <View style={styles.statItem}>
+                      <Text style={styles.statValue}>
+                        {Math.max(0, displayAllowance - pouchesUsedToday)}
+                      </Text>
+                      <Text style={styles.statLabel}>Remaining</Text>
+                    </View>
+                    <View style={styles.statDivider} />
+                    <View style={styles.statItem}>
+                      <Text style={styles.statValue}>{cravingsResistedToday}</Text>
+                      <Text style={styles.statLabel}>Resisted</Text>
+                    </View>
                   </View>
                 </View>
-              </View>
-            </Card>
+              </Card>
+            )}
 
             {showPaceNudge && <PaceNudge onDismiss={dismissPaceNudge} style={styles.card} />}
 

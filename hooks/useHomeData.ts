@@ -28,11 +28,15 @@
 import { useState, useRef, useCallback } from 'react';
 import { useFocusEffect } from 'expo-router';
 import { getTaperSettings } from '@/lib/db-settings';
-import { calculateDailyAllowance } from '@/lib/taper-plan';
+import { calculateDailyAllowance, getDisplayAllowance } from '@/lib/taper-plan';
 import { getLogEntriesForDay } from '@/lib/db-log-entries';
 import { getPreference, setPreference } from '@/lib/db-preferences';
-import { assessPace } from '@/lib/progress';
-import { PACE_NUDGE_DISMISSED_AT_KEY, PACE_NUDGE_SNOOZE_DAYS } from '@/lib/constants';
+import { assessPace, calculateTotalProgressAndMilestones } from '@/lib/progress';
+import {
+  GOAL_CELEBRATED_KEY,
+  PACE_NUDGE_DISMISSED_AT_KEY,
+  PACE_NUDGE_SNOOZE_DAYS,
+} from '@/lib/constants';
 import { captureError } from '@/lib/sentry';
 
 export type HomeStatus = 'loading' | 'no-settings' | 'ready' | 'error';
@@ -47,6 +51,10 @@ export interface HomeData {
   triggers: string[];
   /** True when the pace assessment suggests easing up AND the nudge isn't snoozed (#222). */
   showPaceNudge: boolean;
+  /** True the first time the allowance reaches zero — one-time celebration (#223). */
+  showGoalCelebration: boolean;
+  /** Cumulative pouches avoided, loaded only for the celebration copy. */
+  goalPouchesAvoided: number | null;
 }
 
 const EMPTY_DATA: HomeData = {
@@ -57,6 +65,8 @@ const EMPTY_DATA: HomeData = {
   settingsId: null,
   triggers: [],
   showPaceNudge: false,
+  showGoalCelebration: false,
+  goalPouchesAvoided: null,
 };
 
 export interface UseHomeDataResult {
@@ -71,6 +81,8 @@ export interface UseHomeDataResult {
   decrementCravings: () => void;
   /** Hide the pace nudge and snooze it for PACE_NUDGE_SNOOZE_DAYS. */
   dismissPaceNudge: () => void;
+  /** Acknowledge the goal celebration — it never shows again for this plan. */
+  dismissGoalCelebration: () => void;
 }
 
 export function useHomeData(): UseHomeDataResult {
@@ -98,10 +110,11 @@ export function useHomeData(): UseHomeDataResult {
       today.setHours(0, 0, 0, 0);
       const calculatedAllowance = calculateDailyAllowance(settings, today);
 
-      const [todayLogs, paceAssessment, nudgeDismissedAt] = await Promise.all([
+      const [todayLogs, paceAssessment, nudgeDismissedAt, goalCelebrated] = await Promise.all([
         getLogEntriesForDay(today),
         assessPace(settings),
         getPreference(PACE_NUDGE_DISMISSED_AT_KEY),
+        getPreference(GOAL_CELEBRATED_KEY),
       ]);
       const usedCount = todayLogs.filter((log) => log.type === 'pouch_used').length;
       const resistedCount = todayLogs.filter((log) => log.type === 'craving_resisted').length;
@@ -112,6 +125,22 @@ export function useHomeData(): UseHomeDataResult {
         (Number(nudgeDismissedAt) || 0) + PACE_NUDGE_SNOOZE_DAYS * 24 * 60 * 60 * 1000;
       const showPaceNudge = paceAssessment.tooAggressive && Date.now() >= snoozeUntil;
 
+      // One-time goal celebration when the whole-pouch target reaches zero (#223).
+      const goalReached = getDisplayAllowance(calculatedAllowance) === 0;
+      let showGoalCelebration = false;
+      let goalPouchesAvoided: number | null = null;
+      if (goalReached && !goalCelebrated) {
+        // Rare path — one extra query only in the not-yet-celebrated state,
+        // to give the celebration its headline number.
+        const { progress } = await calculateTotalProgressAndMilestones(settings);
+        goalPouchesAvoided = progress.totalPouchesAvoided;
+        showGoalCelebration = true;
+      } else if (!goalReached && goalCelebrated) {
+        // The plan was edited and the allowance rose above zero — re-arm the
+        // celebration for a genuine second finish.
+        setPreference(GOAL_CELEBRATED_KEY, '').catch(() => {});
+      }
+
       setData({
         dailyAllowance: Math.round(calculatedAllowance * 10) / 10,
         pouchesUsedToday: usedCount,
@@ -120,6 +149,8 @@ export function useHomeData(): UseHomeDataResult {
         settingsId: settings.id,
         triggers: settings.triggers ?? [],
         showPaceNudge,
+        showGoalCelebration,
+        goalPouchesAvoided,
       });
       setStatus('ready');
     } catch (error) {
@@ -175,6 +206,15 @@ export function useHomeData(): UseHomeDataResult {
     });
   }, []);
 
+  const dismissGoalCelebration = useCallback(() => {
+    setData((prev) => ({ ...prev, showGoalCelebration: false }));
+    setPreference(GOAL_CELEBRATED_KEY, String(Date.now())).catch((error) => {
+      captureError(error instanceof Error ? error : new Error(String(error)), {
+        context: 'home_dismiss_goal_celebration',
+      });
+    });
+  }, []);
+
   return {
     data,
     status,
@@ -185,5 +225,6 @@ export function useHomeData(): UseHomeDataResult {
     incrementCravings,
     decrementCravings,
     dismissPaceNudge,
+    dismissGoalCelebration,
   };
 }
