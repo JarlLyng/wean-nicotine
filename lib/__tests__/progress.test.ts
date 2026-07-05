@@ -18,8 +18,10 @@ jest.mock('../db-log-entries', () => ({
 
 import { getLogEntries } from '../db-log-entries';
 import {
+  assessPace,
   calculateWeeklyProgress,
   calculateTotalProgressAndMilestones,
+  computePaceAssessment,
   computeUsagePatterns,
   getCurrentWeek,
   getPreviousWeek,
@@ -383,5 +385,95 @@ describe('getUsagePatterns', () => {
 
     const result = await getUsagePatterns(settings, 30);
     expect(result.windowDays).toBe(30);
+  });
+});
+
+describe('computePaceAssessment', () => {
+  const day = (allowance: number, used: number) => ({ allowance, used });
+
+  it('flags too-aggressive when usage is 20%+ over allowance across the window', () => {
+    // 7 days, allowance 10/day = 70; used 84 = exactly 1.2x
+    const days = Array.from({ length: 7 }, () => day(10, 12));
+    expect(computePaceAssessment(days).tooAggressive).toBe(true);
+  });
+
+  it('does not flag when usage is under the 1.2x threshold', () => {
+    // 70 allowance, 80 used = 1.14x — over, but not "consistently 20%+"
+    const days = Array.from({ length: 7 }, () => day(10, 80 / 7));
+    expect(computePaceAssessment(days).tooAggressive).toBe(false);
+  });
+
+  it('requires a minimum sample before ever flagging', () => {
+    // 6 days massively over — still no nudge (min is 7 days)
+    const days = Array.from({ length: 6 }, () => day(10, 30));
+    expect(computePaceAssessment(days).tooAggressive).toBe(false);
+  });
+
+  it('never flags when total allowance is zero', () => {
+    // End of taper: allowance 0, any usage is "over" but the nudge to
+    // slow down makes no sense — that is taper-complete territory (#223).
+    const days = Array.from({ length: 14 }, () => day(0, 2));
+    expect(computePaceAssessment(days).tooAggressive).toBe(false);
+  });
+
+  it('returns totals for transparency', () => {
+    const result = computePaceAssessment([day(10, 12), day(9, 11)]);
+    expect(result.sampleDays).toBe(2);
+    expect(result.totalAllowance).toBe(19);
+    expect(result.totalUsed).toBe(23);
+  });
+});
+
+describe('assessPace', () => {
+  beforeEach(() => {
+    mockedGetLogEntries.mockReset();
+  });
+
+  it('returns an empty assessment when the plan started today', async () => {
+    const settings = makeSettings({ startDate: Date.now() });
+    const result = await assessPace(settings);
+    expect(result.sampleDays).toBe(0);
+    expect(result.tooAggressive).toBe(false);
+    expect(mockedGetLogEntries).not.toHaveBeenCalled();
+  });
+
+  it('excludes today from the window (queries end yesterday)', async () => {
+    const settings = makeSettings({
+      startDate: Date.now() - 30 * 24 * 60 * 60 * 1000,
+    });
+    mockedGetLogEntries.mockResolvedValue([]);
+
+    await assessPace(settings);
+
+    const call = mockedGetLogEntries.mock.calls[0][0]!;
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+    expect(call.endDate).toBeLessThan(todayStart.getTime());
+    expect(call.type).toBe('pouch_used');
+  });
+
+  it('flags a consistently-over user with a full window of data', async () => {
+    // Flat pace (0% reduction) so allowance = 10/day for the whole window.
+    const settings = makeSettings({
+      baselinePouchesPerDay: 10,
+      weeklyReductionPercent: 0,
+      startDate: Date.now() - 60 * 24 * 60 * 60 * 1000,
+    });
+    // 13 pouches every day for the last 14 complete days = 1.3x allowance
+    const logs: LogEntry[] = [];
+    let id = 0;
+    for (let d = 1; d <= 14; d++) {
+      for (let n = 0; n < 13; n++) {
+        const t = new Date();
+        t.setDate(t.getDate() - d);
+        t.setHours(8 + (n % 12), 15, 0, 0);
+        logs.push(pouchLog(t, id++));
+      }
+    }
+    mockedGetLogEntries.mockResolvedValue(logs);
+
+    const result = await assessPace(settings);
+    expect(result.sampleDays).toBe(14);
+    expect(result.tooAggressive).toBe(true);
   });
 });

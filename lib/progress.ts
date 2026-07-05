@@ -6,8 +6,15 @@ import type { TaperSettings, LogEntry } from './models';
 import { getLogEntries } from './db-log-entries';
 import { calculateDailyAllowance } from './taper-plan';
 import { formatMoney } from './currency';
-
-const POUCHES_PER_CAN = 20;
+import {
+  CRAVING_MILESTONE_THRESHOLDS,
+  MONEY_MILESTONE_THRESHOLDS,
+  PACE_NUDGE_MIN_DAYS,
+  PACE_NUDGE_OVER_FACTOR,
+  PACE_NUDGE_WINDOW_DAYS,
+  POUCH_MILESTONE_THRESHOLDS,
+  POUCHES_PER_CAN,
+} from './constants';
 
 function toDayKey(date: Date): string {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
@@ -213,8 +220,8 @@ export async function calculateTotalProgressAndMilestones(
   const milestones: Milestone[] = [];
   let foundFirstDayUnderLimit = false;
 
-  const pouchThresholds = [100, 500, 1000, 2500, 5000];
-  const moneyThresholds = settings.pricePerCan ? [1000, 5000, 10000, 25000, 50000] : [];
+  const pouchThresholds = POUCH_MILESTONE_THRESHOLDS;
+  const moneyThresholds = settings.pricePerCan ? MONEY_MILESTONE_THRESHOLDS : [];
   const remainingPouchThresholds = new Set(pouchThresholds);
   const remainingMoneyThresholds = new Set(moneyThresholds);
   const pouchMilestoneDates = new Map<number, number>();
@@ -290,7 +297,7 @@ export async function calculateTotalProgressAndMilestones(
     }
   }
 
-  const cravingThresholds = [10, 25, 50, 100, 250];
+  const cravingThresholds = CRAVING_MILESTONE_THRESHOLDS;
   for (const threshold of cravingThresholds) {
     if (totalCravingsResisted >= threshold) {
       milestones.push({
@@ -503,6 +510,90 @@ export async function getUsagePatterns(
 
   const windowDays = getDaysInRange(start, end).length;
   return computeUsagePatterns(logs, windowDays);
+}
+
+// ──────────────────────────────────────────────
+// Pace assessment (#222) — "is the pace too aggressive?"
+// ──────────────────────────────────────────────
+
+export interface PaceAssessment {
+  /** Complete days the assessment covers (today is excluded — it's partial). */
+  sampleDays: number;
+  /** Sum of daily allowances across the window. */
+  totalAllowance: number;
+  /** Pouches actually used across the window. */
+  totalUsed: number;
+  /**
+   * True when usage exceeds allowance by PACE_NUDGE_OVER_FACTOR across a
+   * window of at least PACE_NUDGE_MIN_DAYS. Encodes the blog's guidance:
+   * "consistently 20%+ over your allowance → the pace is too aggressive".
+   */
+  tooAggressive: boolean;
+}
+
+/**
+ * Pure assessment over per-day (allowance, used) pairs. Exported for tests.
+ */
+export function computePaceAssessment(days: { allowance: number; used: number }[]): PaceAssessment {
+  let totalAllowance = 0;
+  let totalUsed = 0;
+  for (const day of days) {
+    totalAllowance += day.allowance;
+    totalUsed += day.used;
+  }
+  return {
+    sampleDays: days.length,
+    totalAllowance,
+    totalUsed,
+    tooAggressive:
+      days.length >= PACE_NUDGE_MIN_DAYS &&
+      totalAllowance > 0 &&
+      totalUsed >= totalAllowance * PACE_NUDGE_OVER_FACTOR,
+  };
+}
+
+/**
+ * Assess the trailing PACE_NUDGE_WINDOW_DAYS of complete days (yesterday
+ * backwards, capped at taper start). Today is excluded: a partial day would
+ * bias the ratio downward every morning.
+ */
+export async function assessPace(settings: TaperSettings): Promise<PaceAssessment> {
+  const windowEnd = new Date();
+  windowEnd.setHours(0, 0, 0, 0);
+  windowEnd.setDate(windowEnd.getDate() - 1); // yesterday
+  windowEnd.setHours(23, 59, 59, 999);
+
+  const windowStart = new Date(windowEnd);
+  windowStart.setHours(0, 0, 0, 0);
+  windowStart.setDate(windowStart.getDate() - (PACE_NUDGE_WINDOW_DAYS - 1));
+
+  const taperStart = new Date(settings.startDate);
+  taperStart.setHours(0, 0, 0, 0);
+  const start = taperStart > windowStart ? taperStart : windowStart;
+
+  if (start > windowEnd) {
+    // Plan started today — no complete days yet
+    return computePaceAssessment([]);
+  }
+
+  const logs = await getLogEntries({
+    type: 'pouch_used',
+    startDate: start.getTime(),
+    endDate: windowEnd.getTime(),
+  });
+
+  const usedByDay = new Map<string, number>();
+  for (const log of logs) {
+    const key = toDayKey(new Date(log.timestamp));
+    usedByDay.set(key, (usedByDay.get(key) ?? 0) + 1);
+  }
+
+  const days = getDaysInRange(start, windowEnd).map((day) => ({
+    allowance: calculateDailyAllowance(settings, day),
+    used: usedByDay.get(toDayKey(day)) ?? 0,
+  }));
+
+  return computePaceAssessment(days);
 }
 
 /**

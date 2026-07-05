@@ -30,6 +30,9 @@ import { useFocusEffect } from 'expo-router';
 import { getTaperSettings } from '@/lib/db-settings';
 import { calculateDailyAllowance } from '@/lib/taper-plan';
 import { getLogEntriesForDay } from '@/lib/db-log-entries';
+import { getPreference, setPreference } from '@/lib/db-preferences';
+import { assessPace } from '@/lib/progress';
+import { PACE_NUDGE_DISMISSED_AT_KEY, PACE_NUDGE_SNOOZE_DAYS } from '@/lib/constants';
 import { captureError } from '@/lib/sentry';
 
 export type HomeStatus = 'loading' | 'no-settings' | 'ready' | 'error';
@@ -42,6 +45,8 @@ export interface HomeData {
   settingsId: number | null;
   /** The user's onboarding-selected triggers — drives the optional post-log tag row. */
   triggers: string[];
+  /** True when the pace assessment suggests easing up AND the nudge isn't snoozed (#222). */
+  showPaceNudge: boolean;
 }
 
 const EMPTY_DATA: HomeData = {
@@ -51,6 +56,7 @@ const EMPTY_DATA: HomeData = {
   baselinePouchesPerDay: null,
   settingsId: null,
   triggers: [],
+  showPaceNudge: false,
 };
 
 export interface UseHomeDataResult {
@@ -63,6 +69,8 @@ export interface UseHomeDataResult {
   decrementPouches: () => void;
   incrementCravings: () => void;
   decrementCravings: () => void;
+  /** Hide the pace nudge and snooze it for PACE_NUDGE_SNOOZE_DAYS. */
+  dismissPaceNudge: () => void;
 }
 
 export function useHomeData(): UseHomeDataResult {
@@ -90,9 +98,19 @@ export function useHomeData(): UseHomeDataResult {
       today.setHours(0, 0, 0, 0);
       const calculatedAllowance = calculateDailyAllowance(settings, today);
 
-      const todayLogs = await getLogEntriesForDay(today);
+      const [todayLogs, paceAssessment, nudgeDismissedAt] = await Promise.all([
+        getLogEntriesForDay(today),
+        assessPace(settings),
+        getPreference(PACE_NUDGE_DISMISSED_AT_KEY),
+      ]);
       const usedCount = todayLogs.filter((log) => log.type === 'pouch_used').length;
       const resistedCount = todayLogs.filter((log) => log.type === 'craving_resisted').length;
+
+      // Nudge only when the assessment says so AND the user hasn't dismissed
+      // it within the snooze window — it must never nag (#222).
+      const snoozeUntil =
+        (Number(nudgeDismissedAt) || 0) + PACE_NUDGE_SNOOZE_DAYS * 24 * 60 * 60 * 1000;
+      const showPaceNudge = paceAssessment.tooAggressive && Date.now() >= snoozeUntil;
 
       setData({
         dailyAllowance: Math.round(calculatedAllowance * 10) / 10,
@@ -101,6 +119,7 @@ export function useHomeData(): UseHomeDataResult {
         baselinePouchesPerDay: settings.baselinePouchesPerDay,
         settingsId: settings.id,
         triggers: settings.triggers ?? [],
+        showPaceNudge,
       });
       setStatus('ready');
     } catch (error) {
@@ -146,6 +165,16 @@ export function useHomeData(): UseHomeDataResult {
     }));
   }, []);
 
+  const dismissPaceNudge = useCallback(() => {
+    // Optimistic hide; the preference write snoozes future loads.
+    setData((prev) => ({ ...prev, showPaceNudge: false }));
+    setPreference(PACE_NUDGE_DISMISSED_AT_KEY, String(Date.now())).catch((error) => {
+      captureError(error instanceof Error ? error : new Error(String(error)), {
+        context: 'home_dismiss_pace_nudge',
+      });
+    });
+  }, []);
+
   return {
     data,
     status,
@@ -155,5 +184,6 @@ export function useHomeData(): UseHomeDataResult {
     decrementPouches,
     incrementCravings,
     decrementCravings,
+    dismissPaceNudge,
   };
 }
