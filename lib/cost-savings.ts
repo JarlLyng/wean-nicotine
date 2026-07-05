@@ -6,8 +6,7 @@
 
 import type { TaperSettings } from './models';
 import { getLogEntries } from './db-log-entries';
-
-const POUCHES_PER_CAN = 20;
+import { POUCHES_PER_CAN, PROJECTED_MONTH_DAYS } from './constants';
 
 function toDayKey(date: Date): string {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
@@ -23,7 +22,20 @@ function toWeekLabel(date: Date): string {
 }
 
 function toMonthLabel(date: Date): string {
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
   return `${months[date.getMonth()]} ${date.getFullYear()}`;
 }
 
@@ -45,9 +57,7 @@ export interface CostSavingsData {
   projectedMonthlySaving: number; // cents
 }
 
-export async function calculateCostSavings(
-  settings: TaperSettings,
-): Promise<CostSavingsData> {
+export async function calculateCostSavings(settings: TaperSettings): Promise<CostSavingsData> {
   const pricePerCan = settings.pricePerCan ?? 0;
   const pricePerPouch = pricePerCan / POUCHES_PER_CAN;
 
@@ -99,10 +109,13 @@ export async function calculateCostSavings(
 
   const totalSaved = Math.round(totalAvoided * pricePerPouch);
   const dailyRate = dayCount > 0 ? Math.round(totalSaved / dayCount) : 0;
-  const projectedMonthlySaving = dailyRate * 30;
+  const projectedMonthlySaving = dailyRate * PROJECTED_MONTH_DAYS;
 
   const weeklySavings = [...weekMap.entries()].map(([weekLabel, saved]) => ({ weekLabel, saved }));
-  const monthlySavings = [...monthMap.entries()].map(([monthLabel, saved]) => ({ monthLabel, saved }));
+  const monthlySavings = [...monthMap.entries()].map(([monthLabel, saved]) => ({
+    monthLabel,
+    saved,
+  }));
 
   return {
     totalSaved,

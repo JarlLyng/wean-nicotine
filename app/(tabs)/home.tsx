@@ -10,6 +10,7 @@ import { spacing, typography } from '@/lib/theme';
 import { useDesignTokens } from '@/lib/design';
 import { createLogEntry, deleteLogEntry, setLogEntryTrigger } from '@/lib/db-log-entries';
 import { getDisplayAllowance } from '@/lib/taper-plan';
+import { PaceNudge } from '@/components/PaceNudge';
 import { TriggerTagRow } from '@/components/TriggerTagRow';
 import { captureError } from '@/lib/sentry';
 import { useHomeData } from '@/hooks/useHomeData';
@@ -46,6 +47,7 @@ export default function HomeScreen() {
     decrementPouches,
     incrementCravings,
     decrementCravings,
+    dismissPaceNudge,
   } = useHomeData();
   const {
     dailyAllowance,
@@ -54,6 +56,7 @@ export default function HomeScreen() {
     baselinePouchesPerDay,
     settingsId,
     triggers,
+    showPaceNudge,
   } = data;
 
   // Whole-pouch target for display (#219) — the precise decimal allowance
@@ -300,6 +303,8 @@ export default function HomeScreen() {
                 </View>
               </View>
             </Card>
+
+            {showPaceNudge && <PaceNudge onDismiss={dismissPaceNudge} style={styles.card} />}
 
             <View style={styles.loggingButtons}>
               {tagTarget !== null && (

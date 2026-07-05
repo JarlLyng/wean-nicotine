@@ -1,6 +1,6 @@
 /**
  * Notification management for Wean Nicotine
- * 
+ *
  * NOTE: Notifications require a development build and do not work in Expo Go.
  * To test notifications, create a development build:
  * - iOS: npx expo run:ios
@@ -11,6 +11,7 @@ import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 import type { DailyTriggerInput } from 'expo-notifications';
 import { captureError } from './sentry';
+import { DEFAULT_CHECK_IN_HOUR } from './constants';
 
 // Configure notification handler
 Notifications.setNotificationHandler({
@@ -50,7 +51,10 @@ export async function requestNotificationPermissions(): Promise<boolean> {
 /**
  * Schedule daily check-in notification
  */
-export async function scheduleDailyCheckIn(hour: number = 20, minute: number = 0): Promise<string | null> {
+export async function scheduleDailyCheckIn(
+  hour: number = DEFAULT_CHECK_IN_HOUR,
+  minute: number = 0,
+): Promise<string | null> {
   try {
     // Cancel existing daily check-in
     await cancelDailyCheckIn();
@@ -85,9 +89,7 @@ export async function scheduleDailyCheckIn(hour: number = 20, minute: number = 0
 export async function cancelDailyCheckIn(): Promise<void> {
   try {
     const allNotifications = await Notifications.getAllScheduledNotificationsAsync();
-    const dailyCheckIns = allNotifications.filter(
-      (n) => n.content.data?.type === 'daily_checkin'
-    );
+    const dailyCheckIns = allNotifications.filter((n) => n.content.data?.type === 'daily_checkin');
 
     for (const notification of dailyCheckIns) {
       await Notifications.cancelScheduledNotificationAsync(notification.identifier);
@@ -108,8 +110,8 @@ export async function cancelDailyCheckIn(): Promise<void> {
  */
 export async function scheduleTriggerReminders(
   triggers: string[] | undefined,
-  hour: number = 20,
-  minute: number = 0
+  hour: number = DEFAULT_CHECK_IN_HOUR,
+  minute: number = 0,
 ): Promise<string | null> {
   try {
     // Cancel existing trigger reminders first, then schedule a new one.
@@ -152,7 +154,7 @@ export async function cancelTriggerReminders(): Promise<void> {
   try {
     const allNotifications = await Notifications.getAllScheduledNotificationsAsync();
     const triggerReminders = allNotifications.filter(
-      (n) => n.content.data?.type === 'trigger_reminder'
+      (n) => n.content.data?.type === 'trigger_reminder',
     );
 
     for (const notification of triggerReminders) {
