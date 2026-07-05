@@ -67,6 +67,19 @@ describe('scrubExtra', () => {
     });
   });
 
+  it('replaces a single per-entry trigger tag with [scrubbed]', () => {
+    // Per-log trigger tagging (#220): the tag names a personal habit and
+    // must never reach Sentry, same as the settings-level triggers list.
+    const result = scrubExtra({
+      context: 'home_tag_trigger',
+      trigger: 'Stress',
+    });
+    expect(result).toEqual({
+      context: 'home_tag_trigger',
+      trigger: '[scrubbed]',
+    });
+  });
+
   it('replaces daily counters and allowance with [scrubbed]', () => {
     const result = scrubExtra({
       context: 'home_load_data',

@@ -37,12 +37,13 @@ import {
   Pause,
   Clock,
   BookOpen,
+  X,
 } from 'phosphor-react-native';
 
-export type IconName = 
-  | 'house' 
-  | 'chart-line-up' 
-  | 'heart' 
+export type IconName =
+  | 'house'
+  | 'chart-line-up'
+  | 'heart'
   | 'gear'
   | 'wind'
   | 'waves'
@@ -70,7 +71,8 @@ export type IconName =
   | 'play'
   | 'pause'
   | 'clock'
-  | 'book-open';
+  | 'book-open'
+  | 'x';
 
 export type IconWeight = 'thin' | 'light' | 'regular' | 'bold' | 'fill' | 'duotone';
 
@@ -83,54 +85,56 @@ interface IconProps {
 }
 
 // Mapping of icon names to Phosphor icon components
-const ICON_MAP: Record<IconName, React.ComponentType<{ size?: number; color?: string; weight?: IconWeight; style?: StyleProp<ViewStyle> }>> = {
-  'house': House,
+const ICON_MAP: Record<
+  IconName,
+  React.ComponentType<{
+    size?: number;
+    color?: string;
+    weight?: IconWeight;
+    style?: StyleProp<ViewStyle>;
+  }>
+> = {
+  house: House,
   'chart-line-up': ChartLineUp,
-  'heart': Heart,
-  'gear': Gear,
-  'wind': Wind,
-  'waves': Waves,
-  'brain': Brain,
+  heart: Heart,
+  gear: Gear,
+  wind: Wind,
+  waves: Waves,
+  brain: Brain,
   'check-circle': CheckCircle,
   'x-circle': XCircle,
   'arrow-left': ArrowLeft,
   'arrow-right': ArrowRight,
-  'plus': Plus,
-  'minus': Minus,
-  'trash': Trash,
-  'bell': Bell,
+  plus: Plus,
+  minus: Minus,
+  trash: Trash,
+  bell: Bell,
   'bell-slash': BellSlash,
   'arrow-clockwise': ArrowClockwise,
-  'calendar': Calendar,
+  calendar: Calendar,
   'currency-dollar': CurrencyDollar,
-  'coins': Coins,
-  'medal': Medal,
-  'trophy': Trophy,
-  'lightning': Lightning,
-  'star': Star,
-  'timer': Timer,
+  coins: Coins,
+  medal: Medal,
+  trophy: Trophy,
+  lightning: Lightning,
+  star: Star,
+  timer: Timer,
   'piggy-bank': PiggyBank,
-  'notebook': Notebook,
-  'play': Play,
-  'pause': Pause,
-  'clock': Clock,
+  notebook: Notebook,
+  play: Play,
+  pause: Pause,
+  clock: Clock,
   'book-open': BookOpen,
+  x: X,
 };
 
 export function Icon({ name, size = 24, color, weight = 'regular', style }: IconProps) {
   const IconComponent = ICON_MAP[name];
-  
+
   if (!IconComponent) {
     console.warn(`Icon "${name}" not found in icon map`);
     return null;
   }
 
-  return (
-    <IconComponent 
-      size={size} 
-      color={color} 
-      weight={weight}
-      style={style}
-    />
-  );
+  return <IconComponent size={size} color={color} weight={weight} style={style} />;
 }

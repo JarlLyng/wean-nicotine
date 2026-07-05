@@ -4,7 +4,7 @@
 
 import { Platform } from 'react-native';
 import { getDatabase } from './db';
-import { addDummyLogEntry, getDummyLogEntries } from './db-web-dummy';
+import { addDummyLogEntry, getDummyLogEntries, setDummyLogEntryTrigger } from './db-web-dummy';
 import type { LogEntry, LogEntryType } from './models';
 
 /**
@@ -12,11 +12,12 @@ import type { LogEntry, LogEntryType } from './models';
  */
 export async function createLogEntry(
   type: LogEntryType,
-  timestamp?: number
+  timestamp?: number,
+  trigger?: string,
 ): Promise<number> {
   // On web, write to in-memory dummy store so UI preview is interactive.
   if (Platform.OS === 'web') {
-    return addDummyLogEntry(type, timestamp);
+    return addDummyLogEntry(type, timestamp, trigger);
   }
 
   const db = await getDatabase();
@@ -24,11 +25,25 @@ export async function createLogEntry(
   const entryTimestamp = timestamp ?? now;
 
   const result = await db.runAsync(
-    `INSERT INTO log_entries (type, timestamp, created_at) VALUES (?, ?, ?)`,
-    [type, entryTimestamp, now]
+    `INSERT INTO log_entries (type, timestamp, trigger, created_at) VALUES (?, ?, ?, ?)`,
+    [type, entryTimestamp, trigger ?? null, now],
   );
 
   return result.lastInsertRowId;
+}
+
+/**
+ * Set (or clear) the trigger tag on an existing log entry. Used by the
+ * optional post-log tagging flow on the Today screen — the entry is created
+ * by the one-tap log first, then tagged if the user chooses to.
+ */
+export async function setLogEntryTrigger(id: number, trigger: string | null): Promise<void> {
+  if (Platform.OS === 'web') {
+    setDummyLogEntryTrigger(id, trigger);
+    return;
+  }
+  const db = await getDatabase();
+  await db.runAsync('UPDATE log_entries SET trigger = ? WHERE id = ?', [trigger, id]);
 }
 
 /**
@@ -46,15 +61,15 @@ export async function getLogEntries(options?: {
 
     // Apply filters to dummy data
     if (options?.type) {
-      dummyEntries = dummyEntries.filter(entry => entry.type === options.type);
+      dummyEntries = dummyEntries.filter((entry) => entry.type === options.type);
     }
 
     if (options?.startDate) {
-      dummyEntries = dummyEntries.filter(entry => entry.timestamp >= options.startDate!);
+      dummyEntries = dummyEntries.filter((entry) => entry.timestamp >= options.startDate!);
     }
 
     if (options?.endDate) {
-      dummyEntries = dummyEntries.filter(entry => entry.timestamp <= options.endDate!);
+      dummyEntries = dummyEntries.filter((entry) => entry.timestamp <= options.endDate!);
     }
 
     if (options?.limit) {
@@ -94,21 +109,26 @@ export async function getLogEntries(options?: {
     id: number;
     type: string;
     timestamp: number;
+    trigger?: string | null;
     created_at?: number;
     createdAt?: number;
   }>(query, params);
-  return result.map((row: {
-    id: number;
-    type: string;
-    timestamp: number;
-    created_at?: number;
-    createdAt?: number;
-  }) => ({
-    id: row.id,
-    type: row.type as LogEntryType,
-    timestamp: row.timestamp,
-    createdAt: row.created_at ?? row.createdAt ?? row.timestamp, // Handle both snake_case and camelCase
-  }));
+  return result.map(
+    (row: {
+      id: number;
+      type: string;
+      timestamp: number;
+      trigger?: string | null;
+      created_at?: number;
+      createdAt?: number;
+    }) => ({
+      id: row.id,
+      type: row.type as LogEntryType,
+      timestamp: row.timestamp,
+      trigger: row.trigger ?? undefined,
+      createdAt: row.created_at ?? row.createdAt ?? row.timestamp, // Handle both snake_case and camelCase
+    }),
+  );
 }
 
 /**
@@ -123,7 +143,7 @@ export async function getLogEntriesForDay(date: Date): Promise<LogEntry[]> {
     const endOfDay = new Date(date);
     endOfDay.setHours(23, 59, 59, 999);
 
-    return dummyEntries.filter(entry => {
+    return dummyEntries.filter((entry) => {
       const entryDate = new Date(entry.timestamp);
       return entryDate >= startOfDay && entryDate <= endOfDay;
     });

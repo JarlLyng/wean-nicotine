@@ -141,7 +141,7 @@ Tracks timestamped user actions.
 - `pouch_used`
 - `craving_resisted`
 
-These logs drive daily counts and progress summaries.
+Entries can optionally carry a `trigger` tag (one of the user's onboarding-selected triggers, added via the post-log tag row on Today — migration v8, #220). These logs drive daily counts and progress summaries.
 
 ### Local analytics
 

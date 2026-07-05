@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { useFocusEffect } from 'expo-router';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { Screen } from '@/components/Screen';
 import { Card } from '@/components/ui/Card';
@@ -7,7 +8,8 @@ import { ProgressRing } from '@/components/ui/ProgressRing';
 import { Toast } from '@/components/ui/Toast';
 import { spacing, typography } from '@/lib/theme';
 import { useDesignTokens } from '@/lib/design';
-import { createLogEntry, deleteLogEntry } from '@/lib/db-log-entries';
+import { createLogEntry, deleteLogEntry, setLogEntryTrigger } from '@/lib/db-log-entries';
+import { TriggerTagRow } from '@/components/TriggerTagRow';
 import { captureError } from '@/lib/sentry';
 import { useHomeData } from '@/hooks/useHomeData';
 import * as Haptics from 'expo-haptics';
@@ -17,6 +19,16 @@ type UndoKind = 'pouch_used' | 'craving_resisted';
 interface UndoState {
   entryId: number;
   kind: UndoKind;
+}
+
+/**
+ * The pouch entry currently offered for optional trigger tagging (#220).
+ * Separate from UndoState so tagging stays available after the undo toast
+ * times out — the row is dismissed by ×, undo, or the next log instead.
+ */
+interface TagTargetState {
+  entryId: number;
+  selected: string | null;
 }
 
 function formatAllowanceDisplay(n: number): string {
@@ -36,11 +48,19 @@ export default function HomeScreen() {
     incrementCravings,
     decrementCravings,
   } = useHomeData();
-  const { dailyAllowance, pouchesUsedToday, cravingsResistedToday, baselinePouchesPerDay, settingsId } = data;
+  const {
+    dailyAllowance,
+    pouchesUsedToday,
+    cravingsResistedToday,
+    baselinePouchesPerDay,
+    settingsId,
+    triggers,
+  } = data;
 
   // UI-only transient state — not part of the data layer
   const [isLogging, setIsLogging] = useState(false);
   const [undo, setUndo] = useState<UndoState | null>(null);
+  const [tagTarget, setTagTarget] = useState<TagTargetState | null>(null);
 
   const handleLogPouch = useCallback(async () => {
     try {
@@ -49,13 +69,18 @@ export default function HomeScreen() {
       const entryId = await createLogEntry('pouch_used');
       incrementPouches();
       setUndo({ entryId, kind: 'pouch_used' });
+      // Offer optional trigger tagging for the new entry (replaces any
+      // previous offer — only the latest pouch is taggable).
+      setTagTarget(triggers.length > 0 ? { entryId, selected: null } : null);
       void reload({ showLoading: false });
     } catch (error) {
-      captureError(error instanceof Error ? error : new Error(String(error)), { context: 'home_log_pouch' });
+      captureError(error instanceof Error ? error : new Error(String(error)), {
+        context: 'home_log_pouch',
+      });
     } finally {
       setIsLogging(false);
     }
-  }, [incrementPouches, reload]);
+  }, [incrementPouches, reload, triggers]);
 
   const handleLogCravingResisted = useCallback(async () => {
     try {
@@ -64,13 +89,46 @@ export default function HomeScreen() {
       const entryId = await createLogEntry('craving_resisted');
       incrementCravings();
       setUndo({ entryId, kind: 'craving_resisted' });
+      setTagTarget(null);
       void reload({ showLoading: false });
     } catch (error) {
-      captureError(error instanceof Error ? error : new Error(String(error)), { context: 'home_log_craving_resisted' });
+      captureError(error instanceof Error ? error : new Error(String(error)), {
+        context: 'home_log_craving_resisted',
+      });
     } finally {
       setIsLogging(false);
     }
   }, [incrementCravings, reload]);
+
+  const handleTagTrigger = useCallback(
+    async (trigger: string | null) => {
+      if (!tagTarget) return;
+      const { entryId } = tagTarget;
+      // Optimistic — the chip highlights immediately
+      setTagTarget({ entryId, selected: trigger });
+      try {
+        await setLogEntryTrigger(entryId, trigger);
+      } catch (error) {
+        captureError(error instanceof Error ? error : new Error(String(error)), {
+          context: 'home_tag_trigger',
+        });
+        setTagTarget({ entryId, selected: null });
+      }
+    },
+    [tagTarget],
+  );
+
+  const handleTagDismiss = useCallback(() => {
+    setTagTarget(null);
+  }, []);
+
+  // Retract the tag offer when the user leaves the tab — "the last pouch"
+  // reference goes stale once they've moved on.
+  useFocusEffect(
+    useCallback(() => {
+      return () => setTagTarget(null);
+    }, []),
+  );
 
   const handleUndo = useCallback(async () => {
     if (!undo) return;
@@ -78,6 +136,8 @@ export default function HomeScreen() {
     // Optimistic rollback so the tap feels instant
     if (kind === 'pouch_used') {
       decrementPouches();
+      // The tag offer points at the entry being deleted — retract it
+      setTagTarget((current) => (current?.entryId === entryId ? null : current));
     } else {
       decrementCravings();
     }
@@ -87,10 +147,9 @@ export default function HomeScreen() {
       await deleteLogEntry(entryId);
       void reload({ showLoading: false });
     } catch (error) {
-      captureError(
-        error instanceof Error ? error : new Error(String(error)),
-        { context: 'home_undo_log_entry' }
-      );
+      captureError(error instanceof Error ? error : new Error(String(error)), {
+        context: 'home_undo_log_entry',
+      });
       // On delete failure, refetch so the UI reflects real DB state
       void reload({ showLoading: false });
     }
@@ -178,9 +237,7 @@ export default function HomeScreen() {
           </Card>
         ) : status === 'error' ? (
           <Card variant="elevated" style={styles.card} padding="lg">
-            <Text style={styles.placeholderText}>
-              Couldn{'’'}t load your data right now.
-            </Text>
+            <Text style={styles.placeholderText}>Couldn{'’'}t load your data right now.</Text>
             <Button
               title="Try again"
               onPress={() => reload({ showLoading: true })}
@@ -195,11 +252,7 @@ export default function HomeScreen() {
 
               <View style={styles.progressContainer}>
                 <ProgressRing
-                  progress={
-                    dailyAllowance > 0
-                      ? Math.min(pouchesUsedToday / dailyAllowance, 1)
-                      : 0
-                  }
+                  progress={dailyAllowance > 0 ? Math.min(pouchesUsedToday / dailyAllowance, 1) : 0}
                   size={140}
                   strokeWidth={14}
                   color={colors.primary}
@@ -248,6 +301,14 @@ export default function HomeScreen() {
             </Card>
 
             <View style={styles.loggingButtons}>
+              {tagTarget !== null && (
+                <TriggerTagRow
+                  triggers={triggers}
+                  selected={tagTarget.selected}
+                  onSelect={handleTagTrigger}
+                  onDismiss={handleTagDismiss}
+                />
+              )}
               <Button
                 title="Used a pouch"
                 onPress={handleLogPouch}
@@ -276,11 +337,7 @@ export default function HomeScreen() {
       </View>
       <Toast
         visible={undo !== null}
-        message={
-          undo?.kind === 'pouch_used'
-            ? 'Pouch logged'
-            : 'Craving resisted — nice.'
-        }
+        message={undo?.kind === 'pouch_used' ? 'Pouch logged' : 'Craving resisted — nice.'}
         actionLabel="Undo"
         onActionPress={handleUndo}
         onDismiss={handleUndoDismiss}

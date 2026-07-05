@@ -10,6 +10,7 @@ export interface LogEntry {
   id: number;
   type: LogEntryType;
   timestamp: number; // Unix timestamp in milliseconds
+  trigger?: string; // Optional trigger tag (one of the user's TaperSettings.triggers)
   createdAt: number; // Unix timestamp in milliseconds
 }
 

@@ -40,6 +40,8 @@ export interface HomeData {
   cravingsResistedToday: number;
   baselinePouchesPerDay: number | null;
   settingsId: number | null;
+  /** The user's onboarding-selected triggers — drives the optional post-log tag row. */
+  triggers: string[];
 }
 
 const EMPTY_DATA: HomeData = {
@@ -48,6 +50,7 @@ const EMPTY_DATA: HomeData = {
   cravingsResistedToday: 0,
   baselinePouchesPerDay: null,
   settingsId: null,
+  triggers: [],
 };
 
 export interface UseHomeDataResult {
@@ -67,56 +70,53 @@ export function useHomeData(): UseHomeDataResult {
   const [status, setStatus] = useState<HomeStatus>('loading');
   const isLoadingRef = useRef(false);
 
-  const reload = useCallback(
-    async ({ showLoading = true }: { showLoading?: boolean } = {}) => {
-      if (isLoadingRef.current) return;
-      isLoadingRef.current = true;
-      try {
-        if (showLoading) setStatus('loading');
+  const reload = useCallback(async ({ showLoading = true }: { showLoading?: boolean } = {}) => {
+    if (isLoadingRef.current) return;
+    isLoadingRef.current = true;
+    try {
+      if (showLoading) setStatus('loading');
 
-        const settings = await getTaperSettings();
-        if (!settings) {
-          // Genuine "user has not finished onboarding" — distinct from a
-          // load failure below, so the UI can confidently route to onboarding
-          // without risking data wipe on a parse error.
-          setData(EMPTY_DATA);
-          setStatus('no-settings');
-          return;
-        }
-
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        const calculatedAllowance = calculateDailyAllowance(settings, today);
-
-        const todayLogs = await getLogEntriesForDay(today);
-        const usedCount = todayLogs.filter((log) => log.type === 'pouch_used').length;
-        const resistedCount = todayLogs.filter((log) => log.type === 'craving_resisted').length;
-
-        setData({
-          dailyAllowance: Math.round(calculatedAllowance * 10) / 10,
-          pouchesUsedToday: usedCount,
-          cravingsResistedToday: resistedCount,
-          baselinePouchesPerDay: settings.baselinePouchesPerDay,
-          settingsId: settings.id,
-        });
-        setStatus('ready');
-      } catch (error) {
-        captureError(
-          error instanceof Error ? error : new Error(String(error)),
-          { context: 'home_load_data' },
-        );
-        // IMPORTANT: do NOT clear `data` to EMPTY_DATA on error. Doing so
-        // looks indistinguishable from "no settings" and could push the user
-        // back through onboarding (which wipes everything). Keep whatever we
-        // last rendered and surface 'error' so the screen can show a calm
-        // retry affordance instead.
-        setStatus('error');
-      } finally {
-        isLoadingRef.current = false;
+      const settings = await getTaperSettings();
+      if (!settings) {
+        // Genuine "user has not finished onboarding" — distinct from a
+        // load failure below, so the UI can confidently route to onboarding
+        // without risking data wipe on a parse error.
+        setData(EMPTY_DATA);
+        setStatus('no-settings');
+        return;
       }
-    },
-    [],
-  );
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const calculatedAllowance = calculateDailyAllowance(settings, today);
+
+      const todayLogs = await getLogEntriesForDay(today);
+      const usedCount = todayLogs.filter((log) => log.type === 'pouch_used').length;
+      const resistedCount = todayLogs.filter((log) => log.type === 'craving_resisted').length;
+
+      setData({
+        dailyAllowance: Math.round(calculatedAllowance * 10) / 10,
+        pouchesUsedToday: usedCount,
+        cravingsResistedToday: resistedCount,
+        baselinePouchesPerDay: settings.baselinePouchesPerDay,
+        settingsId: settings.id,
+        triggers: settings.triggers ?? [],
+      });
+      setStatus('ready');
+    } catch (error) {
+      captureError(error instanceof Error ? error : new Error(String(error)), {
+        context: 'home_load_data',
+      });
+      // IMPORTANT: do NOT clear `data` to EMPTY_DATA on error. Doing so
+      // looks indistinguishable from "no settings" and could push the user
+      // back through onboarding (which wipes everything). Keep whatever we
+      // last rendered and surface 'error' so the screen can show a calm
+      // retry affordance instead.
+      setStatus('error');
+    } finally {
+      isLoadingRef.current = false;
+    }
+  }, []);
 
   // Refresh whenever the screen comes into focus
   useFocusEffect(
@@ -140,7 +140,10 @@ export function useHomeData(): UseHomeDataResult {
   }, []);
 
   const decrementCravings = useCallback(() => {
-    setData((prev) => ({ ...prev, cravingsResistedToday: Math.max(0, prev.cravingsResistedToday - 1) }));
+    setData((prev) => ({
+      ...prev,
+      cravingsResistedToday: Math.max(0, prev.cravingsResistedToday - 1),
+    }));
   }, []);
 
   return {
