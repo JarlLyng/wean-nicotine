@@ -10,6 +10,7 @@ import { spacing, typography } from '@/lib/theme';
 import { useDesignTokens } from '@/lib/design';
 import { createLogEntry, deleteLogEntry, setLogEntryTrigger } from '@/lib/db-log-entries';
 import { getDisplayAllowance } from '@/lib/taper-plan';
+import { maybeRequestReview } from '@/lib/store-review';
 import { GoalReachedCard } from '@/components/GoalReachedCard';
 import { PaceNudge } from '@/components/PaceNudge';
 import { TriggerTagRow } from '@/components/TriggerTagRow';
@@ -61,6 +62,7 @@ export default function HomeScreen() {
     showPaceNudge,
     showGoalCelebration,
     goalPouchesAvoided,
+    planStartDate,
   } = data;
 
   // Whole-pouch target for display (#219) — the precise decimal allowance
@@ -169,6 +171,15 @@ export default function HomeScreen() {
     setUndo(null);
   }, []);
 
+  // Reaching the goal is the single most positive moment in the app —
+  // the right time (and only Home trigger) for the in-app review ask (#180).
+  const handleGoalCelebrationDismiss = useCallback(() => {
+    dismissGoalCelebration();
+    if (planStartDate !== null) {
+      void maybeRequestReview(planStartDate);
+    }
+  }, [dismissGoalCelebration, planStartDate]);
+
   // Force remount when settingsId changes (after onboarding/reset)
   const screenKey = `home-screen-${settingsId || 'no-settings'}`;
 
@@ -260,7 +271,7 @@ export default function HomeScreen() {
             {showGoalCelebration ? (
               <GoalReachedCard
                 totalPouchesAvoided={goalPouchesAvoided}
-                onDismiss={dismissGoalCelebration}
+                onDismiss={handleGoalCelebrationDismiss}
                 style={styles.card}
               />
             ) : (
