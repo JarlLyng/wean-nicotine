@@ -20,9 +20,9 @@ Target audience, positioning, pricing reasoning, SEO/ASO playbooks, and competit
 ## App features (be precise — do not invent features that don't exist)
 
 - **Onboarding** — welcome → baseline (pouches/day) → pace (3–15% weekly reduction) → optional price per can → common triggers. Progress dots show step-of-4.
-- **Daily tracking** — one-tap _Used a pouch_ / _Craving resisted_; daily allowance from the taper plan; calm UI even when over the limit; 5-second undo via toast.
+- **Daily tracking** — one-tap _Used a pouch_ / _Craving resisted_; daily allowance from the taper plan; calm UI even when over the limit; 5-second undo via toast. After a pouch log, an optional dismissible chip row lets the user tag which trigger fired (never required).
 - **Taper plan** — automatic weekly reduction, user-selectable pace (3–15%); edit baseline/pace/price anytime from Settings without losing log history.
-- **Progress** — weekly bar chart, pouches avoided vs baseline, money saved, gentle milestones (not aggressive streaks). All five reads are issued in parallel.
+- **Progress** — weekly bar chart, pouches avoided vs baseline, money saved, gentle milestones (not aggressive streaks), and a Patterns card (pouches by time of day + by tagged trigger, trailing 30 days; hidden until ≥10 pouches logged). All six reads are issued in parallel.
 - **Support tools** — guided breathing exercise (multiple patterns + completion celebration), urge-surfing timer, reflection prompts with optional journal, cost-savings calculator with week/month breakdown.
 - **Notifications (optional)** — daily check-in + trigger reminders, both local-only. When permission is denied the app deep-links to OS notification settings.
 - **Reset / Start Over** — hold-to-confirm destructive action (2-second press with animated fill); wipes all local SQLite data and returns to onboarding.

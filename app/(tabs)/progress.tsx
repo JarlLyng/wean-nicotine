@@ -6,21 +6,34 @@ import { captureError } from '@/lib/sentry';
 import { getTaperSettings } from '@/lib/db-settings';
 import { useDesignTokens } from '@/lib/design';
 import type { TaperSettings } from '@/lib/models';
+import { PatternsCard } from '@/components/PatternsCard';
 import {
-    calculateTotalProgressAndMilestones,
-    calculateWeeklyProgress,
-    getCurrentWeek,
-    getDailyBreakdown,
-    getPreviousWeek,
-    type DailyBreakdown,
-    type Milestone,
-    type TotalProgress,
-    type WeeklyProgress,
+  calculateTotalProgressAndMilestones,
+  calculateWeeklyProgress,
+  getCurrentWeek,
+  getDailyBreakdown,
+  getPreviousWeek,
+  getUsagePatterns,
+  type DailyBreakdown,
+  type Milestone,
+  type TotalProgress,
+  type UsagePatterns,
+  type WeeklyProgress,
 } from '@/lib/progress';
 import { animations, borderRadius, spacing, typography } from '@/lib/theme';
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { ActivityIndicator, RefreshControl, ScrollView, StyleSheet, Text, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native';
+import {
+  ActivityIndicator,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextStyle,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from 'react-native';
 import Animated, { FadeIn, FadeInDown, FadeInRight } from 'react-native-reanimated';
 
 // ──────────────────────────────────────────────
@@ -40,17 +53,27 @@ function milestoneIcon(
   colors: ReturnType<typeof useDesignTokens>['colors'],
 ): { name: MilestoneIconName; color: string } {
   switch (type) {
-    case 'first_day_under_limit': return { name: 'medal', color: colors.warning };
-    case 'week_under_limit':      return { name: 'trophy', color: colors.primary };
-    case 'pouches_avoided':       return { name: 'lightning', color: colors.warning };
-    case 'money_saved':           return { name: 'coins', color: colors.success };
-    case 'cravings_resisted':     return { name: 'brain', color: colors.primary };
-    default:                      return { name: 'star', color: colors.primary };
+    case 'first_day_under_limit':
+      return { name: 'medal', color: colors.warning };
+    case 'week_under_limit':
+      return { name: 'trophy', color: colors.primary };
+    case 'pouches_avoided':
+      return { name: 'lightning', color: colors.warning };
+    case 'money_saved':
+      return { name: 'coins', color: colors.success };
+    case 'cravings_resisted':
+      return { name: 'brain', color: colors.primary };
+    default:
+      return { name: 'star', color: colors.primary };
   }
 }
 
 /** Generate a contextual insight sentence from weekly data */
-function getWeeklyInsight(week: WeeklyProgress, previousWeek: WeeklyProgress | null, isCurrentWeek: boolean): string {
+function getWeeklyInsight(
+  week: WeeklyProgress,
+  previousWeek: WeeklyProgress | null,
+  isCurrentWeek: boolean,
+): string {
   const { daysUnderLimit, pouchesAvoided, cravingsResisted, actualUsed, baselineTotal } = week;
 
   // Compare to previous week
@@ -80,7 +103,10 @@ function getWeeklyInsight(week: WeeklyProgress, previousWeek: WeeklyProgress | n
 }
 
 /** Trend arrow + label comparing this vs. previous week */
-function getTrend(current: number, previous: number): { arrow: string; label: string; isPositive: boolean } | null {
+function getTrend(
+  current: number,
+  previous: number,
+): { arrow: string; label: string; isPositive: boolean } | null {
   if (previous === 0) return null;
   const diff = current - previous;
   if (diff === 0) return null;
@@ -96,9 +122,15 @@ function getTrend(current: number, previous: number): { arrow: string; label: st
 // Bar chart component
 // ──────────────────────────────────────────────
 
-function WeekBarChart({ data, colors }: { data: DailyBreakdown[]; colors: ReturnType<typeof useDesignTokens>['colors'] }) {
+function WeekBarChart({
+  data,
+  colors,
+}: {
+  data: DailyBreakdown[];
+  colors: ReturnType<typeof useDesignTokens>['colors'];
+}) {
   // Find max value for scaling (at least 1 to avoid division by zero)
-  const maxVal = Math.max(1, ...data.map(d => Math.max(d.used, d.allowance)));
+  const maxVal = Math.max(1, ...data.map((d) => Math.max(d.used, d.allowance)));
   const BAR_HEIGHT = 120;
 
   return (
@@ -113,9 +145,17 @@ function WeekBarChart({ data, colors }: { data: DailyBreakdown[]; colors: Return
           <Animated.View
             key={day.dayLabel}
             style={barStyles.column}
-            entering={FadeInDown.delay(i * 60).duration(300).springify()}>
+            entering={FadeInDown.delay(i * 60)
+              .duration(300)
+              .springify()}
+          >
             {/* Value label */}
-            <Text style={[barStyles.valueLabel, { color: day.isFuture ? colors.text.tertiary : colors.text.primary }]}>
+            <Text
+              style={[
+                barStyles.valueLabel,
+                { color: day.isFuture ? colors.text.tertiary : colors.text.primary },
+              ]}
+            >
               {day.isFuture ? '–' : day.used}
             </Text>
 
@@ -159,7 +199,8 @@ function WeekBarChart({ data, colors }: { data: DailyBreakdown[]; colors: Return
                   color: day.isToday ? colors.primary : colors.text.tertiary,
                   fontWeight: day.isToday ? '700' : '400',
                 },
-              ]}>
+              ]}
+            >
               {day.dayLabel}
             </Text>
           </Animated.View>
@@ -222,6 +263,7 @@ export default function ProgressScreen() {
   const [prevDailyBreakdown, setPrevDailyBreakdown] = useState<DailyBreakdown[]>([]);
   const [totalProgress, setTotalProgress] = useState<TotalProgress | null>(null);
   const [milestones, setMilestones] = useState<Milestone[]>([]);
+  const [patterns, setPatterns] = useState<UsagePatterns | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [showPreviousWeek, setShowPreviousWeek] = useState(false);
   const settingsIdRef = useRef<number | null>(null);
@@ -244,6 +286,7 @@ export default function ProgressScreen() {
         setPrevDailyBreakdown([]);
         setTotalProgress(null);
         setMilestones([]);
+        setPatterns(null);
         setIsLoading(false);
         return;
       }
@@ -257,6 +300,7 @@ export default function ProgressScreen() {
         setPrevDailyBreakdown([]);
         setTotalProgress(null);
         setMilestones([]);
+        setPatterns(null);
         setShowPreviousWeek(false);
       }
 
@@ -267,8 +311,8 @@ export default function ProgressScreen() {
       const { start: currentStart, end: currentEnd } = getCurrentWeek();
       const { start: prevStart, end: prevEnd } = getPreviousWeek();
 
-      // Five independent reads hit the same DB; running them sequentially used
-      // to add up to ~5× the DB round-trip latency. Promise.all lets the SQLite
+      // Six independent reads hit the same DB; running them sequentially used
+      // to add up to ~6× the DB round-trip latency. Promise.all lets the SQLite
       // driver pipeline them — each call still goes through the migration-
       // gated init, but the awaits no longer block each other.
       const [
@@ -277,12 +321,14 @@ export default function ProgressScreen() {
         previousWeekData,
         prevBreakdown,
         totalAndMilestones,
+        usagePatterns,
       ] = await Promise.all([
         calculateWeeklyProgress(currentSettings, currentStart, currentEnd),
         getDailyBreakdown(currentSettings, currentStart, currentEnd),
         calculateWeeklyProgress(currentSettings, prevStart, prevEnd),
         getDailyBreakdown(currentSettings, prevStart, prevEnd),
         calculateTotalProgressAndMilestones(currentSettings),
+        getUsagePatterns(currentSettings),
       ]);
 
       setCurrentWeek(currentWeekData);
@@ -291,6 +337,7 @@ export default function ProgressScreen() {
       setPrevDailyBreakdown(prevBreakdown);
       setTotalProgress(totalAndMilestones.progress);
       setMilestones(totalAndMilestones.milestones);
+      setPatterns(usagePatterns);
       lastLoadedRef.current = Date.now();
     } catch (error) {
       if (__DEV__) console.error('Error loading progress:', error);
@@ -303,7 +350,7 @@ export default function ProgressScreen() {
   useFocusEffect(
     useCallback(() => {
       loadData();
-    }, [loadData])
+    }, [loadData]),
   );
 
   // Full-screen loader on first load
@@ -324,7 +371,9 @@ export default function ProgressScreen() {
         <View style={s.emptyContainer}>
           <Text style={s.emptyEmoji}>📊</Text>
           <Text style={s.emptyTitle}>No progress yet</Text>
-          <Text style={s.emptyText}>Complete onboarding and start logging to see your progress here.</Text>
+          <Text style={s.emptyText}>
+            Complete onboarding and start logging to see your progress here.
+          </Text>
         </View>
       </Screen>
     );
@@ -337,39 +386,47 @@ export default function ProgressScreen() {
   const screenKey = `progress-screen-${settingsId || 'no-settings'}`;
 
   // Trend: compare current week's usage to previous week
-  const usageTrend = previousWeek ? getTrend(currentWeek.actualUsed, previousWeek.actualUsed) : null;
+  const usageTrend = previousWeek
+    ? getTrend(currentWeek.actualUsed, previousWeek.actualUsed)
+    : null;
 
   return (
     <Screen key={screenKey}>
       <ScrollView
         contentContainerStyle={s.scrollContent}
         showsVerticalScrollIndicator={false}
-        refreshControl={<RefreshControl refreshing={isLoading} onRefresh={() => loadData(true)} />}>
+        refreshControl={<RefreshControl refreshing={isLoading} onRefresh={() => loadData(true)} />}
+      >
         <View style={s.content}>
-
           {/* ── Weekly Insight ── */}
           <Animated.View entering={FadeIn.duration(400)}>
-            <Text style={s.insight}>
-              {getWeeklyInsight(weekData, previousWeek, isCurrentWeek)}
-            </Text>
+            <Text style={s.insight}>{getWeeklyInsight(weekData, previousWeek, isCurrentWeek)}</Text>
           </Animated.View>
 
           {/* ── Segmented Week Selector ── */}
           <View style={[s.segmentedControl, { backgroundColor: colors.background.muted }]}>
             <TouchableOpacity
-              style={[s.segment, !showPreviousWeek && [s.segmentActive, { backgroundColor: colors.surface.default }]]}
+              style={[
+                s.segment,
+                !showPreviousWeek && [s.segmentActive, { backgroundColor: colors.surface.default }],
+              ]}
               accessibilityRole="button"
               accessibilityState={{ selected: !showPreviousWeek }}
-              onPress={() => setShowPreviousWeek(false)}>
+              onPress={() => setShowPreviousWeek(false)}
+            >
               <Text style={[s.segmentText, !showPreviousWeek && s.segmentTextActive]}>
                 This Week
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[s.segment, showPreviousWeek && [s.segmentActive, { backgroundColor: colors.surface.default }]]}
+              style={[
+                s.segment,
+                showPreviousWeek && [s.segmentActive, { backgroundColor: colors.surface.default }],
+              ]}
               accessibilityRole="button"
               accessibilityState={{ selected: showPreviousWeek }}
-              onPress={() => setShowPreviousWeek(true)}>
+              onPress={() => setShowPreviousWeek(true)}
+            >
               <Text style={[s.segmentText, showPreviousWeek && s.segmentTextActive]}>
                 Last Week
               </Text>
@@ -419,7 +476,12 @@ export default function ProgressScreen() {
             {/* Trend indicator */}
             {usageTrend && isCurrentWeek && (
               <View style={s.trendRow}>
-                <Text style={[s.trendArrow, { color: usageTrend.isPositive ? colors.success : colors.error }]}>
+                <Text
+                  style={[
+                    s.trendArrow,
+                    { color: usageTrend.isPositive ? colors.success : colors.error },
+                  ]}
+                >
                   {usageTrend.arrow} {usageTrend.label}
                 </Text>
                 <Text style={s.trendLabel}>
@@ -432,9 +494,7 @@ export default function ProgressScreen() {
             {weekData.moneySaved != null && weekData.moneySaved > 0 && (
               <View style={s.moneyRow}>
                 <Text style={s.moneyLabel}>Saved this week</Text>
-                <Text style={s.moneyValue}>
-                  {formatMoney(weekData.moneySaved, currency)}
-                </Text>
+                <Text style={s.moneyValue}>{formatMoney(weekData.moneySaved, currency)}</Text>
               </View>
             )}
           </Card>
@@ -444,7 +504,9 @@ export default function ProgressScreen() {
             <Text style={s.cardTitle}>All Time</Text>
             <View style={s.statsGrid}>
               <View style={s.statBox}>
-                <Text style={s.statValueLarge}>{Number(totalProgress.totalPouchesAvoided ?? 0)}</Text>
+                <Text style={s.statValueLarge}>
+                  {Number(totalProgress.totalPouchesAvoided ?? 0)}
+                </Text>
                 <Text style={s.statLabel}>Pouches avoided</Text>
               </View>
               <View style={s.statBox}>
@@ -452,7 +514,9 @@ export default function ProgressScreen() {
                 <Text style={s.statLabel}>Days</Text>
               </View>
               <View style={s.statBox}>
-                <Text style={s.statValueLarge}>{Number(totalProgress.totalCravingsResisted ?? 0)}</Text>
+                <Text style={s.statValueLarge}>
+                  {Number(totalProgress.totalCravingsResisted ?? 0)}
+                </Text>
                 <Text style={s.statLabel}>Resisted</Text>
               </View>
             </View>
@@ -474,6 +538,15 @@ export default function ProgressScreen() {
             </View>
           </Card>
 
+          {/* ── Usage Patterns ── */}
+          {patterns && (
+            <PatternsCard
+              patterns={patterns}
+              hasTriggersConfigured={(settings.triggers?.length ?? 0) > 0}
+              style={s.card}
+            />
+          )}
+
           {/* ── Milestones ── */}
           {milestones.length > 0 && (
             <Card variant="elevated" style={s.card} padding="lg">
@@ -483,8 +556,14 @@ export default function ProgressScreen() {
                 return (
                   <Animated.View
                     key={milestone.id}
-                    style={[s.milestoneItem, index === milestones.length - 1 && s.milestoneItemLast]}
-                    entering={FadeInRight.delay(index * 80).duration(animations.normal).springify()}>
+                    style={[
+                      s.milestoneItem,
+                      index === milestones.length - 1 && s.milestoneItemLast,
+                    ]}
+                    entering={FadeInRight.delay(index * 80)
+                      .duration(animations.normal)
+                      .springify()}
+                  >
                     <View style={[s.milestoneIconWrap, { backgroundColor: badge.color + '18' }]}>
                       <Icon name={badge.name} size={22} color={badge.color} weight="fill" />
                     </View>
@@ -507,7 +586,7 @@ export default function ProgressScreen() {
                 ? 'You just started — the first days are the hardest. One step at a time.'
                 : totalProgress.totalPouchesAvoided > 50
                   ? `${totalProgress.totalPouchesAvoided} pouches avoided is real, tangible progress.`
-                  : 'Progress isn\'t about perfection — it\'s about moving in the right direction.'}
+                  : "Progress isn't about perfection — it's about moving in the right direction."}
             </Text>
           </Animated.View>
         </View>
@@ -520,253 +599,254 @@ export default function ProgressScreen() {
 // Styles
 // ──────────────────────────────────────────────
 
-const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => StyleSheet.create({
-  scrollContent: {
-    flexGrow: 1,
-  } as ViewStyle,
-  content: {
-    flex: 1,
-    paddingVertical: spacing.md,
-    paddingHorizontal: 0,
-  } as ViewStyle,
+const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) =>
+  StyleSheet.create({
+    scrollContent: {
+      flexGrow: 1,
+    } as ViewStyle,
+    content: {
+      flex: 1,
+      paddingVertical: spacing.md,
+      paddingHorizontal: 0,
+    } as ViewStyle,
 
-  // Loading / Empty
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  } as ViewStyle,
-  loadingText: {
-    ...typography.caption,
-    color: colors.text.secondary,
-    marginTop: spacing.sm,
-  } as TextStyle,
-  emptyContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: spacing.xl,
-  } as ViewStyle,
-  emptyEmoji: {
-    fontSize: 48,
-    marginBottom: spacing.md,
-  } as TextStyle,
-  emptyTitle: {
-    ...typography.xl,
-    fontWeight: '600',
-    color: colors.text.primary,
-    marginBottom: spacing.sm,
-  } as TextStyle,
-  emptyText: {
-    ...typography.body,
-    color: colors.text.secondary,
-    textAlign: 'center',
-    lineHeight: 22,
-  } as TextStyle,
+    // Loading / Empty
+    loadingContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    } as ViewStyle,
+    loadingText: {
+      ...typography.caption,
+      color: colors.text.secondary,
+      marginTop: spacing.sm,
+    } as TextStyle,
+    emptyContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: spacing.xl,
+    } as ViewStyle,
+    emptyEmoji: {
+      fontSize: 48,
+      marginBottom: spacing.md,
+    } as TextStyle,
+    emptyTitle: {
+      ...typography.xl,
+      fontWeight: '600',
+      color: colors.text.primary,
+      marginBottom: spacing.sm,
+    } as TextStyle,
+    emptyText: {
+      ...typography.body,
+      color: colors.text.secondary,
+      textAlign: 'center',
+      lineHeight: 22,
+    } as TextStyle,
 
-  // Insight
-  insight: {
-    ...typography.body,
-    color: colors.text.secondary,
-    lineHeight: 22,
-    marginBottom: spacing.lg,
-  } as TextStyle,
+    // Insight
+    insight: {
+      ...typography.body,
+      color: colors.text.secondary,
+      lineHeight: 22,
+      marginBottom: spacing.lg,
+    } as TextStyle,
 
-  // Segmented control (iOS-style)
-  segmentedControl: {
-    flexDirection: 'row',
-    borderRadius: borderRadius.sm,
-    padding: 3,
-    marginBottom: spacing.lg,
-  } as ViewStyle,
-  segment: {
-    flex: 1,
-    // 44pt minimum touch target per IAMJARL / Apple HIG. Previously paddingVertical:
-    // spacing.sm produced ~32-36pt rows which fail accessibility on phone-only.
-    minHeight: 44,
-    paddingVertical: spacing.sm,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: borderRadius.sm - 2,
-  } as ViewStyle,
-  segmentActive: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.08,
-    shadowRadius: 2,
-    elevation: 1,
-  } as ViewStyle,
-  segmentText: {
-    ...typography.sm,
-    fontWeight: '600',
-    color: colors.text.secondary,
-  } as TextStyle,
-  segmentTextActive: {
-    color: colors.text.primary,
-    fontWeight: '600',
-  } as TextStyle,
+    // Segmented control (iOS-style)
+    segmentedControl: {
+      flexDirection: 'row',
+      borderRadius: borderRadius.sm,
+      padding: 3,
+      marginBottom: spacing.lg,
+    } as ViewStyle,
+    segment: {
+      flex: 1,
+      // 44pt minimum touch target per IAMJARL / Apple HIG. Previously paddingVertical:
+      // spacing.sm produced ~32-36pt rows which fail accessibility on phone-only.
+      minHeight: 44,
+      paddingVertical: spacing.sm,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: borderRadius.sm - 2,
+    } as ViewStyle,
+    segmentActive: {
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.08,
+      shadowRadius: 2,
+      elevation: 1,
+    } as ViewStyle,
+    segmentText: {
+      ...typography.sm,
+      fontWeight: '600',
+      color: colors.text.secondary,
+    } as TextStyle,
+    segmentTextActive: {
+      color: colors.text.primary,
+      fontWeight: '600',
+    } as TextStyle,
 
-  // Cards
-  card: {
-    marginBottom: spacing.md,
-  } as ViewStyle,
-  cardTitle: {
-    ...typography.lg,
-    fontWeight: '600',
-    color: colors.text.primary,
-    marginBottom: spacing.md,
-  } as TextStyle,
+    // Cards
+    card: {
+      marginBottom: spacing.md,
+    } as ViewStyle,
+    cardTitle: {
+      ...typography.lg,
+      fontWeight: '600',
+      color: colors.text.primary,
+      marginBottom: spacing.md,
+    } as TextStyle,
 
-  // Chart header
-  chartHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: spacing.xs,
-  } as ViewStyle,
-  legendRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.xs,
-  } as ViewStyle,
-  legendDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-  } as ViewStyle,
-  legendText: {
-    ...typography.xs,
-    color: colors.text.tertiary,
-    marginRight: spacing.sm,
-  } as TextStyle,
+    // Chart header
+    chartHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: spacing.xs,
+    } as ViewStyle,
+    legendRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing.xs,
+    } as ViewStyle,
+    legendDot: {
+      width: 8,
+      height: 8,
+      borderRadius: 4,
+    } as ViewStyle,
+    legendText: {
+      ...typography.xs,
+      color: colors.text.tertiary,
+      marginRight: spacing.sm,
+    } as TextStyle,
 
-  // Stats grid
-  statsGrid: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  } as ViewStyle,
-  statBox: {
-    alignItems: 'center',
-    flex: 1,
-    gap: spacing.xs,
-  } as ViewStyle,
-  statValue: {
-    ...typography.xl,
-    fontWeight: '700',
-    color: colors.text.primary,
-  } as TextStyle,
-  statValueLarge: {
-    fontSize: 28,
-    lineHeight: 34,
-    fontWeight: '700',
-    color: colors.primary,
-  } as TextStyle,
-  statLabel: {
-    ...typography.xs,
-    color: colors.text.secondary,
-    textAlign: 'center',
-  } as TextStyle,
+    // Stats grid
+    statsGrid: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    } as ViewStyle,
+    statBox: {
+      alignItems: 'center',
+      flex: 1,
+      gap: spacing.xs,
+    } as ViewStyle,
+    statValue: {
+      ...typography.xl,
+      fontWeight: '700',
+      color: colors.text.primary,
+    } as TextStyle,
+    statValueLarge: {
+      fontSize: 28,
+      lineHeight: 34,
+      fontWeight: '700',
+      color: colors.primary,
+    } as TextStyle,
+    statLabel: {
+      ...typography.xs,
+      color: colors.text.secondary,
+      textAlign: 'center',
+    } as TextStyle,
 
-  // Trend
-  trendRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: spacing.md,
-    paddingTop: spacing.md,
-    borderTopWidth: 1,
-    borderTopColor: colors.border.subtle,
-    gap: spacing.xs,
-  } as ViewStyle,
-  trendArrow: {
-    ...typography.sm,
-    fontWeight: '700',
-  } as TextStyle,
-  trendLabel: {
-    ...typography.sm,
-    color: colors.text.secondary,
-  } as TextStyle,
+    // Trend
+    trendRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginTop: spacing.md,
+      paddingTop: spacing.md,
+      borderTopWidth: 1,
+      borderTopColor: colors.border.subtle,
+      gap: spacing.xs,
+    } as ViewStyle,
+    trendArrow: {
+      ...typography.sm,
+      fontWeight: '700',
+    } as TextStyle,
+    trendLabel: {
+      ...typography.sm,
+      color: colors.text.secondary,
+    } as TextStyle,
 
-  // Money
-  moneyRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: spacing.md,
-    paddingTop: spacing.md,
-    borderTopWidth: 1,
-    borderTopColor: colors.border.subtle,
-  } as ViewStyle,
-  moneyLabel: {
-    ...typography.body,
-    color: colors.text.secondary,
-  } as TextStyle,
-  moneyValue: {
-    ...typography.xl,
-    fontWeight: '700',
-    color: colors.primary,
-  } as TextStyle,
+    // Money
+    moneyRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginTop: spacing.md,
+      paddingTop: spacing.md,
+      borderTopWidth: 1,
+      borderTopColor: colors.border.subtle,
+    } as ViewStyle,
+    moneyLabel: {
+      ...typography.body,
+      color: colors.text.secondary,
+    } as TextStyle,
+    moneyValue: {
+      ...typography.xl,
+      fontWeight: '700',
+      color: colors.primary,
+    } as TextStyle,
 
-  // Average
-  averageRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: spacing.sm,
-    paddingTop: spacing.md,
-    borderTopWidth: 1,
-    borderTopColor: colors.border.subtle,
-  } as ViewStyle,
-  averageLabel: {
-    ...typography.sm,
-    color: colors.text.secondary,
-  } as TextStyle,
-  averageValue: {
-    ...typography.body,
-    fontWeight: '600',
-    color: colors.text.primary,
-  } as TextStyle,
+    // Average
+    averageRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginTop: spacing.sm,
+      paddingTop: spacing.md,
+      borderTopWidth: 1,
+      borderTopColor: colors.border.subtle,
+    } as ViewStyle,
+    averageLabel: {
+      ...typography.sm,
+      color: colors.text.secondary,
+    } as TextStyle,
+    averageValue: {
+      ...typography.body,
+      fontWeight: '600',
+      color: colors.text.primary,
+    } as TextStyle,
 
-  // Milestones
-  milestoneItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: spacing.sm,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border.subtle,
-    gap: spacing.md,
-  } as ViewStyle,
-  milestoneItemLast: {
-    borderBottomWidth: 0,
-  } as ViewStyle,
-  milestoneIconWrap: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-  } as ViewStyle,
-  milestoneContent: {
-    flex: 1,
-  } as ViewStyle,
-  milestoneTitle: {
-    ...typography.body,
-    fontWeight: '600',
-    color: colors.text.primary,
-  } as TextStyle,
-  milestoneDate: {
-    ...typography.xs,
-    color: colors.text.tertiary,
-    marginTop: 2,
-  } as TextStyle,
+    // Milestones
+    milestoneItem: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingVertical: spacing.sm,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border.subtle,
+      gap: spacing.md,
+    } as ViewStyle,
+    milestoneItemLast: {
+      borderBottomWidth: 0,
+    } as ViewStyle,
+    milestoneIconWrap: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      alignItems: 'center',
+      justifyContent: 'center',
+    } as ViewStyle,
+    milestoneContent: {
+      flex: 1,
+    } as ViewStyle,
+    milestoneTitle: {
+      ...typography.body,
+      fontWeight: '600',
+      color: colors.text.primary,
+    } as TextStyle,
+    milestoneDate: {
+      ...typography.xs,
+      color: colors.text.tertiary,
+      marginTop: 2,
+    } as TextStyle,
 
-  // Encouragement
-  encouragement: {
-    ...typography.sm,
-    color: colors.text.tertiary,
-    textAlign: 'center',
-    marginTop: spacing.md,
-    marginBottom: spacing.xxl,
-    lineHeight: 20,
-    paddingHorizontal: spacing.lg,
-  } as TextStyle,
-});
+    // Encouragement
+    encouragement: {
+      ...typography.sm,
+      color: colors.text.tertiary,
+      textAlign: 'center',
+      marginTop: spacing.md,
+      marginBottom: spacing.xxl,
+      lineHeight: 20,
+      paddingHorizontal: spacing.lg,
+    } as TextStyle,
+  });

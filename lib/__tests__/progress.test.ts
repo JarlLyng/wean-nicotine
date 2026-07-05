@@ -20,8 +20,10 @@ import { getLogEntries } from '../db-log-entries';
 import {
   calculateWeeklyProgress,
   calculateTotalProgressAndMilestones,
+  computeUsagePatterns,
   getCurrentWeek,
   getPreviousWeek,
+  getUsagePatterns,
 } from '../progress';
 
 const mockedGetLogEntries = getLogEntries as jest.MockedFunction<typeof getLogEntries>;
@@ -143,7 +145,14 @@ describe('calculateWeeklyProgress', () => {
     // 10 pouches logged across a week — way over a 2/day baseline
     const logs: LogEntry[] = [];
     for (let i = 0; i < 30; i++) {
-      logs.push(pouchLog(new Date(`2026-01-05T${String(8 + (i % 12)).padStart(2, '0')}:${String(i * 2 % 60).padStart(2, '0')}:00Z`), i));
+      logs.push(
+        pouchLog(
+          new Date(
+            `2026-01-05T${String(8 + (i % 12)).padStart(2, '0')}:${String((i * 2) % 60).padStart(2, '0')}:00Z`,
+          ),
+          i,
+        ),
+      );
     }
     mockedGetLogEntries.mockResolvedValue(logs);
 
@@ -262,5 +271,117 @@ describe('calculateTotalProgressAndMilestones', () => {
 
     expect(craving10).toBeDefined();
     expect(craving25).toBeDefined();
+  });
+});
+
+describe('computeUsagePatterns', () => {
+  function at(hour: number, day: number = 1, trigger?: string): LogEntry {
+    const d = new Date(2026, 5, day, hour, 30, 0); // June 2026, local time
+    return {
+      id: hour * 100 + day,
+      type: 'pouch_used',
+      timestamp: d.getTime(),
+      trigger,
+      createdAt: d.getTime(),
+    };
+  }
+
+  it('buckets pouches into parts of day by local hour', () => {
+    const logs = [
+      at(6),
+      at(9), // morning (5–11)
+      at(12),
+      at(14),
+      at(16), // afternoon (11–17)
+      at(18), // evening (17–22)
+      at(23),
+      at(2, 2), // night (22–5)
+    ];
+    const result = computeUsagePatterns(logs, 30);
+
+    expect(result.totalPouches).toBe(8);
+    expect(result.partsOfDay).toEqual([
+      { key: 'morning', label: 'Morning', count: 2 },
+      { key: 'afternoon', label: 'Afternoon', count: 3 },
+      { key: 'evening', label: 'Evening', count: 1 },
+      { key: 'night', label: 'Night', count: 2 },
+    ]);
+  });
+
+  it('counts triggers most-frequent-first and excludes untagged logs', () => {
+    const logs = [
+      at(8, 1, 'Stress'),
+      at(9, 2, 'Stress'),
+      at(10, 3, 'With coffee'),
+      at(11, 4), // untagged
+    ];
+    const result = computeUsagePatterns(logs, 30);
+
+    expect(result.taggedPouches).toBe(3);
+    expect(result.triggerCounts).toEqual([
+      { trigger: 'Stress', count: 2 },
+      { trigger: 'With coffee', count: 1 },
+    ]);
+  });
+
+  it('breaks trigger-count ties alphabetically for stable ordering', () => {
+    const logs = [at(8, 1, 'Work breaks'), at(9, 2, 'After meals')];
+    const result = computeUsagePatterns(logs, 30);
+    expect(result.triggerCounts.map((t) => t.trigger)).toEqual(['After meals', 'Work breaks']);
+  });
+
+  it('ignores craving_resisted entries entirely', () => {
+    const d = new Date(2026, 5, 1, 8, 0, 0);
+    const logs: LogEntry[] = [
+      {
+        id: 1,
+        type: 'craving_resisted',
+        timestamp: d.getTime(),
+        trigger: 'Stress',
+        createdAt: d.getTime(),
+      },
+    ];
+    const result = computeUsagePatterns(logs, 30);
+    expect(result.totalPouches).toBe(0);
+    expect(result.taggedPouches).toBe(0);
+    expect(result.triggerCounts).toEqual([]);
+  });
+
+  it('returns empty buckets for no logs', () => {
+    const result = computeUsagePatterns([], 30);
+    expect(result.totalPouches).toBe(0);
+    expect(result.partsOfDay.every((p) => p.count === 0)).toBe(true);
+  });
+});
+
+describe('getUsagePatterns', () => {
+  beforeEach(() => {
+    mockedGetLogEntries.mockReset();
+  });
+
+  it('caps the window at the taper start date', async () => {
+    // Taper started 5 days ago — a 30-day request should only cover 5 days
+    const start = new Date();
+    start.setHours(0, 0, 0, 0);
+    start.setDate(start.getDate() - 4);
+    const settings = makeSettings({ startDate: start.getTime() });
+    mockedGetLogEntries.mockResolvedValue([]);
+
+    const result = await getUsagePatterns(settings, 30);
+
+    expect(result.windowDays).toBe(5);
+    const call = mockedGetLogEntries.mock.calls[0][0]!;
+    expect(call.type).toBe('pouch_used');
+    expect(call.startDate).toBe(start.getTime());
+  });
+
+  it('uses the full window when the taper started earlier', async () => {
+    const settings = makeSettings({
+      startDate: Date.now() - 90 * 24 * 60 * 60 * 1000,
+    });
+    mockedGetLogEntries.mockResolvedValue([]);
+
+    const result = await getUsagePatterns(settings, 30);
+    expect(result.windowDays).toBe(30);
   });
 });
