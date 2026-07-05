@@ -53,3 +53,19 @@ export const PACE_NUDGE_DISMISSED_AT_KEY = 'pace_nudge_dismissed_at';
  * a genuine second finish). Wiped by Start Over like all preferences.
  */
 export const GOAL_CELEBRATED_KEY = 'taper_goal_celebrated';
+
+// ── In-app review prompt (#180) ────────────────────────────────────
+// Apple hard-caps StoreKit review prompts at 3/365 days; these are our
+// stricter self-imposed limits so the ask only lands on positive moments.
+
+/** app_preferences key holding the last review-request timestamp (ms epoch). */
+export const REVIEW_LAST_REQUEST_KEY = 'review_last_requested_at';
+
+/** Minimum days between our own review requests. */
+export const REVIEW_MIN_DAYS_BETWEEN = 90;
+
+/** Never ask before the plan is at least this old (also guards post-reset). */
+export const REVIEW_MIN_DAYS_SINCE_START = 14;
+
+/** Progress-milestone trigger: ask only once this many pouches are avoided. */
+export const REVIEW_MIN_POUCHES_AVOIDED = 100;

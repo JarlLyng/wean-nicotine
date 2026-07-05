@@ -7,6 +7,8 @@ import { getTaperSettings } from '@/lib/db-settings';
 import { useDesignTokens } from '@/lib/design';
 import type { TaperSettings } from '@/lib/models';
 import { PatternsCard } from '@/components/PatternsCard';
+import { REVIEW_MIN_POUCHES_AVOIDED } from '@/lib/constants';
+import { maybeRequestReview } from '@/lib/store-review';
 import {
   calculateTotalProgressAndMilestones,
   calculateWeeklyProgress,
@@ -338,6 +340,12 @@ export default function ProgressScreen() {
       setTotalProgress(totalAndMilestones.progress);
       setMilestones(totalAndMilestones.milestones);
       setPatterns(usagePatterns);
+
+      // Positive-moment review ask (#180): only once real progress exists.
+      // maybeRequestReview self-limits (plan age, 90-day gap, availability).
+      if (totalAndMilestones.progress.totalPouchesAvoided >= REVIEW_MIN_POUCHES_AVOIDED) {
+        void maybeRequestReview(currentSettings.startDate);
+      }
       lastLoadedRef.current = Date.now();
     } catch (error) {
       if (__DEV__) console.error('Error loading progress:', error);

@@ -55,6 +55,8 @@ export interface HomeData {
   showGoalCelebration: boolean;
   /** Cumulative pouches avoided, loaded only for the celebration copy. */
   goalPouchesAvoided: number | null;
+  /** Plan start (ms epoch) — gates the review prompt's minimum-age check (#180). */
+  planStartDate: number | null;
 }
 
 const EMPTY_DATA: HomeData = {
@@ -67,6 +69,7 @@ const EMPTY_DATA: HomeData = {
   showPaceNudge: false,
   showGoalCelebration: false,
   goalPouchesAvoided: null,
+  planStartDate: null,
 };
 
 export interface UseHomeDataResult {
@@ -151,6 +154,7 @@ export function useHomeData(): UseHomeDataResult {
         showPaceNudge,
         showGoalCelebration,
         goalPouchesAvoided,
+        planStartDate: settings.startDate,
       });
       setStatus('ready');
     } catch (error) {
