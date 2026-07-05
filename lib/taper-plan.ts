@@ -10,7 +10,7 @@ import type { TaperSettings } from './models';
  */
 export function calculateDailyAllowance(
   settings: TaperSettings,
-  currentDate: Date = new Date()
+  currentDate: Date = new Date(),
 ): number {
   const startDate = new Date(settings.startDate);
   startDate.setHours(0, 0, 0, 0);
@@ -19,18 +19,29 @@ export function calculateDailyAllowance(
   const weeksSinceStart = getWeeksBetween(startDate, endDate);
   // Stepwise weekly reduction: use full weeks only (no fractional week)
   const clampedWeeks = Math.max(0, Math.floor(weeksSinceStart));
-  
+
   const clampedPercent = Math.max(0, Math.min(100, settings.weeklyReductionPercent));
-  const reductionFactor = Math.pow(
-    1 - clampedPercent / 100,
-    clampedWeeks
-  );
-  
+  const reductionFactor = Math.pow(1 - clampedPercent / 100, clampedWeeks);
+
   const allowance = settings.baselinePouchesPerDay * reductionFactor;
-  
+
   // Round to 1 decimal place, but never go below 0
   // Also ensure allowance never exceeds baseline (safety check)
   return Math.max(0, Math.min(settings.baselinePouchesPerDay, Math.round(allowance * 10) / 10));
+}
+
+/**
+ * Whole-pouch allowance for display (#219).
+ *
+ * The computed allowance keeps 1-decimal precision because the taper math
+ * needs it — rounding the stored value would stall gentle paces (3%/week on
+ * a low baseline barely moves the integer). But you can't use half a pouch,
+ * so the Today screen shows the FLOOR of the allowance: "3 today" for 3.5.
+ * Flooring (not rounding) means staying under the displayed target always
+ * keeps you under the real one — the forgiving direction.
+ */
+export function getDisplayAllowance(allowance: number): number {
+  return Math.max(0, Math.floor(allowance));
 }
 
 /**
@@ -47,7 +58,7 @@ function getWeeksBetween(startDate: Date, endDate: Date): number {
  */
 export function generateDefaultTaperPlan(
   baselinePouchesPerDay: number,
-  weeklyReductionPercent: number = 5
+  weeklyReductionPercent: number = 5,
 ): Omit<TaperSettings, 'id' | 'createdAt' | 'updatedAt'> {
   return {
     baselinePouchesPerDay,
