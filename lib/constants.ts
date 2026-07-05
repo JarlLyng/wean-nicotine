@@ -43,3 +43,13 @@ export const PACE_NUDGE_SNOOZE_DAYS = 7;
 
 /** app_preferences key holding the last-dismissed timestamp (ms epoch). */
 export const PACE_NUDGE_DISMISSED_AT_KEY = 'pace_nudge_dismissed_at';
+
+// ── Taper-complete state (#223) ────────────────────────────────────
+
+/**
+ * app_preferences key marking that the one-time "you reached your goal"
+ * celebration has been shown. Cleared automatically if the plan is edited
+ * so the allowance rises above zero again (re-arming the celebration for
+ * a genuine second finish). Wiped by Start Over like all preferences.
+ */
+export const GOAL_CELEBRATED_KEY = 'taper_goal_celebrated';
