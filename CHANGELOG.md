@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-07-05
+
+iOS build 20. Theme: insight + the finish line — the app now delivers the usage-pattern promises from the blog, acknowledges reaching the goal, and gently helps when the pace doesn't fit.
+
+### Added
+- **Trigger tagging on pouch logs.** After "Used a pouch", an optional dismissible chip row ("What triggered it?") offers the user's own onboarding-selected triggers. One-tap logging is unchanged — tagging is an optional second tap, never required. Stored per entry (schema migration v8, nullable — existing history untouched). The tag is scrubbed from any Sentry payload like all user data. (#220)
+- **Patterns card on Progress.** Pouches broken down by time of day (morning/afternoon/evening/night) and by tagged trigger over the trailing 30 days. Descriptive primary-colored bars — no red, no "worst time" framing. Hidden until 10+ pouches are logged; honest footnote when only some pouches are tagged. (#221)
+- **Gentle pace suggestion.** When usage runs ≥20% over the allowance across the trailing two complete weeks, Home shows a calm, dismissible "Going over most days?" card linking to Edit plan. Dismissal snoozes it for 7 days — it never nags. Framed as pace-fit information, never failure. (#222)
+- **Goal-reached celebration.** The first time the whole-pouch daily target hits zero, Home shows a one-time trophy card ("You reached your goal") with the cumulative pouches-avoided number, one success haptic, and gentle next steps. Explicitly not a streak or "days clean" counter; re-arms only if the plan is edited above zero again. (#223)
+- **In-app review prompt** via expo-store-review, asked only at positive moments (goal celebration acknowledged; 100+ pouches avoided on Progress) and hard-gated: plan ≥14 days old, ≥90 days between asks, never after Reset. No network calls, no user data. (#180)
+- **20 new unit tests** — total now 87.
+
+### Changed
+- **Whole-pouch daily target.** The Today ring now shows "3" instead of "3.5" — floored, so staying under the shown number always means staying under the real allowance. The decimal precision still drives the taper math and Progress chart unchanged. (#219)
+- Magic numbers (pouches per can, milestone thresholds, notification defaults, nudge tunables) consolidated into `lib/constants.ts`. No behavior change. (#112)
+
 ## [1.4.1] - 2026-06-01
 
 iOS build 19. Hotfix for build 18 — Buttons were unresponsive across the entire app, including the welcome-screen "Get Started" CTA which blocked onboarding completely.
