@@ -27,7 +27,12 @@ export interface WeeklyProgress {
 
 export interface Milestone {
   id: string;
-  type: 'first_day_under_limit' | 'week_under_limit' | 'pouches_avoided' | 'money_saved' | 'cravings_resisted';
+  type:
+    | 'first_day_under_limit'
+    | 'week_under_limit'
+    | 'pouches_avoided'
+    | 'money_saved'
+    | 'cravings_resisted';
   title: string;
   description: string;
   achievedAt: number;
@@ -40,12 +45,12 @@ export interface Milestone {
 export async function calculateWeeklyProgress(
   settings: TaperSettings,
   weekStart: Date,
-  weekEnd: Date
+  weekEnd: Date,
 ): Promise<WeeklyProgress> {
   // Ensure we only use dates from after the taper start date
   const settingsStartDate = new Date(settings.startDate);
   settingsStartDate.setHours(0, 0, 0, 0);
-  
+
   // If the week is entirely before the start date, return empty progress
   if (weekEnd < settingsStartDate) {
     return {
@@ -65,7 +70,7 @@ export async function calculateWeeklyProgress(
   const today = new Date();
   today.setHours(23, 59, 59, 999);
   const effectiveEnd = weekEnd > today ? today : weekEnd;
-  
+
   // If effective start is after effective end, return empty progress
   if (effectiveEnd < effectiveStart) {
     return {
@@ -97,7 +102,7 @@ export async function calculateWeeklyProgress(
   const daysInWeek = days.length;
   const baselineTotal = settings.baselinePouchesPerDay * daysInWeek;
   const pouchesAvoided = Math.max(0, baselineTotal - actualUsed);
-  
+
   // Calculate money saved (if price is set)
   let moneySaved: number | undefined;
   if (settings.pricePerCan) {
@@ -170,7 +175,7 @@ export interface TotalProgress {
  * Previously these were two separate functions each querying the DB independently.
  */
 export async function calculateTotalProgressAndMilestones(
-  settings: TaperSettings
+  settings: TaperSettings,
 ): Promise<{ progress: TotalProgress; milestones: Milestone[] }> {
   const startDate = new Date(settings.startDate);
   const today = new Date();
@@ -364,7 +369,8 @@ export async function getDailyBreakdown(
   for (const log of logs) {
     const key = toDayKey(new Date(log.timestamp));
     if (log.type === 'pouch_used') usedByDay.set(key, (usedByDay.get(key) ?? 0) + 1);
-    else if (log.type === 'craving_resisted') resistedByDay.set(key, (resistedByDay.get(key) ?? 0) + 1);
+    else if (log.type === 'craving_resisted')
+      resistedByDay.set(key, (resistedByDay.get(key) ?? 0) + 1);
   }
 
   const days = getDaysInRange(weekStart, weekEnd);
@@ -386,6 +392,118 @@ export async function getDailyBreakdown(
   });
 }
 
+// ──────────────────────────────────────────────
+// Usage patterns (#221) — time-of-day + trigger breakdown
+// ──────────────────────────────────────────────
+
+export type PartOfDayKey = 'morning' | 'afternoon' | 'evening' | 'night';
+
+export interface PartOfDayBucket {
+  key: PartOfDayKey;
+  label: string;
+  count: number;
+}
+
+export interface TriggerCount {
+  trigger: string;
+  count: number;
+}
+
+export interface UsagePatterns {
+  /** Days the window actually covers (capped by taper start). */
+  windowDays: number;
+  /** Total pouch logs inside the window. */
+  totalPouches: number;
+  /** Pouch counts bucketed by part of day, in day order. */
+  partsOfDay: PartOfDayBucket[];
+  /** Pouch counts per trigger tag, most frequent first. Untagged logs are excluded. */
+  triggerCounts: TriggerCount[];
+  /** How many pouch logs in the window carry a trigger tag. */
+  taggedPouches: number;
+}
+
+/**
+ * Bucket an hour (0–23) into a part of day. Boundaries are deliberately
+ * coarse — this is descriptive insight, not clinical analysis.
+ */
+function partOfDay(hour: number): PartOfDayKey {
+  if (hour >= 5 && hour < 11) return 'morning';
+  if (hour >= 11 && hour < 17) return 'afternoon';
+  if (hour >= 17 && hour < 22) return 'evening';
+  return 'night';
+}
+
+/**
+ * Pure aggregation over pouch logs. Exported for unit testing — the DB read
+ * lives in `getUsagePatterns` below.
+ */
+export function computeUsagePatterns(logs: LogEntry[], windowDays: number): UsagePatterns {
+  const buckets: Record<PartOfDayKey, number> = {
+    morning: 0,
+    afternoon: 0,
+    evening: 0,
+    night: 0,
+  };
+  const triggerMap = new Map<string, number>();
+  let totalPouches = 0;
+  let taggedPouches = 0;
+
+  for (const log of logs) {
+    if (log.type !== 'pouch_used') continue;
+    totalPouches++;
+    buckets[partOfDay(new Date(log.timestamp).getHours())]++;
+    if (log.trigger) {
+      taggedPouches++;
+      triggerMap.set(log.trigger, (triggerMap.get(log.trigger) ?? 0) + 1);
+    }
+  }
+
+  const triggerCounts = [...triggerMap.entries()]
+    .map(([trigger, count]) => ({ trigger, count }))
+    .sort((a, b) => b.count - a.count || a.trigger.localeCompare(b.trigger));
+
+  return {
+    windowDays,
+    totalPouches,
+    partsOfDay: [
+      { key: 'morning', label: 'Morning', count: buckets.morning },
+      { key: 'afternoon', label: 'Afternoon', count: buckets.afternoon },
+      { key: 'evening', label: 'Evening', count: buckets.evening },
+      { key: 'night', label: 'Night', count: buckets.night },
+    ],
+    triggerCounts,
+    taggedPouches,
+  };
+}
+
+/**
+ * Usage patterns over the trailing `days` window (default 30), capped at the
+ * taper start date so a brand-new plan doesn't dilute shares with empty days.
+ */
+export async function getUsagePatterns(
+  settings: TaperSettings,
+  days: number = 30,
+): Promise<UsagePatterns> {
+  const end = new Date();
+  end.setHours(23, 59, 59, 999);
+
+  const windowStart = new Date();
+  windowStart.setHours(0, 0, 0, 0);
+  windowStart.setDate(windowStart.getDate() - (days - 1));
+
+  const taperStart = new Date(settings.startDate);
+  taperStart.setHours(0, 0, 0, 0);
+  const start = taperStart > windowStart ? taperStart : windowStart;
+
+  const logs = await getLogEntries({
+    type: 'pouch_used',
+    startDate: start.getTime(),
+    endDate: end.getTime(),
+  });
+
+  const windowDays = getDaysInRange(start, end).length;
+  return computeUsagePatterns(logs, windowDays);
+}
 
 /**
  * Get current week start and end dates
