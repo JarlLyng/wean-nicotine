@@ -9,6 +9,7 @@ import { Toast } from '@/components/ui/Toast';
 import { spacing, typography } from '@/lib/theme';
 import { useDesignTokens } from '@/lib/design';
 import { createLogEntry, deleteLogEntry, setLogEntryTrigger } from '@/lib/db-log-entries';
+import { getDisplayAllowance } from '@/lib/taper-plan';
 import { TriggerTagRow } from '@/components/TriggerTagRow';
 import { captureError } from '@/lib/sentry';
 import { useHomeData } from '@/hooks/useHomeData';
@@ -31,10 +32,8 @@ interface TagTargetState {
   selected: string | null;
 }
 
-function formatAllowanceDisplay(n: number): string {
-  const rounded = Math.round(n * 10) / 10;
-  return rounded % 1 === 0 ? String(rounded) : rounded.toFixed(1);
-}
+// (Displayed allowance is floored to whole pouches — see getDisplayAllowance
+// in lib/taper-plan.ts. The precise decimal value still drives the taper math.)
 
 export default function HomeScreen() {
   const { colors } = useDesignTokens();
@@ -56,6 +55,10 @@ export default function HomeScreen() {
     settingsId,
     triggers,
   } = data;
+
+  // Whole-pouch target for display (#219) — the precise decimal allowance
+  // still drives the taper math and progress calculations.
+  const displayAllowance = dailyAllowance !== null ? getDisplayAllowance(dailyAllowance) : 0;
 
   // UI-only transient state — not part of the data layer
   const [isLogging, setIsLogging] = useState(false);
@@ -252,17 +255,15 @@ export default function HomeScreen() {
 
               <View style={styles.progressContainer}>
                 <ProgressRing
-                  progress={dailyAllowance > 0 ? Math.min(pouchesUsedToday / dailyAllowance, 1) : 0}
+                  progress={
+                    displayAllowance > 0 ? Math.min(pouchesUsedToday / displayAllowance, 1) : 0
+                  }
                   size={140}
                   strokeWidth={14}
                   color={colors.primary}
                   useGradient={true}
                   showLabel={true}
-                  label={
-                    dailyAllowance > 0
-                      ? `${pouchesUsedToday}/${formatAllowanceDisplay(dailyAllowance)}`
-                      : `${pouchesUsedToday}/0`
-                  }
+                  label={`${pouchesUsedToday}/${displayAllowance}`}
                   sublabel="pouches"
                 />
               </View>
@@ -287,7 +288,7 @@ export default function HomeScreen() {
                 <View style={styles.statsRow}>
                   <View style={styles.statItem}>
                     <Text style={styles.statValue}>
-                      {formatAllowanceDisplay(Math.max(0, dailyAllowance - pouchesUsedToday))}
+                      {Math.max(0, displayAllowance - pouchesUsedToday)}
                     </Text>
                     <Text style={styles.statLabel}>Remaining</Text>
                   </View>

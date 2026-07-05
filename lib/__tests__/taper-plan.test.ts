@@ -8,7 +8,11 @@
  *   same-day calculation, partial weeks
  */
 
-import { calculateDailyAllowance, generateDefaultTaperPlan } from '../taper-plan';
+import {
+  calculateDailyAllowance,
+  generateDefaultTaperPlan,
+  getDisplayAllowance,
+} from '../taper-plan';
 import type { TaperSettings } from '../models';
 
 function makeSettings(partial: Partial<TaperSettings> = {}): TaperSettings {
@@ -178,5 +182,29 @@ describe('generateDefaultTaperPlan', () => {
     const after = Date.now();
     expect(plan.startDate).toBeGreaterThanOrEqual(before);
     expect(plan.startDate).toBeLessThanOrEqual(after);
+  });
+});
+
+describe('getDisplayAllowance', () => {
+  it('floors fractional allowances to whole pouches', () => {
+    expect(getDisplayAllowance(3.5)).toBe(3);
+    expect(getDisplayAllowance(11.9)).toBe(11);
+    expect(getDisplayAllowance(0.9)).toBe(0);
+  });
+
+  it('leaves whole numbers unchanged', () => {
+    expect(getDisplayAllowance(12)).toBe(12);
+    expect(getDisplayAllowance(0)).toBe(0);
+  });
+
+  it('never returns a negative target', () => {
+    expect(getDisplayAllowance(-0.4)).toBe(0);
+  });
+
+  it('floors (not rounds) so the displayed target is always achievable', () => {
+    // 3.5 must show 3, never 4 — staying under the shown number must
+    // guarantee staying under the real allowance.
+    expect(getDisplayAllowance(3.5)).toBe(3);
+    expect(getDisplayAllowance(3.99)).toBe(3);
   });
 });
