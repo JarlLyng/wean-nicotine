@@ -1,0 +1,237 @@
+---
+/**
+ * NordicHome — shared home-page template for the da / sv / no locales (#100).
+ *
+ * The three Nordic homes were byte-for-byte structurally identical (hero,
+ * 3-step "how", 6-card features, FAQ grid + FAQPage schema, ~100 lines of
+ * hero CSS) — only the copy differed. Each locale page now supplies a typed
+ * `content` object and this component owns the markup, styles, and schema.
+ *
+ * The EN home (src/pages/index.astro) is intentionally NOT unified here:
+ * it has a richer, structurally different layout (two-phone hero,
+ * screenshots gallery, social-proof bar) — forcing it into this template
+ * would trade duplication for a conditional mega-component.
+ */
+import { Picture } from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+import Button from './Button.astro';
+import Card from './Card.astro';
+import Section from './Section.astro';
+import heroToday from '../assets/screenshots/05-today.png';
+import { APP_STORE_URL, isAppStoreUrlKnown } from '../lib/site';
+
+export interface NordicHomeContent {
+	meta: { title: string; description: string };
+	hero: {
+		kicker: string;
+		heading: string;
+		subline: string;
+		ctaKnown: string;
+		ctaUnknown: string;
+		privacyLabel: string;
+		fineprint: string;
+		imageAlt: string;
+	};
+	how: { title: string; lede: string; steps: { title: string; text: string }[] };
+	features: { title: string; lede: string; cards: { title: string; text: string }[] };
+	faq: { title: string; lede: string; items: { question: string; answer: string }[] };
+}
+
+interface Props {
+	lang: 'da' | 'sv' | 'no';
+	/** Locale-specific hero background, e.g. '/images/unsplash/nordic-1.jpg'. */
+	bgImage: string;
+	content: NordicHomeContent;
+}
+
+const { lang, bgImage, content } = Astro.props;
+
+const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
+const appStoreCtaLabel = appStoreKnown ? content.hero.ctaKnown : content.hero.ctaUnknown;
+
+const faqSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'FAQPage',
+	mainEntity: content.faq.items.map((item) => ({
+		'@type': 'Question',
+		name: item.question,
+		acceptedAnswer: {
+			'@type': 'Answer',
+			text: item.answer,
+		},
+	})),
+};
+---
+
+<Layout title={content.meta.title} description={content.meta.description} canonicalPath={`/${lang}/`}>
+	<script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+	<section class="hero">
+		<div class="nordic-bg" style={`background-image: url('${bgImage}');`}></div>
+		<div class="container hero__inner">
+			<div class="hero__copy reveal">
+				<p class="hero__kicker">{content.hero.kicker}</p>
+				<h1>{content.hero.heading}</h1>
+				<p class="hero__subline">{content.hero.subline}</p>
+
+				<div class="hero__cta">
+					<Button variant="primary" href={APP_STORE_URL} disabled={!appStoreKnown} external={true}>
+						{appStoreCtaLabel}
+					</Button>
+					<Button variant="secondary" href={`/${lang}/privacy`}>{content.hero.privacyLabel}</Button>
+				</div>
+
+				<p class="hero__fineprint">{content.hero.fineprint}</p>
+			</div>
+
+			<div class="hero__visual reveal" aria-hidden="true">
+				<div class="hero__frame anim-float">
+					<Picture
+						src={heroToday}
+						formats={['avif', 'webp']}
+						alt={content.hero.imageAlt}
+						width={393}
+						height={852}
+						densities={[1, 2]}
+						loading="eager"
+						decoding="async"
+						fetchpriority="high"
+					/>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<Section id="how" title={content.how.title} lede={content.how.lede}>
+		<div class="grid-3">
+			{content.how.steps.map((step) => (
+				<Card as="article">
+					<h3>{step.title}</h3>
+					<p>{step.text}</p>
+				</Card>
+			))}
+		</div>
+	</Section>
+
+	<Section id="features" title={content.features.title} lede={content.features.lede}>
+		<div class="grid-3">
+			{content.features.cards.map((card) => (
+				<Card as="article">
+					<h3>{card.title}</h3>
+					<p>{card.text}</p>
+				</Card>
+			))}
+		</div>
+	</Section>
+
+	<Section id="faq" title={content.faq.title} lede={content.faq.lede}>
+		<div class="grid-2">
+			{content.faq.items.map((item) => (
+				<Card as="article">
+					<h3>{item.question}</h3>
+					<p>{item.answer}</p>
+				</Card>
+			))}
+		</div>
+	</Section>
+</Layout>
+
+<style>
+	.hero {
+		position: relative;
+		padding: clamp(80px, 15vw, 160px) 0;
+		min-height: clamp(600px, 80vh, 1000px);
+		display: flex;
+		align-items: center;
+		overflow: hidden;
+	}
+
+	.hero__inner {
+		display: grid;
+		gap: clamp(40px, 6vw, 80px);
+		grid-template-columns: 1.15fr 0.85fr;
+		align-items: center;
+	}
+
+	.hero__kicker {
+		margin: 0 0 var(--space-md);
+		color: var(--primary);
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		font-size: 13px;
+	}
+
+	.hero__subline {
+		margin: var(--space-xl) 0 var(--space-xxxl);
+		color: var(--text-secondary);
+		font-size: clamp(18px, 2vw, 21px);
+		line-height: var(--line-height-relaxed);
+		max-width: 50ch;
+	}
+
+	.hero__cta {
+		display: flex;
+		gap: var(--space-lg);
+		flex-wrap: wrap;
+	}
+
+	.hero__fineprint {
+		margin: var(--space-xxxl) 0 0;
+		color: var(--text-tertiary);
+		font-size: 13px;
+		font-weight: 500;
+	}
+
+	.hero__visual {
+		position: relative;
+		display: flex;
+		justify-content: center;
+	}
+
+	.hero__frame {
+		position: relative;
+		border-radius: var(--radius-xl);
+		border: 1px solid var(--border-glass);
+		background: rgba(255, 255, 255, 0.05);
+		backdrop-filter: blur(20px);
+		padding: 1px;
+		box-shadow: 0 40px 100px rgba(0, 0, 0, 0.25);
+		max-width: 340px;
+		overflow: hidden;
+	}
+
+	.hero__frame img {
+		display: block;
+		width: 100%;
+		height: auto;
+		border-radius: inherit;
+	}
+
+	@media (max-width: 1100px) {
+		.hero__inner {
+			grid-template-columns: 1fr;
+			text-align: center;
+		}
+
+		.hero__copy {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
+
+		.hero__subline {
+			margin-left: auto;
+			margin-right: auto;
+		}
+
+		.hero__cta {
+			justify-content: center;
+		}
+	}
+
+	@media (max-width: 700px) {
+		.grid-2 {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

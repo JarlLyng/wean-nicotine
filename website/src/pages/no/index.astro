@@ -1,277 +1,118 @@
 ---
-import { Picture } from 'astro:assets';
-import Layout from '../../layouts/Layout.astro';
-import heroToday from '../../assets/screenshots/05-today.png';
-import Button from '../../components/Button.astro';
-import Card from '../../components/Card.astro';
-import Section from '../../components/Section.astro';
-import { APP_STORE_URL, isAppStoreUrlKnown, SITE_NAME } from '../../lib/site';
+import NordicHome, { type NordicHomeContent } from '../../components/NordicHome.astro';
+import { SITE_NAME } from '../../lib/site';
 
-const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
-const appStoreCtaLabel = appStoreKnown ? 'Last ned i App Store' : 'Kommer snart i App Store';
-
-const faqItems = [
-	{
-		question: 'Hvordan hjelper Wean Nicotine meg med å kutte ned på snus?',
-		answer: 'Wean Nicotine lager en gradvis nedtrappingsplan basert på ditt nåværende daglige bruk. Hver uke reduseres den daglige kvoten din litt, slik at du kutter ned trinn for trinn i stedet for å utsette deg for bråstopp.',
+const content: NordicHomeContent = {
+	meta: {
+		title: 'Nedtrapping av Snus & Nikotinposer App',
+		description:
+			'Trapp gradvis ned på snus og nikotinposer med en rolig, privat app. Følg dagens kvote, logg bruk med ett trykk, og få hjelp med suget.',
 	},
-	{
-		question: 'Fungerer Wean Nicotine for nikotinposer også?',
-		answer: 'Ja. Wean Nicotine fungerer både for snus og nikotinposer. Nedtrappingsmetoden er den samme uansett hvilket produkt du bruker.',
+	hero: {
+		kicker: 'Rolig. Privat. Ingen skam.',
+		heading: 'Trapp ned i ditt eget tempo.',
+		subline: `${SITE_NAME} er en rolig og privat app som hjelper deg å kutte ned på snus og nikotinposer — helt uten mas eller abonnement.`,
+		ctaKnown: 'Last ned i App Store',
+		ctaUnknown: 'Kommer snart i App Store',
+		privacyLabel: 'Se personvernerklæring',
+		fineprint: 'Ingen konto · Ingen bruksporing · Ingen abonnement · Dataene dine blir på enheten',
+		imageAlt: 'Wean Nicotine app. Idag skjermen.',
 	},
-	{
-		question: 'Er dette medisinsk rådgivning?',
-		answer: 'Nei. Wean Nicotine er et selvhjelpsverktøy for sporing og gradvis nedtrapping. Det gir ikke medisinsk råd eller klinisk behandling.',
+	how: {
+		title: 'Slik fungerer det',
+		lede: 'En enkel og skånsom prosess du greier å holde deg til.',
+		steps: [
+			{
+				title: '1) Sett et utgangspunkt',
+				text: 'Fortell Wean hvor mange poser du bruker per dag og din nåværende pris.',
+			},
+			{
+				title: '2) Følg kvoten',
+				text: 'Få et tydelig tall hver dag og logg med ett trykk: "Brukte en" eller "Stod imot".',
+			},
+			{
+				title: '3) Bruk verktøyene',
+				text: 'Benytt pusteøvelser, refleksjon og se pengene du sparer hver uke.',
+			},
+		],
 	},
-	{
-		question: 'Hvor lagres dataene mine?',
-		answer: 'Alle data forblir på enheten din. Wean Nicotine krever ikke en konto og synkroniserer ikke med nettskyen.',
+	features: {
+		title: 'Viktige verktøy i hverdagen',
+		lede: 'Alt du trenger for å kutte ned gradvis — fri for kontoer, skam og mas.',
+		cards: [
+			{
+				title: 'Interaktiv pust',
+				text: 'Ro ned nervesystemet med 4-7-8, Box Breathing eller Quick Calm vibrasjoner.',
+			},
+			{
+				title: 'Guidet Urge Surfing',
+				text: "En 5-minutters timer som hjelper deg å observere og 'ri ut' suget.",
+			},
+			{
+				title: 'Refleksjons-notater',
+				text: 'Lagre korte notater om dine triggere og fremgang for å forstå dine mønstre.',
+			},
+			{
+				title: 'Økonomisk oversikt',
+				text: 'Se nøyaktig hvor mye du har spart siden du startet — rett på din iPhone.',
+			},
+			{
+				title: 'Personvern først',
+				text: 'Ingen kontoer, ingen skysynkronisering, ingen bruksporing. Loggene og planen din blir på enheten din.',
+			},
+			{
+				title: 'Engangskjøp',
+				text: 'Betal én gang, eier appen for alltid. Ingen abonnementer eller skjulte gebyrer.',
+			},
+		],
 	},
-	{
-		question: 'Kan jeg slette alt?',
-		answer: 'Ja. Bruk "Start forfra" inni appen for å slette alle lokale data, eller slett rett og slett selve appen.',
+	faq: {
+		title: 'Vanlige Spørsmål',
+		lede: 'Gjentatte spørsmål ved reduksjon og sporing av snus og nikotinposer.',
+		items: [
+			{
+				question: 'Hvordan hjelper Wean Nicotine meg med å kutte ned på snus?',
+				answer:
+					'Wean Nicotine lager en gradvis nedtrappingsplan basert på ditt nåværende daglige bruk. Hver uke reduseres den daglige kvoten din litt, slik at du kutter ned trinn for trinn i stedet for å utsette deg for bråstopp.',
+			},
+			{
+				question: 'Fungerer Wean Nicotine for nikotinposer også?',
+				answer:
+					'Ja. Wean Nicotine fungerer både for snus og nikotinposer. Nedtrappingsmetoden er den samme uansett hvilket produkt du bruker.',
+			},
+			{
+				question: 'Er dette medisinsk rådgivning?',
+				answer:
+					'Nei. Wean Nicotine er et selvhjelpsverktøy for sporing og gradvis nedtrapping. Det gir ikke medisinsk råd eller klinisk behandling.',
+			},
+			{
+				question: 'Hvor lagres dataene mine?',
+				answer:
+					'Alle data forblir på enheten din. Wean Nicotine krever ikke en konto og synkroniserer ikke med nettskyen.',
+			},
+			{
+				question: 'Kan jeg slette alt?',
+				answer:
+					'Ja. Bruk "Start forfra" inni appen for å slette alle lokale data, eller slett rett og slett selve appen.',
+			},
+			{
+				question: 'Fungerer Wean Nicotine offline?',
+				answer:
+					'Ja. Wean Nicotine lagrer lokalt, og krever derfor ingen internettforbindelse for grunnleggende funksjoner.',
+			},
+			{
+				question: 'Kan jeg spore nikotinposer uten å opprette konto?',
+				answer:
+					'Ja. Wean Nicotine har ingen kontoer, ingen innlogging og ingen registrering. Du kan starte sporingen umiddelbart.',
+			},
+			{
+				question: 'Hva koster Wean Nicotine?',
+				answer:
+					'Wean Nicotine er et engangskjøp — ingen abonnementer, ingen reklame og ingen salg av data. Du betaler én gang og får alle funksjoner, bygget av en uavhengig soloutvikler.',
+			},
+		],
 	},
-	{
-		question: 'Fungerer Wean Nicotine offline?',
-		answer: 'Ja. Wean Nicotine lagrer lokalt, og krever derfor ingen internettforbindelse for grunnleggende funksjoner.',
-	},
-	{
-		question: 'Kan jeg spore nikotinposer uten å opprette konto?',
-		answer: 'Ja. Wean Nicotine har ingen kontoer, ingen innlogging og ingen registrering. Du kan starte sporingen umiddelbart.',
-	},
-	{
-		question: 'Hva koster Wean Nicotine?',
-		answer: 'Wean Nicotine er et engangskjøp — ingen abonnementer, ingen reklame og ingen salg av data. Du betaler én gang og får alle funksjoner, bygget av en uavhengig soloutvikler.',
-	},
-];
-
-const faqSchema = {
-	'@context': 'https://schema.org',
-	'@type': 'FAQPage',
-	mainEntity: faqItems.map((item) => ({
-		'@type': 'Question',
-		name: item.question,
-		acceptedAnswer: {
-			'@type': 'Answer',
-			text: item.answer,
-		},
-	})),
 };
-
-const screenshots = [
-	{ src: '/screenshots/v1.2/04-triggers.png', alt: 'Startskjerm: Velg vanlige utløsere som stress, etter måltider, eller sosiale situasjoner.', width: 393, height: 852 },
-	{ src: '/screenshots/v1.2/05-today.png', alt: 'Dagens skjerm: daglig kvote med ett-trykks logging.', width: 393, height: 852 },
-	{ src: '/screenshots/v1.2/06-progress.png', alt: 'Fremskritt: Ukentlig statistikk over unngåtte poser og eventuelt sparte penger.', width: 393, height: 852 },
-	{ src: '/screenshots/v1.2/07-tools.png', alt: 'Støtteverktøy: Pusteøvelser, refleksjon og mestringsverktøy mot nikotinsug.', width: 393, height: 852 },
-	{ src: '/screenshots/v1.2/03-price.png', alt: 'Pris per boks: Valgfri oversikt over penger du sparer framover.', width: 393, height: 852 },
-];
 ---
 
-<Layout
-	title="Nedtrapping av Snus & Nikotinposer App"
-	description="Trapp gradvis ned på snus og nikotinposer med en rolig, privat app. Følg dagens kvote, logg bruk med ett trykk, og få hjelp med suget."
-	canonicalPath="/no/"
->
-	<script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
-	<section class="hero">
-		<div class="nordic-bg" style="background-image: url('/images/unsplash/nordic-2.jpg');"></div>
-		<div class="container hero__inner">
-			<div class="hero__copy reveal">
-				<p class="hero__kicker">Rolig. Privat. Ingen skam.</p>
-				<h1>Trapp ned i ditt eget tempo.</h1>
-				<p class="hero__subline">
-					{SITE_NAME} er en rolig og privat app som hjelper deg å kutte ned på snus og nikotinposer — helt uten mas eller abonnement.
-				</p>
-
-				<div class="hero__cta">
-					<Button variant="primary" href={APP_STORE_URL} disabled={!appStoreKnown} external={true}>
-						{appStoreCtaLabel}
-					</Button>
-					<Button variant="secondary" href="/no/privacy">Se personvernerklæring</Button>
-				</div>
-
-				<p class="hero__fineprint">
-					Ingen konto · Ingen bruksporing · Ingen abonnement · Dataene dine blir på enheten
-				</p>
-			</div>
-
-			<div class="hero__visual reveal" aria-hidden="true">
-				<div class="hero__frame anim-float">
-					<Picture
-						src={heroToday}
-						formats={['avif', 'webp']}
-						alt="Wean Nicotine app. Idag skjermen."
-						width={393}
-						height={852}
-						densities={[1, 2]}
-						loading="eager"
-						decoding="async"
-						fetchpriority="high"
-					/>
-				</div>
-			</div>
-		</div>
-	</section>
-
-	<Section id="how" title="Slik fungerer det" lede="En enkel og skånsom prosess du greier å holde deg til.">
-		<div class="grid-3">
-			<Card as="article">
-				<h3>1) Sett et utgangspunkt</h3>
-				<p>Fortell Wean hvor mange poser du bruker per dag og din nåværende pris.</p>
-			</Card>
-			<Card as="article">
-				<h3>2) Følg kvoten</h3>
-				<p>Få et tydelig tall hver dag og logg med ett trykk: "Brukte en" eller "Stod imot".</p>
-			</Card>
-			<Card as="article">
-				<h3>3) Bruk verktøyene</h3>
-				<p>Benytt pusteøvelser, refleksjon og se pengene du sparer hver uke.</p>
-			</Card>
-		</div>
-	</Section>
-
-	<Section
-		id="features"
-		title="Viktige verktøy i hverdagen"
-		lede="Alt du trenger for å kutte ned gradvis — fri for kontoer, skam og mas."
-	>
-		<div class="grid-3">
-			<Card as="article">
-				<h3>Interaktiv pust</h3>
-				<p>Ro ned nervesystemet med 4-7-8, Box Breathing eller Quick Calm vibrasjoner.</p>
-			</Card>
-			<Card as="article">
-				<h3>Guidet Urge Surfing</h3>
-				<p>En 5-minutters timer som hjelper deg å observere og 'ri ut' suget.</p>
-			</Card>
-			<Card as="article">
-				<h3>Refleksjons-notater</h3>
-				<p>Lagre korte notater om dine triggere og fremgang for å forstå dine mønstre.</p>
-			</Card>
-			<Card as="article">
-				<h3>Økonomisk oversikt</h3>
-				<p>Se nøyaktig hvor mye du har spart siden du startet — rett på din iPhone.</p>
-			</Card>
-			<Card as="article">
-				<h3>Personvern først</h3>
-				<p>Ingen kontoer, ingen skysynkronisering, ingen bruksporing. Loggene og planen din blir på enheten din.</p>
-			</Card>
-			<Card as="article">
-				<h3>Engangskjøp</h3>
-				<p>Betal én gang, eier appen for alltid. Ingen abonnementer eller skjulte gebyrer.</p>
-			</Card>
-		</div>
-	</Section>
-
-	<Section id="faq" title="Vanlige Spørsmål" lede="Gjentatte spørsmål ved reduksjon og sporing av snus og nikotinposer.">
-		<div class="grid-2">
-			{faqItems.map((item) => (
-				<Card as="article">
-					<h3>{item.question}</h3>
-					<p>{item.answer}</p>
-				</Card>
-			))}
-		</div>
-	</Section>
-</Layout>
-
-<style>
-	.hero {
-		position: relative;
-		padding: clamp(80px, 15vw, 160px) 0;
-		min-height: clamp(600px, 80vh, 1000px);
-		display: flex;
-		align-items: center;
-		overflow: hidden;
-	}
-
-	.hero__inner {
-		display: grid;
-		gap: clamp(40px, 6vw, 80px);
-		grid-template-columns: 1.15fr 0.85fr;
-		align-items: center;
-	}
-
-	.hero__kicker {
-		margin: 0 0 var(--space-md);
-		color: var(--primary);
-		font-weight: 700;
-		text-transform: uppercase;
-		letter-spacing: 0.1em;
-		font-size: 13px;
-	}
-
-	.hero__subline {
-		margin: var(--space-xl) 0 var(--space-xxxl);
-		color: var(--text-secondary);
-		font-size: clamp(18px, 2vw, 21px);
-		line-height: var(--line-height-relaxed);
-		max-width: 50ch;
-	}
-
-	.hero__cta {
-		display: flex;
-		gap: var(--space-lg);
-		flex-wrap: wrap;
-	}
-
-	.hero__fineprint {
-		margin: var(--space-xxxl) 0 0;
-		color: var(--text-tertiary);
-		font-size: 13px;
-		font-weight: 500;
-	}
-
-	.hero__visual {
-		position: relative;
-		display: flex;
-		justify-content: center;
-	}
-
-	.hero__frame {
-		position: relative;
-		border-radius: var(--radius-xl);
-		border: 1px solid var(--border-glass);
-		background: rgba(255, 255, 255, 0.05);
-		backdrop-filter: blur(20px);
-		padding: 1px;
-		box-shadow: 0 40px 100px rgba(0, 0, 0, 0.25);
-		max-width: 340px;
-		overflow: hidden;
-	}
-
-	.hero__frame img {
-		display: block;
-		width: 100%;
-		height: auto;
-		border-radius: inherit;
-	}
-
-	@media (max-width: 1100px) {
-		.hero__inner {
-			grid-template-columns: 1fr;
-			text-align: center;
-		}
-
-		.hero__copy {
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-		}
-
-		.hero__subline {
-			margin-left: auto;
-			margin-right: auto;
-		}
-
-		.hero__cta {
-			justify-content: center;
-		}
-	}
-
-	@media (max-width: 700px) {
-		.grid-2 {
-			grid-template-columns: 1fr;
-		}
-	}
-</style>
+<NordicHome lang="no" bgImage="/images/unsplash/nordic-2.jpg" content={content} />
