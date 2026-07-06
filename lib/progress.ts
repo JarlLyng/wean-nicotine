@@ -194,23 +194,27 @@ export async function calculateTotalProgressAndMilestones(
     endDate: today.getTime(),
   });
 
-  // Partition and sort logs in one pass
+  // Partition logs in one pass
   const usedLogs: LogEntry[] = [];
   const resistedLogs: LogEntry[] = [];
   for (const log of logs) {
     if (log.type === 'pouch_used') usedLogs.push(log);
     else if (log.type === 'craving_resisted') resistedLogs.push(log);
   }
-  resistedLogs.sort((a, b) => a.timestamp - b.timestamp);
 
   const totalUsed = usedLogs.length;
   const totalCravingsResisted = resistedLogs.length;
 
-  // Group used logs by day for O(1) lookup
+  // Group logs by day for O(1) lookup in the day-walk
   const usedCountsByDay = new Map<string, number>();
   for (const log of usedLogs) {
     const dayKey = toDayKey(new Date(log.timestamp));
     usedCountsByDay.set(dayKey, (usedCountsByDay.get(dayKey) || 0) + 1);
+  }
+  const resistedCountsByDay = new Map<string, number>();
+  for (const log of resistedLogs) {
+    const dayKey = toDayKey(new Date(log.timestamp));
+    resistedCountsByDay.set(dayKey, (resistedCountsByDay.get(dayKey) || 0) + 1);
   }
 
   const days = getDaysInRange(startDate, today);
@@ -222,19 +226,24 @@ export async function calculateTotalProgressAndMilestones(
 
   const pouchThresholds = POUCH_MILESTONE_THRESHOLDS;
   const moneyThresholds = settings.pricePerCan ? MONEY_MILESTONE_THRESHOLDS : [];
+  const cravingThresholds = CRAVING_MILESTONE_THRESHOLDS;
   const remainingPouchThresholds = new Set(pouchThresholds);
   const remainingMoneyThresholds = new Set(moneyThresholds);
+  const remainingCravingThresholds = new Set(cravingThresholds);
   const pouchMilestoneDates = new Map<number, number>();
   const moneyMilestoneDates = new Map<number, number>();
+  const cravingMilestoneDates = new Map<number, number>();
 
   let cumBase = 0;
   let cumUsed = 0;
+  let cumResisted = 0;
 
   for (const day of days) {
     const dayKey = toDayKey(day);
     const dayUsed = usedCountsByDay.get(dayKey) ?? 0;
     cumBase += settings.baselinePouchesPerDay;
     cumUsed += dayUsed;
+    cumResisted += resistedCountsByDay.get(dayKey) ?? 0;
     const avoided = cumBase - cumUsed;
 
     // First day under limit
@@ -270,6 +279,15 @@ export async function calculateTotalProgressAndMilestones(
         }
       }
     }
+
+    // Craving thresholds — same day-walk semantics as pouch/money (#92):
+    // achievedAt is the day the cumulative count first crossed the threshold.
+    for (const t of [...remainingCravingThresholds]) {
+      if (cumResisted >= t) {
+        cravingMilestoneDates.set(t, day.getTime());
+        remainingCravingThresholds.delete(t);
+      }
+    }
   }
 
   const totalPouchesAvoided = Math.max(0, cumBase - cumUsed);
@@ -297,7 +315,6 @@ export async function calculateTotalProgressAndMilestones(
     }
   }
 
-  const cravingThresholds = CRAVING_MILESTONE_THRESHOLDS;
   for (const threshold of cravingThresholds) {
     if (totalCravingsResisted >= threshold) {
       milestones.push({
@@ -305,7 +322,7 @@ export async function calculateTotalProgressAndMilestones(
         type: 'cravings_resisted',
         title: `${threshold} Cravings Resisted`,
         description: `You've resisted ${threshold} cravings. That's real progress.`,
-        achievedAt: resistedLogs[threshold - 1].timestamp,
+        achievedAt: cravingMilestoneDates.get(threshold) ?? today.getTime(),
         value: totalCravingsResisted,
       });
     }
