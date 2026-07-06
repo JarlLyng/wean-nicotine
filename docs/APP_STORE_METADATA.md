@@ -44,7 +44,99 @@ Alternativer:
 
 ---
 
-## iOS App Version 1.4.1 — Live in App Store (build 19, approved June 2026)
+## iOS App Version 1.5.0 — Submitted (build 21, awaiting review July 2026)
+
+Feature release: usage-pattern insight, a whole-pouch daily target, a gentle pace suggestion, and a goal-reached celebration. Build 20 was superseded by build 21 before release to fold in refreshed app icons.
+
+### Promotional Text (valgfrit, max 170 tegn)
+
+Kan ændres uden ny version. Evergreen-versionerne fra 1.4.1-sektionen gælder stadig; nedenstående er release-specifikke rotationer for 1.5.0.
+
+**English (release-specific):**
+
+```
+Now with usage patterns, a whole-pouch daily target, and a calm celebration when you reach your goal. Your pace, your data, your phone.
+```
+
+**Danish (release-specific):**
+
+```
+Nu med brugsmønstre, et dagligt mål i hele portioner og en rolig fejring når du når dit mål. Dit tempo, dine data, din iPhone.
+```
+
+**Swedish (release-specific):**
+
+```
+Nu med användningsmönster, ett dagligt mål i hela påsar och ett lugnt firande när du når ditt mål. Din takt, dina data, din iPhone.
+```
+
+**Norwegian (release-specific):**
+
+```
+Nå med bruksmønstre, et daglig mål i hele porsjoner og en rolig feiring når du når målet ditt. Ditt tempo, dine data, din iPhone.
+```
+
+### What's New (v1.5.0)
+
+**English:**
+
+```
+See your patterns and reach your goal — calm and private as ever.
+
+• Tag what set off a pouch — one optional tap, never required
+• New Patterns view: your toughest times of day and most common triggers
+• Your daily target now shows whole pouches, not decimals
+• A gentle nudge if your pace looks too fast — ease it anytime
+• A quiet celebration the day you reach your goal
+• Refreshed app icon
+• Fixes and reliability improvements behind the scenes
+```
+
+**Danish:**
+
+```
+Se dine mønstre og nå dit mål — roligt og privat som altid.
+
+• Tag hvad der udløste en portion — ét valgfrit tryk, aldrig krævet
+• Nyt Mønstre-overblik: dine sværeste tidspunkter og hyppigste triggere
+• Dit daglige mål vises nu i hele portioner, ikke decimaler
+• Et blidt vink hvis dit tempo ser for hurtigt ud — sæt det ned når som helst
+• En rolig fejring den dag du når dit mål
+• Opdateret app-ikon
+• Fejlrettelser og pålidelighedsforbedringer bag kulisserne
+```
+
+**Swedish:**
+
+```
+Se dina mönster och nå ditt mål — lugnt och privat som alltid.
+
+• Tagga vad som utlöste en påse — ett valfritt tryck, aldrig ett krav
+• Ny Mönster-vy: dina svåraste tider på dygnet och vanligaste triggers
+• Ditt dagliga mål visas nu i hela påsar, inte decimaler
+• En mild påminnelse om din takt ser för snabb ut — sänk den när du vill
+• Ett lugnt firande den dag du når ditt mål
+• Uppdaterad appikon
+• Buggfixar och pålitlighetsförbättringar bakom kulisserna
+```
+
+**Norwegian:**
+
+```
+Se mønstrene dine og nå målet ditt — rolig og privat som alltid.
+
+• Merk hva som utløste en porsjon — ett valgfritt trykk, aldri påkrevd
+• Ny Mønster-oversikt: dine vanskeligste tider på døgnet og vanligste triggere
+• Det daglige målet ditt vises nå i hele porsjoner, ikke desimaler
+• Et mildt vink hvis tempoet ditt ser for raskt ut — senk det når som helst
+• En rolig feiring den dagen du når målet ditt
+• Oppdatert app-ikon
+• Feilrettinger og pålitelighetsforbedringer bak kulissene
+```
+
+---
+
+## iOS App Version 1.4.1 — Live in App Store (build 19, approved June 2026; 1.5.0 pending review)
 
 Hotfix release on top of v1.4.0/build 18 — see "Known regression in 1.4.0" at the bottom of this section.
 
