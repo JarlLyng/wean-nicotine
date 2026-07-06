@@ -103,8 +103,8 @@ Update when:
 ### Navigation model
 
 - `app/(onboarding)/`: welcome, baseline, pace (3–15% weekly reduction), price, triggers — 4 setup steps
-- `app/(tabs)/home.tsx`: daily allowance and quick logging; data layer lives in [`hooks/useHomeData.ts`](../hooks/useHomeData.ts); undo toast after every log entry
-- `app/(tabs)/progress.tsx`: progress summary with 7-day bar chart, trend tracking, and milestones
+- `app/(tabs)/home.tsx`: daily allowance and quick logging; data layer lives in [`hooks/useHomeData.ts`](../hooks/useHomeData.ts); 10-second undo toast after every log entry; optional post-log trigger-tag row; a gentle pace-adjustment nudge and a one-time goal-reached celebration surface here when their conditions are met
+- `app/(tabs)/progress.tsx`: progress summary with 7-day bar chart, trend tracking, milestones, and a usage-pattern card (time-of-day + trigger breakdown)
 - `app/(tabs)/tools/`: breathing, urge-surfing, reflection support flows
 - `app/(tabs)/settings/`: notifications, theme, edit plan (baseline/pace/price), start over
 
@@ -113,7 +113,8 @@ Update when:
 - [`lib/design.ts`](../lib/design.ts) defines the IAMJARL Design System tokens (aligned with the upstream v1.x source of truth at <https://github.com/JarlLyng/iamjarl-design>).
 - [`lib/theme.ts`](../lib/theme.ts) exposes backward-compatible theme helpers.
 - [`components/Screen.tsx`](../components/Screen.tsx) is a content wrapper (no title/SafeAreaView — native headers handle that).
-- `components/ui/` contains reusable primitives: `Button` (with haptics), `Card`, `ProgressRing`, `Icon` (Phosphor), `StatCard`, `IconSymbol` (SF Symbols for tabs), `Toast` (transient notification with optional action).
+- `components/ui/` contains reusable primitives: `Button` (with haptics), `Card`, `ProgressRing`, `Icon` (Phosphor), `Chip`, `StatCard`, `IconSymbol` (SF Symbols for tabs), `Toast` (transient notification with optional action).
+- `components/` also holds feature-scoped, non-primitive blocks composed onto screens: `TriggerTagRow`, `PatternsCard`, `PaceNudge`, `GoalReachedCard` (Home/Progress), and `Screen`.
 - Navigation uses native iOS tab bar (SF Symbols) and native Expo Router Stack headers with Large Title support.
 - React Compiler is enabled (`reactCompiler: true`) for automatic memoization.
 
@@ -186,14 +187,18 @@ Important details:
 
 - Only full weeks count toward reduction.
 - The reduction percent is clamped to `0..100`.
-- The result is rounded to one decimal place.
+- The result is rounded to one decimal place (this precision is load-bearing — flooring the stored value would stall gentle paces).
 - The result is clamped so it never falls below `0` or above baseline.
+- **Display vs. math:** the stored allowance keeps its decimal, but the Today screen shows the whole-pouch FLOOR via `getDisplayAllowance()` — you can't use half a pouch, and flooring is the forgiving direction (staying under the shown number keeps you under the real one). The goal-reached celebration triggers on `getDisplayAllowance() === 0`.
+- `estimateWeeksToZero()` iterates this exact formula (rounding + display floor) so the onboarding Pace preview can promise a timeline that provably matches what the app will do.
 
 ### Progress interpretation
 
 - The home screen compares today’s `pouch_used` count with the current allowance.
 - “Avoided” values are derived relative to the user’s baseline, not from an externally stored target.
 - All allowance computation reads `TaperSettings` directly via `lib/taper-plan.ts` — there is no cached plan row to regenerate.
+- `lib/progress.ts` also derives non-milestone insight: `getUsagePatterns()` (pouches by part-of-day and by tagged trigger, trailing 30 days) and `assessPace()` (flags when trailing-2-week usage runs ≥20% over allowance, driving the Home pace nudge). Both have pure, unit-tested cores (`computeUsagePatterns` / `computePaceAssessment`).
+- Milestone achievement times use one shared cumulative day-walk across pouch, money, **and** craving thresholds (unified in #92).
 
 ### Notifications
 
@@ -201,17 +206,19 @@ Canonical implementation: [`lib/notifications.ts`](../lib/notifications.ts)
 
 - Supports a daily check-in reminder.
 - Supports a single daily trigger reminder based on selected triggers.
-- Existing reminders are cancelled before replacement to avoid duplicate schedules.
+- Both are scheduled with **stable identifiers** (`daily-checkin` / `trigger-reminder`), so re-scheduling atomically replaces the request and concurrent schedules can't duplicate (#96). The cancel helpers hit the stable id directly and keep a `data.type` sweep only to clean up legacy random-id requests from pre-#96 installs.
+- In-app review prompts go through `lib/store-review.ts` (`maybeRequestReview`), gated on plan age ≥14 days, ≥90 days between asks, and StoreKit availability. It records before requesting so a failed prompt never double-asks. No network calls, no user data.
 
 ## Testing
 
 - `jest-expo` preset configured in `package.json`.
-- Unit tests live under `lib/__tests__/`.
-  - [`taper-plan.test.ts`](../lib/__tests__/taper-plan.test.ts): allowance math, default plan generation, edge cases.
-  - [`progress.test.ts`](../lib/__tests__/progress.test.ts): weekly progress, total + milestone detection, week boundaries. DB layer (`getLogEntries`) is mocked.
+- Unit tests live under `lib/__tests__/` (6 suites).
+  - [`taper-plan.test.ts`](../lib/__tests__/taper-plan.test.ts): allowance math, default plan generation, whole-pouch display floor, weeks-to-zero estimate, edge cases.
+  - [`progress.test.ts`](../lib/__tests__/progress.test.ts): weekly progress, total + milestone detection (unified day-walk), usage patterns, pace assessment, week boundaries. DB layer (`getLogEntries`) is mocked.
   - [`cost-savings.test.ts`](../lib/__tests__/cost-savings.test.ts): currency-aware savings projections.
-  - [`notifications.test.ts`](../lib/__tests__/notifications.test.ts): reminder scheduling and cancel logic.
+  - [`notifications.test.ts`](../lib/__tests__/notifications.test.ts): reminder scheduling + cancel logic (stable identifiers + legacy sweep).
   - [`sentry-scrubber.test.ts`](../lib/__tests__/sentry-scrubber.test.ts): PII scrubbing.
+  - [`store-review.test.ts`](../lib/__tests__/store-review.test.ts): review-prompt gate logic.
 - Run tests: `npm test` or `npm run test:watch`.
 - Target: pure functions in `lib/` are fully covered. Screen and hook tests are not part of the baseline.
 
@@ -233,6 +240,7 @@ Canonical implementation: [`lib/notifications.ts`](../lib/notifications.ts)
 - `website/src/pages/support.astro`: support page
 - `website/src/pages/*/index.astro`: SEO landing pages
 - `website/src/pages/da`, `website/src/pages/no`, `website/src/pages/sv`: localized folders with SEO-optimized pathnames
+- [`website/src/components/NordicHome.astro`](../website/src/components/NordicHome.astro): shared da/sv/no home template — those three `index.astro` pages are content-only objects passed in (the EN home is standalone; it's structurally richer). Hero images are optimized to AVIF/WebP via `astro:assets` (`Picture`) from `website/src/assets/`.
 
 ### Strategy linkage
 
@@ -253,9 +261,11 @@ SEO/ASO strategy, keyword targets, competitive positioning, and channel plans ar
 - Design tokens: [`lib/design.ts`](../lib/design.ts), [`lib/theme.ts`](../lib/theme.ts)
 - Persistence: [`lib/db.ts`](../lib/db.ts) and `lib/db-*.ts`
 - Home screen data layer: [`hooks/useHomeData.ts`](../hooks/useHomeData.ts)
+- Shared magic numbers / tunables (pouches-per-can, milestone thresholds, notification + pace-nudge + review-prompt constants): [`lib/constants.ts`](../lib/constants.ts)
+- In-app review prompt: [`lib/store-review.ts`](../lib/store-review.ts)
 - Notifications: [`lib/notifications.ts`](../lib/notifications.ts)
 - Error reporting: [`lib/sentry.ts`](../lib/sentry.ts) — includes the PII scrubber and `sendDefaultPii: false`. Privacy hardening details in [`SENTRY.md`](./SENTRY.md).
-- Tests: `lib/__tests__/` (jest-expo, 60 tests across 5 suites). Run via `npm test` or `npm run check`.
+- Tests: `lib/__tests__/` (jest-expo, 94 tests across 6 suites). Run via `npm test` or `npm run check`.
 - Task tracking: [GitHub Issues](https://github.com/JarlLyng/wean-nicotine/issues) with labels `P1`/`P2`/`P3`, `seo`, `aso`, `website`, `marketing`, `enhancement`.
 - Outside contributions: [`CONTRIBUTING.md`](../CONTRIBUTING.md) sets expectations for bug reports, feature requests, and PRs.
 - Security: [`SECURITY.md`](../SECURITY.md) for vulnerability disclosure. Repo has CodeQL + Dependabot + secret scanning enabled.

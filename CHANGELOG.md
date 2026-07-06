@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+Merged to `main` after build 21 was cut, so these are **not** in the 1.5.0 binary currently in review — they ride the next build.
+
+### Added
+- **Expected-timeline preview on the Pace onboarding step.** Selecting a pace now shows "From N a day at X%, you'd reach zero in about W weeks (~M months)", computed from the exact production formula so it matches what the app will actually do. (#123)
+
+### Changed
+- Home undo window extended from 5s to 10s — a mistap writes real data, and the old window was tight for users with motor impairments. (#124)
+- Softened the baseline onboarding copy/hint: realistic placeholder, the 1–100 range surfaced before submit, and a gentler validation message. (#131)
+- Progress empty-state now uses a Phosphor icon instead of a 📊 emoji, matching the icon system. (#135)
+
+### Fixed
+- Closed a notification cancel/schedule race by scheduling with stable identifiers, so rapid reminder toggles can no longer leave duplicate reminders. (#96)
+
+### Internal
+- Toast surface/text moved to `static.*` design tokens (#133); milestone achievement-time semantics unified into one day-walk across pouch/money/craving thresholds (#92); removed dead `webpack.config.js` (#116). Lint is now warning-free.
+- Website (deploys independently of the app): hero LCP image → AVIF/WebP via `astro:assets` (#142); da/sv/no homes DRYed into a shared `NordicHome` component (#100); internal links from the top-ranking blog article into the taper cluster (#237).
+
 ## [1.5.0] - 2026-07-05
 
 iOS build 21 (build 20 was superseded before release to fold in refreshed app icons). Theme: insight + the finish line — the app now delivers the usage-pattern promises from the blog, acknowledges reaching the goal, and gently helps when the pace doesn't fit.
