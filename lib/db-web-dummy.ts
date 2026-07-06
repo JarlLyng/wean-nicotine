@@ -1,6 +1,14 @@
 /**
  * Dummy data for web preview (Wean Nicotine)
- * Provides realistic sample data so the UI can be viewed on web
+ * Provides realistic sample data so the UI can be viewed on web.
+ *
+ * Web-support files and their distinct roles (#116):
+ * - THIS file: in-memory fake data so the UI is interactive in design preview.
+ *   Consumed by the `Platform.OS === 'web'` guard clauses in db-settings.ts /
+ *   db-log-entries.ts.
+ * - lib/db-web-stub.js: module-level replacement for `expo-sqlite` itself,
+ *   wired up in metro.config.js so Metro never bundles the WASM worker on web.
+ * They are not duplicates — one fakes data, the other fakes the native module.
  */
 
 import type { TaperSettings, LogEntry, LogEntryType } from './models';
