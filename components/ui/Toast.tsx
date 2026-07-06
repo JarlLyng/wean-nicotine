@@ -13,19 +13,14 @@
  */
 
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, Pressable, ViewStyle , Platform } from 'react-native';
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
-} from 'react-native-reanimated';
+import { View, Text, StyleSheet, Pressable, ViewStyle, Platform } from 'react-native';
+import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 import { spacing, borderRadius, shadows } from '@/lib/theme';
 import { useDesignTokens, typography } from '@/lib/design';
 
-// Fixed surface colors so contrast is predictable regardless of theme
-const TOAST_SURFACE = '#1C1C1E';
-const TOAST_TEXT = '#FFFFFF';
+// Surface/text come from static design tokens (colors.static.*) so contrast
+// is predictable regardless of theme — see #133.
 
 interface ToastProps {
   visible: boolean;
@@ -84,16 +79,13 @@ export function Toast({
   };
 
   return (
-    <Animated.View
-      pointerEvents="box-none"
-      style={[styles.wrapper, animatedStyle, style]}
-    >
+    <Animated.View pointerEvents="box-none" style={[styles.wrapper, animatedStyle, style]}>
       <View
         style={[
           styles.toast,
           {
-            backgroundColor: TOAST_SURFACE,
-            shadowColor: '#000000',
+            backgroundColor: colors.static.toastSurface,
+            shadowColor: colors.static.black,
           },
           shadows.md,
         ]}
@@ -104,7 +96,7 @@ export function Toast({
           style={[
             styles.message,
             {
-              color: TOAST_TEXT,
+              color: colors.static.white,
               fontSize: typography.sizes.base,
               lineHeight: typography.lineHeights.normal,
             },
@@ -120,10 +112,7 @@ export function Toast({
             accessibilityRole="button"
             accessibilityLabel={actionLabel}
             hitSlop={8}
-            style={({ pressed }) => [
-              styles.action,
-              pressed && { opacity: 0.7 },
-            ]}
+            style={({ pressed }) => [styles.action, pressed && { opacity: 0.7 }]}
           >
             <Text
               style={[

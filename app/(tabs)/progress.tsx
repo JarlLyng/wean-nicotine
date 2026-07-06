@@ -377,7 +377,9 @@ export default function ProgressScreen() {
     return (
       <Screen>
         <View style={s.emptyContainer}>
-          <Text style={s.emptyEmoji}>📊</Text>
+          <View style={s.emptyIcon}>
+            <Icon name="chart-line-up" size={48} color={colors.text.tertiary} weight="duotone" />
+          </View>
           <Text style={s.emptyTitle}>No progress yet</Text>
           <Text style={s.emptyText}>
             Complete onboarding and start logging to see your progress here.
@@ -635,10 +637,9 @@ const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) =>
       alignItems: 'center',
       padding: spacing.xl,
     } as ViewStyle,
-    emptyEmoji: {
-      fontSize: 48,
+    emptyIcon: {
       marginBottom: spacing.md,
-    } as TextStyle,
+    } as ViewStyle,
     emptyTitle: {
       ...typography.xl,
       fontWeight: '600',
