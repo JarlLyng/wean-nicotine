@@ -70,11 +70,15 @@ describe('scheduleTriggerReminders', () => {
     const id = await scheduleTriggerReminders(['Stress'], 19, 30);
 
     expect(id).toBe('new-1');
-    // The daily_checkin reminder must be untouched.
-    expect(mockCancel).toHaveBeenCalledTimes(1);
+    // Stable-id cancel + legacy sweep of 'old-1'; daily_checkin untouched.
+    expect(mockCancel).toHaveBeenCalledTimes(2);
+    expect(mockCancel).toHaveBeenCalledWith('trigger-reminder');
     expect(mockCancel).toHaveBeenCalledWith('old-1');
-    // And we schedule exactly one new reminder.
+    expect(mockCancel).not.toHaveBeenCalledWith('keep-1');
+    // And we schedule exactly one new reminder — under the stable id (#96),
+    // so concurrent schedules replace rather than duplicate.
     expect(mockSchedule).toHaveBeenCalledTimes(1);
+    expect(mockSchedule.mock.calls[0][0].identifier).toBe('trigger-reminder');
   });
 
   it('uses default 20:00 when hour/minute are not provided', async () => {
@@ -129,19 +133,22 @@ describe('cancelTriggerReminders', () => {
 
     await cancelTriggerReminders();
 
-    expect(mockCancel).toHaveBeenCalledTimes(2);
+    // Stable-id cancel first, then the two legacy trigger reminders.
+    expect(mockCancel).toHaveBeenCalledTimes(3);
+    expect(mockCancel).toHaveBeenCalledWith('trigger-reminder');
     expect(mockCancel).toHaveBeenCalledWith('t-1');
     expect(mockCancel).toHaveBeenCalledWith('t-2');
     expect(mockCancel).not.toHaveBeenCalledWith('d-1');
     expect(mockCancel).not.toHaveBeenCalledWith('o-1');
   });
 
-  it('is a no-op when there are no trigger reminders', async () => {
+  it('only issues the stable-id cancel when no legacy reminders exist', async () => {
     mockGetAll.mockResolvedValue([fakeScheduled('d-1', 'daily_checkin')]);
 
     await cancelTriggerReminders();
 
-    expect(mockCancel).not.toHaveBeenCalled();
+    expect(mockCancel).toHaveBeenCalledTimes(1);
+    expect(mockCancel).toHaveBeenCalledWith('trigger-reminder');
   });
 });
 
@@ -154,8 +161,11 @@ describe('cancelDailyCheckIn', () => {
 
     await cancelDailyCheckIn();
 
-    expect(mockCancel).toHaveBeenCalledTimes(1);
+    // Stable-id cancel first, then the legacy check-in.
+    expect(mockCancel).toHaveBeenCalledTimes(2);
+    expect(mockCancel).toHaveBeenCalledWith('daily-checkin');
     expect(mockCancel).toHaveBeenCalledWith('d-1');
+    expect(mockCancel).not.toHaveBeenCalledWith('t-1');
   });
 });
 
@@ -169,6 +179,7 @@ describe('scheduleDailyCheckIn', () => {
     expect(id).toBe('new-d');
     expect(mockCancel).toHaveBeenCalledWith('old-d');
     const call = mockSchedule.mock.calls[0][0];
+    expect(call.identifier).toBe('daily-checkin');
     expect((call.trigger as any).hour).toBe(8);
     expect((call.trigger as any).minute).toBe(30);
     expect((call.content as any).data.type).toBe('daily_checkin');
