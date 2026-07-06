@@ -36,7 +36,7 @@ module.exports = {
       // identifier after an app is published. Changing it would orphan
       // the App Store listing and break updates for existing users.
       bundleIdentifier: 'com.iamjarl.taper',
-      buildNumber: '20',
+      buildNumber: '21',
       icon: {
         light: './assets/images/ios-light.png',
         dark: './assets/images/ios-dark.png',
