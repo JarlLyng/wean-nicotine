@@ -45,6 +45,37 @@ export function getDisplayAllowance(allowance: number): number {
 }
 
 /**
+ * Estimate how many weeks until the DISPLAYED daily target reaches zero
+ * (#123). Iterates the exact same math as calculateDailyAllowance —
+ * 1-decimal rounding, then whole-pouch flooring via getDisplayAllowance —
+ * so the onboarding preview can never drift from what the app will
+ * actually do (the goal celebration in #223 triggers on the same
+ * condition).
+ *
+ * Returns null when the pace can never reach zero (0%) or exceeds
+ * `maxWeeks` (10 years — unreachable for any real pace/baseline combo).
+ */
+export function estimateWeeksToZero(
+  baselinePouchesPerDay: number,
+  weeklyReductionPercent: number,
+  maxWeeks: number = 520,
+): number | null {
+  if (baselinePouchesPerDay <= 0) return 0;
+  const clampedPercent = Math.max(0, Math.min(100, weeklyReductionPercent));
+  if (clampedPercent === 0) return null;
+
+  for (let week = 0; week <= maxWeeks; week++) {
+    const factor = Math.pow(1 - clampedPercent / 100, week);
+    const allowance = Math.max(
+      0,
+      Math.min(baselinePouchesPerDay, Math.round(baselinePouchesPerDay * factor * 10) / 10),
+    );
+    if (getDisplayAllowance(allowance) === 0) return week;
+  }
+  return null;
+}
+
+/**
  * Get number of weeks between two dates
  */
 function getWeeksBetween(startDate: Date, endDate: Date): number {

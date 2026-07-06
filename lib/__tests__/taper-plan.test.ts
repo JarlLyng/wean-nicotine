@@ -10,6 +10,7 @@
 
 import {
   calculateDailyAllowance,
+  estimateWeeksToZero,
   generateDefaultTaperPlan,
   getDisplayAllowance,
 } from '../taper-plan';
@@ -206,5 +207,51 @@ describe('getDisplayAllowance', () => {
     // guarantee staying under the real allowance.
     expect(getDisplayAllowance(3.5)).toBe(3);
     expect(getDisplayAllowance(3.99)).toBe(3);
+  });
+});
+
+describe('estimateWeeksToZero', () => {
+  it('matches the analytic crossing for the default pace (12/day at 5%)', () => {
+    // Displayed target hits 0 when the 1-decimal-rounded allowance < 1,
+    // i.e. raw < 0.95: 12 * 0.95^w < 0.95 -> w >= 50.
+    expect(estimateWeeksToZero(12, 5)).toBe(50);
+  });
+
+  it('reaches zero much faster at aggressive paces', () => {
+    // 12 * 0.85^w < 0.95 -> w >= 16
+    expect(estimateWeeksToZero(12, 15)).toBe(16);
+  });
+
+  it('takes longer at gentle paces', () => {
+    // 10 * 0.97^w < 0.95 -> w >= 78
+    expect(estimateWeeksToZero(10, 3)).toBe(78);
+  });
+
+  it('returns null when the pace is 0% (never reaches zero)', () => {
+    expect(estimateWeeksToZero(12, 0)).toBeNull();
+  });
+
+  it('returns 0 for a zero baseline', () => {
+    expect(estimateWeeksToZero(0, 5)).toBe(0);
+  });
+
+  it('agrees with the live formula: the returned week really displays as 0', () => {
+    const weeks = estimateWeeksToZero(12, 5)!;
+    const start = new Date('2026-01-05T00:00:00');
+    const settings = {
+      id: 1,
+      baselinePouchesPerDay: 12,
+      weeklyReductionPercent: 5,
+      startDate: start.getTime(),
+      createdAt: start.getTime(),
+      updatedAt: start.getTime(),
+    };
+    const atCrossing = new Date(start);
+    atCrossing.setDate(start.getDate() + weeks * 7);
+    const weekBefore = new Date(start);
+    weekBefore.setDate(start.getDate() + (weeks - 1) * 7);
+
+    expect(getDisplayAllowance(calculateDailyAllowance(settings, atCrossing))).toBe(0);
+    expect(getDisplayAllowance(calculateDailyAllowance(settings, weekBefore))).toBeGreaterThan(0);
   });
 });

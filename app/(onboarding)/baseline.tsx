@@ -7,7 +7,16 @@ import { useColorScheme } from '@/hooks/use-color-scheme';
 import { spacing } from '@/lib/theme';
 import { useRouter } from 'expo-router';
 import { useState, useMemo } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextStyle,
+  View,
+  ViewStyle,
+} from 'react-native';
 
 export default function BaselineScreen() {
   useDesignTokens();
@@ -17,14 +26,14 @@ export default function BaselineScreen() {
   const [error, setError] = useState('');
   const s = useMemo(
     () => createStyles(getColors(colorScheme === 'dark' ? 'dark' : 'light')),
-    [colorScheme]
+    [colorScheme],
   );
 
   const handleNext = () => {
     const value = parseInt(baseline, 10);
 
     if (!baseline || isNaN(value) || value < 1 || value > 100) {
-      setError('Enter a number between 1 and 100');
+      setError('Try a whole number between 1 and 100.');
       return;
     }
 
@@ -41,12 +50,14 @@ export default function BaselineScreen() {
       <KeyboardAvoidingView
         style={s.flex}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={100}>
+        keyboardVerticalOffset={100}
+      >
         <ScrollView
           contentContainerStyle={s.scrollContent}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
-          keyboardDismissMode="on-drag">
+          keyboardDismissMode="on-drag"
+        >
           <View style={s.content}>
             {/* Question */}
             <View style={s.questionSection}>
@@ -54,7 +65,8 @@ export default function BaselineScreen() {
                 How many pouches do you use per day?
               </Text>
               <Text style={s.hint}>
-                Be honest — this is your starting point, not a target.
+                Be honest — this is your starting point, not a target. Anything from 1 to 100 works,
+                and you can adjust it later in Settings.
               </Text>
             </View>
 
@@ -67,7 +79,7 @@ export default function BaselineScreen() {
                   setBaseline(text);
                   setError('');
                 }}
-                placeholder="0"
+                placeholder="12"
                 keyboardType="number-pad"
                 autoFocus
                 maxLength={3}
@@ -81,11 +93,7 @@ export default function BaselineScreen() {
             {/* Spacer pushes button to bottom */}
             <View style={s.spacer} />
 
-            <Button
-              title="Continue"
-              onPress={handleNext}
-              style={s.button}
-            />
+            <Button title="Continue" onPress={handleNext} style={s.button} />
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
