@@ -370,6 +370,11 @@ export default function HomeScreen() {
         actionLabel="Undo"
         onActionPress={handleUndo}
         onDismiss={handleUndoDismiss}
+        // 10s undo window (#124): the default 5s is tight for users with
+        // motor impairments, and a mistap here writes real data. A separate
+        // "last action" chip was considered but rejected — it would duplicate
+        // affordances next to the trigger-tag row.
+        durationMs={10000}
       />
     </Screen>
   );
