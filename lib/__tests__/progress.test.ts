@@ -274,6 +274,39 @@ describe('calculateTotalProgressAndMilestones', () => {
     expect(craving10).toBeDefined();
     expect(craving25).toBeDefined();
   });
+
+  it('dates craving milestones by the day the cumulative count crossed the threshold (#92)', async () => {
+    // 2 cravings/day for 10 days starting 20 days ago -> the 10th craving
+    // lands on day 5. achievedAt must be that DAY (day-walk semantics,
+    // consistent with pouch/money milestones), not a raw log timestamp.
+    const start = new Date();
+    start.setDate(start.getDate() - 20);
+    start.setHours(0, 0, 0, 0);
+    const settings = makeSettings({ startDate: start.getTime(), weeklyReductionPercent: 0 });
+
+    const logs: LogEntry[] = [];
+    let id = 0;
+    for (let d = 0; d < 10; d++) {
+      for (let n = 0; n < 2; n++) {
+        const t = new Date(start);
+        t.setDate(start.getDate() + d);
+        t.setHours(10 + n, 30, 0, 0);
+        logs.push(cravingLog(t, id++));
+      }
+    }
+    mockedGetLogEntries.mockResolvedValue(logs);
+
+    const { milestones } = await calculateTotalProgressAndMilestones(settings);
+    const m = milestones.find((x) => x.id === 'cravings_resisted_10');
+    expect(m).toBeDefined();
+
+    const expectedDay = new Date(start);
+    expectedDay.setDate(start.getDate() + 4); // day 5 (0-indexed +4)
+    const achieved = new Date(m!.achievedAt);
+    expect(achieved.getFullYear()).toBe(expectedDay.getFullYear());
+    expect(achieved.getMonth()).toBe(expectedDay.getMonth());
+    expect(achieved.getDate()).toBe(expectedDay.getDate());
+  });
 });
 
 describe('computeUsagePatterns', () => {
