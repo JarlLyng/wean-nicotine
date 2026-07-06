@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.5.0] - 2026-07-05
 
-iOS build 20. Theme: insight + the finish line — the app now delivers the usage-pattern promises from the blog, acknowledges reaching the goal, and gently helps when the pace doesn't fit.
+iOS build 21 (build 20 was superseded before release to fold in refreshed app icons). Theme: insight + the finish line — the app now delivers the usage-pattern promises from the blog, acknowledges reaching the goal, and gently helps when the pace doesn't fit.
 
 ### Added
 - **Trigger tagging on pouch logs.** After "Used a pouch", an optional dismissible chip row ("What triggered it?") offers the user's own onboarding-selected triggers. One-tap logging is unchanged — tagging is an optional second tap, never required. Stored per entry (schema migration v8, nullable — existing history untouched). The tag is scrubbed from any Sentry payload like all user data. (#220)
