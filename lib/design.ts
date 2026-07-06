@@ -1,11 +1,11 @@
 /**
  * IAMJARL Design System Tokens for React Native
- * 
+ *
  * Source of truth: https://jarllyng.github.io/iamjarl-design/
- * 
+ *
  * This file maps the IAMJARL design tokens to React Native-compatible format
  * with full light/dark mode support.
- * 
+ *
  * Rules:
  * - Do NOT invent new colors, spacing, radius or typography values
  * - Always support light + dark mode using the tokens
@@ -72,6 +72,9 @@ export const designTokens = {
     static: {
       black: '#000000',
       white: '#FFFFFF',
+      // Fixed dark snackbar surface (iOS pattern) — same in light and dark
+      // mode so Toast contrast is guaranteed regardless of theme.
+      toastSurface: '#1C1C1E',
     },
     shared: {
       success: '#4CAF50',

@@ -8,8 +8,7 @@ import { Icon } from '@/components/ui/Icon';
 import { spacing, typography, borderRadius, animations } from '@/lib/theme';
 import { useDesignTokens } from '@/lib/design';
 
-// `route` is typed against expo-router's typed-routes table so we don't
-// need an `as any` at the call site.
+// `route` is typed against expo-router's typed-routes table.
 const TOOLS = [
   {
     id: 'breathing',
@@ -39,13 +38,13 @@ const TOOLS = [
     description: "See how much money you're saving by cutting back",
     icon: 'piggy-bank' as const,
   },
-] as const satisfies ReadonlyArray<{
+] as const satisfies readonly {
   id: string;
   route: Href;
   title: string;
   description: string;
   icon: 'wind' | 'brain' | 'waves' | 'piggy-bank';
-}>;
+}[];
 
 export default function ToolsScreen() {
   const { colors } = useDesignTokens();
@@ -54,7 +53,10 @@ export default function ToolsScreen() {
 
   return (
     <Screen>
-      <ScrollView contentContainerStyle={toolsStyles.scrollContent} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerStyle={toolsStyles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
         <View style={toolsStyles.content}>
           <Text style={toolsStyles.subtitle}>
             Tools to help you through cravings and difficult moments. Use them whenever you need
@@ -65,12 +67,16 @@ export default function ToolsScreen() {
             {TOOLS.map((tool, index) => (
               <Animated.View
                 key={tool.id}
-                entering={FadeInDown.delay(index * 100).duration(animations.normal).springify()}>
+                entering={FadeInDown.delay(index * 100)
+                  .duration(animations.normal)
+                  .springify()}
+              >
                 <TouchableOpacity
                   accessibilityRole="button"
                   accessibilityLabel={tool.title}
                   accessibilityHint={tool.description}
-                  onPress={() => router.push(tool.route)}>
+                  onPress={() => router.push(tool.route)}
+                >
                   <Card variant="elevated" style={toolsStyles.toolCard} padding="lg">
                     <View style={toolsStyles.iconContainer}>
                       <Icon name={tool.icon} size={48} color={colors.primary} weight="duotone" />
@@ -85,8 +91,8 @@ export default function ToolsScreen() {
 
           <Card variant="flat" style={toolsStyles.infoBox} padding="md">
             <Text style={toolsStyles.infoText}>
-              Remember: setbacks are part of the journey. These tools are here to support you,
-              not to judge you.
+              Remember: setbacks are part of the journey. These tools are here to support you, not
+              to judge you.
             </Text>
           </Card>
         </View>
@@ -95,56 +101,57 @@ export default function ToolsScreen() {
   );
 }
 
-const createToolsStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => StyleSheet.create({
-  scrollContent: {
-    flexGrow: 1,
-  },
-  content: {
-    flex: 1,
-    paddingTop: spacing.lg,
-    // Match preview: remove left/right padding, keep top padding
-    paddingHorizontal: 0,
-  },
-  subtitle: {
-    ...typography.body,
-    color: colors.text.secondary,
-    marginBottom: spacing.xl,
-    textAlign: 'center',
-  },
-  toolsContainer: {
-    gap: spacing.md,
-    marginBottom: spacing.lg,
-  },
-  toolCard: {
-    alignItems: 'center',
-  },
-  iconContainer: {
-    marginBottom: spacing.sm,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  toolTitle: {
-    ...typography.xl,
-    fontWeight: '600',
-    color: colors.text.primary,
-    marginBottom: spacing.xs,
-    textAlign: 'center',
-  },
-  toolDescription: {
-    ...typography.caption,
-    color: colors.text.secondary,
-    textAlign: 'center',
-  },
-  infoBox: {
-    backgroundColor: colors.background.card,
-    borderRadius: borderRadius.lg,
-    padding: spacing.md,
-    marginTop: spacing.lg,
-  },
-  infoText: {
-    ...typography.caption,
-    // Avoid low-contrast semantic green as body text.
-    color: colors.text.secondary,
-    textAlign: 'center',
-  },
-});
+const createToolsStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) =>
+  StyleSheet.create({
+    scrollContent: {
+      flexGrow: 1,
+    },
+    content: {
+      flex: 1,
+      paddingTop: spacing.lg,
+      // Match preview: remove left/right padding, keep top padding
+      paddingHorizontal: 0,
+    },
+    subtitle: {
+      ...typography.body,
+      color: colors.text.secondary,
+      marginBottom: spacing.xl,
+      textAlign: 'center',
+    },
+    toolsContainer: {
+      gap: spacing.md,
+      marginBottom: spacing.lg,
+    },
+    toolCard: {
+      alignItems: 'center',
+    },
+    iconContainer: {
+      marginBottom: spacing.sm,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    toolTitle: {
+      ...typography.xl,
+      fontWeight: '600',
+      color: colors.text.primary,
+      marginBottom: spacing.xs,
+      textAlign: 'center',
+    },
+    toolDescription: {
+      ...typography.caption,
+      color: colors.text.secondary,
+      textAlign: 'center',
+    },
+    infoBox: {
+      backgroundColor: colors.background.card,
+      borderRadius: borderRadius.lg,
+      padding: spacing.md,
+      marginTop: spacing.lg,
+    },
+    infoText: {
+      ...typography.caption,
+      // Avoid low-contrast semantic green as body text.
+      color: colors.text.secondary,
+      textAlign: 'center',
+    },
+  });
