@@ -44,7 +44,7 @@ Alternativer:
 
 ---
 
-## iOS App Version 1.5.0 — Submitted (build 21, awaiting review July 2026)
+## iOS App Version 1.5.0 — Live in App Store (build 21, approved July 2026)
 
 Feature release: usage-pattern insight, a whole-pouch daily target, a gentle pace suggestion, and a goal-reached celebration. Build 20 was superseded by build 21 before release to fold in refreshed app icons.
 
@@ -136,7 +136,7 @@ Se mønstrene dine og nå målet ditt — rolig og privat som alltid.
 
 ---
 
-## iOS App Version 1.4.1 — Live in App Store (build 19, approved June 2026; 1.5.0 pending review)
+## iOS App Version 1.4.1 — Superseded by 1.5.0 (build 19, was live June–July 2026)
 
 Hotfix release on top of v1.4.0/build 18 — see "Known regression in 1.4.0" at the bottom of this section.
 
