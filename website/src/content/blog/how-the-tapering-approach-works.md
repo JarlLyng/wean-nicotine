@@ -6,7 +6,7 @@ author: 'Jarl Lyng'
 tags: ['tapering', 'snus', 'nicotine-pouches', 'method']
 ---
 
-Cold turkey is the dominant story we tell ourselves about quitting nicotine. Set a date, throw out the pouches, white-knuckle through the withdrawal. The reason cold turkey dominates the conversation isn't that it works best — it's that it's the easiest method to describe in a single sentence.
+Cold turkey is the dominant story we tell ourselves about quitting nicotine. Set a date, throw out the pouches, white-knuckle through the withdrawal. The reason cold turkey dominates the conversation isn't that it works best — it's that it's the easiest method to describe in a single sentence. (We put the two approaches side by side in [gradual reduction vs. cold turkey](/gradual-reduction-vs-cold-turkey/).)
 
 Tapering is harder to summarize and easier to actually do. This piece walks through what it is, why it tends to stick where cold turkey doesn't, and how to pick a pace that fits the person rather than the marketing.
 
@@ -104,7 +104,7 @@ A practical heuristic: pick the pace that feels almost too easy. The first month
 
 A good taper exposes patterns. After two or three weeks, you should be able to see:
 
-- **Which times of day are hardest.** Morning coffee, post-lunch, end of workday. If the same hour breaks you every week, that hour needs a non-pouch plan (breathing, urge surfing, a walk).
+- **Which times of day are hardest.** Morning coffee, post-lunch, end of workday. If the same hour breaks you every week, that hour needs a non-pouch plan (breathing, urge surfing, a walk) — see [how to handle nicotine cravings](/how-to-handle-nicotine-cravings/) for tactics that work in the moment.
 - **Whether the pace is right.** If you're consistently 20%+ over your allowance, the pace is too aggressive. Drop to a smaller percentage rather than abandoning the taper.
 - **Whether triggers are stress-shaped or habit-shaped.** Habit-shaped triggers (driving, coffee) fade with reduction. Stress-shaped triggers (deadline, conflict) need actual stress management, not just nicotine reduction.
 
