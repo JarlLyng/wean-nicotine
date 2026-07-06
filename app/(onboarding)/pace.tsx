@@ -13,17 +13,10 @@ import { OnboardingProgress } from '@/components/ui/OnboardingProgress';
 import { useDesignTokens, getColors, typography } from '@/lib/design';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { spacing, borderRadius } from '@/lib/theme';
+import { estimateWeeksToZero } from '@/lib/taper-plan';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
-import {
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextStyle,
-  View,
-  ViewStyle,
-} from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native';
 
 const REDUCTION_PRESETS = [
   { value: 3, label: '3%', description: 'Gentle — slower taper, easier on withdrawal' },
@@ -46,6 +39,15 @@ export default function PaceScreen() {
     [colorScheme],
   );
 
+  // Expected-timeline preview (#123): computed from the same math the app
+  // will actually run, so the promise here matches the plan later.
+  const timeline = useMemo(() => {
+    const weeks = estimateWeeksToZero(baseline, reductionPercent);
+    if (weeks === null || weeks <= 0) return null;
+    const months = Math.round(weeks / 4.345);
+    return { weeks, months };
+  }, [baseline, reductionPercent]);
+
   const handleNext = () => {
     router.push({
       pathname: '/(onboarding)/price',
@@ -66,9 +68,12 @@ export default function PaceScreen() {
       >
         <View style={s.content}>
           <View style={s.questionSection}>
-            <Text accessibilityRole="header" style={s.question}>How fast do you want to reduce?</Text>
+            <Text accessibilityRole="header" style={s.question}>
+              How fast do you want to reduce?
+            </Text>
             <Text style={s.hint}>
-              This is how much your daily allowance drops each week. You can change it later in Settings.
+              This is how much your daily allowance drops each week. You can change it later in
+              Settings.
             </Text>
           </View>
 
@@ -100,6 +105,19 @@ export default function PaceScreen() {
               );
             })}
           </View>
+
+          {timeline && (
+            <View style={s.timeline} accessibilityLiveRegion="polite">
+              <Text style={s.timelineText}>
+                From {baseline} a day at {reductionPercent}%, you{"'"}d reach zero in about{' '}
+                <Text style={s.timelineStrong}>
+                  {timeline.weeks} weeks
+                  {timeline.months >= 2 ? ` (~${timeline.months} months)` : ''}
+                </Text>
+                . The right pace is the one you can keep on a hard day.
+              </Text>
+            </View>
+          )}
 
           <View style={s.spacer} />
 
@@ -178,5 +196,20 @@ const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) =>
       backgroundColor: colors.primary,
     } as ViewStyle,
     spacer: { flex: 1, minHeight: spacing.xl } as ViewStyle,
+    timeline: {
+      marginTop: spacing.lg,
+      padding: spacing.md,
+      borderRadius: borderRadius.md,
+      backgroundColor: colors.background.muted,
+    } as ViewStyle,
+    timelineText: {
+      fontSize: typography.sizes.sm,
+      lineHeight: typography.lineHeights.sm,
+      color: colors.text.secondary,
+    } as TextStyle,
+    timelineStrong: {
+      fontWeight: `${typography.weights.semibold}`,
+      color: colors.text.primary,
+    } as TextStyle,
     button: { marginBottom: spacing.sm } as ViewStyle,
   });
