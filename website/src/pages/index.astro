@@ -1,10 +1,13 @@
 ---
+import { Picture } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
 import Button from '../components/Button.astro';
 import Card from '../components/Card.astro';
 import Section from '../components/Section.astro';
 import AppStoreBadge from '../components/AppStoreBadge.astro';
 import { APP_STORE_URL, isAppStoreUrlKnown, SITE_NAME } from '../lib/site';
+import heroToday from '../assets/screenshots/05-today.png';
+import heroProgress from '../assets/screenshots/06-progress.png';
 
 const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
 const appStoreCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming soon on the App Store';
@@ -134,21 +137,25 @@ const screenshots = [
 			<div class="hero__visual reveal" aria-hidden="true">
 				<div class="hero__phone-group">
 					<div class="hero__phone hero__phone--back">
-						<img
-							src="/screenshots/v1.2/06-progress.png"
+						<Picture
+							src={heroProgress}
+							formats={['avif', 'webp']}
 							alt=""
-							width="393"
-							height="852"
-							loading="eager"
+							width={393}
+							height={852}
+							densities={[1, 2]}
+							loading="lazy"
 							decoding="async"
 						/>
 					</div>
 					<div class="hero__phone hero__phone--front anim-float">
-						<img
-							src="/screenshots/v1.2/05-today.png"
+						<Picture
+							src={heroToday}
+							formats={['avif', 'webp']}
 							alt="Wean Nicotine app showing daily allowance tracking"
-							width="393"
-							height="852"
+							width={393}
+							height={852}
+							densities={[1, 2]}
 							loading="eager"
 							decoding="async"
 							fetchpriority="high"

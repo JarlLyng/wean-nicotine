@@ -117,16 +117,11 @@ const structuredData: Record<string, unknown> = {
 		     Removed the render-blocking Google Fonts <link> that previously
 		     stalled first paint and required preconnect hints. -->
 
-		<!-- Preload the LCP hero image so the browser fetches it before the
-		     HTML parser discovers the <img>. Cuts ~200-400ms off LCP on cold
-		     loads. Same path across all locale homes. -->
-		<link
-			rel="preload"
-			as="image"
-			href="/screenshots/v1.2/05-today.png"
-			type="image/png"
-			fetchpriority="high"
-		/>
+		<!-- The old raw-PNG hero preload was removed with #142: the hero now
+		     ships as hashed AVIF/WebP via astro:assets, so a fixed-URL preload
+		     would double-fetch (preload the PNG, render the AVIF). The <img>
+		     carries fetchpriority="high" instead, and the preload also fired
+		     wastefully on every non-home page. -->
 
 		<!-- Scroll Reveal Script -->
 		<script is:inline>

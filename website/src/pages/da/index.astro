@@ -1,5 +1,7 @@
 ---
+import { Picture } from 'astro:assets';
 import Layout from '../../layouts/Layout.astro';
+import heroToday from '../../assets/screenshots/05-today.png';
 import Button from '../../components/Button.astro';
 import Card from '../../components/Card.astro';
 import Section from '../../components/Section.astro';
@@ -95,11 +97,13 @@ const screenshots = [
 
 			<div class="hero__visual reveal" aria-hidden="true">
 				<div class="hero__frame anim-float">
-					<img
-						src="/screenshots/v1.2/05-today.png"
+					<Picture
+						src={heroToday}
+						formats={['avif', 'webp']}
 						alt="Wean Nicotine app, der viser det daglige kvoteoverblik"
-						width="393"
-						height="852"
+						width={393}
+						height={852}
+						densities={[1, 2]}
 						loading="eager"
 						decoding="async"
 						fetchpriority="high"
