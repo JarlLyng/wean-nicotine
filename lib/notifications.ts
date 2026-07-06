@@ -13,6 +13,17 @@ import type { DailyTriggerInput } from 'expo-notifications';
 import { captureError } from './sentry';
 import { DEFAULT_CHECK_IN_HOUR } from './constants';
 
+/**
+ * Stable notification identifiers (#96). Scheduling with the same identifier
+ * REPLACES the existing request (UNUserNotificationCenter semantics), which
+ * closes the snapshot-then-cancel race window structurally: two concurrent
+ * schedules can never leave duplicates, because both write the same slot.
+ * Pre-stable-id installs scheduled with random UUIDs — the cancel helpers
+ * still sweep those legacy requests by their `data.type` marker.
+ */
+const DAILY_CHECKIN_ID = 'daily-checkin';
+const TRIGGER_REMINDER_ID = 'trigger-reminder';
+
 // Configure notification handler
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -56,10 +67,13 @@ export async function scheduleDailyCheckIn(
   minute: number = 0,
 ): Promise<string | null> {
   try {
-    // Cancel existing daily check-in
+    // Sweep any legacy (random-id) check-ins from pre-stable-id installs.
+    // The stable identifier below makes this unnecessary for new schedules —
+    // same id replaces atomically.
     await cancelDailyCheckIn();
 
     const notificationId = await Notifications.scheduleNotificationAsync({
+      identifier: DAILY_CHECKIN_ID,
       content: {
         title: 'Daily Check-In',
         body: 'How are you doing today? Take a moment to log your progress.',
@@ -88,6 +102,10 @@ export async function scheduleDailyCheckIn(
  */
 export async function cancelDailyCheckIn(): Promise<void> {
   try {
+    // Direct, race-free cancel of the stable-id request…
+    await Notifications.cancelScheduledNotificationAsync(DAILY_CHECKIN_ID);
+
+    // …plus a sweep for legacy random-id requests from older installs.
     const allNotifications = await Notifications.getAllScheduledNotificationsAsync();
     const dailyCheckIns = allNotifications.filter((n) => n.content.data?.type === 'daily_checkin');
 
@@ -114,8 +132,8 @@ export async function scheduleTriggerReminders(
   minute: number = 0,
 ): Promise<string | null> {
   try {
-    // Cancel existing trigger reminders first, then schedule a new one.
-    // This avoids the race condition of snapshot + schedule + cancel.
+    // Sweep legacy (random-id) reminders from pre-stable-id installs. The
+    // stable identifier below replaces atomically for new schedules.
     await cancelTriggerReminders();
 
     const exampleTrigger = triggers && triggers.length > 0 ? triggers[0] : null;
@@ -124,6 +142,7 @@ export async function scheduleTriggerReminders(
       : `Remember your plan. You've got this!`;
 
     const notificationId = await Notifications.scheduleNotificationAsync({
+      identifier: TRIGGER_REMINDER_ID,
       content: {
         title: 'Trigger Reminder',
         body,
@@ -152,6 +171,10 @@ export async function scheduleTriggerReminders(
  */
 export async function cancelTriggerReminders(): Promise<void> {
   try {
+    // Direct, race-free cancel of the stable-id request…
+    await Notifications.cancelScheduledNotificationAsync(TRIGGER_REMINDER_ID);
+
+    // …plus a sweep for legacy random-id requests from older installs.
     const allNotifications = await Notifications.getAllScheduledNotificationsAsync();
     const triggerReminders = allNotifications.filter(
       (n) => n.content.data?.type === 'trigger_reminder',
