@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-Merged to `main` after build 21 was cut, so these are **not** in the 1.5.0 binary currently in review — they ride the next build.
+Merged to `main` after build 21 was cut, so these are **not** in the live 1.5.0 build — they ride the next build.
 
 ### Added
 - **Expected-timeline preview on the Pace onboarding step.** Selecting a pace now shows "From N a day at X%, you'd reach zero in about W weeks (~M months)", computed from the exact production formula so it matches what the app will actually do. (#123)
@@ -24,9 +24,9 @@ Merged to `main` after build 21 was cut, so these are **not** in the 1.5.0 binar
 - Toast surface/text moved to `static.*` design tokens (#133); milestone achievement-time semantics unified into one day-walk across pouch/money/craving thresholds (#92); removed dead `webpack.config.js` (#116). Lint is now warning-free.
 - Website (deploys independently of the app): hero LCP image → AVIF/WebP via `astro:assets` (#142); da/sv/no homes DRYed into a shared `NordicHome` component (#100); internal links from the top-ranking blog article into the taper cluster (#237).
 
-## [1.5.0] - 2026-07-05
+## [1.5.0] - 2026-07-06
 
-iOS build 21 (build 20 was superseded before release to fold in refreshed app icons). Theme: insight + the finish line — the app now delivers the usage-pattern promises from the blog, acknowledges reaching the goal, and gently helps when the pace doesn't fit.
+iOS build 21, approved and live in the App Store July 2026 (build 20 was superseded before release to fold in refreshed app icons). Theme: insight + the finish line — the app now delivers the usage-pattern promises from the blog, acknowledges reaching the goal, and gently helps when the pace doesn't fit.
 
 ### Added
 - **Trigger tagging on pouch logs.** After "Used a pouch", an optional dismissible chip row ("What triggered it?") offers the user's own onboarding-selected triggers. One-tap logging is unchanged — tagging is an optional second tap, never required. Stored per entry (schema migration v8, nullable — existing history untouched). The tag is scrubbed from any Sentry payload like all user data. (#220)
@@ -138,7 +138,8 @@ User-visible changes shipped with iOS build 18.
 
 ---
 
-[Unreleased]: https://github.com/JarlLyng/wean-nicotine/compare/v1.4.1...HEAD
+[Unreleased]: https://github.com/JarlLyng/wean-nicotine/compare/v1.5.0...HEAD
+[1.5.0]: https://github.com/JarlLyng/wean-nicotine/compare/v1.4.1...v1.5.0
 [1.4.1]: https://github.com/JarlLyng/wean-nicotine/compare/v1.4.0...v1.4.1
 [1.4.0]: https://github.com/JarlLyng/wean-nicotine/compare/v1.3.1...v1.4.0
 [1.3.1]: https://github.com/JarlLyng/wean-nicotine/compare/v1.3.0...v1.3.1

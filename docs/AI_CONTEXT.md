@@ -37,7 +37,7 @@ Update when:
 - The app is local-first by design. No backend, no account system, no cloud sync.
 - The mobile app uses Expo SDK 55, Expo Router, SQLite, Expo Notifications, Sentry, and React Compiler.
 - The website uses Astro and contains SEO landing pages in EN/DA/SV/NO.
-- Latest live App Store version: **1.4.1** (iOS build 19, approved June 2026). v1.4.0 / build 18 was a TestFlight-only release blocked by an unresponsive-Button regression and was never submitted to the App Store — see [CHANGELOG.md](../CHANGELOG.md#141---2026-06-01) for both versions.
+- Latest live App Store version: **1.5.0** (iOS build 21, approved July 2026) — usage-pattern insight, whole-pouch daily target, gentle pace nudge, and a goal-reached celebration. See [CHANGELOG.md](../CHANGELOG.md) for the full history (incl. the 1.4.0/build 18 TestFlight-only regression).
 
 ## What Exists In This Repo
 
