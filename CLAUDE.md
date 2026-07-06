@@ -11,7 +11,7 @@ A calm, private iPhone app for **gradually reducing** snus and nicotine pouches 
 - **License:** [MIT](LICENSE) — open source.
 - **Price:** **29 DKK (~$4) one-time** — no subscription, no in-app purchases, no ads.
 - **Platform:** iPhone (Expo / React Native — the portfolio's one non-SwiftUI app; chosen deliberately).
-- **Current version:** **1.4.1** (live in App Store since June 2026). `app.config.js` is the source of truth for the current build; release history is in `CHANGELOG.md`.
+- **Current version:** **1.4.1** live in App Store since June 2026; **1.5.0 (build 21) submitted and in review**. `app.config.js` is the source of truth for the current build number; release history is in `CHANGELOG.md`. Note some merged app changes (see the `[Unreleased]` section of `CHANGELOG.md`) landed on `main` _after_ build 21 was cut, so they ride the next build, not the one in review.
 
 ## Strategy lives in the private hub
 
@@ -19,8 +19,8 @@ Target audience, positioning, pricing reasoning, SEO/ASO playbooks, and competit
 
 ## App features (be precise — do not invent features that don't exist)
 
-- **Onboarding** — welcome → baseline (pouches/day) → pace (3–15% weekly reduction) → optional price per can → common triggers. Progress dots show step-of-4.
-- **Daily tracking** — one-tap _Used a pouch_ / _Craving resisted_; daily allowance from the taper plan; calm UI even when over the limit; 5-second undo via toast. After a pouch log, an optional dismissible chip row lets the user tag which trigger fired (never required).
+- **Onboarding** — welcome → baseline (pouches/day) → pace (3–15% weekly reduction, with a live "you'd reach zero in ~X weeks" preview) → optional price per can → common triggers. Progress dots show step-of-4.
+- **Daily tracking** — one-tap _Used a pouch_ / _Craving resisted_; daily allowance from the taper plan shown as a whole number; calm UI even when over the limit; 10-second undo via toast. After a pouch log, an optional dismissible chip row lets the user tag which trigger fired (never required).
 - **Taper plan** — automatic weekly reduction, user-selectable pace (3–15%); edit baseline/pace/price anytime from Settings without losing log history. If usage runs ≥20% over allowance across the trailing two weeks, Home shows a gentle dismissible "adjust pace?" suggestion (snoozed 7 days on dismissal, never nagging).
 - **Progress** — weekly bar chart, pouches avoided vs baseline, money saved, gentle milestones (not aggressive streaks), and a Patterns card (pouches by time of day + by tagged trigger, trailing 30 days; hidden until ≥10 pouches logged). All six reads are issued in parallel.
 - **Support tools** — guided breathing exercise (multiple patterns + completion celebration), urge-surfing timer, reflection prompts with optional journal, cost-savings calculator with week/month breakdown.
@@ -41,7 +41,7 @@ Target audience, positioning, pricing reasoning, SEO/ASO playbooks, and competit
 
 ## Build & release
 
-- Expo / React Native. Preferred release: local build → IPA → upload via **Transporter** to App Store Connect (bump `ios.buildNumber` in `app.config.js`). Cloud alternative: `npx eas build --profile production --platform ios`.
+- Expo / React Native. Bump `ios.buildNumber` (and `version` for a marketing release) in `app.config.js`, then either: **(a) EAS cloud build + auto-submit** — `npx eas build --profile production --platform ios --auto-submit` — which builds and uploads straight to App Store Connect via the stored ASC API key + `eas.json` `submit` config (this is what shipped builds 20 and 21); or **(b) local build → IPA → Transporter** upload.
 - Telemetry: anonymous crash reporting (Sentry) only — disclosed in the privacy policy.
 
 ## Conventions
