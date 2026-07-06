@@ -23,6 +23,7 @@
     "eslint-config-expo": "~57.0.0"
   },
   "overrides": {
-    "esbuild": ">=0.28.1"
+    "esbuild": ">=0.28.1",
+    "@babel/core": "^7.29.6"
   }
 }
