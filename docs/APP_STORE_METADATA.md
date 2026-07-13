@@ -44,6 +44,62 @@ Alternativer:
 
 ---
 
+## iOS App Version 1.6.0 — In preparation (build 22)
+
+Small quality release. **This version also carries the ASO metadata pass**: new subtitles and rebuilt keyword fields per locale. Those values are pasted into App Store Connect when this version is created; they live in the private strategy hub (`WeanNicotine/aso-pass-draft.md`) until shipped, after which the final values are recorded here. Release notes below are written per the portfolio voice rules (no em-dashes; bullets are allowed on this surface).
+
+### What's New (v1.6.0)
+
+**English:**
+
+```
+A small, careful update.
+
+• Pick your pace with confidence: setup now shows when you'd reach zero, before you commit
+• Undo has twice the time: 10 seconds to take back a mistap
+• Gentler wording when setting your starting point
+• Fixed a rare case where reminders could be scheduled twice
+• Small visual polish and reliability improvements
+```
+
+**Danish:**
+
+```
+En lille, omhyggelig opdatering.
+
+• Vælg dit tempo med ro i maven: opsætningen viser nu, hvornår du rammer nul, før du beslutter dig
+• Fortryd har dobbelt så lang tid: 10 sekunder til at tage et fejltryk tilbage
+• Blidere formuleringer, når du sætter dit udgangspunkt
+• Rettet et sjældent tilfælde, hvor påmindelser kunne blive planlagt dobbelt
+• Små visuelle forbedringer og øget stabilitet
+```
+
+**Swedish:**
+
+```
+En liten, omsorgsfull uppdatering.
+
+• Välj din takt med trygghet: introduktionen visar nu när du når noll, innan du bestämmer dig
+• Ångra har dubbelt så lång tid: 10 sekunder att ta tillbaka ett feltryck
+• Mjukare formuleringar när du anger din utgångspunkt
+• Åtgärdat ett sällsynt fall där påminnelser kunde schemaläggas dubbelt
+• Små visuella förbättringar och ökad stabilitet
+```
+
+**Norwegian:**
+
+```
+En liten, omtenksom oppdatering.
+
+• Velg tempoet ditt med trygghet: introduksjonen viser nå når du når null, før du bestemmer deg
+• Angre har dobbelt så lang tid: 10 sekunder til å ta tilbake et feiltrykk
+• Mildere formuleringer når du setter utgangspunktet ditt
+• Rettet et sjeldent tilfelle der påminnelser kunne bli planlagt dobbelt
+• Små visuelle forbedringer og økt stabilitet
+```
+
+---
+
 ## iOS App Version 1.5.0 — Live in App Store (build 21, approved July 2026)
 
 Feature release: usage-pattern insight, a whole-pouch daily target, a gentle pace suggestion, and a goal-reached celebration. Build 20 was superseded by build 21 before release to fold in refreshed app icons.

@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-Merged to `main` after build 21 was cut, so these are **not** in the live 1.5.0 build — they ride the next build.
+## [1.6.0] - 2026-07-13
+
+iOS build 22. Small quality release that also carries the ASO metadata pass (new subtitles + keyword fields per locale, entered in App Store Connect with this version).
 
 ### Added
 - **Expected-timeline preview on the Pace onboarding step.** Selecting a pace now shows "From N a day at X%, you'd reach zero in about W weeks (~M months)", computed from the exact production formula so it matches what the app will actually do. (#123)
@@ -138,7 +140,8 @@ User-visible changes shipped with iOS build 18.
 
 ---
 
-[Unreleased]: https://github.com/JarlLyng/wean-nicotine/compare/v1.5.0...HEAD
+[Unreleased]: https://github.com/JarlLyng/wean-nicotine/compare/v1.6.0...HEAD
+[1.6.0]: https://github.com/JarlLyng/wean-nicotine/compare/v1.5.0...v1.6.0
 [1.5.0]: https://github.com/JarlLyng/wean-nicotine/compare/v1.4.1...v1.5.0
 [1.4.1]: https://github.com/JarlLyng/wean-nicotine/compare/v1.4.0...v1.4.1
 [1.4.0]: https://github.com/JarlLyng/wean-nicotine/compare/v1.3.1...v1.4.0
