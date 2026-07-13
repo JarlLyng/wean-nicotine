@@ -44,9 +44,35 @@ Alternativer:
 
 ---
 
-## iOS App Version 1.6.0 — In preparation (build 22)
+## iOS App Version 1.6.0 — Submitted to review (build 22, 2026-07-13)
 
-Small quality release. **This version also carries the ASO metadata pass**: new subtitles and rebuilt keyword fields per locale. Those values are pasted into App Store Connect when this version is created; they live in the private strategy hub (`WeanNicotine/aso-pass-draft.md`) until shipped, after which the final values are recorded here. Release notes below are written per the portfolio voice rules (no em-dashes; bullets are allowed on this surface).
+Small quality release that also carries the ASO metadata pass: new subtitles (SV + NO) and rebuilt keyword fields per locale, plus re-pasted Promotional Text (ASC wipes it on every new version). Release notes and promo text are written per the portfolio voice rules (no em-dashes; bullets are allowed on the store surface). Rationale for the keyword/subtitle choices lives in the private hub (`WeanNicotine/aso-pass-draft.md`).
+
+### ASO fields shipped with 1.6.0 (final, as submitted)
+
+**English** — subtitle kept (warm), taper/pouch moved into keywords:
+
+- **Subtitle:** `Reduce snus at your pace` (unchanged)
+- **Keywords:** `taper,pouch,zyn,velo,quit,stop,cut,down,gradual,tracker,cessation,tobacco,dip,chew,habit,craving`
+- **Promotional Text:** `A gentler way to reduce nicotine pouches. No accounts, no cloud, no streak anxiety. Just your pace, your data, your phone.`
+
+**Danish** — subtitle unchanged (already intent-matched):
+
+- **Subtitle:** `Skær ned på snus i dit tempo` (unchanged)
+- **Keywords:** `nedtrapning,trappe,nikotin,nikotinposer,stop,stoppe,afvænning,trang,poser,gradvis,mindre,tobak`
+- **Promotional Text:** `En blidere måde at trappe ned for snus og nikotinposer. Ingen konto, ingen sky, ingen streak-angst. Bare dit tempo, dine data, din iPhone.`
+
+**Swedish** — new query-matching subtitle:
+
+- **Subtitle:** `Trappa ner snus i din takt` (was `Minska snuset i din takt`)
+- **Keywords:** `sluta,snusa,minska,nedtrappning,nikotin,prilla,prillor,nikotinpåsar,vitt,sug,gradvis,tobak`
+- **Promotional Text:** `Ett mildare sätt att minska snus och nikotinpåsar. Inget konto, inget moln, ingen streak-ångest. Bara din takt, dina data, din iPhone.`
+
+**Norwegian** — new query-matching subtitle:
+
+- **Subtitle:** `Trapp ned snus i ditt tempo` (was `Reduser snusbruken i ditt tempo`)
+- **Keywords:** `slutte,snuse,redusere,nedtrapping,nikotin,nikotinposer,porsjon,sug,gradvis,tobakk,mindre,vane`
+- **Promotional Text:** `En mildere måte å trappe ned snus og nikotinposer. Ingen konto, ingen sky, ingen streak-angst. Bare ditt tempo, dine data, din iPhone.`
 
 ### What's New (v1.6.0)
 
@@ -449,6 +475,8 @@ Appen er kun til iPhone (`ios.supportsTablet: false`). Udfyld kun "Phone" med iP
 ---
 
 ## Localized Storefronts (submitted 2026-04-24)
+
+> **Superseded for subtitle / keywords / promo by 1.6.0.** The Swedish and Norwegian **subtitles**, all four **keyword** fields, and the **promotional texts** were refreshed in the 1.6.0 ASO pass — see "ASO fields shipped with 1.6.0" near the top of this file for the current values. The **descriptions** below are still current. This block is kept as the v1.3 historical record.
 
 Endelige tekster som er indsendt til App Store Connect for v1.3 på dansk, svensk og norsk. Disse subtitles, promo-tekster, descriptions og keywords er stadig aktuelle for v1.4.x (kun "What's New" ændres mellem patch-releases — find 1.4.1 og 1.3.1 release notes længere oppe). Promo-tekster for v1.4.x findes længere oppe i denne fil.
 
