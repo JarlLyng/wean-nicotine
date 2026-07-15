@@ -6,7 +6,7 @@
  * change the PII_KEYS list, add a test here.
  */
 
-import { scrubExtra } from '../sentry';
+import { scrubExtra, scrubBreadcrumb } from '../sentry';
 
 describe('scrubExtra', () => {
   it('returns undefined when input is undefined', () => {
@@ -127,5 +127,52 @@ describe('scrubExtra', () => {
       baseline: '[scrubbed]',
       timestamp: 1234567890,
     });
+  });
+});
+
+describe('scrubBreadcrumb', () => {
+  it('strips the label + data from touch (ui.click) breadcrumbs', () => {
+    // A tap on a trigger chip: accessibilityLabel is the trigger name — a health
+    // signal that must not ride along on a crash report.
+    const result = scrubBreadcrumb({
+      category: 'ui.click',
+      message: 'Touch event within element: Stress',
+      data: { label: 'Stress' },
+      type: 'user',
+    });
+    expect(result.message).toBe('[scrubbed]');
+    expect(result.data).toBeUndefined();
+    // Skeleton kept for debugging value.
+    expect(result.category).toBe('ui.click');
+    expect(result.type).toBe('user');
+  });
+
+  it('strips other ui.* interaction breadcrumbs too', () => {
+    const result = scrubBreadcrumb({ category: 'ui.longPress', message: 'With coffee' });
+    expect(result.message).toBe('[scrubbed]');
+  });
+
+  it('strips console breadcrumb messages', () => {
+    const result = scrubBreadcrumb({
+      category: 'console',
+      message: 'saveTaperSettings: baseline 14',
+      data: { arguments: ['baseline', 14] },
+    });
+    expect(result.message).toBe('[scrubbed]');
+    expect(result.data).toBeUndefined();
+  });
+
+  it('leaves navigation breadcrumbs untouched (route names are not PII)', () => {
+    const nav = {
+      category: 'navigation',
+      message: 'home -> progress',
+      data: { from: 'home', to: 'progress' },
+    };
+    expect(scrubBreadcrumb(nav)).toEqual(nav);
+  });
+
+  it('leaves breadcrumbs with no category untouched', () => {
+    const b = { message: 'app.start' };
+    expect(scrubBreadcrumb(b)).toEqual(b);
   });
 });

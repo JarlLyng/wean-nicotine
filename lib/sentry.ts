@@ -65,6 +65,42 @@ export function scrubExtra(
   return cleaned;
 }
 
+/**
+ * Sanitize a breadcrumb before Sentry records it. `beforeSend` only scrubs
+ * `event.extra`, but breadcrumbs are a separate path that rides along on every
+ * event — and two default breadcrumb types can carry user data on a health app:
+ *
+ * - **`ui.click` (touch) breadcrumbs.** `Sentry.wrap()` enables the touch-event
+ *   boundary, which labels taps by their `accessibilityLabel`. Our trigger chips
+ *   are labelled with the trigger name ("Stress", "With coffee") — a health
+ *   signal we scrub everywhere else. We drop the human-readable label/message
+ *   and keep only the category, so the breadcrumb still shows "a tap happened"
+ *   for debugging without naming what was tapped.
+ * - **`console` breadcrumbs.** Any stray `console.*` in production becomes a
+ *   breadcrumb verbatim. We drop the console breadcrumb's message text.
+ *
+ * Returns `null` to drop the breadcrumb entirely is avoided — we keep the
+ * skeleton (category/type/level) for debugging value, minus any free text.
+ * Exported for unit testing.
+ */
+export function scrubBreadcrumb(breadcrumb: {
+  category?: string;
+  message?: string;
+  data?: Record<string, unknown>;
+  type?: string;
+}): typeof breadcrumb {
+  const category = breadcrumb.category ?? '';
+  // Touch / UI-interaction breadcrumbs: strip the label text + data payload.
+  if (category === 'ui.click' || category === 'touch' || category.startsWith('ui.')) {
+    return { ...breadcrumb, message: '[scrubbed]', data: undefined };
+  }
+  // Console breadcrumbs: strip the logged message + args.
+  if (category === 'console') {
+    return { ...breadcrumb, message: '[scrubbed]', data: undefined };
+  }
+  return breadcrumb;
+}
+
 /** True only when we had a DSN and called Sentry.init() – use to show "not configured" in Diagnostics. */
 let sentryInitialized = false;
 
@@ -148,8 +184,17 @@ export function initSentry(): void {
 
       return event;
     },
-    // Default integrations (ANR detection, app start, native crashes, screenshots)
-    // are included automatically. We add React Navigation tracking on top.
+    // Sanitize breadcrumbs before they're recorded. beforeSend only scrubs
+    // event.extra; touch (ui.click) and console breadcrumbs are a separate path
+    // that can carry user data (e.g. a trigger-chip accessibilityLabel). See
+    // scrubBreadcrumb above.
+    beforeBreadcrumb(breadcrumb) {
+      return scrubBreadcrumb(breadcrumb);
+    },
+    // Default integrations (ANR detection, app start, native crashes) are
+    // included automatically. Screenshots are NOT attached (attachScreenshot
+    // defaults to false and we do not enable it) and Session Replay is off —
+    // deliberate for a health app. We add React Navigation tracking on top.
     integrations: navigationIntegration ? [navigationIntegration] : [],
   });
 }

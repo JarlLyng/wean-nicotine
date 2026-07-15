@@ -1,22 +1,27 @@
 # Sentry – error tracking i Wean Nicotine
 
 Purpose:
+
 - Explain how Sentry is configured and how to verify it in builds
 
 Audience:
+
 - Maintainers handling diagnostics and release verification
 - LLMs assisting with build or monitoring setup
 
 Source of truth:
+
 - Runtime behavior in [`lib/sentry.ts`](../lib/sentry.ts)
 - Build-time environment handling in [`app.config.js`](../app.config.js)
 
 Related files:
+
 - [`app/_layout.tsx`](../app/_layout.tsx)
 - [`hooks/useAppInitialize.ts`](../hooks/useAppInitialize.ts)
 - [`docs/PRIVACY_APP_STORE.md`](./PRIVACY_APP_STORE.md)
 
 Update when:
+
 - DSN handling changes
 - Build workflow changes
 - Sentry SDK behavior or project policy changes
@@ -33,7 +38,7 @@ Sentry is configured in three layers:
 
 ### Integrations
 
-- **Default integrations** are enabled (ANR detection, app start timing, native crash handling, screenshots)
+- **Default integrations** are enabled (ANR detection, app start timing, native crash handling). **Screenshots are NOT attached** — `attachScreenshot` defaults to `false` and we do not enable it, so no screen capture of a health app ever leaves the device. **Session Replay is off** too.
 - **`reactNavigationIntegration`** tracks screen transitions via Expo Router's navigation container
   - `enableTimeToInitialDisplay: true` measures render time per screen
 - **`tracesSampleRate`**: 20% in production (was 10% in v1.0)
@@ -41,29 +46,30 @@ Sentry is configured in three layers:
 ### Privacy hardening
 
 - **`sendDefaultPii: false`** is set explicitly. Sentry will not auto-collect IP, cookies, headers, or other request metadata.
-- **`beforeSend` PII scrubber** strips known sensitive keys from `event.extra` before transmission. The list lives in `PII_KEYS` in `lib/sentry.ts` and covers: baseline, pricePerCan, currency, triggers, raw, pouchesUsedToday, cravingsResistedToday, dailyAllowance, currentDailyAllowance, weeklyReductionPercent, logEntries, userPlan, taperSettings.
-- Callers of `captureError(err, extra)` **must not** pass user values in `extra`. Pass only technical strings (`context`, `screen`, `operation`). The scrubber is defense-in-depth, not a license to be sloppy.
+- **`beforeSend` PII scrubber** strips known sensitive keys from `event.extra` before transmission. The list lives in `PII_KEYS` in `lib/sentry.ts` and covers: baseline, pricePerCan, currency, triggers, trigger, raw, pouchesUsedToday, cravingsResistedToday, dailyAllowance, currentDailyAllowance, weeklyReductionPercent, logEntries, userPlan, taperSettings.
+- **`beforeBreadcrumb` scrubber** (`scrubBreadcrumb` in `lib/sentry.ts`) sanitizes breadcrumbs, which are a _separate_ path from `event.extra`. Touch breadcrumbs (`ui.click`) label taps by `accessibilityLabel` — and trigger chips are labelled with the trigger name — so the label text and data payload are stripped; `console` breadcrumb messages are stripped too. Navigation breadcrumbs (route names) are kept. Without this, a tap on a "Stress" trigger chip would ride along on the next crash report.
+- Callers of `captureError(err, extra)` **must not** pass user values in `extra`. Pass only technical strings (`context`, `screen`, `operation`). The scrubbers are defense-in-depth, not a license to be sloppy.
 - Tests for the scrubber live in [`lib/__tests__/sentry-scrubber.test.ts`](../lib/__tests__/sentry-scrubber.test.ts) — extend them when `PII_KEYS` changes.
 
 ### Error capture coverage
 
 All catch blocks in the app report to Sentry in production:
 
-| File | Context |
-|------|---------|
-| `app/_layout.tsx` | ErrorBoundary (automatic) |
-| `app/index.tsx` | App routing |
-| `app/(tabs)/home.tsx` | Load data, log pouch, log craving |
-| `app/(tabs)/progress.tsx` | Load progress data |
-| `app/(tabs)/settings/index.tsx` | Load data, notification status, toggle checkin |
+| File                                    | Context                                               |
+| --------------------------------------- | ----------------------------------------------------- |
+| `app/_layout.tsx`                       | ErrorBoundary (automatic)                             |
+| `app/index.tsx`                         | App routing                                           |
+| `app/(tabs)/home.tsx`                   | Load data, log pouch, log craving                     |
+| `app/(tabs)/progress.tsx`               | Load progress data                                    |
+| `app/(tabs)/settings/index.tsx`         | Load data, notification status, toggle checkin        |
 | `app/(tabs)/settings/notifications.tsx` | Load status, toggle checkin, toggle trigger reminders |
-| `app/(tabs)/settings/reset-taper.tsx` | Start over + data verification |
-| `app/(onboarding)/index.tsx` | Onboarding routing |
-| `app/(onboarding)/triggers.tsx` | Complete onboarding |
-| `hooks/useAppInitialize.ts` | App initialization |
-| `lib/analytics.ts` | Log event, get events, clear old, delete all |
-| `lib/notifications.ts` | All schedule/cancel operations |
-| `lib/db-settings.ts` | JSON parse triggers |
+| `app/(tabs)/settings/reset-taper.tsx`   | Start over + data verification                        |
+| `app/(onboarding)/index.tsx`            | Onboarding routing                                    |
+| `app/(onboarding)/triggers.tsx`         | Complete onboarding                                   |
+| `hooks/useAppInitialize.ts`             | App initialization                                    |
+| `lib/analytics.ts`                      | Log event, get events, clear old, delete all          |
+| `lib/notifications.ts`                  | All schedule/cancel operations                        |
+| `lib/db-settings.ts`                    | JSON parse triggers                                   |
 
 ---
 
