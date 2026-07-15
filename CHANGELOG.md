@@ -7,9 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.6.0] - 2026-07-13
+Merged to `main` after build 22 was cut, so these are **not** in the live 1.6.0 build — they ride the next build.
 
-iOS build 22. Small quality release that also carries the ASO metadata pass (new subtitles + keyword fields per locale, entered in App Store Connect with this version).
+### Fixed
+
+- Sentry now scrubs breadcrumbs, not just `event.extra`. Touch (`ui.click`) breadcrumbs label taps by their `accessibilityLabel` — trigger chips carry the trigger name — and `console` breadcrumbs could log stray text; both are stripped via a new `beforeBreadcrumb` scrubber so no health signal rides along on a crash report. Navigation route names are kept. (privacy hardening; #252)
+
+## [1.6.0] - 2026-07-14
+
+iOS build 22, approved and live in the App Store July 2026. Small quality release that also carries the ASO metadata pass (new SV/NO subtitles + rebuilt keyword fields per locale, entered in App Store Connect with this version).
 
 ### Added
 - **Expected-timeline preview on the Pace onboarding step.** Selecting a pace now shows "From N a day at X%, you'd reach zero in about W weeks (~M months)", computed from the exact production formula so it matches what the app will actually do. (#123)

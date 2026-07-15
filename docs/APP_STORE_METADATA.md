@@ -44,7 +44,7 @@ Alternativer:
 
 ---
 
-## iOS App Version 1.6.0 — Submitted to review (build 22, 2026-07-13)
+## iOS App Version 1.6.0 — Live in App Store (build 22, approved July 2026)
 
 Small quality release that also carries the ASO metadata pass: new subtitles (SV + NO) and rebuilt keyword fields per locale, plus re-pasted Promotional Text (ASC wipes it on every new version). Release notes and promo text are written per the portfolio voice rules (no em-dashes; bullets are allowed on the store surface). Rationale for the keyword/subtitle choices lives in the private hub (`WeanNicotine/aso-pass-draft.md`).
 
@@ -126,7 +126,7 @@ En liten, omtenksom oppdatering.
 
 ---
 
-## iOS App Version 1.5.0 — Live in App Store (build 21, approved July 2026)
+## iOS App Version 1.5.0 — Superseded by 1.6.0 (build 21, was live July 2026)
 
 Feature release: usage-pattern insight, a whole-pouch daily target, a gentle pace suggestion, and a goal-reached celebration. Build 20 was superseded by build 21 before release to fold in refreshed app icons.
 
