@@ -34,7 +34,9 @@ export default function Index() {
           }, 100);
         })
         .catch((error) => {
-          console.error('Error initializing app:', error);
+          if (__DEV__) {
+            console.error('Error initializing app:', error);
+          }
           if (error instanceof Error) {
             captureError(error, { context: 'app_index_initialization' });
           }
