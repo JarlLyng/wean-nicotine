@@ -44,7 +44,7 @@ Alternativer:
 
 ---
 
-## iOS App Version 1.6.1 — In preparation (build 23)
+## iOS App Version 1.6.1 — Submitted to review (build 23, 2026-07-18)
 
 Small patch: refreshed app icons, a privacy hardening (Sentry breadcrumb scrubbing), and the Progress legend layout fix. **ASO fields (subtitle + keywords) are unchanged from 1.6.0** and carry forward automatically — do not re-enter them. **Promotional Text must be re-pasted** (ASC wipes it on every new version); reuse the exact 1.6.0 per-locale promo texts above.
 
