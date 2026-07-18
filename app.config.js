@@ -25,7 +25,7 @@ module.exports = {
     // breaks EAS project linking. Like bundleIdentifier, this is a
     // legacy technical identifier that users never see.
     slug: 'Taper',
-    version: '1.6.0',
+    version: '1.6.1',
     orientation: 'portrait',
     icon: './assets/images/ios-light.png',
     scheme: ['wean', 'taper'],
@@ -36,7 +36,7 @@ module.exports = {
       // identifier after an app is published. Changing it would orphan
       // the App Store listing and break updates for existing users.
       bundleIdentifier: 'com.iamjarl.taper',
-      buildNumber: '22',
+      buildNumber: '23',
       icon: {
         light: './assets/images/ios-light.png',
         dark: './assets/images/ios-dark.png',

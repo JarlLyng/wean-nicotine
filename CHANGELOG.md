@@ -7,11 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-Merged to `main` after build 22 was cut, so these are **not** in the live 1.6.0 build — they ride the next build.
+## [1.6.1] - 2026-07-18
+
+iOS build 23. Small patch: refreshed app icons, a privacy hardening, and a layout fix.
 
 ### Fixed
 
+- **Progress "Daily Usage" title and legend collided.** The title and the 4-item legend (Under limit / Over / No data / Upcoming) were on one row and crammed together on-device; the legend now stacks below the title and wraps. (#254)
 - Sentry now scrubs breadcrumbs, not just `event.extra`. Touch (`ui.click`) breadcrumbs label taps by their `accessibilityLabel` — trigger chips carry the trigger name — and `console` breadcrumbs could log stray text; both are stripped via a new `beforeBreadcrumb` scrubber so no health signal rides along on a crash report. Navigation route names are kept. (privacy hardening; #252)
+
+### Changed
+
+- Refreshed app icons.
 
 ## [1.6.0] - 2026-07-14
 
@@ -146,7 +153,8 @@ User-visible changes shipped with iOS build 18.
 
 ---
 
-[Unreleased]: https://github.com/JarlLyng/wean-nicotine/compare/v1.6.0...HEAD
+[Unreleased]: https://github.com/JarlLyng/wean-nicotine/compare/v1.6.1...HEAD
+[1.6.1]: https://github.com/JarlLyng/wean-nicotine/compare/v1.6.0...v1.6.1
 [1.6.0]: https://github.com/JarlLyng/wean-nicotine/compare/v1.5.0...v1.6.0
 [1.5.0]: https://github.com/JarlLyng/wean-nicotine/compare/v1.4.1...v1.5.0
 [1.4.1]: https://github.com/JarlLyng/wean-nicotine/compare/v1.4.0...v1.4.1
