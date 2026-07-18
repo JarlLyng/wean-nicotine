@@ -706,16 +706,19 @@ const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) =>
       marginBottom: spacing.md,
     } as TextStyle,
 
-    // Chart header
+    // Chart header — title stacked above the legend. A single row can't fit
+    // "Daily Usage" + a 4-item legend on a phone, so they collided (#254).
     chartHeader: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      marginBottom: spacing.xs,
+      flexDirection: 'column',
+      alignItems: 'flex-start',
+      gap: spacing.sm,
+      marginBottom: spacing.md,
     } as ViewStyle,
     legendRow: {
       flexDirection: 'row',
       alignItems: 'center',
+      flexWrap: 'wrap',
+      rowGap: spacing.xs,
       gap: spacing.xs,
     } as ViewStyle,
     legendDot: {
