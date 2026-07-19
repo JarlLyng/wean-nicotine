@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.6.1] - 2026-07-18
 
-iOS build 23. Small patch: refreshed app icons, a privacy hardening, and a layout fix.
+iOS build 23, approved and live in the App Store July 2026. Small patch: refreshed app icons, a privacy hardening, and a layout fix.
 
 ### Fixed
 
