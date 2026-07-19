@@ -11,7 +11,7 @@ A calm, private iPhone app for **gradually reducing** snus and nicotine pouches 
 - **License:** [MIT](LICENSE) — open source.
 - **Price:** **29 DKK (~$4) one-time** — no subscription, no in-app purchases, no ads.
 - **Platform:** iPhone (Expo / React Native — the portfolio's one non-SwiftUI app; chosen deliberately).
-- **Current version:** **1.6.0** (iOS build 22) live in App Store since July 2026. `app.config.js` is the source of truth for the current build number; release history is in `CHANGELOG.md`. Note some merged app changes (see the `[Unreleased]` section of `CHANGELOG.md`) landed on `main` _after_ build 22 was cut, so they ship in the next build, not 1.6.0.
+- **Current version:** **1.6.1** (iOS build 23) live in App Store since July 2026. `app.config.js` is the source of truth for the current build number; release history is in `CHANGELOG.md`.
 
 ## Strategy lives in the private hub
 

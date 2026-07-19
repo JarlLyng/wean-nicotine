@@ -37,7 +37,7 @@ Update when:
 - The app is local-first by design. No backend, no account system, no cloud sync.
 - The mobile app uses Expo SDK 55, Expo Router, SQLite, Expo Notifications, Sentry, and React Compiler.
 - The website uses Astro and contains SEO landing pages in EN/DA/SV/NO.
-- Latest live App Store version: **1.6.0** (iOS build 22, approved July 2026) — small quality release (pace timeline preview, 10s undo, softer baseline copy, notification-race fix) that also carried the ASO metadata pass (new SV/NO subtitles + rebuilt keyword fields). See [CHANGELOG.md](../CHANGELOG.md) for the full history (incl. the 1.4.0/build 18 TestFlight-only regression).
+- Latest live App Store version: **1.6.1** (iOS build 23, approved July 2026) — small patch (refreshed icons, Sentry breadcrumb scrubbing, Progress legend fix) on top of 1.6.0, which carried the usage-pattern features + ASO metadata pass. See [CHANGELOG.md](../CHANGELOG.md) for the full history (incl. the 1.4.0/build 18 TestFlight-only regression).
 
 ## What Exists In This Repo
 

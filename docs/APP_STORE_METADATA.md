@@ -44,7 +44,7 @@ Alternativer:
 
 ---
 
-## iOS App Version 1.6.1 — Submitted to review (build 23, 2026-07-18)
+## iOS App Version 1.6.1 — Live in App Store (build 23, approved July 2026)
 
 Small patch: refreshed app icons, a privacy hardening (Sentry breadcrumb scrubbing), and the Progress legend layout fix. **ASO fields (subtitle + keywords) are unchanged from 1.6.0** and carry forward automatically — do not re-enter them. **Promotional Text must be re-pasted** (ASC wipes it on every new version); reuse the exact 1.6.0 per-locale promo texts above.
 
@@ -92,7 +92,7 @@ Finpuss og en liten personvernforbedring.
 
 ---
 
-## iOS App Version 1.6.0 — Live in App Store (build 22, approved July 2026)
+## iOS App Version 1.6.0 — Superseded by 1.6.1 (build 22, was live July 2026)
 
 Small quality release that also carries the ASO metadata pass: new subtitles (SV + NO) and rebuilt keyword fields per locale, plus re-pasted Promotional Text (ASC wipes it on every new version). Release notes and promo text are written per the portfolio voice rules (no em-dashes; bullets are allowed on the store surface). Rationale for the keyword/subtitle choices lives in the private hub (`WeanNicotine/aso-pass-draft.md`).
 
