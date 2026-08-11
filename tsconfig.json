@@ -1,11 +1,43 @@
 {
-  "extends": "expo/tsconfig.base",
+  "//": [
+    "Self-contained on purpose: this file used to `extends: expo/tsconfig.base`,",
+    "but Astro 7 walks up the directory tree and parses ancestor tsconfigs when",
+    "building website/. CI installs the app and the website as separate",
+    "workspaces, so `expo` is not resolvable from website/ and the whole build",
+    "failed with `Tsconfig not found expo/tsconfig.base` (see #280).",
+    "The compilerOptions below are inlined verbatim from expo/tsconfig.base",
+    "(Expo SDK 55) plus our own `strict` and `paths`. Verified with",
+    "`tsc --showConfig` to resolve identically to the previous extends-based",
+    "setup. If Expo changes its base in a future SDK, re-diff this against",
+    "node_modules/expo/tsconfig.base.json as part of the upgrade."
+  ],
   "compilerOptions": {
+    "allowJs": true,
+    "esModuleInterop": true,
+    "jsx": "react-native",
+    "lib": ["DOM", "ESNext"],
+    "module": "preserve",
+    "moduleDetection": "force",
+    "moduleResolution": "bundler",
+    "customConditions": ["react-native"],
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "target": "ESNext",
     "strict": true,
     "paths": {
       "@/*": ["./*"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"],
-  "exclude": ["node_modules", "ios", "android", "dist", "website"]
+  "exclude": [
+    "node_modules",
+    "ios",
+    "android",
+    "dist",
+    "website",
+    "babel.config.js",
+    "metro.config.js",
+    "jest.config.js"
+  ]
 }
