@@ -28,13 +28,13 @@ const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 const translatePath = useTranslatedPath(lang);
 
-const pageTitle = title ? `${title} | ${SITE_NAME}` : `${SITE_NAME} — Snus & Nicotine Pouch Reduction App`;
+const pageTitle = title ? `${title} | ${SITE_NAME}` : `${SITE_NAME}, Snus & Nicotine Pouch Reduction App`;
 const pageDescription =
 	description ??
 	'Reduce snus and nicotine pouches gradually with a calm, private app. Track daily allowance, log use in one tap, handle cravings, and see progress over time.';
 
 const canonicalUrl = new URL(canonicalPath ?? Astro.url.pathname, Astro.site).toString();
-// PNG (not SVG) — most social platforms reject SVG og:image
+// PNG (not SVG). Most social platforms reject SVG og:image
 // Regenerate via: cd website && node -e "require('sharp')(require('fs').readFileSync('public/og-image.svg'),{density:200}).resize(1200,630,{fit:'contain',background:'#000'}).png({compressionLevel:9}).toFile('public/og-image.png')"
 const ogImageUrl = new URL(ogImage ?? '/og-image.png', Astro.site).toString();
 
@@ -98,13 +98,13 @@ const structuredData: Record<string, unknown> = {
 		<meta property="og:image:type" content="image/png" />
 		<meta property="og:image:width" content="1200" />
 		<meta property="og:image:height" content="630" />
-		<meta property="og:image:alt" content={`${SITE_NAME} — reduce snus and nicotine pouches step by step`} />
+		<meta property="og:image:alt" content={`${SITE_NAME}, reduce snus and nicotine pouches step by step`} />
 
 		<meta name="twitter:card" content="summary_large_image" />
 		<meta name="twitter:title" content={pageTitle} />
 		<meta name="twitter:description" content={pageDescription} />
 		<meta name="twitter:image" content={ogImageUrl} />
-		<meta name="twitter:image:alt" content={`${SITE_NAME} — reduce snus and nicotine pouches step by step`} />
+		<meta name="twitter:image:alt" content={`${SITE_NAME}, reduce snus and nicotine pouches step by step`} />
 
 		<meta name="apple-itunes-app" content="app-id=6758867485" />
 		<meta name="generator" content={Astro.generator} />
@@ -113,7 +113,7 @@ const structuredData: Record<string, unknown> = {
 		<!-- Umami Analytics (privacy-friendly, cookie-free) -->
 		<script defer src="https://umami-iamjarl.vercel.app/script.js" data-website-id="ab39d27c-ff32-49c4-b9e3-4c8407aad2b8"></script>
 
-		<!-- Typography is self-hosted via @fontsource — see styles/global.css.
+		<!-- Typography is self-hosted via @fontsource. See styles/global.css.
 		     Removed the render-blocking Google Fonts <link> that previously
 		     stalled first paint and required preconnect hints. -->
 
@@ -428,7 +428,7 @@ const structuredData: Record<string, unknown> = {
 	}
 
 	/* Non-EN locales drop the two EN-only link columns (see footer markup),
-	   leaving brand + "More from IAMJARL" — keep them balanced, not stranded
+	   leaving brand + "More from IAMJARL". Keep them balanced, not stranded
 	   in the first two of four tracks. */
 	.site-footer__grid--compact {
 		grid-template-columns: repeat(2, 1fr);

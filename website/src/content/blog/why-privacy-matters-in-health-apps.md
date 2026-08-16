@@ -6,7 +6,7 @@ author: 'Jarl Lyng'
 tags: ['privacy', 'local-first', 'positioning']
 ---
 
-Most health apps default to the cloud. You create an account, you sync, your data lives on someone else's server. That works fine when the data is innocuous — step counts, water intake, sleep hours. It becomes a problem when the data is the kind that could embarrass you, get you denied coverage, or simply remind you of a difficult chapter you'd rather not have on file forever.
+Most health apps default to the cloud. You create an account, you sync, your data lives on someone else's server. That works fine when the data is innocuous. Step counts, water intake, sleep hours. It becomes a problem when the data is the kind that could embarrass you, get you denied coverage, or simply remind you of a difficult chapter you'd rather not have on file forever.
 
 A nicotine usage log is squarely in that second category. So is anything that looks like an addiction track record. So is anything tied to a chronic condition, a mental-health pattern, or a personal habit you're trying to break.
 
@@ -72,14 +72,14 @@ This piece is the case for local-first health apps in general, and what to actua
 
 A local-first app stores your data on the device you used to enter it. There's no server-side copy. There's no account. There's no sync. If you delete the app, the data is gone with it.
 
-The trade-off is real: you can't switch phones without exporting, you can't share with a clinician through a portal, you can't pull a five-year backup from the cloud. For most people most of the time, those trade-offs are easy to accept — because the benefit is that the data simply doesn't exist anywhere outside your own device.
+The trade-off is real: you can't switch phones without exporting, you can't share with a clinician through a portal, you can't pull a five-year backup from the cloud. For most people most of the time, those trade-offs are easy to accept, because the benefit is that the data simply doesn't exist anywhere outside your own device.
 
 That benefit looks abstract until you list the concrete failure modes it eliminates:
 
 - **Insurance underwriting.** Health and life insurers don't (yet) read your apps. They could. The boundary holds because of regulation, not technology. A local-first app is invisible to that boundary regardless of how it shifts.
 - **Account breaches.** Every cloud service eventually leaks. A breach of a "quit smoking" app's user database is the kind of dataset that makes the news. A local-first app has nothing for an attacker to target server-side.
 - **Subpoenas and government requests.** In some jurisdictions, the legality of substances you might be tracking is ambiguous or hostile. A server holding "user X used N pouches on date Y" is a record that can be requested by a court. A local DB on an iPhone in your pocket cannot.
-- **Employer / family visibility.** Shared computers, family iCloud, work-managed devices — there are many ways someone else can stumble into your data when it syncs. Local-first cuts those paths at the source.
+- **Employer / family visibility.** Shared computers, family iCloud, work-managed devices. There are many ways someone else can stumble into your data when it syncs. Local-first cuts those paths at the source.
 - **Future-you regret.** You quit, you delete the app, the chapter is closed. With a cloud service, that "closed" status depends on the company's data-retention policy, the policy's actual implementation, and the company's continued existence.
 
 You may not care about any single one of those scenarios today. You don't know which one you'll care about in five years.
@@ -89,15 +89,15 @@ You may not care about any single one of those scenarios today. You don't know w
 Many apps describe themselves as "privacy-first" while still operating in the cloud. The usual marketing pattern:
 
 - "End-to-end encryption" (you trust the company to actually implement it correctly and not retain the keys).
-- "GDPR compliant" (a legal status, not a privacy guarantee — it just means they have a Data Processing Agreement).
+- "GDPR compliant" (a legal status, not a privacy guarantee. It just means they have a Data Processing Agreement).
 - "We don't sell your data" (until they pivot the business model, or get acquired, or change the privacy policy with 30 days' notice that you won't read).
-- "Anonymous" (re-identification of anonymized health data is well-documented in the academic literature — usually trivial when combined with other signals).
+- "Anonymous" (re-identification of anonymized health data is well-documented in the academic literature, usually trivial when combined with other signals).
 
 None of these claims is necessarily false in the marketing copy. They just all depend on continued good behavior by a company that has the data. The local-first approach takes the question off the table by not having the data.
 
 ## What to look for in a "private" health app
 
-If you're shopping for any health-tracking app — not just a nicotine one — here's the checklist that separates real privacy from marketing claims:
+If you're shopping for any health-tracking app (not just a nicotine one), here's the checklist that separates real privacy from marketing claims:
 
 ### Hard signals (binary, easy to verify)
 
@@ -126,23 +126,23 @@ To be useful, an example is worth more than a checklist. Here's what Wean does a
 - **Account?** No. No sign-up flow exists.
 - **Cloud sync?** No. The SQLite database lives on your iPhone. If you delete the app, the data is deleted.
 - **Network calls during normal use?** None. The app works fully offline.
-- **Analytics SDK?** None. The app has a local analytics table for its own UX improvements (which screens you visit, which tools you use) — that table never leaves your phone.
+- **Analytics SDK?** None. The app has a local analytics table for its own UX improvements (which screens you visit, which tools you use), that table never leaves your phone.
 - **Crash reporting?** Sentry is used to capture technical crashes. The Sentry integration is configured with an automatic PII scrubber that strips known user-data fields (baseline, price, currency, triggers, pouch counts) before any event leaves the device. Crash data also doesn't get sent in development builds. The full scrubber rules live in [the Sentry integration code](https://github.com/JarlLyng/wean-nicotine/blob/main/lib/sentry.ts).
 - **Subscription?** None. One-time App Store purchase.
 - **Marketing site analytics?** The marketing website uses Umami, a cookieless, privacy-friendly analytics tool that doesn't track users across sites or collect personal data. It's self-hosted on EU infrastructure. Full details are on the [privacy page](/privacy/).
 - **Source code?** Open at [github.com/JarlLyng/wean-nicotine](https://github.com/JarlLyng/wean-nicotine). MIT licensed. You can verify any of the claims above by reading the code.
 
-That's not the whole landscape — there are other local-first apps worth checking — but it's an existence proof that you can ship a health tool without the cloud as a load-bearing component.
+That's not the whole landscape (there are other local-first apps worth checking), but it's an existence proof that you can ship a health tool without the cloud as a load-bearing component.
 
 ## The "I have nothing to hide" trap
 
 A common response to all of this is: I don't care, I have nothing to hide. The response misses how privacy actually works. You don't make privacy decisions for who you are right now; you make them for every future version of yourself you can't predict.
 
-The data you generate today about a nicotine taper is just data. In ten years, depending on regulation, on insurer behavior, on your career, on relationships you haven't started yet, it might mean something specific. Or it might mean nothing. The point of local-first isn't that you know which scenario will play out — it's that the data simply isn't available to play any of them out.
+The data you generate today about a nicotine taper is just data. In ten years, depending on regulation, on insurer behavior, on your career, on relationships you haven't started yet, it might mean something specific. Or it might mean nothing. The point of local-first isn't that you know which scenario will play out. It's that the data simply isn't available to play any of them out.
 
 ## The shortest honest summary
 
-If a health app needs your data to function, it has your data. Promises about how it'll be used are conditional on the company's continued ability and willingness to keep them. Local-first is the version of "we don't have it" that doesn't require trust — you can verify it by turning off your phone's network connection and seeing the app still work.
+If a health app needs your data to function, it has your data. Promises about how it'll be used are conditional on the company's continued ability and willingness to keep them. Local-first is the version of "we don't have it" that doesn't require trust. You can verify it by turning off your phone's network connection and seeing the app still work.
 
 For data you wouldn't want leaving your pocket, that's the only design that holds up over time.
 

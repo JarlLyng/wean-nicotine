@@ -1,15 +1,15 @@
 ---
 /**
- * NordicHome — shared home-page template for the da / sv / no locales (#100).
+ * NordicHome, shared home-page template for the da / sv / no locales (#100).
  *
  * The three Nordic homes were byte-for-byte structurally identical (hero,
  * 3-step "how", 6-card features, FAQ grid + FAQPage schema, ~100 lines of
- * hero CSS) — only the copy differed. Each locale page now supplies a typed
+ * hero CSS), only the copy differed. Each locale page now supplies a typed
  * `content` object and this component owns the markup, styles, and schema.
  *
  * The EN home (src/pages/index.astro) is intentionally NOT unified here:
  * it has a richer, structurally different layout (two-phone hero,
- * screenshots gallery, social-proof bar) — forcing it into this template
+ * screenshots gallery, social-proof bar), forcing it into this template
  * would trade duplication for a conditional mega-component.
  */
 import { Picture } from 'astro:assets';
