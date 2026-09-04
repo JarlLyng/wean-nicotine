@@ -309,6 +309,43 @@ The fix that holds up:
 - Before EAS local build: `pod repo update` if it's been more than a week.
 - Never add a `brace-expansion` npm `overrides` entry without testing a full EAS build first. Forcing v5 breaks the codegen pipeline by silently breaking transitive `minimatch@3.x` consumers (see #170/#172/#174).
 
+### Dependabot alerts that cannot be fixed from this repo
+
+Three open alerts are permanently blocked on Expo upstream. They are re-investigated
+every time someone looks at the alert list, so the conclusions are written down here.
+Re-check them only when the Expo SDK moves.
+
+| Alert                                              | Path                                 | Why it is stuck                                            |
+| -------------------------------------------------- | ------------------------------------ | ---------------------------------------------------------- |
+| `image-size` (2, high)                             | `metro` ← Expo SDK                   | `patched: NONE`. There is no fixed version to move to yet. |
+| `decode-uri-component` (1, medium, CVE-2026-45822) | `expo-router` → `query-string@7.1.3` | Patched at `0.5.0`, but see below.                         |
+
+**Do not add an `overrides` entry for `decode-uri-component`.** The patched `0.5.0` is
+pure ESM (`"type": "module"`), while the vulnerable `0.2.2` is CommonJS, and
+`query-string@7.1.3` consumes it as `const decodeComponent = require('decode-uri-component')`.
+Forcing the override breaks URL parsing at runtime rather than at build time, so CI would
+stay green. The real fix has to come from `expo-router` moving to `query-string` v8+.
+
+Verify the module-format mismatch before trusting any of this again:
+
+```bash
+npm view decode-uri-component@0.5.0 type   # module
+npm view decode-uri-component@0.2.2 type   # (undefined, i.e. commonjs)
+grep -n "decode-uri-component" node_modules/query-string/index.js
+```
+
+On exposure, so the severity label does not cause a panic: `image-size` is parsed by Metro
+during bundling and never ships in the iOS binary. `decode-uri-component` is a denial of
+service via exponential decoding of malformed percent-encoded input; `app.config.js`
+registers the `wean` and `taper` URL schemes, so a hostile app on the same device could
+hang Wean by deep-linking garbage at it. No data disclosure, no code execution, and the
+advisory is unscored.
+
+The general rule, and the same lesson as the `brace-expansion` warning above: **check the
+module format and the actual consumer before adding an override, not just the semver
+range.** An override that satisfies Dependabot and breaks the app at runtime is worse than
+the advisory it closes.
+
 ### AnimatedPressable doesn't forward style callbacks
 
 `Animated.createAnimatedComponent(Pressable)` accepts an array/object `style` prop but silently disables press handling if the style is a callback `({ pressed, focused }) => ...`. This blocked all Buttons in v1.4.0 build 18. If you need press-state-driven styling on an AnimatedPressable, use explicit `onPress{In,Out}` + animated SharedValue instead. The focus-ring feature for primitives lives in #136 with this constraint documented.
