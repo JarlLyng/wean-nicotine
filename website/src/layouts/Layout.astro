@@ -11,7 +11,16 @@ export interface Props {
 	description?: string;
 	canonicalPath?: string;
 	noindex?: boolean;
-	/** Which locales this page is available in. Defaults to all locales. */
+	/**
+	 * Which locales this page actually exists in, for hreflang and the language
+	 * switcher. Defaults to THIS page's locale only.
+	 *
+	 * The default is deliberately fail-closed. `useTranslatedPath` only swaps the
+	 * language prefix, it does not translate the slug, so claiming a locale the
+	 * page does not have emits an hreflang to a URL that 404s and puts a dead
+	 * link in the switcher. Pass the full list only on pages whose translations
+	 * really exist at the same slug.
+	 */
 	availableLocales?: string[];
 	/**
 	 * Path or absolute URL to the social-share image. Defaults to the brand
@@ -22,9 +31,9 @@ export interface Props {
 }
 
 const { title, description, canonicalPath, noindex = false, availableLocales, ogImage } = Astro.props;
-const localesForHreflang = availableLocales ?? Object.keys(languages);
 
 const lang = getLangFromUrl(Astro.url);
+const localesForHreflang = availableLocales ?? [lang];
 const t = useTranslations(lang);
 const translatePath = useTranslatedPath(lang);
 
@@ -122,6 +131,14 @@ const structuredData: Record<string, unknown> = {
 		     would double-fetch (preload the PNG, render the AVIF). The <img>
 		     carries fetchpriority="high" instead, and the preload also fired
 		     wastefully on every non-home page. -->
+
+		<!-- Marks the document as script-capable before first paint. The
+		     `.reveal` hidden state hangs off this class (see global.css), so a
+		     browser with JavaScript off or blocked renders the content instead
+		     of an invisible page. -->
+		<script is:inline>
+			document.documentElement.classList.add('js');
+		</script>
 
 		<!-- Scroll Reveal Script -->
 		<script is:inline>
@@ -374,7 +391,12 @@ const structuredData: Record<string, unknown> = {
 		text-decoration: none;
 	}
 
-	@media (max-width: 700px) {
+	/* Switch to the compact menu well before the header runs out of room.
+	   At 700px the desktop header still rendered, and at 768px the App Store
+	   CTA ended ~84px outside the viewport, hidden only by the body's
+	   overflow-x: hidden. Keep this in step with LanguageSwitcher's own
+	   breakpoint. */
+	@media (max-width: 960px) {
 		.nav-toggle {
 			display: flex;
 		}

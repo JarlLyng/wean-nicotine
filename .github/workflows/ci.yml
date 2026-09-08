@@ -49,7 +49,7 @@ jobs:
         run: CI=1 npx expo lint
         env:
           # No DSN needed for lint
-          EXPO_PUBLIC_SENTRY_DSN: ""
+          EXPO_PUBLIC_SENTRY_DSN: ''
 
       - name: TypeScript check
         run: npx tsc --noEmit
@@ -79,4 +79,11 @@ jobs:
 
       - name: Build website
         run: npm run build
+        working-directory: website
+
+      - name: Check built output
+        # A passing build does not mean the output is correct. This catches
+        # hreflang and internal links that point at pages which do not exist,
+        # which shipped twice before the check existed.
+        run: node scripts/check-build.mjs
         working-directory: website

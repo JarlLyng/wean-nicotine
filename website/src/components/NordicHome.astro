@@ -14,6 +14,7 @@
  */
 import { Picture } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
+import { ALL_LOCALES } from '../i18n/ui';
 import Button from './Button.astro';
 import Card from './Card.astro';
 import Section from './Section.astro';
@@ -63,7 +64,12 @@ const faqSchema = {
 };
 ---
 
-<Layout title={content.meta.title} description={content.meta.description} canonicalPath={`/${lang}/`}>
+<Layout
+	title={content.meta.title}
+	description={content.meta.description}
+	canonicalPath={`/${lang}/`}
+	availableLocales={ALL_LOCALES}
+>
 	<script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 	<section class="hero">
 		<div class="nordic-bg" style={`background-image: url('${bgImage}');`}></div>
