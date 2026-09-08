@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import { ALL_LOCALES } from '../../i18n/ui';
 import Card from '../../components/Card.astro';
 import Section from '../../components/Section.astro';
 import { SUPPORT_EMAIL } from '../../lib/site';
@@ -9,6 +10,7 @@ import { SUPPORT_EMAIL } from '../../lib/site';
 	title="Support"
 	description="Support til Wean Nicotine iOS-appen."
 	canonicalPath="/da/support/"
+	availableLocales={ALL_LOCALES}
 >
 	<Section
 		id="support"

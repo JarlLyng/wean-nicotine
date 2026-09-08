@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import { ALL_LOCALES } from '../../i18n/ui';
 import { COMPANY_NAME, SITE_URL, SUPPORT_EMAIL } from '../../lib/site';
 
 const lastUpdated = '2026-01-21';
@@ -9,6 +10,7 @@ const lastUpdated = '2026-01-21';
 	title="Integritetspolicy"
 	description="Integritetspolicy för iOS-appen Wean Nicotine."
 	canonicalPath="/sv/privacy/"
+	availableLocales={ALL_LOCALES}
 >
 	<section class="page">
 		<div class="container prose">

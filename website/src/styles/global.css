@@ -12,143 +12,196 @@
 
 /* Color scheme follows system preference via tokens.css */
 :root {
-	color-scheme: light dark;
+  color-scheme: light dark;
 }
 
 * {
-	box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 html,
 body {
-	margin: 0;
-	padding: 0;
-	min-height: 100vh;
-	background-color: var(--bg-app);
-	color: var(--text-primary);
-	font-family: var(--font-body);
-	font-size: var(--font-size-base);
-	line-height: var(--line-height-normal);
-	text-rendering: optimizeLegibility;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
-h1, h2, h3, h4, .brand__name {
-	font-family: var(--font-display);
-	font-weight: var(--font-weight-bold);
-	margin: 0;
+h1,
+h2,
+h3,
+h4,
+.brand__name {
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-bold);
+  margin: 0;
 }
 
-h1 { font-size: var(--font-size-hero); line-height: var(--line-height-tight); letter-spacing: -0.04em; }
-h2 { font-size: var(--font-size-xxl); line-height: var(--line-height-snug); letter-spacing: -0.03em; }
+h1 {
+  font-size: var(--font-size-hero);
+  line-height: var(--line-height-tight);
+  letter-spacing: -0.04em;
+}
+h2 {
+  font-size: var(--font-size-xxl);
+  line-height: var(--line-height-snug);
+  letter-spacing: -0.03em;
+}
 
 a {
-	color: inherit;
-	text-decoration: none;
-	transition: all 0.2s ease;
+  color: inherit;
+  text-decoration: none;
+  transition: all 0.2s ease;
 }
 
 a:hover {
-	color: var(--primary);
+  color: var(--primary);
 }
 
 .container {
-	width: 100%;
-	max-width: 1200px;
-	margin: 0 auto;
-	padding-left: var(--space-xl);
-	padding-right: var(--space-xl);
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-left: var(--space-xl);
+  padding-right: var(--space-xl);
 }
 
 /* Glassmorphism Classes */
 .glass {
-	background: var(--glass-bg);
-	backdrop-filter: blur(var(--glass-blur));
-	-webkit-backdrop-filter: blur(var(--glass-blur));
-	border: 1px solid var(--glass-border);
-	box-shadow: var(--shadow-premium);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-premium);
 }
 
 .glass-card {
-	background: var(--glass-bg);
-	backdrop-filter: blur(var(--glass-blur));
-	-webkit-backdrop-filter: blur(var(--glass-blur));
-	border: 1px solid var(--glass-border);
-	border-radius: var(--radius-lg);
-	padding: var(--space-xxl);
-	transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xxl);
+  transition:
+    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.3s ease;
 }
 
 .glass-card:hover {
-	transform: translateY(-8px);
-	box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
-	border-color: color-mix(in oklab, var(--primary), transparent 60%);
+  transform: translateY(-8px);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+  border-color: color-mix(in oklab, var(--primary), transparent 60%);
 }
 
 /* Nordic Background System */
 .nordic-bg {
-	position: absolute;
-	inset: 0;
-	z-index: -1;
-	background-size: cover;
-	background-position: center;
-	background-repeat: no-repeat;
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .nordic-bg::after {
-	content: '';
-	position: absolute;
-	inset: 0;
-	background: linear-gradient(to bottom, 
-		color-mix(in oklab, var(--bg-app), transparent 20%), 
-		var(--bg-app) 95%
-	);
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in oklab, var(--bg-app), transparent 20%),
+    var(--bg-app) 95%
+  );
 }
 
 /* Animation Utilities */
-.reveal {
-	opacity: 0;
-	transform: translateY(30px);
-	transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+/* The hidden start state is gated on `.js`, which the inline head script in
+   Layout.astro sets. Without JavaScript (or if that script never runs) the
+   class is absent and the content simply renders, instead of staying at
+   opacity 0 forever waiting for an IntersectionObserver that will not fire. */
+.js .reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.reveal.active {
-	opacity: 1;
-	transform: translateY(0);
+.js .reveal.active {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 @keyframes float {
-	0%, 100% { transform: translateY(0); }
-	50% { transform: translateY(-20px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
 }
 
 .anim-float {
-	animation: float 10s ease-in-out infinite;
+  animation: float 10s ease-in-out infinite;
+}
+
+/* Site-wide reduced-motion. Previously this lived only in index.astro's
+   scoped <style>, so it never applied to NordicHome (the DA/SV/NO home
+   pages) or to any other component using these global classes. */
+@media (prefers-reduced-motion: reduce) {
+  .anim-float,
+  .hero__aurora-orb {
+    animation: none !important;
+  }
+
+  .js .reveal,
+  .js .reveal.active {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
 
 /* Grid Utilities */
-.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-xxl); }
-.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-xxl); }
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-xxl);
+}
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-xxl);
+}
 
 @media (max-width: 900px) {
-	.grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .grid-2,
+  .grid-3 {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Section Header */
 .section-header {
-	text-align: center;
-	margin-bottom: var(--space-huge);
-	max-width: 700px;
-	margin-left: auto;
-	margin-right: auto;
+  text-align: center;
+  margin-bottom: var(--space-huge);
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.section-header h2 { margin-bottom: var(--space-md); }
-.section-header p { 
-	font-size: var(--font-size-lg); 
-	color: var(--text-secondary); 
-	line-height: var(--line-height-relaxed);
+.section-header h2 {
+  margin-bottom: var(--space-md);
 }
-
+.section-header p {
+  font-size: var(--font-size-lg);
+  color: var(--text-secondary);
+  line-height: var(--line-height-relaxed);
+}

@@ -1,6 +1,7 @@
 ---
 import { Picture } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
+import { ALL_LOCALES } from '../i18n/ui';
 import Button from '../components/Button.astro';
 import Card from '../components/Card.astro';
 import Section from '../components/Section.astro';
@@ -97,6 +98,7 @@ const screenshots = [
 <Layout
 	description="Reduce snus and nicotine pouches gradually with a calm, private app. Track your daily allowance, log use in one tap, and get support when cravings hit."
 	canonicalPath="/"
+	availableLocales={ALL_LOCALES}
 >
 	<script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 

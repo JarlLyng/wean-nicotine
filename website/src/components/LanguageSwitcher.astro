@@ -93,7 +93,11 @@ const entries = Object.entries(languages).map(([code, label]) => {
 	.lang-label {
 		display: none;
 	}
-	@media (min-width: 768px) {
+	/* Full language names only once the desktop header is actually shown
+	   (Layout.astro switches to the compact menu at 960px). Expanding these
+	   at 768px while the desktop nav was still up is what pushed the CTA
+	   out of the viewport. */
+	@media (min-width: 961px) {
 		.lang-code {
 			display: none;
 		}

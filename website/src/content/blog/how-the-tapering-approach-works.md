@@ -1,6 +1,6 @@
 ---
 title: 'How the tapering approach works for nicotine pouches'
-description: 'Why gradual reduction beats cold turkey for most people, what happens in the body during a taper, and how to set the pace right.'
+description: 'Why Wean Nicotine is built around gradual reduction, what happens in the body during a taper, and how to set the pace.'
 pubDate: 2026-06-04
 author: 'Jarl Lyng'
 tags: ['tapering', 'snus', 'nicotine-pouches', 'method']
@@ -21,12 +21,14 @@ For nicotine pouches, that means:
 - Each week, the daily allowance drops by that percentage compounded against the previous week's allowance.
 - You stop when the allowance reaches zero, or low enough that the final step feels trivial.
 
-A 5% weekly reduction starting from 12 pouches a day puts you at ~6/day after 14 weeks, ~3/day after 24 weeks, and effectively at zero around week 36. That sounds long, but the number that matters isn't the calendar. It's the success rate. Most people who attempt a 9-month taper finish. Most people who attempt cold turkey are back to baseline within a month.
+A 5% weekly reduction starting from 12 pouches a day puts the computed allowance at 5.9 after 14 weeks and 3.5 after 24 weeks. The whole-pouch target you actually see in the app (the allowance rounded down) reads 5 and 3 at those points, reaches 1 around week 36, and first shows zero at week 50. Every figure on this page comes from the app's own `estimateWeeksToZero()`, so the plan you read about here is the plan you get.
+
+That is close to a year, which sounds long. The trade is that each weekly step is small enough to be unremarkable, and a plan you keep following beats a faster one you abandon.
 
 <figure class="taper-figure">
 <svg viewBox="0 0 800 440" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="taper-chart-title taper-chart-desc" class="taper-chart">
 	<title id="taper-chart-title">Taper curves from 12 pouches per day at 3%, 5%, and 10% weekly reduction</title>
-	<desc id="taper-chart-desc">Line chart showing daily pouch allowance over 52 weeks. A 3% weekly reduction ends near 2.5 pouches per day at week 52. A 5% reduction (the app's default) reaches roughly 0.8 by week 52, crossing 6 pouches at week 14 and 3 pouches at week 24. A 10% reduction drops below 1 pouch per day by week 24 but is harder to sustain.</desc>
+	<desc id="taper-chart-desc">Line chart showing daily pouch allowance over 52 weeks. A 3% weekly reduction ends near 2.5 pouches per day at week 52. A 5% reduction (the app's default) reaches roughly 0.8 by week 52, crossing 6 pouches at week 14 and 3 pouches at week 24. A 10% reduction drops below 1 pouch per day at week 25 but is harder to sustain.</desc>
 	<g stroke="var(--border-subtle)" stroke-width="1" opacity="0.6">
 		<line x1="60" y1="40" x2="760" y2="40" />
 		<line x1="60" y1="120" x2="760" y2="120" />
@@ -62,7 +64,7 @@ A 5% weekly reduction starting from 12 pouches a day puts you at ~6/day after 14
 		<text x="652" y="105" fill="var(--text-primary)">10% / week, aggressive</text>
 	</g>
 </svg>
-<figcaption>Weekly taper curves from a baseline of 12 pouches per day. The 5% line is the app default. Steep enough to make weekly progress visible, gentle enough that most people finish.</figcaption>
+<figcaption>Weekly taper curves from a baseline of 12 pouches per day. The 5% line is the app default. Steep enough to make weekly progress visible, gentle enough that each step stays small.</figcaption>
 </figure>
 
 ## Why it works when cold turkey doesn't
@@ -83,7 +85,7 @@ By the time you reach zero pouches, the trigger has often faded too. You don't f
 
 ### 3. The "I failed today" loop doesn't form
 
-In a cold-turkey attempt, a single relapse (one pouch) is usually framed as failure. The mental flip from "I quit" to "I failed" is brutal, and most people don't survive it. They use a second pouch the same day to manage the shame of the first one, and the attempt is over.
+In a cold-turkey attempt, a single relapse (one pouch) is usually framed as failure. The mental flip from "I quit" to "I failed" is brutal. The trap is that the shame of the first pouch is easiest to manage with a second one, and then the attempt is over. A taper has no equivalent cliff: going over your allowance on a Tuesday leaves Wednesday's number unchanged.
 
 In a taper, a day over the limit doesn't end anything. The plan continues tomorrow. Going over the limit is information about whether the pace is right, not evidence that you've failed. The narrative is forgiving by design.
 
@@ -91,10 +93,12 @@ In a taper, a day over the limit doesn't end anything. The plan continues tomorr
 
 The pace is the single most important decision. Three reference points:
 
-- **3% per week.** Very gentle. Good for people who've relapsed from cold turkey multiple times, or who are managing high stress and don't want the taper to add to it. Reaches zero in roughly 50 weeks.
-- **5% per week.** The default. Reaches zero in 36 weeks. Most people find this sustainable indefinitely, the weekly step is small enough that adaptation keeps up.
-- **7–10% per week.** Aggressive. Reaches zero in 20–28 weeks. Higher dropout rate but works for people who genuinely want a faster timeline and have low baseline usage (under 8 pouches/day) to begin with.
-- **15% per week.** Almost cold turkey. We list it because some apps offer it and people ask. In practice, very few people finish a 15% taper without relapse. If you're choosing 15%, you may as well attempt cold turkey and skip the tooling.
+All the week counts below assume a baseline of 12 pouches a day and describe when the app's displayed whole-pouch target first reads zero. A lower baseline gets there sooner.
+
+- **3% per week.** Very gentle. Good for people who've relapsed from cold turkey multiple times, or who are managing high stress and don't want the taper to add to it. Reaches zero at week 84.
+- **5% per week.** The default. Reaches zero at week 50. The weekly step stays small enough that adaptation keeps up.
+- **7 to 10% per week.** Aggressive. Reaches zero between week 35 and week 25. Suited to a faster timeline and a lower starting point, under about 8 pouches a day.
+- **15% per week.** Almost cold turkey, reaching zero at week 16. We list it because some apps offer it and people ask. If you are choosing 15%, consider whether the taper is buying you anything over simply stopping.
 
 The right pace is the one you can sustain on a bad day, not a good one. If you're picking the pace on a quiet Sunday and thinking "I can definitely do 10%," remember that the same plan needs to survive a Tuesday meeting that runs over.
 
