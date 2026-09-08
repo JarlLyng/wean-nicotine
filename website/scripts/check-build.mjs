@@ -46,6 +46,23 @@ function resolve(path) {
   return null;
 }
 
+/**
+ * The site-absolute path of an href, or null when it points somewhere else.
+ * Compares parsed origins rather than testing a string prefix, which would
+ * also accept `weannicotine.iamjarl.com.example` and then slice it into a
+ * path that resolves to nothing useful.
+ */
+function sitePath(href) {
+  let url;
+  try {
+    url = new URL(href, ORIGIN);
+  } catch {
+    return null;
+  }
+  if (url.origin !== ORIGIN) return null;
+  return (url.pathname || '/') + url.search;
+}
+
 const problems = [];
 const alternates = new Map(); // file -> Set of claimed paths
 
@@ -58,8 +75,8 @@ for (const file of files.sort()) {
     /<link\s+rel="alternate"\s+hreflang="([^"]+)"\s+href="([^"]+)"/g,
   )) {
     const [, lang, href] = m;
-    if (!href.startsWith(ORIGIN)) continue;
-    const path = href.slice(ORIGIN.length) || '/';
+    const path = sitePath(href);
+    if (path === null) continue;
     if (lang !== 'x-default') claimed.add(path);
     if (!resolve(path)) problems.push(`${file}: hreflang="${lang}" -> ${path} does not exist`);
   }
