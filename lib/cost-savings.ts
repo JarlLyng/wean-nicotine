@@ -7,10 +7,7 @@
 import type { TaperSettings } from './models';
 import { getLogEntries } from './db-log-entries';
 import { POUCHES_PER_CAN, PROJECTED_MONTH_DAYS } from './constants';
-
-function toDayKey(date: Date): string {
-  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-}
+import { daysWithLogs, toDayKey } from './day-coverage';
 
 function toWeekLabel(date: Date): string {
   const d = new Date(date);
@@ -55,6 +52,10 @@ export interface CostSavingsData {
   monthlySavings: MonthSaving[];
   dailyRate: number; // cents per day average
   projectedMonthlySaving: number; // cents
+  /** Days in the plan that had at least one log entry, so the figures above rest on them. */
+  daysWithData: number;
+  /** Days in the plan with no entries at all. Not counted as zero use (#320). */
+  daysWithoutData: number;
 }
 
 export async function calculateCostSavings(settings: TaperSettings): Promise<CostSavingsData> {
@@ -66,15 +67,18 @@ export async function calculateCostSavings(settings: TaperSettings): Promise<Cos
   const today = new Date();
   today.setHours(23, 59, 59, 999);
 
+  // All types, not just pouch_used: a day whose only entry is a resisted
+  // craving is a day we have evidence for, and a genuine zero (#320).
   const logs = await getLogEntries({
-    type: 'pouch_used',
     startDate: startDate.getTime(),
     endDate: today.getTime(),
   });
+  const covered = daysWithLogs(logs);
 
   // Group used by day
   const usedByDay = new Map<string, number>();
   for (const log of logs) {
+    if (log.type !== 'pouch_used') continue;
     const key = toDayKey(new Date(log.timestamp));
     usedByDay.set(key, (usedByDay.get(key) ?? 0) + 1);
   }
@@ -89,8 +93,19 @@ export async function calculateCostSavings(settings: TaperSettings): Promise<Cos
   const todayStart = new Date(today);
   todayStart.setHours(0, 0, 0, 0);
 
+  let daysWithoutData = 0;
+
   while (current <= todayStart) {
     const key = toDayKey(current);
+
+    // No entries at all means we do not know what happened, so we cannot
+    // claim the baseline was avoided. Skip rather than credit (#320).
+    if (!covered.has(key)) {
+      daysWithoutData++;
+      current.setDate(current.getDate() + 1);
+      continue;
+    }
+
     const used = usedByDay.get(key) ?? 0;
     const avoided = Math.max(0, settings.baselinePouchesPerDay - used);
     const savedCents = Math.round(avoided * pricePerPouch);
@@ -123,5 +138,7 @@ export async function calculateCostSavings(settings: TaperSettings): Promise<Cos
     monthlySavings,
     dailyRate,
     projectedMonthlySaving,
+    daysWithData: dayCount,
+    daysWithoutData,
   };
 }

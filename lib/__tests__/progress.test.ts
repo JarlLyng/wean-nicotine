@@ -51,6 +51,25 @@ function pouchLog(timestamp: Date, id: number = 0): LogEntry {
   };
 }
 
+/**
+ * One resisted-craving entry per day across the range, inclusive. This is how
+ * a genuine zero-pouch day is evidenced: the user logged something, they just
+ * did not use a pouch. Days with no entries are unknown, not zero (#320).
+ */
+function coverDays(from: Date, to: Date, startId = 5000): LogEntry[] {
+  const out: LogEntry[] = [];
+  const d = new Date(from);
+  d.setHours(9, 0, 0, 0);
+  const end = new Date(to);
+  end.setHours(23, 59, 59, 999);
+  let id = startId;
+  while (d <= end) {
+    out.push(cravingLog(new Date(d), id++));
+    d.setDate(d.getDate() + 1);
+  }
+  return out;
+}
+
 function cravingLog(timestamp: Date, id: number = 0): LogEntry {
   return {
     id,
@@ -170,19 +189,63 @@ describe('calculateWeeklyProgress', () => {
       baselinePouchesPerDay: 20, // 1 can/day
       pricePerCan: 5000, // 50.00 in cents
     });
+    // Full week of evidenced zero-pouch days: avoided = 20 * 7 = 140 pouches
+    // = 7 cans = 35000 cents. (Local-midnight dates to stay timezone-safe.)
+    const weekStart = new Date('2026-01-05T00:00:00');
+    weekStart.setHours(0, 0, 0, 0);
+    const weekEnd = new Date('2026-01-11T23:59:59');
+    weekEnd.setHours(23, 59, 59, 999);
+    mockedGetLogEntries.mockResolvedValue(coverDays(weekStart, weekEnd));
+
+    const result = await calculateWeeklyProgress(settings, weekStart, weekEnd);
+
+    expect(result.moneySaved).toBeGreaterThan(0);
+    // Exactly 7 days in the week
+    expect(result.moneySaved).toBe(35000);
+  });
+
+  it('credits nothing for a week with no entries at all (#320)', async () => {
+    const settings = makeSettings({ baselinePouchesPerDay: 20, pricePerCan: 5000 });
     mockedGetLogEntries.mockResolvedValue([]);
 
-    // Full week, no logs: avoided = 20 * 7 = 140 pouches = 7 cans = 35000 cents
-    // (using local-midnight dates to stay timezone-safe)
     const weekStart = new Date('2026-01-05T00:00:00');
     weekStart.setHours(0, 0, 0, 0);
     const weekEnd = new Date('2026-01-11T23:59:59');
     weekEnd.setHours(23, 59, 59, 999);
     const result = await calculateWeeklyProgress(settings, weekStart, weekEnd);
 
-    expect(result.moneySaved).toBeGreaterThan(0);
-    // Exactly 7 days in the week
-    expect(result.moneySaved).toBe(35000);
+    // Previously this reported a full week of savings and 7/7 days under limit.
+    expect(result.moneySaved).toBe(0);
+    expect(result.pouchesAvoided).toBe(0);
+    expect(result.daysUnderLimit).toBe(0);
+  });
+
+  it('counts only evidenced days towards days under limit (#320)', async () => {
+    const settings = makeSettings({ baselinePouchesPerDay: 20, weeklyReductionPercent: 0 });
+    const weekStart = new Date('2026-01-05T00:00:00');
+    weekStart.setHours(0, 0, 0, 0);
+    const weekEnd = new Date('2026-01-11T23:59:59');
+    weekEnd.setHours(23, 59, 59, 999);
+
+    // Only three of the seven days carry any entry.
+    const d1 = new Date(weekStart);
+    d1.setHours(9, 0, 0, 0);
+    const d2 = new Date(weekStart);
+    d2.setDate(d2.getDate() + 2);
+    d2.setHours(9, 0, 0, 0);
+    const d3 = new Date(weekStart);
+    d3.setDate(d3.getDate() + 4);
+    d3.setHours(9, 0, 0, 0);
+    mockedGetLogEntries.mockResolvedValue([
+      cravingLog(d1, 1),
+      cravingLog(d2, 2),
+      cravingLog(d3, 3),
+    ]);
+
+    const result = await calculateWeeklyProgress(settings, weekStart, weekEnd);
+
+    expect(result.daysUnderLimit).toBe(3);
+    expect(result.daysUnderLimit + result.daysOverLimit).toBe(3);
   });
 
   it('does not calculate money saved when pricePerCan is missing', async () => {
@@ -235,7 +298,27 @@ describe('calculateTotalProgressAndMilestones', () => {
   });
 
   it('detects pouches-avoided threshold milestones', async () => {
-    // Baseline = 10/day, startDate 200 days ago, no logs → avoided = 2000 pouches
+    // Baseline = 10/day, 200 evidenced zero-pouch days → avoided = 2010 pouches
+    const twoHundredDaysAgo = new Date();
+    twoHundredDaysAgo.setDate(twoHundredDaysAgo.getDate() - 200);
+    const settings = makeSettings({
+      baselinePouchesPerDay: 10,
+      weeklyReductionPercent: 0,
+      startDate: twoHundredDaysAgo.getTime(),
+    });
+    mockedGetLogEntries.mockResolvedValue(coverDays(twoHundredDaysAgo, new Date()));
+
+    const { milestones } = await calculateTotalProgressAndMilestones(settings);
+    const thresholdIds = milestones.map((m) => m.id);
+
+    expect(thresholdIds).toContain('pouches_avoided_100');
+    expect(thresholdIds).toContain('pouches_avoided_500');
+    expect(thresholdIds).toContain('pouches_avoided_1000');
+  });
+
+  it('does not award avoided-pouch milestones for days with no entries (#320)', async () => {
+    // 200 days in the plan and not one entry. The old walk accrued the full
+    // baseline every silent day and handed out every threshold.
     const twoHundredDaysAgo = new Date();
     twoHundredDaysAgo.setDate(twoHundredDaysAgo.getDate() - 200);
     const settings = makeSettings({
@@ -246,11 +329,8 @@ describe('calculateTotalProgressAndMilestones', () => {
     mockedGetLogEntries.mockResolvedValue([]);
 
     const { milestones } = await calculateTotalProgressAndMilestones(settings);
-    const thresholdIds = milestones.map((m) => m.id);
 
-    expect(thresholdIds).toContain('pouches_avoided_100');
-    expect(thresholdIds).toContain('pouches_avoided_500');
-    expect(thresholdIds).toContain('pouches_avoided_1000');
+    expect(milestones.filter((m) => m.type === 'pouches_avoided')).toHaveLength(0);
   });
 
   it('detects cravings-resisted threshold milestones', async () => {
