@@ -55,7 +55,12 @@ export default function CostSavingsScreen() {
     );
   }
 
-  if (!data) return <Screen><View /></Screen>;
+  if (!data)
+    return (
+      <Screen>
+        <View />
+      </Screen>
+    );
 
   const fmt = (cents: number) => formatMoney(cents, currency);
 
@@ -72,8 +77,19 @@ export default function CostSavingsScreen() {
             <Icon name="piggy-bank" size={40} color={colors.primary} weight="duotone" />
             <Text style={s.heroAmount}>{fmt(data.totalSaved)}</Text>
             <Text style={s.heroSubtitle}>
-              saved since {startDate ? `${startDate.getDate()}/${startDate.getMonth() + 1}/${startDate.getFullYear()}` : '—'}
+              saved since{' '}
+              {startDate
+                ? `${startDate.getDate()}/${startDate.getMonth() + 1}/${startDate.getFullYear()}`
+                : '—'}
             </Text>
+            {data.daysWithoutData > 0 && (
+              <Text style={s.heroNote}>
+                Based on {data.daysWithData} day{data.daysWithData === 1 ? '' : 's'} you logged.{' '}
+                {data.daysWithoutData} day{data.daysWithoutData === 1 ? '' : 's'} without any
+                entries
+                {data.daysWithoutData === 1 ? ' is' : ' are'} left out rather than counted as zero.
+              </Text>
+            )}
           </Card>
         </Animated.View>
 
@@ -141,6 +157,13 @@ const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) =>
       fontSize: typography.sizes.base,
       color: colors.text.secondary,
       marginTop: spacing.xs,
+    },
+    heroNote: {
+      fontSize: typography.sizes.sm,
+      color: colors.text.tertiary,
+      marginTop: spacing.sm,
+      textAlign: 'center',
+      lineHeight: typography.sizes.sm * 1.4,
     },
     statsRow: {
       flexDirection: 'row',

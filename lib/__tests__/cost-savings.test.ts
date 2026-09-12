@@ -50,6 +50,35 @@ function pouchLog(timestamp: Date, id = 0): LogEntry {
   };
 }
 
+/**
+ * A resisted craving with no pouch on the same day. This is how a genuine
+ * zero-pouch day is evidenced: the user was present and logged something,
+ * they just did not use a pouch (#320).
+ */
+function resistedLog(timestamp: Date, id = 0): LogEntry {
+  return {
+    id,
+    type: 'craving_resisted',
+    timestamp: timestamp.getTime(),
+    createdAt: timestamp.getTime(),
+  };
+}
+
+/** One resisted-craving entry per day across the given range, inclusive. */
+function coverDays(from: Date, to: Date, startId = 1000): LogEntry[] {
+  const out: LogEntry[] = [];
+  const d = new Date(from);
+  d.setHours(9, 0, 0, 0);
+  const end = new Date(to);
+  end.setHours(23, 59, 59, 999);
+  let id = startId;
+  while (d <= end) {
+    out.push(resistedLog(new Date(d), id++));
+    d.setDate(d.getDate() + 1);
+  }
+  return out;
+}
+
 beforeEach(() => {
   mockedGetLogEntries.mockReset();
 });
@@ -65,19 +94,58 @@ describe('calculateCostSavings', () => {
     expect(result.projectedMonthlySaving).toBe(0);
   });
 
-  it('counts a fully-avoided day as baseline × pricePerPouch', async () => {
-    // Start = yesterday, no pouches used → 10 avoided
+  it('counts an evidenced zero-pouch day as baseline × pricePerPouch', async () => {
+    // Start = yesterday. Both days carry a resisted-craving entry and no
+    // pouches, so both are known zero-use days → 10 avoided each.
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
     yesterday.setHours(0, 0, 0, 0);
 
-    mockedGetLogEntries.mockResolvedValue([]);
-    const result = await calculateCostSavings(
-      makeSettings({ startDate: yesterday.getTime() }),
-    );
+    mockedGetLogEntries.mockResolvedValue(coverDays(yesterday, new Date()));
+    const result = await calculateCostSavings(makeSettings({ startDate: yesterday.getTime() }));
 
     // 2 days × 10 avoided × 1.0 = 20 currency units
     expect(result.totalSaved).toBe(20);
+    expect(result.daysWithData).toBe(2);
+    expect(result.daysWithoutData).toBe(0);
+  });
+
+  it('credits nothing for days with no entries at all (#320)', async () => {
+    // A week in the plan, not a single log. Previously this reported the
+    // maximum possible saving; missing data is not evidence of zero use.
+    const start = new Date();
+    start.setDate(start.getDate() - 6);
+    start.setHours(0, 0, 0, 0);
+
+    mockedGetLogEntries.mockResolvedValue([]);
+    const result = await calculateCostSavings(makeSettings({ startDate: start.getTime() }));
+
+    expect(result.totalSaved).toBe(0);
+    expect(result.dailyRate).toBe(0);
+    expect(result.projectedMonthlySaving).toBe(0);
+    expect(result.daysWithData).toBe(0);
+    expect(result.daysWithoutData).toBe(7);
+  });
+
+  it('counts only the evidenced days when the log has gaps (#320)', async () => {
+    // 4-day window; only the first and last day have any entries.
+    const start = new Date();
+    start.setDate(start.getDate() - 3);
+    start.setHours(0, 0, 0, 0);
+    const today = new Date();
+    today.setHours(9, 0, 0, 0);
+    const first = new Date(start);
+    first.setHours(9, 0, 0, 0);
+
+    mockedGetLogEntries.mockResolvedValue([resistedLog(first, 1), resistedLog(today, 2)]);
+    const result = await calculateCostSavings(makeSettings({ startDate: start.getTime() }));
+
+    // 2 known days × 10 avoided × 1.0, and the two silent days contribute nothing.
+    expect(result.totalSaved).toBe(20);
+    expect(result.daysWithData).toBe(2);
+    expect(result.daysWithoutData).toBe(2);
+    // The rate is per day WITH data, so it is not diluted by the gaps.
+    expect(result.dailyRate).toBe(10);
   });
 
   it('clamps over-baseline usage to zero avoided (no negative savings)', async () => {
@@ -90,9 +158,7 @@ describe('calculateCostSavings', () => {
     );
     mockedGetLogEntries.mockResolvedValue(logs);
 
-    const result = await calculateCostSavings(
-      makeSettings({ startDate: today.getTime() }),
-    );
+    const result = await calculateCostSavings(makeSettings({ startDate: today.getTime() }));
 
     expect(result.totalSaved).toBe(0);
     expect(result.dailyRate).toBe(0);
@@ -107,9 +173,7 @@ describe('calculateCostSavings', () => {
     );
     mockedGetLogEntries.mockResolvedValue(logs);
 
-    const result = await calculateCostSavings(
-      makeSettings({ startDate: today.getTime() }),
-    );
+    const result = await calculateCostSavings(makeSettings({ startDate: today.getTime() }));
 
     // 6 avoided × 1.0 = 6 currency units
     expect(result.totalSaved).toBe(6);
@@ -120,7 +184,7 @@ describe('calculateCostSavings', () => {
     start.setDate(start.getDate() - 3); // 4-day window incl. today
     start.setHours(0, 0, 0, 0);
 
-    mockedGetLogEntries.mockResolvedValue([]);
+    mockedGetLogEntries.mockResolvedValue(coverDays(start, new Date()));
     const result = await calculateCostSavings(makeSettings({ startDate: start.getTime() }));
 
     // 4 days × 10 avoided × 1.0 = 40 currency units
@@ -137,7 +201,7 @@ describe('calculateCostSavings', () => {
     start.setDate(start.getDate() - 13);
     start.setHours(0, 0, 0, 0);
 
-    mockedGetLogEntries.mockResolvedValue([]);
+    mockedGetLogEntries.mockResolvedValue(coverDays(start, new Date()));
     const result = await calculateCostSavings(makeSettings({ startDate: start.getTime() }));
 
     expect(result.weeklySavings.length).toBeGreaterThanOrEqual(2);
@@ -156,7 +220,8 @@ describe('calculateCostSavings', () => {
 
     expect(mockedGetLogEntries).toHaveBeenCalledTimes(1);
     const call = mockedGetLogEntries.mock.calls[0][0];
-    expect(call?.type).toBe('pouch_used');
+    // All types now, because a resisted craving is what evidences a zero day (#320).
+    expect(call?.type).toBeUndefined();
     expect(typeof call?.startDate).toBe('number');
     expect(typeof call?.endDate).toBe('number');
     expect(call!.endDate as number).toBeGreaterThan(call!.startDate as number);

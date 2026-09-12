@@ -6,6 +6,7 @@ import type { TaperSettings, LogEntry } from './models';
 import { getLogEntries } from './db-log-entries';
 import { calculateDailyAllowance } from './taper-plan';
 import { formatMoney } from './currency';
+import { daysWithLogs, toDayKey } from './day-coverage';
 import {
   CRAVING_MILESTONE_THRESHOLDS,
   MONEY_MILESTONE_THRESHOLDS,
@@ -16,9 +17,8 @@ import {
   POUCHES_PER_CAN,
 } from './constants';
 
-function toDayKey(date: Date): string {
-  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-}
+// toDayKey and the day-coverage rule live in ./day-coverage so the four
+// call sites that depend on it cannot drift apart (#320).
 
 export interface WeeklyProgress {
   weekStart: Date;
@@ -30,6 +30,12 @@ export interface WeeklyProgress {
   moneySaved?: number; // in cents
   daysUnderLimit: number;
   daysOverLimit: number;
+  /**
+   * Days in the week with no log entries at all. These are unknown, not zero
+   * use, so they are excluded from every figure above (#320). Present so the
+   * UI can say what the numbers rest on rather than implying a full week.
+   */
+  daysWithoutData: number;
 }
 
 export interface Milestone {
@@ -69,6 +75,7 @@ export async function calculateWeeklyProgress(
       cravingsResisted: 0,
       daysUnderLimit: 0,
       daysOverLimit: 0,
+      daysWithoutData: 0,
     };
   }
 
@@ -90,6 +97,7 @@ export async function calculateWeeklyProgress(
       moneySaved: 0,
       daysUnderLimit: 0,
       daysOverLimit: 0,
+      daysWithoutData: 0,
     };
   }
 
@@ -106,8 +114,12 @@ export async function calculateWeeklyProgress(
   // Calculate baseline for the week (only count days from start date to today)
   // Count actual days, not just time difference
   const days = getDaysInRange(effectiveStart, effectiveEnd);
-  const daysInWeek = days.length;
-  const baselineTotal = settings.baselinePouchesPerDay * daysInWeek;
+  // Only days we have evidence for contribute a baseline to compare against.
+  // Counting every calendar day would credit unlogged days as perfect (#320).
+  const covered = daysWithLogs(logs);
+  const knownDays = days.filter((day) => covered.has(toDayKey(day)));
+  const daysWithoutData = days.length - knownDays.length;
+  const baselineTotal = settings.baselinePouchesPerDay * knownDays.length;
   const pouchesAvoided = Math.max(0, baselineTotal - actualUsed);
 
   // Calculate money saved (if price is set)
@@ -128,7 +140,8 @@ export async function calculateWeeklyProgress(
   let daysUnderLimit = 0;
   let daysOverLimit = 0;
 
-  for (const day of days) {
+  // A day with no entries is unknown, not a day spent under the limit (#320).
+  for (const day of knownDays) {
     const dayAllowance = calculateDailyAllowance(settings, day);
     const dayKey = toDayKey(day);
     const dayUsed = logsByDay.get(dayKey) || 0;
@@ -150,6 +163,7 @@ export async function calculateWeeklyProgress(
     moneySaved,
     daysUnderLimit,
     daysOverLimit,
+    daysWithoutData,
   };
 }
 
@@ -219,6 +233,7 @@ export async function calculateTotalProgressAndMilestones(
 
   const days = getDaysInRange(startDate, today);
   const daysSinceStart = days.length;
+  const coveredDays = daysWithLogs(logs);
 
   // --- Single pass over days: total progress + first-day milestone + threshold milestones ---
   const milestones: Milestone[] = [];
@@ -240,6 +255,9 @@ export async function calculateTotalProgressAndMilestones(
 
   for (const day of days) {
     const dayKey = toDayKey(day);
+    // Unknown days must not accrue avoided pouches, or a milestone can fire
+    // off a stretch where the user simply stopped logging (#320).
+    if (!coveredDays.has(dayKey)) continue;
     const dayUsed = usedCountsByDay.get(dayKey) ?? 0;
     cumBase += settings.baselinePouchesPerDay;
     cumUsed += dayUsed;
@@ -605,6 +623,11 @@ export async function assessPace(settings: TaperSettings): Promise<PaceAssessmen
     usedByDay.set(key, (usedByDay.get(key) ?? 0) + 1);
   }
 
+  // Deliberately NOT filtered by day coverage the way the earned figures are
+  // (#320). This assessment looks for days consistently OVER allowance, so an
+  // unknown day reading as 0 makes it under-trigger. That is the right failure
+  // direction for a nudge: staying quiet on missing data beats nagging someone
+  // who simply stopped logging. Do not "fix" this into symmetry with the rest.
   const days = getDaysInRange(start, windowEnd).map((day) => ({
     allowance: calculateDailyAllowance(settings, day),
     used: usedByDay.get(toDayKey(day)) ?? 0,

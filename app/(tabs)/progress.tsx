@@ -86,8 +86,10 @@ function getWeeklyInsight(
     }
   }
 
+  // Only days with entries count here: a week that is mostly unlogged is not
+  // a perfect week, it is an unknown one (#320).
   if (daysUnderLimit >= 7) {
-    return 'Perfect week — you stayed under your limit every single day.';
+    return 'Perfect week, you stayed under your limit every single day.';
   }
   if (daysUnderLimit >= 5) {
     return `Strong week with ${daysUnderLimit} days under your limit.`;
@@ -473,8 +475,13 @@ export default function ProgressScreen() {
               </View>
               <View style={s.statBox}>
                 <Icon name="check-circle" size={20} color={colors.success} weight="regular" />
-                <Text style={s.statValue}>{Number(weekData.daysUnderLimit ?? 0)}/7</Text>
-                <Text style={s.statLabel}>Days on track</Text>
+                <Text style={s.statValue}>
+                  {Number(weekData.daysUnderLimit ?? 0)}/
+                  {Number(weekData.daysUnderLimit ?? 0) + Number(weekData.daysOverLimit ?? 0)}
+                </Text>
+                <Text style={s.statLabel}>
+                  {Number(weekData.daysWithoutData ?? 0) > 0 ? 'Days logged' : 'Days on track'}
+                </Text>
               </View>
               <View style={s.statBox}>
                 <Icon name="brain" size={20} color={colors.warning} weight="regular" />
