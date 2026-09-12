@@ -6,9 +6,9 @@ author: 'Jarl Lyng'
 tags: ['tapering', 'snus', 'nicotine-pouches', 'method']
 ---
 
-Cold turkey is the dominant story we tell ourselves about quitting nicotine. Set a date, throw out the pouches, white-knuckle through the withdrawal. The reason cold turkey dominates the conversation isn't that it works best. It's that it's the easiest method to describe in a single sentence. (We put the two approaches side by side in [gradual reduction vs. cold turkey](/gradual-reduction-vs-cold-turkey/).)
+Cold turkey is the dominant story we tell ourselves about quitting nicotine. Set a date, throw out the pouches, white-knuckle through the withdrawal. It dominates the conversation partly because it is the easiest method to describe in a single sentence. On the smoking evidence it is not the more effective one either, but nor is tapering: a Cochrane review found neither produces better long-term quit rates. (We put the two approaches side by side in [gradual reduction vs. cold turkey](/gradual-reduction-vs-cold-turkey/).)
 
-Tapering is harder to summarize and easier to actually do. This piece walks through what it is, why it tends to stick where cold turkey doesn't, and how to pick a pace that fits the person rather than the marketing.
+Tapering is harder to summarize. This piece walks through what it is, what the app actually does, and how to pick a pace. Wean Nicotine is built around tapering because that is what its users want, not because the research crowns a winner.
 
 ## What tapering actually is
 
@@ -75,13 +75,13 @@ There are three honest reasons.
 
 Nicotine pouches don't just deliver nicotine. They deliver a specific rhythm of nicotine. Your brain adapts to that rhythm, and stopping abruptly creates a sudden vacuum the nervous system reacts to with strong cravings, sleep disturbance, irritability, and the classic "I can't think straight" fog. Tapering shrinks the rhythm gradually, so the adaptation runs in reverse instead of being torn out.
 
-The withdrawal symptoms aren't gone in a taper. They're just spread thin enough that you can keep functioning during them. That's the whole point.
+The withdrawal symptoms aren't gone in a taper. The design intent is to spread them out, so that each individual step is small. Whether that feels easier is personal, and it is the reason the app lets you slow the pace down rather than prescribing one.
 
 ### 2. The habit unlearns itself
 
-Nicotine addiction isn't only chemical. It's also a set of behavioral triggers: coffee, driving, breaks, stress. Cold turkey leaves all those triggers intact and removes the response. The trigger fires, no pouch is available, and the discomfort spikes. The taper keeps the response in place but reduces the dose, so the trigger gradually weakens through repetition rather than confrontation.
+Nicotine addiction isn't only chemical. It's also a set of behavioral triggers: coffee, driving, breaks, stress. Cold turkey leaves all those triggers intact and removes the response. The trigger fires, no pouch is available, and the discomfort spikes. The taper keeps the response in place while lowering the number, so the trigger is met with a smaller version of the habit rather than with nothing at all. That is the idea behind the design; it is not a measured result.
 
-By the time you reach zero pouches, the trigger has often faded too. You don't feel like a person with no pouches; you feel like a person who hardly reaches for them.
+The hope is that by the time the target reaches zero, the trigger has faded alongside it, so you feel less like a person with no pouches and more like a person who hardly reaches for them. Your own patterns card is the honest check on whether that is happening for you.
 
 ### 3. The "I failed today" loop doesn't form
 
@@ -98,7 +98,7 @@ All the week counts below assume a baseline of 12 pouches a day and describe whe
 - **3% per week.** Very gentle. Good for people who've relapsed from cold turkey multiple times, or who are managing high stress and don't want the taper to add to it. Reaches zero at week 84.
 - **5% per week.** The default. Reaches zero at week 50. The weekly step stays small enough that adaptation keeps up.
 - **7 to 10% per week.** Aggressive. Reaches zero between week 35 and week 25. Suited to a faster timeline and a lower starting point, under about 8 pouches a day.
-- **15% per week.** Almost cold turkey, reaching zero at week 16. We list it because some apps offer it and people ask. If you are choosing 15%, consider whether the taper is buying you anything over simply stopping.
+- **15% per week.** The fastest pace the app offers, reaching zero at week 16 from a baseline of 12. Still four months, so it is a taper rather than a quit date, but each weekly step is three times the default. It is there because some people want the shortest schedule the method allows.
 
 The right pace is the one you can sustain on a bad day, not a good one. If you're picking the pace on a quiet Sunday and thinking "I can definitely do 10%," remember that the same plan needs to survive a Tuesday meeting that runs over.
 
