@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.6.2] - 2026-09-17
+
+iOS build 24, submitted September 2026. One fix, to numbers the app was already showing.
+
+### Fixed
+
+- **Days with no log entries were counted as days with zero pouches used**, so missing data was rewarded exactly like perfect adherence. Money saved, pouches avoided, days under limit and the milestone thresholds all credited a full baseline for every unlogged day, meaning someone who stopped logging for a fortnight came back to a better number than someone who logged honestly and went over twice. A day now counts only when it has at least one entry of any type; a resisted craving with no pouch still counts as a real zero. Both screens say what the figures rest on. (#320)
+
 ## [1.6.1] - 2026-07-18
 
 iOS build 23, approved and live in the App Store July 2026. Small patch: refreshed app icons, a privacy hardening, and a layout fix.
