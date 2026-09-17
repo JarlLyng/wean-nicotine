@@ -44,6 +44,58 @@ Alternativer:
 
 ---
 
+## iOS App Version 1.6.2 — Submitted September 2026 (build 24)
+
+One fix, to numbers the app was already showing. **ASO fields (subtitle + keywords) are unchanged from 1.6.0** and carry forward automatically. **Promotional Text must be re-pasted** (ASC wipes it on every new version); reuse the 1.6.0 per-locale promo texts below. **The Description was revised with this version** (see Localized Storefronts) and is version-locked, so this is the moment to paste it.
+
+### What's New (v1.6.2)
+
+**English:**
+
+```
+More honest numbers.
+
+• A day with no entries used to count as a day with zero pouches, which made the figures look better than they were
+• Money saved, pouches avoided, days under your limit and milestones now rest only on the days you logged
+• Logging a resisted craving still marks a real zero-pouch day
+• Some figures may read lower than before. Those are the accurate ones
+```
+
+**Danish:**
+
+```
+Mere ærlige tal.
+
+• En dag uden registreringer talte før som en dag med nul poser, hvilket fik tallene til at se bedre ud, end de var
+• Penge sparet, poser undgået, dage under din grænse og milepæle bygger nu kun på de dage, du har registreret
+• Registrerer du en modstået trang, tæller dagen stadig som en ægte nul-dag
+• Nogle tal kan se lavere ud end før. Det er de rigtige
+```
+
+**Swedish:**
+
+```
+Ärligare siffror.
+
+• En dag utan registreringar räknades förut som en dag med noll prillor, vilket fick siffrorna att se bättre ut än de var
+• Pengar sparade, prillor undvikna, dagar under din gräns och milstolpar bygger nu bara på de dagar du loggat
+• Loggar du ett motstått sug räknas dagen fortfarande som en äkta nolldag
+• Vissa siffror kan se lägre ut än förut. Det är de korrekta
+```
+
+**Norwegian:**
+
+```
+Ærligere tall.
+
+• En dag uten registreringer telte før som en dag med null poser, noe som fikk tallene til å se bedre ut enn de var
+• Penger spart, poser unngått, dager under grensen din og milepæler bygger nå bare på dagene du har loggført
+• Loggfører du et motstått sug, teller dagen fortsatt som en ekte nulldag
+• Noen tall kan se lavere ut enn før. Det er de riktige
+```
+
+---
+
 ## iOS App Version 1.6.1 — Live in App Store (build 23, approved July 2026)
 
 Small patch: refreshed app icons, a privacy hardening (Sentry breadcrumb scrubbing), and the Progress legend layout fix. **ASO fields (subtitle + keywords) are unchanged from 1.6.0** and carry forward automatically — do not re-enter them. **Promotional Text must be re-pasted** (ASC wipes it on every new version); reuse the exact 1.6.0 per-locale promo texts above.
@@ -445,32 +497,26 @@ Pick your own taper pace. Edit your plan anytime. Undo accidental logs. All data
 
 ### Description (fuld beskrivelse, SEO-optimeret)
 
-**Første 1–2 sætninger** vises i søgeresultater — hold dem klare og med nøgleord.
+**Første 1-2 sætninger** vises i søgeresultater, så hold dem klare og med nøgleord. Revideret med 1.6.2, se noten under Localized Storefronts.
 
 ```
-Wean Nicotine helps you reduce nicotine use step by step—whether you use snus, pouches, or similar products. Set your baseline, log your daily use, and follow a gradual weekly reduction. All data stays on your device.
+Wean Nicotine helps you reduce nicotine use step by step, whether you use snus, pouches, or similar products. Set your baseline, log your daily use, and follow a gradual weekly reduction. All data stays on your device.
 
 HOW IT WORKS
 • Set your baseline daily use during onboarding
 • Choose your weekly reduction pace (3% to 15%, default 5%)
 • Log pouches used and cravings resisted each day with one tap
-• Undo accidental logs in the 5-second window after tapping
-• Edit your plan anytime from Settings — change baseline or pace without losing history
+• Undo an accidental log in the 10 seconds after tapping
+• Edit your plan anytime from Settings: change baseline or pace without losing history
 • See your daily usage in a weekly bar chart with trend tracking
 • Earn milestone badges as you hit new goals
 • Use built-in tools: breathing exercises, urge surfing, and reflection prompts
-
-WHAT'S NEW IN 1.3
-• Choose your own taper pace during onboarding — 3%, 5%, 7%, 10%, or 15% weekly reduction
-• Edit your plan anytime from Settings — adjust baseline, pace, or price without losing your log history
-• Undo pouch logging with a 5-second toast after every tap
-• Quality-of-life improvements under the hood for a smoother experience
 
 FOR YOU
 Wean Nicotine is for anyone who wants to cut down gradually without judgment. You choose the speed. The app keeps you honest and motivated with clear numbers and optional daily check-ins.
 
 PRIVACY
-Your data is stored only on your phone. We use crash reporting (Sentry) in production to fix bugs—no tracking, no ads, no selling data.
+Your data is stored only on your phone. We use crash reporting (Sentry) in production to fix bugs. No tracking, no ads, no selling data.
 
 This app is for harm reduction and personal tracking only. It is not a substitute for medical advice. If you have health concerns, please consult a healthcare provider.
 ```
@@ -524,7 +570,7 @@ Appen er kun til iPhone (`ios.supportsTablet: false`). Udfyld kun "Phone" med iP
 
 ## Localized Storefronts (submitted 2026-04-24)
 
-> **Superseded for subtitle / keywords / promo by 1.6.0.** The Swedish and Norwegian **subtitles**, all four **keyword** fields, and the **promotional texts** were refreshed in the 1.6.0 ASO pass — see "ASO fields shipped with 1.6.0" near the top of this file for the current values. The **descriptions** below are still current. This block is kept as the v1.3 historical record.
+> **Superseded for subtitle / keywords / promo by 1.6.0.** The Swedish and Norwegian **subtitles**, all four **keyword** fields, and the **promotional texts** were refreshed in the 1.6.0 ASO pass — see "ASO fields shipped with 1.6.0" near the top of this file for the current values. The **descriptions** below are current and were revised with 1.6.2: the stale "NYT I 1.3" sections were removed, the undo window corrected from 5 to 10 seconds, and em-dashes replaced per VOICE.md (#296). They are no longer a v1.3 historical record. Descriptions are version-locked in App Store Connect, so they can only be edited when a new version exists.
 
 Endelige tekster som er indsendt til App Store Connect for v1.3 på dansk, svensk og norsk. Disse subtitles, promo-tekster, descriptions og keywords er stadig aktuelle for v1.4.x (kun "What's New" ændres mellem patch-releases — find 1.4.1 og 1.3.1 release notes længere oppe). Promo-tekster for v1.4.x findes længere oppe i denne fil.
 
@@ -541,25 +587,19 @@ Wean Nicotine hjælper dig med at skære ned på snus og nikotinposer i dit eget
 
 SÅDAN FUNGERER DET
 • Angiv dit nuværende daglige forbrug under onboarding
-• Vælg dit ugentlige nedtrapningstempo — 3 % til 15 %, standard 5 %
-• Log hver pose med ét tryk — tager under 2 sekunder
-• Fortryd en fejlregistrering inden for 5 sekunder
+• Vælg dit ugentlige nedtrapningstempo: 3 % til 15 %, standard 5 %
+• Log hver pose med ét tryk, det tager under 2 sekunder
+• Fortryd en fejlregistrering inden for 10 sekunder
 • Ret din plan når som helst i Indstillinger uden at miste historik
 • Se dit daglige forbrug i en ugentlig graf med tendenssporing
 • Optjen milepæle når du når nye mål
 • Brug indbyggede værktøjer: vejrtrækningsøvelser, urge surfing og refleksionslog
 
-NYT I 1.3
-• Vælg dit eget tempo under onboarding — 3, 5, 7, 10 eller 15 % ugentlig nedtrapning
-• Ret din plan når som helst i Indstillinger — juster udgangspunkt, tempo eller pris uden at miste loghistorik
-• Fortryd-knap i 5 sekunder efter hvert tryk
-• Tekniske forbedringer for en mere flydende oplevelse
-
 HVEM ER APPEN TIL
 Wean Nicotine er til dig der vil skære ned gradvist uden løftede pegefingre. Du bestemmer tempoet. Appen holder dig ærlig og motiveret med klare tal og valgfri daglige påmindelser.
 
 PRIVATLIV
-Dine brugsdata gemmes lokalt på din iPhone. Appen kræver ingen konto og synkroniserer ikke til skyen. Anonyme fejlrapporter sendes via Sentry for at fikse bugs — ingen reklamer, ingen tracking, intet salg af data.
+Dine brugsdata gemmes lokalt på din iPhone. Appen kræver ingen konto og synkroniserer ikke til skyen. Anonyme fejlrapporter sendes via Sentry for at fikse bugs. Ingen reklamer, ingen tracking, intet salg af data.
 
 Denne app er til skadesreduktion og personlig tracking. Den erstatter ikke lægelig rådgivning. Har du bekymringer omkring dit helbred, så tal med din læge eller sundhedspersonale.
 ```
@@ -586,25 +626,19 @@ Wean Nicotine hjälper dig att minska på snus och nikotinpåsar i din egen takt
 
 SÅ HÄR FUNGERAR DET
 • Ange din nuvarande dagliga användning under introduktionen
-• Välj din veckovisa nedtrappningstakt — 3 % till 15 %, standard 5 %
-• Logga varje prilla med ett tryck — tar under 2 sekunder
-• Ångra en felaktig registrering inom 5 sekunder
+• Välj din veckovisa nedtrappningstakt: 3 % till 15 %, standard 5 %
+• Logga varje prilla med ett tryck, det tar under 2 sekunder
+• Ångra en felaktig registrering inom 10 sekunder
 • Ändra planen när som helst i Inställningar utan att förlora historik
 • Se din dagliga användning i ett veckoschema med trendspårning
 • Tjäna milstolpar när du når nya mål
 • Använd inbyggda verktyg: andningsövningar, urge surfing och reflektionslogg
 
-NYTT I 1.3
-• Välj din egen takt under introduktionen — 3, 5, 7, 10 eller 15 % veckovis nedtrappning
-• Ändra planen när som helst i Inställningar — justera baslinje, takt eller pris utan att förlora logghistoriken
-• Ångra-knapp i 5 sekunder efter varje tryck
-• Tekniska förbättringar för en smidigare upplevelse
-
 VEM ÄR APPEN FÖR
 Wean Nicotine är för dig som vill minska gradvis utan pekpinnar. Du bestämmer takten. Appen håller dig ärlig och motiverad med tydliga siffror och valfria dagliga påminnelser.
 
 INTEGRITET
-Din användningsdata lagras lokalt på din iPhone. Appen kräver inget konto och synkroniserar inte till molnet. Anonyma felrapporter skickas via Sentry för att fixa buggar — inga annonser, ingen spårning, ingen försäljning av data.
+Din användningsdata lagras lokalt på din iPhone. Appen kräver inget konto och synkroniserar inte till molnet. Anonyma felrapporter skickas via Sentry för att fixa buggar. Inga annonser, ingen spårning, ingen försäljning av data.
 
 Den här appen är till för skadereducering och personlig tracking. Den ersätter inte medicinsk rådgivning. Har du hälsobekymmer, prata med din läkare eller vårdpersonal.
 ```
@@ -631,25 +665,19 @@ Wean Nicotine hjelper deg med å redusere snusbruken og nikotinposene i ditt ege
 
 SLIK FUNGERER DET
 • Oppgi ditt nåværende daglige forbruk under introduksjonen
-• Velg ditt ukentlige nedtrappingstempo — 3 % til 15 %, standard 5 %
-• Logg hver pose med ett trykk — tar under 2 sekunder
-• Angre en feillogging innen 5 sekunder
+• Velg ditt ukentlige nedtrappingstempo: 3 % til 15 %, standard 5 %
+• Logg hver pose med ett trykk, det tar under 2 sekunder
+• Angre en feillogging innen 10 sekunder
 • Endre planen når som helst i Innstillinger uten å miste historikk
 • Se ditt daglige forbruk i en ukentlig graf med trendsporing
 • Tjen milepæler når du når nye mål
 • Bruk innebygde verktøy: pusteøvelser, urge surfing og refleksjonslogg
 
-NYTT I 1.3
-• Velg ditt eget tempo under introduksjonen — 3, 5, 7, 10 eller 15 % ukentlig nedtrapping
-• Endre planen når som helst i Innstillinger — juster utgangspunkt, tempo eller pris uten å miste logghistorikken
-• Angre-knapp i 5 sekunder etter hvert trykk
-• Tekniske forbedringer for en smidigere opplevelse
-
 HVEM ER APPEN FOR
 Wean Nicotine er for deg som vil redusere gradvis uten moralisering. Du bestemmer tempoet. Appen holder deg ærlig og motivert med klare tall og valgfrie daglige påminnelser.
 
 PERSONVERN
-Brukerdataene dine lagres lokalt på iPhonen din. Appen krever ingen konto og synkroniserer ikke til skyen. Anonyme feilrapporter sendes via Sentry for å fikse bugs — ingen annonser, ingen sporing, ingen salg av data.
+Brukerdataene dine lagres lokalt på iPhonen din. Appen krever ingen konto og synkroniserer ikke til skyen. Anonyme feilrapporter sendes via Sentry for å fikse bugs. Ingen annonser, ingen sporing, ingen salg av data.
 
 Denne appen er til skadereduksjon og personlig sporing. Den erstatter ikke medisinsk rådgivning. Har du helsebekymringer, snakk med legen din eller helsepersonell.
 ```
