@@ -44,6 +44,58 @@ Alternativer:
 
 ---
 
+## iOS App Version 1.6.2 — Submitted September 2026 (build 24)
+
+One fix, to numbers the app was already showing. **ASO fields (subtitle + keywords) are unchanged from 1.6.0** and carry forward automatically. **Promotional Text must be re-pasted** (ASC wipes it on every new version); reuse the 1.6.0 per-locale promo texts below. **The Description was revised with this version** (see Localized Storefronts) and is version-locked, so this is the moment to paste it.
+
+### What's New (v1.6.2)
+
+**English:**
+
+```
+More honest numbers.
+
+• A day with no entries used to count as a day with zero pouches, which made the figures look better than they were
+• Money saved, pouches avoided, days under your limit and milestones now rest only on the days you logged
+• Logging a resisted craving still marks a real zero-pouch day
+• Some figures may read lower than before. Those are the accurate ones
+```
+
+**Danish:**
+
+```
+Mere ærlige tal.
+
+• En dag uden registreringer talte før som en dag med nul poser, hvilket fik tallene til at se bedre ud, end de var
+• Penge sparet, poser undgået, dage under din grænse og milepæle bygger nu kun på de dage, du har registreret
+• Registrerer du en modstået trang, tæller dagen stadig som en ægte nul-dag
+• Nogle tal kan se lavere ud end før. Det er de rigtige
+```
+
+**Swedish:**
+
+```
+Ärligare siffror.
+
+• En dag utan registreringar räknades förut som en dag med noll prillor, vilket fick siffrorna att se bättre ut än de var
+• Pengar sparade, prillor undvikna, dagar under din gräns och milstolpar bygger nu bara på de dagar du loggat
+• Loggar du ett motstått sug räknas dagen fortfarande som en äkta nolldag
+• Vissa siffror kan se lägre ut än förut. Det är de korrekta
+```
+
+**Norwegian:**
+
+```
+Ærligere tall.
+
+• En dag uten registreringer telte før som en dag med null poser, noe som fikk tallene til å se bedre ut enn de var
+• Penger spart, poser unngått, dager under grensen din og milepæler bygger nå bare på dagene du har loggført
+• Loggfører du et motstått sug, teller dagen fortsatt som en ekte nulldag
+• Noen tall kan se lavere ut enn før. Det er de riktige
+```
+
+---
+
 ## iOS App Version 1.6.1 — Live in App Store (build 23, approved July 2026)
 
 Small patch: refreshed app icons, a privacy hardening (Sentry breadcrumb scrubbing), and the Progress legend layout fix. **ASO fields (subtitle + keywords) are unchanged from 1.6.0** and carry forward automatically — do not re-enter them. **Promotional Text must be re-pasted** (ASC wipes it on every new version); reuse the exact 1.6.0 per-locale promo texts above.
