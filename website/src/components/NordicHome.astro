@@ -80,7 +80,7 @@ const faqSchema = {
 				<p class="hero__subline">{content.hero.subline}</p>
 
 				<div class="hero__cta">
-					<Button variant="primary" href={APP_STORE_URL} disabled={!appStoreKnown} external={true}>
+					<Button placement="hero" variant="primary" href={APP_STORE_URL} disabled={!appStoreKnown} external={true}>
 						{appStoreCtaLabel}
 					</Button>
 					<Button variant="secondary" href={`/${lang}/privacy`}>{content.hero.privacyLabel}</Button>

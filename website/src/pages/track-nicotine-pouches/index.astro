@@ -25,7 +25,7 @@ const finalAppStoreUrl = getCampaignAppStoreUrl(campaignToken);
 				Get a clear picture of your daily and weekly patterns and follow a gradual reduction plan that lowers your allowance by 5% each week by default.
 			</p>
 			<div class="cta">
-				<Button variant="primary" href={finalAppStoreUrl} disabled={!appStoreKnown} external={true}>
+				<Button placement="hero" variant="primary" href={finalAppStoreUrl} disabled={!appStoreKnown} external={true}>
 					{appStoreCtaLabel}
 				</Button>
 				<Button variant="secondary" href="/">Learn more about Wean Nicotine</Button>
@@ -138,7 +138,7 @@ const finalAppStoreUrl = getCampaignAppStoreUrl(campaignToken);
 		<div class="container">
 			<h2>Start tracking your nicotine pouch use</h2>
 			<p>One tap per pouch. See your patterns, track your progress, and take control.</p>
-			<Button variant="primary" href={finalAppStoreUrl} disabled={!appStoreKnown} external={true}>
+			<Button placement="bottom-cta" variant="primary" href={finalAppStoreUrl} disabled={!appStoreKnown} external={true}>
 				{appStoreCtaLabel}
 			</Button>
 		</div>

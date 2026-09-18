@@ -148,4 +148,4 @@ For data you wouldn't want leaving your pocket, that's the only design that hold
 
 ---
 
-_If you're looking for a nicotine reduction app that fits the description above: [Wean Nicotine](https://apps.apple.com/app/wean-nicotine/id6758867485) is on the App Store. One-time purchase, no accounts, no cloud. The [privacy policy](/privacy/) is the short version; the [source code](https://github.com/JarlLyng/wean-nicotine) is the long one._
+_If you're looking for a nicotine reduction app that fits the description above: <a href="https://apps.apple.com/app/wean-nicotine/id6758867485" target="_blank" rel="noopener noreferrer" data-umami-event="app-store-click" data-umami-event-placement="in-article" data-umami-event-locale="en">Wean Nicotine</a> is on the App Store. One-time purchase, no accounts, no cloud. The [privacy policy](/privacy/) is the short version; the [source code](https://github.com/JarlLyng/wean-nicotine) is the long one._

@@ -6,6 +6,7 @@ import { APP_STORE_URL, COMPANY_NAME, isAppStoreUrlKnown, SITE_NAME, SUPPORT_EMA
 import { getLangFromUrl, useTranslations, useTranslatedPath } from '../i18n/utils';
 import { languages } from '../i18n/ui';
 import { NORDIC_FOOTER } from '../i18n/footer-links';
+import { appStoreTracking } from '../lib/analytics';
 
 export interface Props {
 	title?: string;
@@ -190,7 +191,7 @@ const structuredData: Record<string, unknown> = {
 						disabled={!appStoreKnown}
 						external={true}
 						ariaLabel={appStoreCtaLabel}
-						trackSource="header"
+						placement="header"
 					>
 						{appStoreCtaLabel}
 					</Button>
@@ -244,7 +245,7 @@ const structuredData: Record<string, unknown> = {
 					<a href={translatePath('/privacy')}>{t('nav.privacy')}</a>
 					<a href={translatePath('/support')}>{t('nav.support')}</a>
 					{appStoreKnown ? (
-						<a href={APP_STORE_URL} target="_blank" rel="noopener noreferrer">App Store</a>
+						<a href={APP_STORE_URL} target="_blank" rel="noopener noreferrer" {...appStoreTracking('footer', lang)}>App Store</a>
 					) : (
 						<span class="disabled-link" aria-disabled="true">App Store</span>
 					)}
