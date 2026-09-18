@@ -22,6 +22,10 @@ export const ui = {
     'footer.tagline': 'Calm, local-first progress tracking.',
     'cta.appstore': 'Download on the App Store',
     'cta.comingsoon': 'Coming soon on the App Store',
+    'nav.skip': 'Skip to content',
+    'nav.toggle': 'Toggle menu',
+    'nav.blog': 'Blog',
+    'footer.more': 'More from IAMJARL',
   },
   da: {
     'nav.privacy': 'Privatliv',
@@ -29,6 +33,10 @@ export const ui = {
     'footer.tagline': 'Rolig, lokal fremgangssporing.',
     'cta.appstore': 'Hent i App Store',
     'cta.comingsoon': 'Kommer snart i App Store',
+    'nav.skip': 'Gå til indhold',
+    'nav.toggle': 'Vis/skjul menu',
+    'nav.blog': 'Blog (engelsk)',
+    'footer.more': 'Mere fra IAMJARL',
   },
   sv: {
     'nav.privacy': 'Integritet',
@@ -36,6 +44,10 @@ export const ui = {
     'footer.tagline': 'Lugn, lokal spårning av framsteg.',
     'cta.appstore': 'Hämta i App Store',
     'cta.comingsoon': 'Kommer snart i App Store',
+    'nav.skip': 'Till innehållet',
+    'nav.toggle': 'Visa/dölj meny',
+    'nav.blog': 'Blogg (engelska)',
+    'footer.more': 'Mer från IAMJARL',
   },
   no: {
     'nav.privacy': 'Personvern',
@@ -43,5 +55,9 @@ export const ui = {
     'footer.tagline': 'Rolig, lokal fremdriftssporing.',
     'cta.appstore': 'Last ned i App Store',
     'cta.comingsoon': 'Kommer snart i App Store',
+    'nav.skip': 'Gå til innhold',
+    'nav.toggle': 'Vis/skjul meny',
+    'nav.blog': 'Blogg (engelsk)',
+    'footer.more': 'Mer fra IAMJARL',
   },
 } as const;

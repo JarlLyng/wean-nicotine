@@ -164,7 +164,7 @@ const structuredData: Record<string, unknown> = {
 	</head>
 
 	<body>
-		<a class="skip-link" href="#main">Skip to content</a>
+		<a class="skip-link" href="#main">{t('nav.skip')}</a>
 
 		<header class="site-header">
 			<div class="container site-header__inner">
@@ -173,14 +173,14 @@ const structuredData: Record<string, unknown> = {
 					<span class="brand__name">{SITE_NAME}</span>
 				</a>
 
-				<button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+				<button class="nav-toggle" aria-label={t('nav.toggle')} aria-controls="primary-nav" aria-expanded="false">
 					<span class="nav-toggle__bar"></span>
 					<span class="nav-toggle__bar"></span>
 					<span class="nav-toggle__bar"></span>
 				</button>
 
-				<nav class="nav" aria-label="Primary">
-					<a class="nav__link" href="/blog/">Blog</a>
+				<nav class="nav" id="primary-nav" aria-label="Primary">
+					<a class="nav__link" href="/blog/">{t('nav.blog')}</a>
 					<a class="nav__link" href={translatePath('/privacy')}>{t('nav.privacy')}</a>
 					<a class="nav__link" href={translatePath('/support')}>{t('nav.support')}</a>
 					<LanguageSwitcher availableLocales={localesForHreflang} />
@@ -202,17 +202,32 @@ const structuredData: Record<string, unknown> = {
 			const toggle = document.querySelector('.nav-toggle');
 			const nav = document.querySelector('.nav');
 			if (toggle && nav) {
+				const closeNav = (refocus) => {
+					if (!nav.classList.contains('nav--open')) return;
+					nav.classList.remove('nav--open');
+					toggle.classList.remove('nav-toggle--open');
+					toggle.setAttribute('aria-expanded', 'false');
+					// Send focus back to the control that opened it, so a keyboard
+					// user is not dropped at the top of the document.
+					if (refocus) toggle.focus();
+				};
+
 				toggle.addEventListener('click', () => {
 					const open = nav.classList.toggle('nav--open');
 					toggle.classList.toggle('nav-toggle--open', open);
 					toggle.setAttribute('aria-expanded', String(open));
 				});
+
 				nav.querySelectorAll('a').forEach(link => {
-					link.addEventListener('click', () => {
-						nav.classList.remove('nav--open');
-						toggle.classList.remove('nav-toggle--open');
-						toggle.setAttribute('aria-expanded', 'false');
-					});
+					// Following a link leaves the page, so do not steal focus.
+					link.addEventListener('click', () => closeNav(false));
+				});
+
+				// Escape closes it. Deliberately NOT a modal focus trap: this is
+				// ordinary navigation, and trapping focus in it would be worse
+				// than leaving it open (see #302).
+				document.addEventListener('keydown', (e) => {
+					if (e.key === 'Escape') closeNav(true);
 				});
 			}
 		</script>
@@ -225,7 +240,7 @@ const structuredData: Record<string, unknown> = {
 			<div class:list={['container', 'site-footer__grid', { 'site-footer__grid--compact': lang !== 'en' }]}>
 				<div class="site-footer__col">
 					<p class="footer-heading">{SITE_NAME}</p>
-					<a href="/blog/">Blog</a>
+					<a href="/blog/">{t('nav.blog')}</a>
 					<a href={translatePath('/privacy')}>{t('nav.privacy')}</a>
 					<a href={translatePath('/support')}>{t('nav.support')}</a>
 					{appStoreKnown ? (
@@ -267,7 +282,7 @@ const structuredData: Record<string, unknown> = {
 					</Fragment>
 				)}
 				<div class="site-footer__col">
-					<p class="footer-heading">More from IAMJARL</p>
+					<p class="footer-heading">{t('footer.more')}</p>
 					<a href="https://iamjarl.com" target="_blank" rel="noopener noreferrer">IAMJARL Portfolio</a>
 					<a href="https://wodrounds.iamjarl.com" target="_blank" rel="noopener noreferrer">WODrounds</a>
 					<a href="https://madebyhuman.iamjarl.com" target="_blank" rel="noopener noreferrer">Made by Human</a>
