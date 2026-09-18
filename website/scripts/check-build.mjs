@@ -12,6 +12,10 @@
  *    symptom (a dead link in the language switcher or body copy).
  *  - reciprocity: if A claims B as an alternate, B must claim A back.
  *    Google ignores non-reciprocal hreflang.
+ *  - orphans: a page no other page links to. A sitemap entry is not a path a
+ *    reader can follow, and a crawler weighs an unlinked page accordingly.
+ *    Three Nordic guides sat orphaned this way until #303, found by exactly
+ *    this crawl.
  *
  * Run with `npm run check` in website/.
  */
@@ -65,6 +69,7 @@ function sitePath(href) {
 
 const problems = [];
 const alternates = new Map(); // file -> Set of claimed paths
+const inbound = new Map(); // resolved file -> Set of files linking to it
 
 for (const file of files.sort()) {
   const html = readFileSync(join(DIST, file), 'utf8');
@@ -82,11 +87,19 @@ for (const file of files.sort()) {
   }
   alternates.set(file, claimed);
 
-  // internal links must exist
+  // internal links must exist, and record who links to what
   for (const m of html.matchAll(/<a\s[^>]*href="(\/[^"]*)"/g)) {
     const path = m[1];
     if (path.startsWith('//')) continue;
-    if (!resolve(path)) problems.push(`${file}: link -> ${path} does not exist`);
+    const target = resolve(path);
+    if (!target) {
+      problems.push(`${file}: link -> ${path} does not exist`);
+      continue;
+    }
+    if (target !== file) {
+      if (!inbound.has(target)) inbound.set(target, new Set());
+      inbound.get(target).add(file);
+    }
   }
 }
 
@@ -102,6 +115,16 @@ for (const [file, claimed] of alternates) {
     if (!claimsUsBack && selfPaths.length > 1) {
       problems.push(`${file}: claims ${path} as an alternate, but it does not claim back`);
     }
+  }
+}
+
+// Every page needs at least one inbound link. 404 is reachable by definition
+// and is noindex, so it is exempt.
+const EXEMPT_FROM_INBOUND = new Set(['404.html', 'index.html']);
+for (const file of files.sort()) {
+  if (EXEMPT_FROM_INBOUND.has(file)) continue;
+  if (!inbound.get(file)?.size) {
+    problems.push(`${file}: no other page links to it (orphan)`);
   }
 }
 
