@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.6.2] - 2026-09-17
 
-iOS build 24, submitted September 2026. One fix, to numbers the app was already showing.
+iOS build 24, approved and live in the App Store September 2026. One fix, to numbers the app was already showing. Also carried the corrected store descriptions in all four locales and the App Privacy URL fix (#296, #312).
 
 ### Fixed
 

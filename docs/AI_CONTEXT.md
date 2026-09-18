@@ -37,7 +37,7 @@ Update when:
 - The app is local-first by design. No backend, no account system, no cloud sync.
 - The mobile app uses Expo SDK 55, Expo Router, SQLite, Expo Notifications, Sentry, and React Compiler.
 - The website uses Astro and contains SEO landing pages in EN/DA/SV/NO.
-- Latest live App Store version: **1.6.1** (iOS build 23, approved July 2026) — small patch (refreshed icons, Sentry breadcrumb scrubbing, Progress legend fix) on top of 1.6.0, which carried the usage-pattern features + ASO metadata pass. See [CHANGELOG.md](../CHANGELOG.md) for the full history (incl. the 1.4.0/build 18 TestFlight-only regression).
+- Latest live App Store version: **1.6.2** (iOS build 24, approved September 2026), a single fix: days with no log entries no longer count as days with zero pouches, which had been inflating money saved, pouches avoided and the milestone thresholds (#320). It also carried the corrected store descriptions and the App Privacy URL fix (#312, #296). See [CHANGELOG.md](../CHANGELOG.md) for the full history (incl. the 1.4.0/build 18 TestFlight-only regression).
 
 ## What Exists In This Repo
 
@@ -291,7 +291,7 @@ SEO/ASO strategy, keyword targets, competitive positioning, and channel plans ar
 
 The single most important pitfall this repo has hit. Three separate symptoms — all root-caused to the same drift:
 
-1. **Codegen `TypeError: expand is not a function` during `pod install`** — caused by `react-native@0.83.9` (Dependabot bump) drifting past the SDK 55 manifest (which expects `0.83.6`). Same shape blocked TestFlight build 18.
+1. **Codegen `TypeError: expand is not a function` during `pod install`** — caused by `react-native@0.83.9` (Dependabot bump) drifting past the SDK 55 manifest, which expected `0.83.6` at the time. Same shape blocked TestFlight build 18. **The manifest moves**: as of September 2026 it expects `0.83.10`, matched in #325. The rule is "track the manifest", not "pin 0.83.6"; `npx expo-doctor` tells you the current expectation.
 2. **`Cannot find module 'babel-preset-expo'` in CI** — happens when patch bumps move `@react-navigation/bottom-tabs` or similar to versions that pull a `babel-preset-expo@56.x` dep into the tree.
 3. **`pod install … None of your spec sources contain a spec satisfying the dependency: Sentry (= 9.15.0)`** — separate but compounding issue from stale CocoaPods spec repo.
 
@@ -307,18 +307,31 @@ The fix that holds up:
   # commit + verify with a local EAS build before opening a PR
   ```
 - Before EAS local build: `pod repo update` if it's been more than a week.
-- Never add a `brace-expansion` npm `overrides` entry without testing a full EAS build first. Forcing v5 breaks the codegen pipeline by silently breaking transitive `minimatch@3.x` consumers (see #170/#172/#174).
+- Never add a `brace-expansion` npm `overrides` entry without testing a full EAS build first, and **always scope it to a minimatch major**. Forcing v5 breaks the codegen pipeline by silently breaking transitive `minimatch@3.x` consumers (#170/#172/#174). The reverse bites too: an unscoped `"minimatch": { "brace-expansion": "^1.1.17" }` also caught `minimatch@10`, which requires brace-expansion v5 and calls its named `expand` export, and that failed the 1.6.2 EAS build at the fingerprint step with `(0 , brace_expansion_1.expand) is not a function` (#332). Three minimatch majors coexist in this tree and disagree on purpose:
+
+  | minimatch | needs brace-expansion |
+  | --------- | --------------------- |
+  | 3.x       | `^1.1.7`              |
+  | 10.x      | `^5`                  |
+
+  The working entry is `"minimatch@3": { "brace-expansion": "^1.1.17" }`. Neither CI nor `npm run check` catches this; only a real EAS build does.
 
 ### Dependabot alerts that cannot be fixed from this repo
 
-Three open alerts are permanently blocked on Expo upstream. They are re-investigated
-every time someone looks at the alert list, so the conclusions are written down here.
-Re-check them only when the Expo SDK moves.
+One open alert is blocked on Expo upstream. It gets re-investigated every time someone
+looks at the alert list, so the conclusion is written down here.
 
-| Alert                                              | Path                                 | Why it is stuck                                            |
-| -------------------------------------------------- | ------------------------------------ | ---------------------------------------------------------- |
-| `image-size` (2, high)                             | `metro` ← Expo SDK                   | `patched: NONE`. There is no fixed version to move to yet. |
-| `decode-uri-component` (1, medium, CVE-2026-45822) | `expo-router` → `query-string@7.1.3` | Patched at `0.5.0`, but see below.                         |
+**Updated 2026-09-18.** The two `image-size` alerts that used to sit here are gone.
+They were marked `patched: NONE` and looked permanent, but realigning the tree with the
+current SDK 55 manifest (#325) removed the package from the tree entirely: it arrived via
+Metro, and the newer Metro in the current manifest does not use it. `npm ls image-size`
+now returns empty. The lesson is the one in the drift section above: "no patch available"
+on a transitive Expo dependency often means "not on this SDK patch level", so re-check
+after an SDK move rather than treating it as permanent.
+
+| Alert                                              | Path                                 | Why it is stuck                    |
+| -------------------------------------------------- | ------------------------------------ | ---------------------------------- |
+| `decode-uri-component` (1, medium, CVE-2026-45822) | `expo-router` → `query-string@7.1.3` | Patched at `0.5.0`, but see below. |
 
 **Do not add an `overrides` entry for `decode-uri-component`.** The patched `0.5.0` is
 pure ESM (`"type": "module"`), while the vulnerable `0.2.2` is CommonJS, and
@@ -334,8 +347,7 @@ npm view decode-uri-component@0.2.2 type   # (undefined, i.e. commonjs)
 grep -n "decode-uri-component" node_modules/query-string/index.js
 ```
 
-On exposure, so the severity label does not cause a panic: `image-size` is parsed by Metro
-during bundling and never ships in the iOS binary. `decode-uri-component` is a denial of
+On exposure: `decode-uri-component` is a denial of
 service via exponential decoding of malformed percent-encoded input; `app.config.js`
 registers the `wean` and `taper` URL schemes, so a hostile app on the same device could
 hang Wean by deep-linking garbage at it. No data disclosure, no code execution, and the
