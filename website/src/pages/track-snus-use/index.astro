@@ -25,7 +25,7 @@ const finalAppStoreUrl = getCampaignAppStoreUrl(campaignToken);
 				See your daily count, weekly trends, and how your use changes over time as you follow a gradual reduction plan.
 			</p>
 			<div class="cta">
-				<Button variant="primary" href={finalAppStoreUrl} disabled={!appStoreKnown} external={true}>
+				<Button placement="hero" variant="primary" href={finalAppStoreUrl} disabled={!appStoreKnown} external={true}>
 					{appStoreCtaLabel}
 				</Button>
 				<Button variant="secondary" href="/">Learn more about Wean Nicotine</Button>
@@ -138,7 +138,7 @@ const finalAppStoreUrl = getCampaignAppStoreUrl(campaignToken);
 		<div class="container">
 			<h2>Start tracking your snus use today</h2>
 			<p>One tap per pouch. See your daily count, weekly trends, and long-term progress.</p>
-			<Button variant="primary" href={finalAppStoreUrl} disabled={!appStoreKnown} external={true}>
+			<Button placement="bottom-cta" variant="primary" href={finalAppStoreUrl} disabled={!appStoreKnown} external={true}>
 				{appStoreCtaLabel}
 			</Button>
 		</div>

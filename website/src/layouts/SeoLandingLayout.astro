@@ -68,9 +68,9 @@ const finalAppStoreUrl = getCampaignAppStoreUrl(campaignToken);
 			<h2>{bottomCtaHeading}</h2>
 			<p>{bottomCtaText}</p>
 			{appStoreKnown ? (
-				<AppStoreBadge href={finalAppStoreUrl} lang={lang} />
+				<AppStoreBadge href={finalAppStoreUrl} lang={lang} placement="bottom-cta" />
 			) : (
-				<Button variant="primary" href={finalAppStoreUrl} disabled={true}>
+				<Button placement="bottom-cta" variant="primary" href={finalAppStoreUrl} disabled={true}>
 					{finalCtaLabel}
 				</Button>
 			)}

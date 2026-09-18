@@ -1,4 +1,7 @@
 ---
+import { appStoreTracking, type AppStorePlacement } from '../lib/analytics';
+import { getLangFromUrl } from '../i18n/utils';
+
 type Variant = 'primary' | 'secondary' | 'ghost';
 
 export interface Props {
@@ -9,8 +12,12 @@ export interface Props {
 	ariaLabel?: string;
 	/** Umami event name. If set, clicks are tracked. */
 	trackEvent?: string;
-	/** Optional source identifier (e.g. "hero", "footer") sent with the event. */
-	trackSource?: string;
+	/**
+	 * Where this button sits on the page. Required for App Store links so the
+	 * click data can tell surfaces apart (#304); a generic default would put
+	 * every unlabelled button in one bucket, which is what it used to do.
+	 */
+	placement?: AppStorePlacement;
 }
 
 const {
@@ -20,13 +27,17 @@ const {
 	external = false,
 	ariaLabel,
 	trackEvent,
-	trackSource,
+	placement,
 } = Astro.props;
 
 const target = external ? '_blank' : undefined;
 const rel = external ? 'noopener noreferrer' : undefined;
 const isAppStoreLink = typeof href === 'string' && href.includes('apps.apple.com');
-const resolvedEvent = trackEvent ?? (isAppStoreLink ? 'app-store-click' : undefined);
+const lang = getLangFromUrl(Astro.url);
+
+// App Store links go through the shared helper. Anything else keeps the old
+// bare `trackEvent` behaviour.
+const appStoreAttrs = isAppStoreLink && !disabled ? appStoreTracking(placement ?? 'midpage', lang) : {};
 ---
 
 <a
@@ -37,8 +48,8 @@ const resolvedEvent = trackEvent ?? (isAppStoreLink ? 'app-store-click' : undefi
 	aria-disabled={disabled ? 'true' : undefined}
 	aria-label={ariaLabel}
 	tabindex={disabled ? -1 : undefined}
-	data-umami-event={resolvedEvent}
-	data-umami-event-source={resolvedEvent ? (trackSource ?? 'button') : undefined}
+	data-umami-event={!isAppStoreLink ? trackEvent : undefined}
+	{...appStoreAttrs}
 >
 	<slot />
 </a>
