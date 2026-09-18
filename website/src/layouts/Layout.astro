@@ -5,6 +5,7 @@ import LanguageSwitcher from '../components/LanguageSwitcher.astro';
 import { APP_STORE_URL, COMPANY_NAME, isAppStoreUrlKnown, SITE_NAME, SUPPORT_EMAIL } from '../lib/site';
 import { getLangFromUrl, useTranslations, useTranslatedPath } from '../i18n/utils';
 import { languages } from '../i18n/ui';
+import { NORDIC_FOOTER } from '../i18n/footer-links';
 
 export interface Props {
 	title?: string;
@@ -236,6 +237,14 @@ const structuredData: Record<string, unknown> = {
 				{/* Resources/Guides link to EN-only SEO landing pages (see #98),
 				    so they're hidden on DA/SV/NO to avoid yanking the user back
 				    to English. Localize these pages first to surface them here. */}
+				{NORDIC_FOOTER[lang] && (
+					<div class="site-footer__col">
+						<p class="footer-heading">{NORDIC_FOOTER[lang].heading}</p>
+						{NORDIC_FOOTER[lang].links.map((link) => (
+							<a href={link.href}>{link.label}</a>
+						))}
+					</div>
+				)}
 				{lang === 'en' && (
 					<Fragment>
 						<div class="site-footer__col">
@@ -450,11 +459,12 @@ const structuredData: Record<string, unknown> = {
 		margin-bottom: var(--space-xl);
 	}
 
-	/* Non-EN locales drop the two EN-only link columns (see footer markup),
-	   leaving brand + "More from IAMJARL". Keep them balanced, not stranded
-	   in the first two of four tracks. */
+	/* Non-EN locales drop the two EN-only link columns and gain one per-locale
+	   Guides column (#303), so they run brand + Guides + "More from IAMJARL".
+	   Three tracks, not the four English uses, so they are not stranded in the
+	   first three. Was 2 before the Guides column existed. */
 	.site-footer__grid--compact {
-		grid-template-columns: repeat(2, 1fr);
+		grid-template-columns: repeat(3, 1fr);
 	}
 
 	.site-footer__col {
