@@ -35,11 +35,11 @@ const blogPostingJsonLd = {
 	...(coverImage ? { image: new URL(coverImage, Astro.site).toString() } : {}),
 };
 
-const formattedPubDate = pubDate.toLocaleDateString('en-US', {
-	year: 'numeric',
-	month: 'long',
-	day: 'numeric',
-});
+const dateFormat = { year: 'numeric', month: 'long', day: 'numeric' } as const;
+const formattedPubDate = pubDate.toLocaleDateString('en-US', dateFormat);
+// `updatedDate` already fed `dateModified` in the schema but was never shown,
+// so a reader could not tell a corrected post from an untouched one (#305).
+const formattedUpdated = updatedDate?.toLocaleDateString('en-US', dateFormat);
 ---
 
 <Layout
@@ -57,6 +57,12 @@ const formattedPubDate = pubDate.toLocaleDateString('en-US', {
 			<p class="blog-post__lede">{description}</p>
 			<div class="blog-post__meta">
 				<time datetime={isoPub}>{formattedPubDate}</time>
+				{formattedUpdated && (
+					<Fragment>
+						<span aria-hidden="true">·</span>
+						<span>Updated <time datetime={isoUpdated}>{formattedUpdated}</time></span>
+					</Fragment>
+				)}
 				<span aria-hidden="true">·</span>
 				<span>{author}</span>
 				{tags.length > 0 && (

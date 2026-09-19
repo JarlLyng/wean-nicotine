@@ -2,6 +2,9 @@
 title: 'How the tapering approach works for nicotine pouches'
 description: 'Why Wean Nicotine is built around gradual reduction, what happens in the body during a taper, and how to set the pace.'
 pubDate: 2026-06-04
+# Corrected in #299 and #309: the taper week counts were wrong against the app's
+# own estimateWeeksToZero(), and several unsupported claims were removed.
+updatedDate: 2026-09-19
 author: 'Jarl Lyng'
 tags: ['tapering', 'snus', 'nicotine-pouches', 'method']
 ---
