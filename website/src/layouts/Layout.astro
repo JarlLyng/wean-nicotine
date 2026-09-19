@@ -30,9 +30,22 @@ export interface Props {
 	 * has a topical image that converts better than the generic one.
 	 */
 	ogImage?: string;
+	/**
+	 * Open Graph type. Defaults to `website`. Blog posts pass `article`, which
+	 * every post was missing (#307).
+	 */
+	ogType?: 'website' | 'article';
 }
 
-const { title, description, canonicalPath, noindex = false, availableLocales, ogImage } = Astro.props;
+const {
+	title,
+	description,
+	canonicalPath,
+	noindex = false,
+	availableLocales,
+	ogImage,
+	ogType = 'website',
+} = Astro.props;
 
 const lang = getLangFromUrl(Astro.url);
 const localesForHreflang = availableLocales ?? [lang];
@@ -100,7 +113,7 @@ const structuredData: Record<string, unknown> = {
 			<meta name="robots" content="index,follow" />
 		)}
 
-		<meta property="og:type" content="website" />
+		<meta property="og:type" content={ogType} />
 		<meta property="og:site_name" content={SITE_NAME} />
 		<meta property="og:title" content={pageTitle} />
 		<meta property="og:description" content={pageDescription} />
