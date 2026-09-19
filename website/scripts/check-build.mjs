@@ -121,6 +121,28 @@ for (const [file, claimed] of alternates) {
   }
 }
 
+// Directory routes must be linked with a trailing slash. The host 301s the
+// bare form, so a missing slash is a redirect hop on every click and crawl,
+// and it made canonical and hreflang disagree with the sitemap (#307).
+for (const file of files.sort()) {
+  const html = readFileSync(join(DIST, file), 'utf8');
+  const check = (re, what) => {
+    for (const m of html.matchAll(re)) {
+      const url = m[1];
+      const path = url.startsWith('http') ? sitePath(url) : url;
+      if (path === null || path === '/') continue;
+      const clean = path.split(/[?#]/)[0];
+      if (clean.endsWith('/')) continue;
+      // A file with an extension is served directly and takes no slash.
+      if (/\.[a-z0-9]+$/i.test(clean)) continue;
+      problems.push(`${file}: ${what} -> ${path} is missing its trailing slash`);
+    }
+  };
+  check(/<a\s[^>]*href="(\/[^"]*)"/g, 'link');
+  check(/<link rel="canonical" href="([^"]+)"/g, 'canonical');
+  check(/<link\s+rel="alternate"\s+hreflang="[^"]+"\s+href="([^"]+)"/g, 'hreflang');
+}
+
 // Every App Store link must carry the same event with a placement and a
 // locale, or the click data cannot tell surfaces apart (#304).
 const PLACEMENTS = new Set(['header', 'hero', 'midpage', 'bottom-cta', 'in-article', 'footer']);

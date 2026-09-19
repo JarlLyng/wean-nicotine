@@ -47,6 +47,8 @@ const formattedUpdated = updatedDate?.toLocaleDateString('en-US', dateFormat);
 	description={description}
 	canonicalPath={canonicalPath}
 	availableLocales={['en']}
+	ogType="article"
+	ogImage={coverImage}
 >
 	<script type="application/ld+json" set:html={JSON.stringify(blogPostingJsonLd)} />
 

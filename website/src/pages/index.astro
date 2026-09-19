@@ -9,6 +9,7 @@ import AppStoreBadge from '../components/AppStoreBadge.astro';
 import { APP_STORE_URL, isAppStoreUrlKnown, SITE_NAME } from '../lib/site';
 import heroToday from '../assets/screenshots/05-today.png';
 import heroProgress from '../assets/screenshots/06-progress.png';
+import shotTools from '../assets/screenshots/07-tools.png';
 
 const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
 const appStoreCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming soon on the App Store';
@@ -63,38 +64,6 @@ const faqSchema = {
 	})),
 };
 
-const screenshots = [
-	{
-		src: '/screenshots/v1.2/04-triggers.png',
-		alt: 'Onboarding: select common triggers like stress, after meals, with coffee, and social situations.',
-		width: 393,
-		height: 852,
-	},
-	{
-		src: '/screenshots/v1.2/05-today.png',
-		alt: 'Today screen: daily allowance of 3 out of 16 pouches with one-tap logging for used pouches and resisted cravings.',
-		width: 393,
-		height: 852,
-	},
-	{
-		src: '/screenshots/v1.2/06-progress.png',
-		alt: 'Progress screen: weekly stats showing pouches avoided, days on track, cravings resisted, and money saved.',
-		width: 393,
-		height: 852,
-	},
-	{
-		src: '/screenshots/v1.2/07-tools.png',
-		alt: 'Support tools: breathing exercise, reflection prompts, urge surfing, and cost savings.',
-		width: 393,
-		height: 852,
-	},
-	{
-		src: '/screenshots/v1.2/08-savings.png',
-		alt: 'Cost savings: track money saved per day, projected monthly, and weekly breakdown.',
-		width: 393,
-		height: 852,
-	},
-];
 ---
 
 <Layout
@@ -222,15 +191,39 @@ const screenshots = [
 			</div>
 			<div class="screenshots-showcase reveal">
 				<div class="screenshot-card">
-					<img src="/screenshots/v1.2/05-today.png" alt="Today screen: daily allowance of 3/16 pouches with one-tap logging" width="393" height="852" loading="lazy" decoding="async" />
+					<Picture
+						src={heroToday}
+						formats={['avif', 'webp']}
+						alt="Today screen: daily allowance of 3/16 pouches with one-tap logging"
+						width={393}
+						height={852}
+						loading="lazy"
+						decoding="async"
+					/>
 					<p class="screenshot-caption">Log use in one tap</p>
 				</div>
 				<div class="screenshot-card screenshot-card--hero">
-					<img src="/screenshots/v1.2/06-progress.png" alt="Progress screen: weekly stats showing pouches avoided, money saved, and daily chart" width="393" height="852" loading="lazy" decoding="async" />
+					<Picture
+						src={heroProgress}
+						formats={['avif', 'webp']}
+						alt="Progress screen: weekly stats showing pouches avoided, money saved, and daily chart"
+						width={393}
+						height={852}
+						loading="lazy"
+						decoding="async"
+					/>
 					<p class="screenshot-caption">Track your progress</p>
 				</div>
 				<div class="screenshot-card">
-					<img src="/screenshots/v1.2/07-tools.png" alt="Support tools: breathing exercise, reflection prompts, urge surfing, and cost savings" width="393" height="852" loading="lazy" decoding="async" />
+					<Picture
+						src={shotTools}
+						formats={['avif', 'webp']}
+						alt="Support tools: breathing exercise, reflection prompts, urge surfing, and cost savings"
+						width={393}
+						height={852}
+						loading="lazy"
+						decoding="async"
+					/>
 					<p class="screenshot-caption">Handle cravings</p>
 				</div>
 			</div>
