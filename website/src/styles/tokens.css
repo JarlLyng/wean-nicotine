@@ -1,4 +1,17 @@
-/* IAMJARL Design Tokens v1.2.0 - Nordic Modern Edition */
+/*
+ * Wean Nicotine website tokens.
+ *
+ * Hand-written for this site. This is NOT the IAMJARL design system's
+ * tokens.css, whatever the old header here claimed ("IAMJARL Design Tokens
+ * v1.2.0"): it declares no --ij-* variables at all, only 82 local custom
+ * properties, 43 of which the site's stylesheets reference.
+ *
+ * Do not replace it with the design system's file or a CDN link to one. That
+ * would delete every property below and leave the site unstyled with no error.
+ * Adopting the design system here is a migration, mapping each local variable
+ * to its --ij-* equivalent, and it is tracked in #326. #282 proposed the
+ * replacement on the strength of the old header and was closed for that reason.
+ */
 
 :root {
   /* spacing */
