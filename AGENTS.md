@@ -41,7 +41,8 @@ Target audience, positioning, pricing reasoning, SEO/ASO playbooks, and competit
 
 ## Build & release
 
-- Expo / React Native. Bump `ios.buildNumber` (and `version` for a marketing release) in `app.config.js`, then either: **(a) EAS cloud build + auto-submit** — `npx eas build --profile production --platform ios --auto-submit` — which builds and uploads straight to App Store Connect via the stored ASC API key + `eas.json` `submit` config (this is what shipped builds 20 and 21); or **(b) local build → IPA → Transporter** upload.
+- Expo / React Native. Bump `ios.buildNumber` (and `version` for a marketing release) in `app.config.js`, then either: **(a) EAS cloud build + auto-submit** — `eas build --profile production --platform ios --auto-submit` — which builds and uploads straight to App Store Connect via the stored ASC API key + `eas.json` `submit` config (this is what shipped 1.6.2, build 24); or **(b) local build → IPA → Transporter** upload.
+- `eas` is the globally installed eas-cli (`npm install -g eas-cli`); `npx eas` does not work in this repo. On Expo's free plan the submission step can sit queued for a while after the build finishes, so a build missing from App Store Connect right away is not a failure.
 - Telemetry: anonymous crash reporting (Sentry) only — disclosed in the privacy policy.
 
 ## Conventions

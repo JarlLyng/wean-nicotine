@@ -243,12 +243,12 @@ npx expo run:android
 
 - **Bundle ID:** `com.iamjarl.taper`
 - **Local build (IPA) — Expo from terminal:**
-  1. **Build number:** In `app.config.js`, `ios.buildNumber` must be higher than the last build uploaded to App Store Connect. `version` is user-visible (currently `1.4.1`) and only bumped for an actual app update.
+  1. **Build number:** In `app.config.js`, `ios.buildNumber` must be higher than the last build uploaded to App Store Connect. `version` is user-visible and only bumped for an actual app update.
   2. **Sentry:** Create the EAS Secret so the DSN is embedded in the build:
      `eas env:create --name EXPO_PUBLIC_SENTRY_DSN --value "https://your-dsn@xxx.ingest.sentry.io/xxx" --environment production --visibility plaintext`
   3. From the project root:
      ```bash
-     npx eas build --profile production --platform ios --local
+     eas build --profile production --platform ios --local
      ```
      The build runs on your Mac and produces an IPA (EAS prints the path when finished).
   4. Upload the IPA to App Store Connect via **Transporter** (Mac App Store).
@@ -257,7 +257,9 @@ npx expo run:android
 
 - **Sentry:** DSN comes from EAS env (production). For local builds: `export EXPO_PUBLIC_SENTRY_DSN="https://..."` in the terminal before `eas build --local`. Troubleshooting: `docs/SENTRY.md`.
 
-**Alternative (cloud build):** `npx eas build --profile production --platform ios` (without `--local`) — builds in the cloud. Same EAS Secret. Then either `npx eas submit --platform ios --latest`, or download the IPA and use Transporter.
+**Alternative (cloud build):** `eas build --profile production --platform ios` (without `--local`) — builds in the cloud. Same EAS Secret. Add `--auto-submit` to upload straight to App Store Connect, or afterwards run `eas submit --platform ios --latest`, or download the IPA and use Transporter.
+
+`eas` is the globally installed eas-cli (`npm install -g eas-cli`); `npx eas` does not work in this repo.
 
 No secrets or credentials are stored in the repo. Use EAS Secrets for `EXPO_PUBLIC_SENTRY_DSN` (and any others) during builds.
 
