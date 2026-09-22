@@ -2,7 +2,6 @@
 title: 'Welcome to the Wean Nicotine blog'
 description: 'A short note on why we built Wean Nicotine and what we plan to write about here. Tapering, harm reduction, privacy-first health apps, and the indie route.'
 pubDate: 2026-05-31
-author: 'Jarl Lyng'
 tags: ['intro', 'wean-nicotine']
 ---
 

@@ -2,7 +2,6 @@
 title: 'Why privacy matters in health apps'
 description: "A nicotine usage log is the kind of data you don't want leaving your phone. Here's the specific case for local-first health tools and what to look for before you install one."
 pubDate: 2026-06-05
-author: 'Jarl Lyng'
 tags: ['privacy', 'local-first', 'positioning']
 ---
 

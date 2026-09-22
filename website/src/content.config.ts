@@ -9,20 +9,22 @@ import { glob } from 'astro/loaders';
  * post.
  */
 const blog = defineCollection({
-	loader: glob({ pattern: '**/*.md', base: './src/content/blog' }),
-	schema: z.object({
-		title: z.string(),
-		description: z.string(),
-		pubDate: z.coerce.date(),
-		updatedDate: z.coerce.date().optional(),
-		author: z.string().default('Jarl Lyng'),
-		/** Show the post in listings + RSS. Set false to soft-unpublish. */
-		published: z.boolean().default(true),
-		/** Free-form tags surfaced in the listing and OG. */
-		tags: z.array(z.string()).default([]),
-		/** Optional cover/social image relative to /public (or a full URL). */
-		coverImage: z.string().optional(),
-	}),
+  loader: glob({ pattern: '**/*.md', base: './src/content/blog' }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    pubDate: z.coerce.date(),
+    updatedDate: z.coerce.date().optional(),
+    // First name only, per the portfolio's BRAND_LEGAL rule (#329). The public
+    // identity is IAMJARL; a byline is where a human name is genuinely needed.
+    author: z.string().default('Jarl'),
+    /** Show the post in listings + RSS. Set false to soft-unpublish. */
+    published: z.boolean().default(true),
+    /** Free-form tags surfaced in the listing and OG. */
+    tags: z.array(z.string()).default([]),
+    /** Optional cover/social image relative to /public (or a full URL). */
+    coverImage: z.string().optional(),
+  }),
 });
 
 export const collections = { blog };
