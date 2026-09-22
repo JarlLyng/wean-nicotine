@@ -370,7 +370,7 @@ so its source of truth lives where it stays current on its own:
 
 - **In progress / deferred / prioritized:** the [GitHub issue tracker](https://github.com/JarlLyng/wean-nicotine/issues), using the P0–P3 labels (taxonomy in [`CONTRIBUTING.md`](../CONTRIBUTING.md)).
 - **What shipped, and when:** [`CHANGELOG.md`](../CHANGELOG.md) and the git log.
-- **What the App Store sees:** `npx eas build` history, and download/sales numbers via [`scripts/asc_downloads.py`](../scripts/asc_downloads.py).
+- **What the App Store sees:** the EAS build history (`eas build:list`), and download/sales numbers via [`scripts/asc_downloads.py`](../scripts/asc_downloads.py).
 
 Keep this document to the durable parts above (architecture, business rules,
 and especially the hard-won pitfalls). When in doubt, prefer a pointer to the

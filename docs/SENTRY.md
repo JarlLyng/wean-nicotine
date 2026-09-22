@@ -108,7 +108,7 @@ Ved **`eas build --local`** skal DSN sættes i terminalen:
 
 ```bash
 export EXPO_PUBLIC_SENTRY_DSN="https://din-dsn@xxx.ingest.de.sentry.io/xxx"
-npx eas build --profile production --platform ios --local
+eas build --profile production --platform ios --local
 ```
 
 ## 4. Fejlsøgning
