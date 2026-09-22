@@ -55,7 +55,7 @@ npx expo start
 cd website && npm run dev
 ```
 
-See [`docs/AI_CONTEXT.md`](./docs/AI_CONTEXT.md) for the full architecture overview.
+See [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md) for the full architecture overview.
 
 ## What gets accepted
 

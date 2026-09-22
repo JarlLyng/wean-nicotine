@@ -1,6 +1,6 @@
-# CLAUDE.md — Wean Nicotine
+# Wean Nicotine
 
-Quick-start context for developers and AI assistants. Detailed specs in `docs/` (see `docs/AI_CONTEXT.md`).
+Quick-start context for developers and AI assistants. Detailed specs in `docs/` (see `docs/ARCHITECTURE.md`).
 
 ## What is Wean Nicotine?
 
@@ -15,7 +15,7 @@ A calm, private iPhone app for **gradually reducing** snus and nicotine pouches 
 
 ## Strategy lives in the private hub
 
-Target audience, positioning, pricing reasoning, SEO/ASO playbooks, and competitor analysis are **not** in this public repo — they're in the private [iamjarl-strategy](https://github.com/JarlLyng/iamjarl-strategy) hub (folder `WeanNicotine/`). Before doing any audience/positioning/pricing/marketing-planning work, read that repo's `CONVENTIONS.md` and write results there, not here. (This is already documented in `docs/README.md` and `docs/AI_CONTEXT.md`.)
+Target audience, positioning, pricing reasoning, SEO/ASO playbooks, and competitor analysis are **not** in this public repo — they're in the private [iamjarl-strategy](https://github.com/JarlLyng/iamjarl-strategy) hub (folder `WeanNicotine/`). Before doing any audience/positioning/pricing/marketing-planning work, read that repo's `CONVENTIONS.md` and write results there, not here. (This is already documented in `docs/README.md` and `docs/ARCHITECTURE.md`.)
 
 ## App features (be precise — do not invent features that don't exist)
 

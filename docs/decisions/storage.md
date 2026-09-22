@@ -1,22 +1,27 @@
 # Storage Decision: SQLite vs MMKV
 
 Purpose:
+
 - Record why SQLite was chosen over MMKV for local persistence
 
 Audience:
+
 - Maintainers and LLMs evaluating storage-related changes
 
 Source of truth:
+
 - Current implementation in [`lib/db.ts`](../../lib/db.ts) and `lib/db-*.ts`
 - This document explains the decision, not every runtime detail
 
 Related files:
-- [`docs/AI_CONTEXT.md`](../AI_CONTEXT.md)
+
+- [`docs/ARCHITECTURE.md`](../ARCHITECTURE.md)
 - [`lib/db.ts`](../../lib/db.ts)
 - [`lib/db-log-entries.ts`](../../lib/db-log-entries.ts)
 - [`lib/db-settings.ts`](../../lib/db-settings.ts)
 
 Update when:
+
 - Storage technology changes
 - Migration strategy changes materially
 - The reasons for the decision are no longer accurate
@@ -30,6 +35,7 @@ Update when:
 ## Context
 
 Wean needs local-first storage for:
+
 - Timestamped log entries (pouch usage, cravings resisted)
 - User taper plan settings
 - Daily/weekly progress data
@@ -40,6 +46,7 @@ Wean needs local-first storage for:
 ### SQLite (expo-sqlite)
 
 **Pros:**
+
 - Full relational database with SQL queries
 - Excellent for timestamped logs with date ranges
 - Supports complex queries (aggregations, joins, filtering)
@@ -50,6 +57,7 @@ Wean needs local-first storage for:
 - Easy to export data (CSV) for users later
 
 **Cons:**
+
 - More setup complexity than key-value stores
 - Requires schema migrations
 - Slightly heavier than MMKV
@@ -57,12 +65,14 @@ Wean needs local-first storage for:
 ### MMKV (react-native-mmkv)
 
 **Pros:**
+
 - Extremely fast key-value operations
 - Simple API (get/set)
 - Very lightweight
 - Great for simple settings storage
 
 **Cons:**
+
 - Key-value only (no relational queries)
 - Not ideal for timestamped logs (would need manual filtering)
 - No built-in date range queries
@@ -119,6 +129,7 @@ Wean's primary storage needs:
 Schema changes are managed via the `MIGRATIONS` array in `lib/db.ts`. Each entry has a `version` (integer), `sql` (DDL statement), and optional `ignoreError` flag for legacy migrations that may already have run on existing installs. The `schema_version` table tracks which migrations have been applied.
 
 To add a new migration:
+
 ```ts
 { version: 3, sql: `ALTER TABLE log_entries ADD COLUMN note TEXT` }
 ```
