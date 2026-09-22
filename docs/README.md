@@ -18,7 +18,7 @@ Source of truth:
 
 Related files:
 
-- [`AI_CONTEXT.md`](./AI_CONTEXT.md)
+- [`ARCHITECTURE.md`](./ARCHITECTURE.md)
 - [`README.md`](../README.md)
 
 Update when:
@@ -28,7 +28,7 @@ Update when:
 
 If you are a human or an LLM, read documents in this order:
 
-1. [`AI_CONTEXT.md`](./AI_CONTEXT.md) for the canonical repo and app overview.
+1. [`ARCHITECTURE.md`](./ARCHITECTURE.md) for the canonical repo and app overview.
 2. [`README.md`](../README.md) for setup, product framing, and release workflow.
 3. [GitHub Issues](https://github.com/JarlLyng/wean-nicotine/issues) for all open tasks (labels: P1/P2/P3, seo, aso, website, marketing).
 4. Domain-specific docs from the map below.
@@ -36,7 +36,7 @@ If you are a human or an LLM, read documents in this order:
 ## Documentation Rules
 
 - Code is the final source of truth for behavior.
-- Architecture and domain summaries live in [`AI_CONTEXT.md`](./AI_CONTEXT.md).
+- Architecture and domain summaries live in [`ARCHITECTURE.md`](./ARCHITECTURE.md).
 - Product/developer onboarding lives in [`README.md`](../README.md).
 - Decision records explain why something was chosen, not how every current detail works.
 - Strategy docs describe intent and direction. They must not override code.
@@ -90,7 +90,7 @@ This makes the docs easier for LLMs to classify correctly and reduces accidental
 
 ### In this directory (`docs/`)
 
-- [`AI_CONTEXT.md`](./AI_CONTEXT.md): Canonical repo overview for fast machine and human orientation.
+- [`ARCHITECTURE.md`](./ARCHITECTURE.md): Canonical repo overview for fast machine and human orientation.
 - [`design.md`](./design.md): Design-system principles and token usage.
 - [`SENTRY.md`](./SENTRY.md): Sentry setup, privacy hardening, and troubleshooting.
 - [`APP_STORE_METADATA.md`](./APP_STORE_METADATA.md): App Store listing copy and metadata for all storefronts.
@@ -108,6 +108,6 @@ This makes the docs easier for LLMs to classify correctly and reduces accidental
 ## Change Guidance
 
 - If you change app behavior, update code first, then adjust docs that summarize that behavior.
-- If you add a new subsystem, add it to [`AI_CONTEXT.md`](./AI_CONTEXT.md) and this index.
+- If you add a new subsystem, add it to [`ARCHITECTURE.md`](./ARCHITECTURE.md) and this index.
 - If a document conflicts with code, treat the document as stale and fix it.
 - Prefer concise, explicit statements over narrative prose when documenting architecture or operational steps.

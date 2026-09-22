@@ -5,17 +5,21 @@
 **Version:** 1.2 (IAMJARL Design System v0.1.3)
 
 Purpose:
+
 - Summarize the app's design system and usage patterns
 
 Audience:
+
 - Maintainers and LLMs working on app UI
 
 Source of truth:
+
 - `lib/design.ts` (IAMJARL tokens) and `lib/theme.ts` (re-exports)
 - Do not rely on this doc for exact pixel values; use the code
 
 Related files:
-- [`AI_CONTEXT.md`](./AI_CONTEXT.md)
+
+- [`ARCHITECTURE.md`](./ARCHITECTURE.md)
 - [`lib/design.ts`](../lib/design.ts)
 - [`lib/theme.ts`](../lib/theme.ts)
 - [`components/Screen.tsx`](../components/Screen.tsx)
@@ -23,6 +27,7 @@ Related files:
 - [`components/ui/Button.tsx`](../components/ui/Button.tsx)
 
 Update when:
+
 - Tokens change
 - Component usage patterns change
 - Design principles change
@@ -45,24 +50,25 @@ Design tokens live in `lib/design.ts` and are consumed via `useDesignTokens()`.
 
 ### Mode Colors
 
-| Token | Light | Dark |
-|-------|-------|------|
-| `primary` | `#CE63FF` (neon purple) | `#D0FF00` (neon lime) |
-| `onPrimary` | `#000000` | `#000000` |
-| `background.app` | `#FFFFFF` | `#000000` |
-| `background.card` | `rgba(0,0,0,0.04)` | `rgba(255,255,255,0.05)` |
-| `text.primary` | `#000000` | `#FFFFFF` |
-| `text.secondary` | `rgba(0,0,0,0.70)` | `rgba(255,255,255,0.75)` |
+| Token             | Light                   | Dark                     |
+| ----------------- | ----------------------- | ------------------------ |
+| `primary`         | `#CE63FF` (neon purple) | `#D0FF00` (neon lime)    |
+| `onPrimary`       | `#000000`               | `#000000`                |
+| `background.app`  | `#FFFFFF`               | `#000000`                |
+| `background.card` | `rgba(0,0,0,0.04)`      | `rgba(255,255,255,0.05)` |
+| `text.primary`    | `#000000`               | `#FFFFFF`                |
+| `text.secondary`  | `rgba(0,0,0,0.70)`      | `rgba(255,255,255,0.75)` |
 
 ### Shared Semantic Colors
 
-| Token | Value |
-|-------|-------|
+| Token     | Value     |
+| --------- | --------- |
 | `success` | `#4CAF50` |
 | `warning` | `#FF6B35` |
-| `error` | `#FF3B30` |
+| `error`   | `#FF3B30` |
 
 **Rules:**
+
 - Never use primary color for destructive actions
 - Never hardcode hex in UI code — use tokens
 - Always support light + dark mode
@@ -110,6 +116,7 @@ sm: 8   md: 12   lg: 16
 ```
 
 **Rules:**
+
 - Primary buttons: `radius.md` (12px)
 - Cards: `borderRadius.lg` (16px)
 - Pill/chip shapes: `borderRadius.full` (9999) — fra `lib/theme.ts`
@@ -182,4 +189,4 @@ const { colors } = useDesignTokens();
 
 ---
 
-*Last updated: 2026-03-21*
+_Last updated: 2026-03-21_

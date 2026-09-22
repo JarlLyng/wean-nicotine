@@ -57,8 +57,19 @@ build-*.ipa
 website/.astro/
 CODEX_ANBEFALINGER.md
 
-# Claude Code local config (not portable across machines)
+# AI tooling: the repo is indifferent to which assistant is used and keeps
+# exactly one vendor-neutral agent file, AGENTS.md (#343). Tool-specific config
+# describes one machine or one tool, not the project, so it stays local.
 .claude/
+CLAUDE.md
+CLAUDE.local.md
+.cursor/
+.cursorrules
+.windsurfrules
+.clinerules
+.aider*
+.mcp.json
+.github/copilot-instructions.md
 
 # Secrets — never commit. App Store Connect API keys and env files.
 *.p8

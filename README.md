@@ -23,7 +23,7 @@ Instead of quitting cold turkey, Wean focuses on **tapering** — reducing usage
 If you need to understand the repository quickly:
 
 - Start with [`docs/README.md`](./docs/README.md) for the documentation map.
-- Read [`docs/AI_CONTEXT.md`](./docs/AI_CONTEXT.md) for the canonical architecture and domain summary.
+- Read [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md) for the canonical architecture and domain summary.
 - Use code as source of truth for exact behavior.
 
 ---

@@ -1,4 +1,4 @@
-# AI Context
+# Architecture
 
 This file is the canonical fast-path for understanding the repository.
 
