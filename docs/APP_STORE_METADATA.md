@@ -548,7 +548,7 @@ https://weannicotine.iamjarl.com/
 ### Copyright
 
 ```
-2026 Jarl Lyng
+2026 IAMJARL
 ```
 
 ---
