@@ -1,11 +1,11 @@
 /**
  * Theme tokens for Wean Nicotine app
- * 
+ *
  * Now based on IAMJARL Design System (https://jarllyng.github.io/iamjarl-design/)
- * 
+ *
  * This file provides backward-compatible exports while using IAMJARL tokens as the source of truth.
  * For new code, prefer using `useDesignTokens()` hook from `@/lib/design` for automatic light/dark mode support.
- * 
+ *
  * Design principles:
  * - Follow IAMJARL Design System strictly
  * - Always support light + dark mode
@@ -112,7 +112,7 @@ export const fontWeights = {
 /**
  * Colors - WARNING: This is a static export that defaults to light mode.
  * For proper light/dark mode support, use `useDesignTokens()` hook instead.
- * 
+ *
  * This export is kept for backward compatibility but will be deprecated.
  * New code should use `useDesignTokens()` from `@/lib/design`.
  */
@@ -120,7 +120,7 @@ const lightColors = getColors('light');
 export const colors = {
   // IAMJARL primary color (light mode default)
   primary: lightColors.primary,
-  
+
   // IAMJARL text colors (light mode default)
   text: {
     primary: lightColors.text.primary,
@@ -128,36 +128,35 @@ export const colors = {
     tertiary: lightColors.text.tertiary,
     inverse: lightColors.text.inverse,
   },
-  
+
   // IAMJARL border colors (light mode default)
   border: {
     subtle: lightColors.border.subtle,
     default: lightColors.border.default,
   },
-  
+
   // IAMJARL shared semantic colors
   success: designTokens.colors.shared.success,
   warning: designTokens.colors.shared.warning,
   error: designTokens.colors.shared.error,
-  
+
   // Backward compatibility aliases (deprecated - use IAMJARL tokens via useDesignTokens())
   // These are flat strings for compatibility with existing code
   background: lightColors.background.app,
   surface: lightColors.surface.default,
   textPrimary: lightColors.text.primary,
   textSecondary: lightColors.text.secondary,
-  
+
   // IAMJARL background and surface (for new code, prefer useDesignTokens())
   backgroundApp: lightColors.background.app,
   backgroundMuted: lightColors.background.muted,
   backgroundCard: lightColors.background.card,
   surfaceRaised: lightColors.surface.raised,
-  
+
   // Legacy gradient colors - DEPRECATED: Use primary instead
   accentStart: lightColors.primary, // Using IAMJARL primary
   accentMid: lightColors.primary, // Using IAMJARL primary
   accentEnd: lightColors.primary, // Using IAMJARL primary
-  
 } as const;
 
 // IAMJARL radius tokens (sm 8, md 12, lg 16). full is for pill shapes.
@@ -201,12 +200,11 @@ export const shadows = {
   },
 } as const;
 
-// Animation timings (calm, not rushed)
+// IAMJARL motion durations in ms (--ij-duration-fast / -normal / -slow)
 export const animations = {
   fast: 150,
   normal: 250,
-  slow: 350,
-  slower: 500,
+  slow: 400,
 } as const;
 
 // Easing curves (smooth, natural)
