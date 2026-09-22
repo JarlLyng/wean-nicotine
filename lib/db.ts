@@ -152,6 +152,32 @@ const MIGRATIONS: Migration[] = [
   },
 ];
 
+/**
+ * Run `task` inside BEGIN/COMMIT, rolling back if it throws.
+ *
+ * Not expo-sqlite's `withTransactionAsync`: that one lets a failing ROLLBACK
+ * replace the original error. ROLLBACK fails exactly when BEGIN failed or
+ * SQLite already rolled back on its own (disk full, I/O error), so Sentry
+ * would get "no transaction is active" instead of the real cause.
+ */
+export async function runInTransaction(
+  database: Pick<SQLiteDatabase, 'runAsync'>,
+  task: () => Promise<void>,
+): Promise<void> {
+  try {
+    await database.runAsync('BEGIN');
+    await task();
+    await database.runAsync('COMMIT');
+  } catch (error) {
+    try {
+      await database.runAsync('ROLLBACK');
+    } catch {
+      // Keep the original error
+    }
+    throw error;
+  }
+}
+
 async function runMigrations(database: SQLiteDatabase): Promise<void> {
   await database.execAsync(
     `CREATE TABLE IF NOT EXISTS schema_version (version INTEGER PRIMARY KEY)`,
@@ -167,17 +193,12 @@ async function runMigrations(database: SQLiteDatabase): Promise<void> {
     // Run each migration in its own transaction. If `up` throws, the SQL is
     // rolled back AND we do NOT advance `schema_version` — so the next launch
     // retries this migration cleanly instead of skipping a half-applied one.
-    await database.runAsync('BEGIN');
-    try {
+    await runInTransaction(database, async () => {
       await migration.up(database);
       await database.runAsync('INSERT OR REPLACE INTO schema_version (version) VALUES (?)', [
         migration.version,
       ]);
-      await database.runAsync('COMMIT');
-    } catch (error) {
-      await database.runAsync('ROLLBACK');
-      throw error;
-    }
+    });
   }
 }
 
@@ -280,20 +301,11 @@ export async function getDatabase(): Promise<SQLiteDatabase> {
  */
 export async function resetAllData(): Promise<void> {
   const database = await getDatabase();
-  try {
-    await database.runAsync('BEGIN');
+  await runInTransaction(database, async () => {
     await database.runAsync('DELETE FROM log_entries');
     await database.runAsync('DELETE FROM taper_settings');
     await database.runAsync('DELETE FROM app_preferences');
     await database.runAsync('DELETE FROM breathing_sessions');
     await database.runAsync('DELETE FROM reflections');
-    await database.runAsync('COMMIT');
-  } catch (error) {
-    try {
-      await database.runAsync('ROLLBACK');
-    } catch {
-      // Ignore rollback errors
-    }
-    throw error;
-  }
+  });
 }
