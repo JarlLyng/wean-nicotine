@@ -13,6 +13,18 @@ A calm, private iPhone app for **gradually reducing** snus and nicotine pouches 
 - **Platform:** iPhone (Expo / React Native — the portfolio's one non-SwiftUI app; chosen deliberately).
 - **Current version:** **1.6.2** (iOS build 24) live in App Store since September 2026. `app.config.js` is the source of truth for the current build number; release history is in `CHANGELOG.md`.
 
+## Boundaries: work only in this repo
+
+- Commit, push and open pull requests **only in this repo**. Never edit, commit to, push to or
+  open a pull request in another IAMJARL repo, and that includes `iamjarl-design`.
+- To ask another repo for something, **open an issue there**. Public repos get findings, never
+  measured numbers. If it is strategic, or not safe in public, it goes to the hub instead.
+- The one place outside this repo you write is this app's own folder in the private hub
+  (`WeanNicotine/`). Shared hub files (`PORTFOLIO.md`, the standards, `tools/`) are changed from inside
+  the hub; if one needs changing, open an issue there.
+- If a task seems to need a change in another repo, stop, open the issue, and carry on with what
+  this repo can do.
+
 ## Strategy lives in the private hub
 
 Target audience, positioning, pricing reasoning, SEO/ASO playbooks, and competitor analysis are **not** in this public repo — they're in the private [iamjarl-strategy](https://github.com/JarlLyng/iamjarl-strategy) hub (folder `WeanNicotine/`). Before doing any audience/positioning/pricing/marketing-planning work, read that repo's `CONVENTIONS.md` and write results there, not here. (This is already documented in `docs/README.md` and `docs/ARCHITECTURE.md`.)
