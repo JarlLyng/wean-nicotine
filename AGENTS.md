@@ -6,7 +6,7 @@ Quick-start context for developers and AI assistants. Detailed specs in `docs/` 
 
 A calm, private iPhone app for **gradually reducing** snus and nicotine pouches (not quitting cold turkey). Local-first: no accounts, no cloud, no internet required. The tone is deliberately non-judgmental — it serves _reducers_, not _quitters_.
 
-- **Developer:** Jarl Lyng / [IAMJARL](https://iamjarl.com)
+- **Developer:** [IAMJARL](https://iamjarl.com) (Jarl). The full personal name is never used in copy or docs; see `BRAND_LEGAL.md` in the hub.
 - **Website:** [weannicotine.iamjarl.com](https://weannicotine.iamjarl.com)
 - **License:** [MIT](LICENSE) — open source.
 - **Price:** **29 DKK (~$4) one-time** — no subscription, no in-app purchases, no ads.
@@ -28,6 +28,23 @@ A calm, private iPhone app for **gradually reducing** snus and nicotine pouches 
 ## Strategy lives in the private hub
 
 Target audience, positioning, pricing reasoning, SEO/ASO playbooks, and competitor analysis are **not** in this public repo — they're in the private [iamjarl-strategy](https://github.com/JarlLyng/iamjarl-strategy) hub (folder `WeanNicotine/`). Before doing any audience/positioning/pricing/marketing-planning work, read that repo's `CONVENTIONS.md` and write results there, not here. (This is already documented in `docs/README.md` and `docs/ARCHITECTURE.md`.)
+
+### Read these hub files before the task they govern
+
+The hub holds rules that this repo cannot follow unless it knows they exist. Read by task:
+
+- **`VOICE.md`** before writing _any_ public copy: App Store text, site copy, release notes,
+  community posts, replies. Hard rules: no em-dashes, no bullet lists in copy, minimal emojis,
+  always pay-once framing (never "free" for a paid app), plus this app's overlay. Wean's is the
+  gentlest voice in the portfolio: never guilt or shame, and no war metaphors (no fighting,
+  battling or beating an addiction).
+- **`BRAND_LEGAL.md`** before anything naming the maker, copyright or a third-party product.
+  The public identity is IAMJARL; a human name is the first name only.
+- **`DESIGN.md`** before App Store screenshots or any visual that carries the brand.
+- **`ASO_GUIDANCE.md`** before touching App Store metadata; **`SEO_GUIDANCE.md`** before site SEO.
+- **Public issues carry findings, never measured numbers.** No download, sales, revenue,
+  rating-count or traffic figures in this repo or its issues. State the finding, drop the number.
+  The hub's `tools/public_text_check.py` is the check.
 
 ## App features (be precise — do not invent features that don't exist)
 
