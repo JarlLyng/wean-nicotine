@@ -59,7 +59,9 @@ const pageDescription =
 
 const canonicalUrl = new URL(canonicalPath ?? Astro.url.pathname, Astro.site).toString();
 // PNG (not SVG). Most social platforms reject SVG og:image
-// Regenerate via: cd website && node -e "require('sharp')(require('fs').readFileSync('public/og-image.svg'),{density:200}).resize(1200,630,{fit:'contain',background:'#000'}).png({compressionLevel:9}).toFile('public/og-image.png')"
+// public/og-image.png is its own source: a hand-made composite of app screens,
+// 1200x630 and under 1 MB. Nothing in the repo generates it. It is also the
+// GitHub social preview, uploaded by hand in Settings, so replace it there too.
 const ogImageUrl = new URL(ogImage ?? '/og-image.png', Astro.site).toString();
 
 const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
