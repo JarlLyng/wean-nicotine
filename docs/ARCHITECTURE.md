@@ -318,8 +318,8 @@ The fix that holds up:
 
 ### Dependabot alerts that cannot be fixed from this repo
 
-One open alert is blocked on Expo upstream. It gets re-investigated every time someone
-looks at the alert list, so the conclusion is written down here.
+Two open alerts are blocked upstream. They get re-investigated every time someone looks at
+the alert list, so the conclusions are written down here.
 
 **Updated 2026-09-18.** The two `image-size` alerts that used to sit here are gone.
 They were marked `patched: NONE` and looked permanent, but realigning the tree with the
@@ -329,9 +329,10 @@ now returns empty. The lesson is the one in the drift section above: "no patch a
 on a transitive Expo dependency often means "not on this SDK patch level", so re-check
 after an SDK move rather than treating it as permanent.
 
-| Alert                                              | Path                                 | Why it is stuck                    |
-| -------------------------------------------------- | ------------------------------------ | ---------------------------------- |
-| `decode-uri-component` (1, medium, CVE-2026-45822) | `expo-router` → `query-string@7.1.3` | Patched at `0.5.0`, but see below. |
+| Alert                                              | Path                                                                         | Why it is stuck                                 |
+| -------------------------------------------------- | ---------------------------------------------------------------------------- | ----------------------------------------------- |
+| `decode-uri-component` (1, medium, CVE-2026-45822) | `expo-router` → `query-string@7.1.3`                                         | Patched at `0.5.0`, but see below.              |
+| `node-forge` (1, high, CVE-2026-85393)             | `@expo/cli` and `expo-updates` → `@expo/code-signing-certificates` → `1.4.0` | No patched release exists; `1.4.0` is the last. |
 
 **Do not add an `overrides` entry for `decode-uri-component`.** The patched `0.5.0` is
 pure ESM (`"type": "module"`), while the vulnerable `0.2.2` is CommonJS, and
@@ -352,6 +353,21 @@ service via exponential decoding of malformed percent-encoded input; `app.config
 registers the `wean` and `taper` URL schemes, so a hostile app on the same device could
 hang Wean by deep-linking garbage at it. No data disclosure, no code execution, and the
 advisory is unscored.
+
+**`node-forge` (added 2026-10-02).** The advisory is that RSA PKCS#1 v1.5 signature
+verification accepts extra nested `DigestAlgorithm` elements, and every version up to and
+including `1.4.0` is affected, with no fix published. There is nothing to bump or override
+to. On exposure: `node-forge` is Node tooling only. `@expo/cli` uses it, and `expo-updates`
+reaches it through its `cli/` code-signing commands, not through `build/`, so it never enters
+the app's JavaScript bundle. Wean also configures no update code signing (`updates` in
+`app.config.js` has a `url` and nothing else). When a patched release ships, check that
+Expo's packages accept it, and check the module format before any override, as for
+`decode-uri-component` above.
+
+```bash
+npm ls node-forge                 # both paths, both 1.4.0
+npm view node-forge version       # 1.4.0 until a fix ships
+```
 
 The general rule, and the same lesson as the `brace-expansion` warning above: **check the
 module format and the actual consumer before adding an override, not just the semver
