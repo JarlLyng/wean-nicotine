@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import { ALL_LOCALES } from '../i18n/ui';
 import { COMPANY_NAME, SITE_URL, SUPPORT_EMAIL } from '../lib/site';
 
-const lastUpdated = '2026-01-21';
+const lastUpdated = '2026-10-03';
 ---
 
 <Layout
@@ -80,6 +80,12 @@ const lastUpdated = '2026-01-21';
 				<li><strong>No GDPR consent banner.</strong> Because nothing personal is collected and no cookie is set, no consent is required under GDPR / ePrivacy. We deliberately avoid the cookie wall.</li>
 				<li><strong>Self-hosted instance</strong> at <a href="https://umami-iamjarl.vercel.app/" rel="noopener noreferrer" target="_blank">umami-iamjarl.vercel.app</a>. No third party receives the data.</li>
 			</ul>
+			<p>
+				Links to the App Store also carry a campaign tag (<code>ct=site</code>) that is the same for every visitor. It lets
+				Apple's App Store Connect show us, in aggregate, how many App Store visits and downloads started from this website.
+				The tag is fixed when the site is built and says nothing about you. What the App Store itself records is covered by
+				Apple's privacy policy.
+			</p>
 
 			<h2>Data retention</h2>
 			<p>

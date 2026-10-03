@@ -3,12 +3,10 @@ import Layout from '../../layouts/Layout.astro';
 import Button from '../../components/Button.astro';
 import Card from '../../components/Card.astro';
 import Section from '../../components/Section.astro';
-import { APP_STORE_URL, isAppStoreUrlKnown, SITE_NAME, getCampaignAppStoreUrl } from '../../lib/site';
+import { APP_STORE_URL, isAppStoreUrlKnown, SITE_NAME } from '../../lib/site';
 
-const campaignToken = 'seo_en_guide_craving';
 const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
 const appStoreCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming soon on the App Store';
-const finalAppStoreUrl = getCampaignAppStoreUrl(campaignToken);
 ---
 
 <Layout
@@ -146,7 +144,7 @@ const finalAppStoreUrl = getCampaignAppStoreUrl(campaignToken);
 		<div class="container">
 			<h2>Get craving support when you need it</h2>
 			<p>Wean Nicotine includes breathing exercises, urge surfing, and reflection tools built right into the app.</p>
-			<Button placement="bottom-cta" variant="primary" href={finalAppStoreUrl} disabled={!appStoreKnown} external={true}>
+			<Button placement="bottom-cta" variant="primary" href={APP_STORE_URL} disabled={!appStoreKnown} external={true}>
 				{appStoreCtaLabel}
 			</Button>
 		</div>

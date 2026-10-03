@@ -2,7 +2,7 @@
 import '../styles/global.css';
 import Button from '../components/Button.astro';
 import LanguageSwitcher from '../components/LanguageSwitcher.astro';
-import { APP_STORE_URL, COMPANY_NAME, isAppStoreUrlKnown, SITE_NAME, SUPPORT_EMAIL } from '../lib/site';
+import { APP_STORE_LISTING_URL, APP_STORE_URL, COMPANY_NAME, isAppStoreUrlKnown, SITE_NAME, SUPPORT_EMAIL } from '../lib/site';
 import { getLangFromUrl, useTranslations, useTranslatedPath } from '../i18n/utils';
 import { languages } from '../i18n/ui';
 import { NORDIC_FOOTER } from '../i18n/footer-links';
@@ -76,7 +76,7 @@ const structuredData: Record<string, unknown> = {
 	description: 'A calm, private app for reducing snus and nicotine pouches gradually with daily tracking, craving support tools, and weekly progress.',
 	url: new URL('/', Astro.site).toString(),
 	offers: { '@type': 'Offer', price: '29', priceCurrency: 'DKK' },
-	...(appStoreKnown ? { downloadUrl: APP_STORE_URL, installUrl: APP_STORE_URL } : {}),
+	...(appStoreKnown ? { downloadUrl: APP_STORE_LISTING_URL, installUrl: APP_STORE_LISTING_URL } : {}),
 };
 ---
 
