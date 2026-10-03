@@ -64,3 +64,16 @@ the whole vendor account (every app).
   new-download codes, not the updates.
 - Reports lag **~24–48h**, so the most recent day(s) show `(no report)` — that's normal.
 - Apple retains **monthly** reports for 12 months and **daily** reports for 365 days.
+
+## `changelog-section.mjs` — one version's changelog notes
+
+Prints a version's section of `CHANGELOG.md`, heading included:
+
+```bash
+node scripts/changelog-section.mjs 1.6.2
+```
+
+The Release workflow (`.github/workflows/release.yml`) uses it as the notes for
+that version's GitHub Release. It exits 1 when the version has no section, so a
+tag pushed before its changelog entry fails instead of publishing an empty
+release.
