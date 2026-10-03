@@ -6,11 +6,14 @@ import { useColorScheme } from '@/hooks/use-color-scheme';
 import { setPreferredColorScheme } from '@/lib/color-scheme';
 import { formatMoney } from '@/lib/currency';
 import { buildFeedbackMailto, SUPPORT_EMAIL } from '@/lib/feedback';
+import { buildLogCsv, exportFileName } from '@/lib/export-csv';
+import { getLogEntries } from '@/lib/db-log-entries';
 import { getTaperSettings } from '@/lib/db-settings';
 import { useDesignTokens, typography } from '@/lib/design';
 import { captureError } from '@/lib/sentry';
 import type { TaperSettings } from '@/lib/models';
 import Constants from 'expo-constants';
+import { File, Paths } from 'expo-file-system';
 import {
   cancelDailyCheckIn,
   getAllScheduledNotifications,
@@ -25,6 +28,7 @@ import {
   Linking,
   Platform,
   ScrollView,
+  Share,
   StyleSheet,
   Switch,
   Text,
@@ -41,8 +45,27 @@ export default function SettingsScreen() {
   const [hasPermission, setHasPermission] = useState(false);
   const [dailyCheckInEnabled, setDailyCheckInEnabled] = useState(false);
   const [isLoadingNotifications, setIsLoadingNotifications] = useState(true);
+  const [isExporting, setIsExporting] = useState(false);
   const lastLoadedRef = useRef(0);
   const s = useMemo(() => createStyles(colors), [colors]);
+
+  // CSV export (#43): written to the cache directory and handed to the share
+  // sheet, so the person chooses where it goes. Nothing is sent anywhere else.
+  const handleExport = async () => {
+    setIsExporting(true);
+    try {
+      const entries = await getLogEntries();
+      const file = new File(Paths.cache, exportFileName(new Date()));
+      file.create({ overwrite: true });
+      file.write(buildLogCsv(entries));
+      await Share.share({ url: file.uri });
+    } catch (error) {
+      if (error instanceof Error) captureError(error, { context: 'settings_export_csv' });
+      Alert.alert('Export failed', 'The file could not be created. Please try again.');
+    } finally {
+      setIsExporting(false);
+    }
+  };
 
   const loadData = useCallback(async (force = false) => {
     if (!force && Date.now() - lastLoadedRef.current < 2000) return;
@@ -212,6 +235,26 @@ export default function SettingsScreen() {
               />
             </Card>
           )}
+
+          {/* ── Export ── */}
+          <Card variant="elevated" style={s.card} padding="lg">
+            <View style={s.row}>
+              <View style={[s.iconWrap, { backgroundColor: colors.primary + '14' }]}>
+                <Icon name="export" size={20} color={colors.primary} weight="regular" />
+              </View>
+              <View style={s.rowText}>
+                <Text style={s.rowTitle}>Export Data</Text>
+                <Text style={s.rowDescription}>Save your log as a CSV file</Text>
+              </View>
+            </View>
+            <Button
+              title="Export"
+              onPress={handleExport}
+              loading={isExporting}
+              variant="secondary"
+              style={s.exportButton}
+            />
+          </Card>
 
           {/* ── Start Over ── */}
           <Card variant="elevated" style={s.card} padding="lg">
@@ -389,6 +432,9 @@ const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) =>
       marginTop: spacing.md,
       paddingHorizontal: 0,
       justifyContent: 'flex-start',
+    } as ViewStyle,
+    exportButton: {
+      marginTop: spacing.md,
     } as ViewStyle,
     startOverButton: {
       marginTop: spacing.md,

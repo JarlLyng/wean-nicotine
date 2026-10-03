@@ -38,6 +38,7 @@ import {
   Clock,
   BookOpen,
   X,
+  Export,
 } from 'phosphor-react-native';
 
 export type IconName =
@@ -72,7 +73,8 @@ export type IconName =
   | 'pause'
   | 'clock'
   | 'book-open'
-  | 'x';
+  | 'x'
+  | 'export';
 
 export type IconWeight = 'thin' | 'light' | 'regular' | 'bold' | 'fill' | 'duotone';
 
@@ -126,6 +128,7 @@ const ICON_MAP: Record<
   clock: Clock,
   'book-open': BookOpen,
   x: X,
+  export: Export,
 };
 
 export function Icon({ name, size = 24, color, weight = 'regular', style }: IconProps) {
