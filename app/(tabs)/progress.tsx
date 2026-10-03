@@ -1,12 +1,14 @@
 import { Screen } from '@/components/Screen';
-import { Card } from '@/components/ui/Card';
 import { Icon } from '@/components/ui/Icon';
-import { formatMoney } from '@/lib/currency';
 import { captureError } from '@/lib/sentry';
 import { getTaperSettings } from '@/lib/db-settings';
 import { useDesignTokens } from '@/lib/design';
 import type { TaperSettings } from '@/lib/models';
 import { PatternsCard } from '@/components/PatternsCard';
+import { DailyUsageCard } from '@/components/progress/DailyUsageCard';
+import { MilestonesList } from '@/components/progress/MilestonesList';
+import { TotalProgressCard } from '@/components/progress/TotalProgressCard';
+import { getTrend, WeeklyStatsCard } from '@/components/progress/WeeklyStatsCard';
 import { REVIEW_MIN_POUCHES_AVOIDED } from '@/lib/constants';
 import { maybeRequestReview } from '@/lib/store-review';
 import {
@@ -22,7 +24,7 @@ import {
   type UsagePatterns,
   type WeeklyProgress,
 } from '@/lib/progress';
-import { animations, borderRadius, spacing, typography } from '@/lib/theme';
+import { borderRadius, spacing, typography } from '@/lib/theme';
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import {
@@ -36,39 +38,11 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import Animated, { FadeIn, FadeInDown, FadeInRight } from 'react-native-reanimated';
+import Animated, { FadeIn } from 'react-native-reanimated';
 
 // ──────────────────────────────────────────────
 // Helpers
 // ──────────────────────────────────────────────
-
-/**
- * Icon + color for a milestone type.
- *
- * Pulls accent colors from the IAMJARL palette so dark mode auto-flips and we
- * avoid shipping hardcoded near-duplicate hex (#FF9500, #FFD700, etc) that
- * ignored the theme.
- */
-type MilestoneIconName = 'medal' | 'trophy' | 'lightning' | 'coins' | 'brain' | 'star';
-function milestoneIcon(
-  type: Milestone['type'],
-  colors: ReturnType<typeof useDesignTokens>['colors'],
-): { name: MilestoneIconName; color: string } {
-  switch (type) {
-    case 'first_day_under_limit':
-      return { name: 'medal', color: colors.warning };
-    case 'week_under_limit':
-      return { name: 'trophy', color: colors.primary };
-    case 'pouches_avoided':
-      return { name: 'lightning', color: colors.warning };
-    case 'money_saved':
-      return { name: 'coins', color: colors.success };
-    case 'cravings_resisted':
-      return { name: 'brain', color: colors.primary };
-    default:
-      return { name: 'star', color: colors.primary };
-  }
-}
 
 /** Generate a contextual insight sentence from weekly data */
 function getWeeklyInsight(
@@ -105,153 +79,6 @@ function getWeeklyInsight(
   }
   return "Every day is a chance to make progress. You've got this.";
 }
-
-/** Trend arrow + label comparing this vs. previous week */
-function getTrend(
-  current: number,
-  previous: number,
-): { arrow: string; label: string; isPositive: boolean } | null {
-  if (previous === 0) return null;
-  const diff = current - previous;
-  if (diff === 0) return null;
-  // For "used" lower is better, but this is generic — caller decides meaning
-  return {
-    arrow: diff > 0 ? '↑' : '↓',
-    label: `${Math.abs(diff)}`,
-    isPositive: diff < 0, // less usage is positive
-  };
-}
-
-// ──────────────────────────────────────────────
-// Bar chart component
-// ──────────────────────────────────────────────
-
-function WeekBarChart({
-  data,
-  colors,
-}: {
-  data: DailyBreakdown[];
-  colors: ReturnType<typeof useDesignTokens>['colors'];
-}) {
-  // Find max value for scaling (at least 1 to avoid division by zero)
-  const maxVal = Math.max(1, ...data.map((d) => Math.max(d.used, d.allowance)));
-  const BAR_HEIGHT = 120;
-
-  return (
-    <View style={barStyles.container}>
-      {data.map((day, i) => {
-        const usedHeight = (day.used / maxVal) * BAR_HEIGHT;
-        const allowanceHeight = (day.allowance / maxVal) * BAR_HEIGHT;
-        const overLimit = day.used > day.allowance && !day.isFuture;
-        const underLimit = day.used <= day.allowance && day.used > 0;
-
-        return (
-          <Animated.View
-            key={day.dayLabel}
-            style={barStyles.column}
-            entering={FadeInDown.delay(i * 60)
-              .duration(300)
-              .springify()}
-          >
-            {/* Value label */}
-            <Text
-              style={[
-                barStyles.valueLabel,
-                { color: day.isFuture ? colors.text.tertiary : colors.text.primary },
-              ]}
-            >
-              {day.isFuture ? '–' : day.used}
-            </Text>
-
-            {/* Bar area */}
-            <View style={[barStyles.barArea, { height: BAR_HEIGHT }]}>
-              {/* Allowance line (dashed background) */}
-              <View
-                style={[
-                  barStyles.allowanceLine,
-                  {
-                    bottom: allowanceHeight,
-                    backgroundColor: colors.border.subtle,
-                  },
-                ]}
-              />
-              {/* Used bar */}
-              <View
-                style={[
-                  barStyles.bar,
-                  {
-                    height: Math.max(day.isFuture ? 0 : 2, usedHeight),
-                    backgroundColor: day.isFuture
-                      ? colors.background.muted
-                      : overLimit
-                        ? colors.error
-                        : underLimit
-                          ? colors.primary
-                          : colors.background.muted,
-                    borderRadius: borderRadius.sm / 2,
-                    opacity: day.isFuture ? 0.3 : 1,
-                  },
-                ]}
-              />
-            </View>
-
-            {/* Day label */}
-            <Text
-              style={[
-                barStyles.dayLabel,
-                {
-                  color: day.isToday ? colors.primary : colors.text.tertiary,
-                  fontWeight: day.isToday ? '700' : '400',
-                },
-              ]}
-            >
-              {day.dayLabel}
-            </Text>
-          </Animated.View>
-        );
-      })}
-    </View>
-  );
-}
-
-const barStyles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-end',
-    paddingTop: spacing.sm,
-  },
-  column: {
-    alignItems: 'center',
-    flex: 1,
-  },
-  valueLabel: {
-    fontSize: 11,
-    fontWeight: '600',
-    marginBottom: spacing.xs,
-  },
-  barArea: {
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    position: 'relative',
-  },
-  bar: {
-    width: '55%',
-    minWidth: 12,
-    maxWidth: 28,
-  },
-  allowanceLine: {
-    position: 'absolute',
-    left: '15%',
-    right: '15%',
-    height: 1.5,
-  },
-  dayLabel: {
-    fontSize: 11,
-    marginTop: spacing.xs,
-  },
-});
 
 // ──────────────────────────────────────────────
 // Main screen
@@ -397,10 +224,11 @@ export default function ProgressScreen() {
   const isCurrentWeek = !showPreviousWeek;
   const screenKey = `progress-screen-${settingsId || 'no-settings'}`;
 
-  // Trend: compare current week's usage to previous week
-  const usageTrend = previousWeek
-    ? getTrend(currentWeek.actualUsed, previousWeek.actualUsed)
-    : null;
+  // Trend: compare current week's usage to previous week, shown on the current week only
+  const usageTrend =
+    isCurrentWeek && previousWeek
+      ? getTrend(currentWeek.actualUsed, previousWeek.actualUsed)
+      : null;
 
   return (
     <Screen key={screenKey}>
@@ -446,114 +274,13 @@ export default function ProgressScreen() {
           </View>
 
           {/* ── Bar Chart ── */}
-          {chartData.length > 0 && (
-            <Card variant="elevated" style={s.card} padding="lg">
-              <View style={s.chartHeader}>
-                <Text style={s.cardTitle}>Daily Usage</Text>
-                <View style={s.legendRow}>
-                  <View style={[s.legendDot, { backgroundColor: colors.primary }]} />
-                  <Text style={s.legendText}>Under limit</Text>
-                  <View style={[s.legendDot, { backgroundColor: colors.error }]} />
-                  <Text style={s.legendText}>Over</Text>
-                  <View style={[s.legendDot, { backgroundColor: colors.border.default }]} />
-                  <Text style={s.legendText}>No data</Text>
-                  <View style={[s.legendDot, { backgroundColor: colors.border.subtle }]} />
-                  <Text style={s.legendText}>Upcoming</Text>
-                </View>
-              </View>
-              <WeekBarChart data={chartData} colors={colors} />
-            </Card>
-          )}
+          {chartData.length > 0 && <DailyUsageCard data={chartData} style={s.card} />}
 
           {/* ── Weekly Stats ── */}
-          <Card variant="elevated" style={s.card} padding="lg">
-            <View style={s.statsGrid}>
-              <View style={s.statBox}>
-                <Icon name="minus" size={20} color={colors.primary} weight="regular" />
-                <Text style={s.statValue}>{Number(weekData.pouchesAvoided ?? 0)}</Text>
-                <Text style={s.statLabel}>Avoided</Text>
-              </View>
-              <View style={s.statBox}>
-                <Icon name="check-circle" size={20} color={colors.success} weight="regular" />
-                <Text style={s.statValue}>
-                  {Number(weekData.daysUnderLimit ?? 0)}/
-                  {Number(weekData.daysUnderLimit ?? 0) + Number(weekData.daysOverLimit ?? 0)}
-                </Text>
-                <Text style={s.statLabel}>
-                  {Number(weekData.daysWithoutData ?? 0) > 0 ? 'Days logged' : 'Days on track'}
-                </Text>
-              </View>
-              <View style={s.statBox}>
-                <Icon name="brain" size={20} color={colors.warning} weight="regular" />
-                <Text style={s.statValue}>{Number(weekData.cravingsResisted ?? 0)}</Text>
-                <Text style={s.statLabel}>Resisted</Text>
-              </View>
-            </View>
-
-            {/* Trend indicator */}
-            {usageTrend && isCurrentWeek && (
-              <View style={s.trendRow}>
-                <Text
-                  style={[
-                    s.trendArrow,
-                    { color: usageTrend.isPositive ? colors.success : colors.error },
-                  ]}
-                >
-                  {usageTrend.arrow} {usageTrend.label}
-                </Text>
-                <Text style={s.trendLabel}>
-                  {usageTrend.isPositive ? 'fewer' : 'more'} pouches vs. last week
-                </Text>
-              </View>
-            )}
-
-            {/* Money saved */}
-            {weekData.moneySaved != null && weekData.moneySaved > 0 && (
-              <View style={s.moneyRow}>
-                <Text style={s.moneyLabel}>Saved this week</Text>
-                <Text style={s.moneyValue}>{formatMoney(weekData.moneySaved, currency)}</Text>
-              </View>
-            )}
-          </Card>
+          <WeeklyStatsCard week={weekData} trend={usageTrend} currency={currency} style={s.card} />
 
           {/* ── Total Progress ── */}
-          <Card variant="elevated" style={s.card} padding="lg">
-            <Text style={s.cardTitle}>All Time</Text>
-            <View style={s.statsGrid}>
-              <View style={s.statBox}>
-                <Text style={s.statValueLarge}>
-                  {Number(totalProgress.totalPouchesAvoided ?? 0)}
-                </Text>
-                <Text style={s.statLabel}>Pouches avoided</Text>
-              </View>
-              <View style={s.statBox}>
-                <Text style={s.statValueLarge}>{Number(totalProgress.daysSinceStart ?? 0)}</Text>
-                <Text style={s.statLabel}>Days</Text>
-              </View>
-              <View style={s.statBox}>
-                <Text style={s.statValueLarge}>
-                  {Number(totalProgress.totalCravingsResisted ?? 0)}
-                </Text>
-                <Text style={s.statLabel}>Resisted</Text>
-              </View>
-            </View>
-
-            {totalProgress.totalMoneySaved != null && totalProgress.totalMoneySaved > 0 && (
-              <View style={s.moneyRow}>
-                <Text style={s.moneyLabel}>Total saved</Text>
-                <Text style={s.moneyValue}>
-                  {formatMoney(totalProgress.totalMoneySaved, currency)}
-                </Text>
-              </View>
-            )}
-
-            <View style={s.averageRow}>
-              <Text style={s.averageLabel}>Average daily usage</Text>
-              <Text style={s.averageValue}>
-                {(totalProgress.averageDailyUsage ?? 0).toFixed(1)} / day
-              </Text>
-            </View>
-          </Card>
+          <TotalProgressCard total={totalProgress} currency={currency} style={s.card} />
 
           {/* ── Usage Patterns ── */}
           {patterns && (
@@ -565,36 +292,7 @@ export default function ProgressScreen() {
           )}
 
           {/* ── Milestones ── */}
-          {milestones.length > 0 && (
-            <Card variant="elevated" style={s.card} padding="lg">
-              <Text style={s.cardTitle}>Milestones</Text>
-              {milestones.map((milestone, index) => {
-                const badge = milestoneIcon(milestone.type, colors);
-                return (
-                  <Animated.View
-                    key={milestone.id}
-                    style={[
-                      s.milestoneItem,
-                      index === milestones.length - 1 && s.milestoneItemLast,
-                    ]}
-                    entering={FadeInRight.delay(index * 80)
-                      .duration(animations.normal)
-                      .springify()}
-                  >
-                    <View style={[s.milestoneIconWrap, { backgroundColor: badge.color + '18' }]}>
-                      <Icon name={badge.name} size={22} color={badge.color} weight="fill" />
-                    </View>
-                    <View style={s.milestoneContent}>
-                      <Text style={s.milestoneTitle}>{milestone.title}</Text>
-                      <Text style={s.milestoneDate}>
-                        {new Date(milestone.achievedAt).toLocaleDateString()}
-                      </Text>
-                    </View>
-                  </Animated.View>
-                );
-              })}
-            </Card>
-          )}
+          <MilestonesList milestones={milestones} style={s.card} />
 
           {/* ── Dynamic Encouragement ── */}
           <Animated.View entering={FadeIn.delay(300).duration(400)}>
@@ -706,157 +404,6 @@ const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) =>
     card: {
       marginBottom: spacing.md,
     } as ViewStyle,
-    cardTitle: {
-      ...typography.lg,
-      fontWeight: '600',
-      color: colors.text.primary,
-      marginBottom: spacing.md,
-    } as TextStyle,
-
-    // Chart header — title stacked above the legend. A single row can't fit
-    // "Daily Usage" + a 4-item legend on a phone, so they collided (#254).
-    chartHeader: {
-      flexDirection: 'column',
-      alignItems: 'flex-start',
-      gap: spacing.sm,
-      marginBottom: spacing.md,
-    } as ViewStyle,
-    legendRow: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      flexWrap: 'wrap',
-      rowGap: spacing.xs,
-      gap: spacing.xs,
-    } as ViewStyle,
-    legendDot: {
-      width: 8,
-      height: 8,
-      borderRadius: 4,
-    } as ViewStyle,
-    legendText: {
-      ...typography.xs,
-      color: colors.text.tertiary,
-      marginRight: spacing.sm,
-    } as TextStyle,
-
-    // Stats grid
-    statsGrid: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-    } as ViewStyle,
-    statBox: {
-      alignItems: 'center',
-      flex: 1,
-      gap: spacing.xs,
-    } as ViewStyle,
-    statValue: {
-      ...typography.xl,
-      fontWeight: '700',
-      color: colors.text.primary,
-    } as TextStyle,
-    statValueLarge: {
-      fontSize: 28,
-      lineHeight: 34,
-      fontWeight: '700',
-      color: colors.primary,
-    } as TextStyle,
-    statLabel: {
-      ...typography.xs,
-      color: colors.text.secondary,
-      textAlign: 'center',
-    } as TextStyle,
-
-    // Trend
-    trendRow: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginTop: spacing.md,
-      paddingTop: spacing.md,
-      borderTopWidth: 1,
-      borderTopColor: colors.border.subtle,
-      gap: spacing.xs,
-    } as ViewStyle,
-    trendArrow: {
-      ...typography.sm,
-      fontWeight: '700',
-    } as TextStyle,
-    trendLabel: {
-      ...typography.sm,
-      color: colors.text.secondary,
-    } as TextStyle,
-
-    // Money
-    moneyRow: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      marginTop: spacing.md,
-      paddingTop: spacing.md,
-      borderTopWidth: 1,
-      borderTopColor: colors.border.subtle,
-    } as ViewStyle,
-    moneyLabel: {
-      ...typography.body,
-      color: colors.text.secondary,
-    } as TextStyle,
-    moneyValue: {
-      ...typography.xl,
-      fontWeight: '700',
-      color: colors.primary,
-    } as TextStyle,
-
-    // Average
-    averageRow: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      marginTop: spacing.sm,
-      paddingTop: spacing.md,
-      borderTopWidth: 1,
-      borderTopColor: colors.border.subtle,
-    } as ViewStyle,
-    averageLabel: {
-      ...typography.sm,
-      color: colors.text.secondary,
-    } as TextStyle,
-    averageValue: {
-      ...typography.body,
-      fontWeight: '600',
-      color: colors.text.primary,
-    } as TextStyle,
-
-    // Milestones
-    milestoneItem: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      paddingVertical: spacing.sm,
-      borderBottomWidth: 1,
-      borderBottomColor: colors.border.subtle,
-      gap: spacing.md,
-    } as ViewStyle,
-    milestoneItemLast: {
-      borderBottomWidth: 0,
-    } as ViewStyle,
-    milestoneIconWrap: {
-      width: 40,
-      height: 40,
-      borderRadius: 20,
-      alignItems: 'center',
-      justifyContent: 'center',
-    } as ViewStyle,
-    milestoneContent: {
-      flex: 1,
-    } as ViewStyle,
-    milestoneTitle: {
-      ...typography.body,
-      fontWeight: '600',
-      color: colors.text.primary,
-    } as TextStyle,
-    milestoneDate: {
-      ...typography.xs,
-      color: colors.text.tertiary,
-      marginTop: 2,
-    } as TextStyle,
 
     // Encouragement
     encouragement: {
