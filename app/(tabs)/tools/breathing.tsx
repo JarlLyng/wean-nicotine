@@ -14,6 +14,7 @@ import { useFocusEffect } from 'expo-router';
 import { Screen } from '@/components/Screen';
 import { Icon } from '@/components/ui/Icon';
 import { Button } from '@/components/ui/Button';
+import { useKeepAwakeWhile } from '@/hooks/use-keep-awake-while';
 import { spacing } from '@/lib/theme';
 import { useDesignTokens, typography } from '@/lib/design';
 import { saveBreathingSession, getBreathingSessionCount } from '@/lib/db-breathing';
@@ -41,7 +42,11 @@ const PATTERNS: Record<BreathingPattern, PatternConfig> = {
     phases: [
       { phase: 'Breathe In', duration: 4000, instruction: 'Slowly breathe in through your nose' },
       { phase: 'Hold', duration: 2000, instruction: 'Hold your breath gently' },
-      { phase: 'Breathe Out', duration: 6000, instruction: 'Slowly breathe out through your mouth' },
+      {
+        phase: 'Breathe Out',
+        duration: 6000,
+        instruction: 'Slowly breathe out through your mouth',
+      },
       { phase: 'Pause', duration: 2000, instruction: 'Take a moment' },
     ],
   },
@@ -98,11 +103,12 @@ export default function BreathingExercise() {
   const ringPulse = useSharedValue(STROKE_WIDTH);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const phaseHandledRef = useRef(false);
-  const hapticTickRef = useRef(0);
 
   const pattern = PATTERNS[selectedPattern];
   const currentPhase = pattern.phases[currentCycle];
   const s = useMemo(() => createStyles(colors), [colors]);
+
+  useKeepAwakeWhile(isRunning, 'breathing-session');
 
   // Load session count
   useFocusEffect(
@@ -122,7 +128,6 @@ export default function BreathingExercise() {
     (cycleIndex: number, elapsed: number) => {
       clearTimer();
       phaseHandledRef.current = false;
-      hapticTickRef.current = 0;
       const phase = pattern.phases[cycleIndex];
       setTimeRemaining(phase.duration);
 
@@ -150,17 +155,21 @@ export default function BreathingExercise() {
       // Phase-start haptic
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
 
-      let phaseElapsed = 0;
+      // Time comes from the clock, not from counting ticks, so a late tick
+      // or a locked phone cannot stretch the session (#353). The interval
+      // only refreshes the UI.
+      const phaseStartedAt = Date.now();
+      let lastHapticAt = phaseStartedAt;
       timerRef.current = setInterval(() => {
-        phaseElapsed += 100;
-        hapticTickRef.current += 100;
+        const now = Date.now();
+        const phaseElapsed = now - phaseStartedAt;
 
         // Rhythmic haptic every second during inhale/exhale
         if (
-          hapticTickRef.current >= 1000 &&
+          now - lastHapticAt >= 1000 &&
           (phase.phase === 'Breathe In' || phase.phase === 'Breathe Out')
         ) {
-          hapticTickRef.current = 0;
+          lastHapticAt = now;
           Haptics.selectionAsync().catch(() => {});
         }
 
@@ -253,9 +262,7 @@ export default function BreathingExercise() {
         {/* Setup: pattern + duration selectors */}
         {showSetup && (
           <Animated.View entering={FadeIn.duration(200)}>
-            <Text style={s.subtitle}>
-              Choose a pattern and duration, then press start.
-            </Text>
+            <Text style={s.subtitle}>Choose a pattern and duration, then press start.</Text>
 
             {/* Pattern pills */}
             <View style={s.pillRow}>
@@ -263,7 +270,8 @@ export default function BreathingExercise() {
                 <TouchableOpacity
                   key={key}
                   style={[s.pill, selectedPattern === key && s.pillActive]}
-                  onPress={() => setSelectedPattern(key)}>
+                  onPress={() => setSelectedPattern(key)}
+                >
                   <Text style={[s.pillText, selectedPattern === key && s.pillTextActive]}>
                     {PATTERNS[key].label}
                   </Text>
@@ -277,11 +285,14 @@ export default function BreathingExercise() {
                 <TouchableOpacity
                   key={d.seconds}
                   style={[s.pill, selectedDuration === d.seconds && s.pillActive]}
-                  onPress={() => setSelectedDuration(d.seconds)}>
+                  onPress={() => setSelectedDuration(d.seconds)}
+                >
                   <Icon
                     name="clock"
                     size={14}
-                    color={selectedDuration === d.seconds ? colors.onPrimary : colors.text.secondary}
+                    color={
+                      selectedDuration === d.seconds ? colors.onPrimary : colors.text.secondary
+                    }
                   />
                   <Text style={[s.pillText, selectedDuration === d.seconds && s.pillTextActive]}>
                     {d.label}
@@ -334,28 +345,18 @@ export default function BreathingExercise() {
                   </Text>
                 </Animated.View>
               )}
-              {showSetup && (
-                <Icon name="wind" size={48} color={colors.primary} weight="duotone" />
-              )}
+              {showSetup && <Icon name="wind" size={48} color={colors.primary} weight="duotone" />}
             </View>
           </Animated.View>
 
-          {isRunning && (
-            <Text style={s.instruction}>{currentPhase.instruction}</Text>
-          )}
+          {isRunning && <Text style={s.instruction}>{currentPhase.instruction}</Text>}
         </View>
 
         {/* Buttons */}
         <View style={s.buttonArea}>
-          {showSetup && (
-            <Button title="Start" onPress={handleStart} />
-          )}
-          {isRunning && (
-            <Button title="Stop" variant="secondary" onPress={handleStop} />
-          )}
-          {isComplete && (
-            <Button title="Done" onPress={handleDone} />
-          )}
+          {showSetup && <Button title="Start" onPress={handleStart} />}
+          {isRunning && <Button title="Stop" variant="secondary" onPress={handleStop} />}
+          {isComplete && <Button title="Done" onPress={handleDone} />}
         </View>
 
         {/* Session counter */}
