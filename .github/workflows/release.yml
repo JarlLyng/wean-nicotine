@@ -27,7 +27,12 @@ jobs:
     name: Publish GitHub Release
     runs-on: ubuntu-latest
     steps:
+      # Notes come from the default branch, not the tagged commit: a version's
+      # changelog section is edited after the tag (submitted, then approved
+      # and live), and the release should carry the current text.
       - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.repository.default_branch }}
 
       - name: Resolve tag
         id: tag
