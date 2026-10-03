@@ -1,10 +1,17 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import Animated, { FadeIn, FadeInDown, useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
+import Animated, {
+  FadeIn,
+  FadeInDown,
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+} from 'react-native-reanimated';
 import { Screen } from '@/components/Screen';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Icon } from '@/components/ui/Icon';
+import { useKeepAwakeWhile } from '@/hooks/use-keep-awake-while';
 import { spacing } from '@/lib/theme';
 import { useDesignTokens, typography } from '@/lib/design';
 import { createLogEntry } from '@/lib/db-log-entries';
@@ -14,7 +21,7 @@ import * as Haptics from 'expo-haptics';
 const STEPS = [
   {
     title: 'Notice the urge',
-    instruction: "Don't fight it. Simply acknowledge: \"I'm having a craving right now.\"",
+    instruction: 'Don\'t fight it. Simply acknowledge: "I\'m having a craving right now."',
     guidance: 'Where do you feel it? Jaw? Chest? Hands? Just notice.',
   },
   {
@@ -25,7 +32,7 @@ const STEPS = [
   {
     title: 'Ride the wave',
     instruction: 'Like a wave, cravings build, peak, and subside. This will pass.',
-    guidance: 'You don\'t have to do anything. Just let it move through you.',
+    guidance: "You don't have to do anything. Just let it move through you.",
   },
   {
     title: 'Breathe through it',
@@ -49,8 +56,13 @@ export default function UrgeSurfingScreen() {
   const [elapsed, setElapsed] = useState(0);
   const [logged, setLogged] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const startedAtRef = useRef(0);
+  const elapsedRef = useRef(0);
+  const stepRef = useRef(0);
   const progressWidth = useSharedValue(0);
   const s = useMemo(() => createStyles(colors), [colors]);
+
+  useKeepAwakeWhile(mode === 'session', 'urge-surfing-session');
 
   const clearTimer = useCallback(() => {
     if (timerRef.current) {
@@ -69,29 +81,38 @@ export default function UrgeSurfingScreen() {
     setElapsed(0);
     setLogged(false);
     progressWidth.value = 0;
+    startedAtRef.current = Date.now();
+    elapsedRef.current = 0;
+    stepRef.current = 0;
 
+    // Elapsed comes from the clock, not from counting ticks, so a late tick
+    // or a locked phone cannot stretch the session (#353). The interval only
+    // refreshes the UI, often enough that no second is skipped on screen.
+    clearTimer();
     timerRef.current = setInterval(() => {
-      setElapsed((prev) => {
-        const next = prev + 1;
-        progressWidth.value = withTiming(next / SESSION_DURATION, { duration: 900 });
+      const next = Math.min(
+        SESSION_DURATION,
+        Math.floor((Date.now() - startedAtRef.current) / 1000),
+      );
+      if (next === elapsedRef.current) return;
+      elapsedRef.current = next;
+      setElapsed(next);
+      progressWidth.value = withTiming(next / SESSION_DURATION, { duration: 900 });
 
-        // Auto-advance step
-        const step = Math.min(Math.floor(next / STEP_DURATION), STEPS.length - 1);
-        setCurrentStep((curr) => {
-          if (step !== curr) {
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => {});
-          }
-          return step;
-        });
+      // Auto-advance step
+      const step = Math.min(Math.floor(next / STEP_DURATION), STEPS.length - 1);
+      if (step !== stepRef.current) {
+        stepRef.current = step;
+        setCurrentStep(step);
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => {});
+      }
 
-        if (next >= SESSION_DURATION) {
-          clearTimer();
-          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
-          setMode('complete');
-        }
-        return next;
-      });
-    }, 1000);
+      if (next >= SESSION_DURATION) {
+        clearTimer();
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
+        setMode('complete');
+      }
+    }, 250);
   };
 
   const handleStop = () => {
@@ -145,7 +166,9 @@ export default function UrgeSurfingScreen() {
           </Text>
 
           {/* Step indicator */}
-          <Text style={s.stepIndicator}>Step {currentStep + 1} of {STEPS.length}</Text>
+          <Text style={s.stepIndicator}>
+            Step {currentStep + 1} of {STEPS.length}
+          </Text>
 
           {/* Current step */}
           <Animated.View key={currentStep} entering={FadeIn.duration(400)} style={s.stepCard}>
@@ -169,9 +192,7 @@ export default function UrgeSurfingScreen() {
         <View style={s.completeContainer}>
           <Animated.View entering={FadeInDown.duration(400)} style={s.completeContent}>
             <Icon name="check-circle" size={56} color={colors.success} />
-            <Text style={s.completeTitle}>
-              The craving passed
-            </Text>
+            <Text style={s.completeTitle}>The craving passed</Text>
             <Text style={s.completeSubtitle}>
               after {minutesElapsed} minute{minutesElapsed !== 1 ? 's' : ''}
               {secondsElapsed > 0 ? ` ${secondsElapsed}s` : ''}
@@ -208,8 +229,8 @@ export default function UrgeSurfingScreen() {
 
           <Text style={s.heading}>What is Urge Surfing?</Text>
           <Text style={s.text}>
-            Urge surfing is a mindfulness technique where you observe your craving like a wave
-            — noticing it rise, peak, and fall — without acting on it.
+            Urge surfing is a mindfulness technique where you observe your craving like a wave —
+            noticing it rise, peak, and fall — without acting on it.
           </Text>
 
           <Text style={s.heading}>How to Practice</Text>
@@ -225,8 +246,8 @@ export default function UrgeSurfingScreen() {
 
           <Card variant="flat" padding="md" style={s.infoBox}>
             <Text style={s.infoText}>
-              Cravings typically peak within 5–15 minutes and then fade. Each time you ride one
-              out, you get stronger.
+              Cravings typically peak within 5–15 minutes and then fade. Each time you ride one out,
+              you get stronger.
             </Text>
           </Card>
         </View>
