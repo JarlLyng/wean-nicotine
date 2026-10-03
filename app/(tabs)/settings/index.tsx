@@ -5,8 +5,9 @@ import { Icon } from '@/components/ui/Icon';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { setPreferredColorScheme } from '@/lib/color-scheme';
 import { formatMoney } from '@/lib/currency';
+import { buildFeedbackMailto, SUPPORT_EMAIL } from '@/lib/feedback';
 import { getTaperSettings } from '@/lib/db-settings';
-import { useDesignTokens , typography } from '@/lib/design';
+import { useDesignTokens, typography } from '@/lib/design';
 import { captureError } from '@/lib/sentry';
 import type { TaperSettings } from '@/lib/models';
 import Constants from 'expo-constants';
@@ -19,7 +20,18 @@ import {
 import { borderRadius, spacing } from '@/lib/theme';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { Alert, Linking, ScrollView, StyleSheet, Switch, Text, TextStyle, View, ViewStyle } from 'react-native';
+import {
+  Alert,
+  Linking,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Switch,
+  Text,
+  TextStyle,
+  View,
+  ViewStyle,
+} from 'react-native';
 
 export default function SettingsScreen() {
   const { colors } = useDesignTokens();
@@ -51,13 +63,12 @@ export default function SettingsScreen() {
       const { status } = await getPermissionsAsync();
       setHasPermission(status === 'granted');
       const notifications = await getAllScheduledNotifications();
-      const hasDailyCheckIn = notifications.some(
-        (n) => n.content.data?.type === 'daily_checkin'
-      );
+      const hasDailyCheckIn = notifications.some((n) => n.content.data?.type === 'daily_checkin');
       setDailyCheckInEnabled(hasDailyCheckIn);
     } catch (error) {
       if (__DEV__) console.error('Error loading notification status:', error);
-      if (error instanceof Error) captureError(error, { context: 'settings_load_notification_status' });
+      if (error instanceof Error)
+        captureError(error, { context: 'settings_load_notification_status' });
     } finally {
       setIsLoadingNotifications(false);
     }
@@ -68,7 +79,7 @@ export default function SettingsScreen() {
       loadData();
       loadNotificationStatus();
       return () => {};
-    }, [loadData, loadNotificationStatus])
+    }, [loadData, loadNotificationStatus]),
   );
 
   const handleToggleDailyCheckIn = async (enabled: boolean) => {
@@ -107,7 +118,6 @@ export default function SettingsScreen() {
     <Screen>
       <ScrollView contentContainerStyle={s.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={s.content}>
-
           {/* ── Notifications ── */}
           <Card variant="elevated" style={s.card} padding="lg">
             <View style={s.row}>
@@ -160,7 +170,9 @@ export default function SettingsScreen() {
           {/* ── Current Plan ── */}
           {settings && (
             <Card variant="elevated" style={s.card} padding="lg">
-              <Text accessibilityRole="header" style={s.sectionTitle}>Your Plan</Text>
+              <Text accessibilityRole="header" style={s.sectionTitle}>
+                Your Plan
+              </Text>
               <View style={s.planGrid}>
                 <View style={s.planItem}>
                   <Text style={s.planValue}>{settings.baselinePouchesPerDay}</Text>
@@ -231,7 +243,26 @@ export default function SettingsScreen() {
             />
             <Button
               title="Support"
-              onPress={() => Linking.openURL('https://weannicotine.iamjarl.com/support')}
+              onPress={() => Linking.openURL('https://weannicotine.iamjarl.com/support/')}
+              variant="ghost"
+              style={s.linkButton}
+            />
+            <Button
+              title="Send Feedback"
+              onPress={() =>
+                Linking.openURL(
+                  buildFeedbackMailto(
+                    Constants.expoConfig?.version ?? '?',
+                    Constants.expoConfig?.ios?.buildNumber ?? '?',
+                    String(Platform.Version),
+                  ),
+                ).catch(() =>
+                  Alert.alert(
+                    'No mail app found',
+                    `You can write to ${SUPPORT_EMAIL} from any mail app.`,
+                  ),
+                )
+              }
               variant="ghost"
               style={s.linkButton}
             />
@@ -239,7 +270,8 @@ export default function SettingsScreen() {
 
           {/* ── Version ── */}
           <Text style={s.version}>
-            Wean Nicotine v{Constants.expoConfig?.version ?? '1.0.0'} (Build {Constants.expoConfig?.ios?.buildNumber ?? '?'})
+            Wean Nicotine v{Constants.expoConfig?.version ?? '1.0.0'} (Build{' '}
+            {Constants.expoConfig?.ios?.buildNumber ?? '?'})
           </Text>
         </View>
       </ScrollView>
