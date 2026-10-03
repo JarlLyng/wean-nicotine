@@ -44,7 +44,85 @@ Alternativer:
 
 ---
 
-## iOS App Version 1.6.2 — Submitted September 2026 (build 24)
+## iOS App Version 1.7.0 — Submitted October 2026 (build 25)
+
+Export, Send Feedback, guided sessions that keep the screen on, and a faster start. **ASO fields (subtitle + keywords) are unchanged from 1.6.0** and carry forward automatically. **Promotional Text must be re-pasted** (ASC wipes it on every new version); use the 1.7.0 texts below. **Copyright is version-locked: set it to `2026 IAMJARL` with this version** (see Copyright below). The Description is unchanged from 1.6.2.
+
+### What's New (v1.7.0)
+
+**English:**
+
+```
+Your log is yours to take with you.
+
+• Export Data in Settings saves your log as a CSV file to keep, open in a spreadsheet or share
+• Send Feedback in Settings opens an email to me, with the app version already filled in
+• Breathing and urge surfing keep the screen on, so a session no longer stops when the phone locks
+• The app opens faster
+```
+
+**Danish:**
+
+```
+Din log kan nu følge med dig.
+
+• Under Indstillinger kan du eksportere din log som en CSV-fil, du kan gemme, åbne i et regneark eller dele
+• Send feedback fra Indstillinger åbner en mail til mig med appens version udfyldt
+• Vejrtrækning og urge surfing holder skærmen tændt, så en session ikke længere stopper, når telefonen låser
+• Appen åbner hurtigere
+```
+
+**Swedish:**
+
+```
+Din logg kan nu följa med dig.
+
+• Under Inställningar kan du exportera din logg som en CSV-fil att spara, öppna i ett kalkylark eller dela
+• Skicka feedback från Inställningar öppnar ett mejl till mig med appens version ifylld
+• Andning och urge surfing håller skärmen tänd, så en session inte längre stannar när telefonen låses
+• Appen öppnas snabbare
+```
+
+**Norwegian:**
+
+```
+Loggen din kan nå bli med deg.
+
+• Under Innstillinger kan du eksportere loggen din som en CSV-fil du kan lagre, åpne i et regneark eller dele
+• Send tilbakemelding fra Innstillinger åpner en e-post til meg med appversjonen fylt inn
+• Pusteøvelser og urge surfing holder skjermen på, så en økt ikke lenger stopper når telefonen låses
+• Appen åpner raskere
+```
+
+### Promotional Text (v1.7.0, max 170 tegn)
+
+**English (138):**
+
+```
+Export your log as a CSV file, and guided breathing now keeps the screen on. One-time purchase, no account, your logs stay on your iPhone.
+```
+
+**Danish (146):**
+
+```
+Eksportér din log som CSV-fil, og vejrtrækningsøvelsen holder nu skærmen tændt. Engangskøb, ingen konto, dine registreringer bliver på din iPhone.
+```
+
+**Swedish (144):**
+
+```
+Exportera din logg som CSV-fil, och andningsövningen håller nu skärmen tänd. Engångsköp, inget konto, dina registreringar stannar på din iPhone.
+```
+
+**Norwegian (140):**
+
+```
+Eksporter loggen din som CSV-fil, og pusteøvelsen holder nå skjermen på. Engangskjøp, ingen konto, registreringene dine blir på iPhonen din.
+```
+
+---
+
+## iOS App Version 1.6.2 — Live in App Store (build 24, approved September 2026)
 
 One fix, to numbers the app was already showing. **ASO fields (subtitle + keywords) are unchanged from 1.6.0** and carry forward automatically. **Promotional Text must be re-pasted** (ASC wipes it on every new version); reuse the 1.6.0 per-locale promo texts below. **The Description was revised with this version** (see Localized Storefronts) and is version-locked, so this is the moment to paste it.
 

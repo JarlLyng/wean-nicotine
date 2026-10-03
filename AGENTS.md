@@ -52,10 +52,12 @@ The hub holds rules that this repo cannot follow unless it knows they exist. Rea
 - **Daily tracking** — one-tap _Used a pouch_ / _Craving resisted_; daily allowance from the taper plan shown as a whole number; calm UI even when over the limit; 10-second undo via toast. After a pouch log, an optional dismissible chip row lets the user tag which trigger fired (never required).
 - **Taper plan** — automatic weekly reduction, user-selectable pace (3–15%); edit baseline/pace/price anytime from Settings without losing log history. If usage runs ≥20% over allowance across the trailing two weeks, Home shows a gentle dismissible "adjust pace?" suggestion (snoozed 7 days on dismissal, never nagging).
 - **Progress** — weekly bar chart, pouches avoided vs baseline, money saved, gentle milestones (not aggressive streaks), and a Patterns card (pouches by time of day + by tagged trigger, trailing 30 days; hidden until ≥10 pouches logged). All six reads are issued in parallel.
-- **Support tools** — guided breathing exercise (multiple patterns + completion celebration), urge-surfing timer, reflection prompts with optional journal, cost-savings calculator with week/month breakdown.
+- **Support tools** — guided breathing exercise (multiple patterns + completion celebration), urge-surfing timer, reflection prompts with optional journal, cost-savings calculator with week/month breakdown. Breathing and urge surfing keep the screen awake while a session runs and take elapsed time from the clock, not from timer ticks.
 - **Notifications (optional)** — daily check-in + trigger reminders, both local-only. When permission is denied the app deep-links to OS notification settings.
 - **Taper complete** — when the whole-pouch daily target reaches zero, Home shows a one-time "You reached your goal" celebration (trophy card, framed around the plan — explicitly NOT a streak/"days clean" counter, and no clinical "quit"/"cured" claims). Re-arms only if the plan is edited so the allowance rises above zero again.
 - **Reset / Start Over** — hold-to-confirm destructive action (2-second press with animated fill); wipes all local SQLite data and returns to onboarding.
+- **Export (from 1.7.0)** — Settings → Export Data writes the log as CSV (`date,time,event,trigger,timestamp_utc`, oldest first) to the cache directory and opens the iOS share sheet; nothing leaves the phone unless the user picks a destination. There is no import yet (#224).
+- **Send feedback (from 1.7.0)** — a Settings link opens a `mailto:` to support@iamjarl.com with subject and app/iOS version prefilled; the user sees it all before sending.
 - **Theme** — light / dark / system, IAMJARL tokens via `lib/design.ts`. Phosphor icons.
 
 ### Features that do NOT exist (common hallucination targets)

@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.7.0] - 2026-10-04
+
+iOS build 25, submitted October 2026. Two additions in Settings, a fix for the guided tools, and a faster start.
+
+### Added
+
+- **Export your log as a CSV file.** Settings, then Export Data, writes one row per entry (date, time, event, trigger and a UTC timestamp) and opens the share sheet, so the file goes wherever you send it and nowhere else. (#43)
+- **Send Feedback.** A link in Settings opens an email to support@iamjarl.com with the app and iOS version filled in. You see all of it before sending. (#357)
+
+### Fixed
+
+- **Breathing and urge surfing stopped when the phone locked.** Neither needs a touch once it starts, so Auto-Lock could lock the screen mid-session and pause it. Both now keep the screen on while a session runs and count time from the clock, so a late tick or a manual lock cannot stretch a session. (#353)
+- The Support link in Settings went through a redirect on every tap.
+
+### Changed
+
+- **The app opens faster.** The start screen no longer waits through three chained delays before showing Home or onboarding. (#94)
+
+### Internal
+
+- Progress screen split into `components/progress/` with memoised cards, rendering identically (#95). One transaction helper for the migrations and Start Over, which keeps the original error when a rollback fails (#53). IAMJARL motion durations (#130). expo-updates 55.0.33 (#365) and @sentry/react-native 8.28 (#360).
+- Website (deploys independently of the app): HTTPS enforced (#358), one App Store campaign across the site (#366), privacy claims that name which data stays on the phone (#305), and GitHub Releases published from this changelog (#104).
+
 ## [1.6.2] - 2026-09-17
 
 iOS build 24, approved and live in the App Store September 2026. One fix, to numbers the app was already showing. Also carried the corrected store descriptions in all four locales and the App Privacy URL fix (#296, #312).
