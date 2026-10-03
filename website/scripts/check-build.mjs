@@ -15,6 +15,9 @@
  *  - App Store links that are not tracked, or tracked inconsistently. 46 of
  *    them were dark until #304, including the footer on every page, and the
  *    ones that did fire used four different dimension shapes.
+ *  - App Store links without the site's campaign (pt, ct=site, mt=8). Until
+ *    #366 most had none, and 27 carried a placeholder provider token with a
+ *    per-page campaign that Apple would never have shown.
  *  - orphans: a page no other page links to. A sitemap entry is not a path a
  *    reader can follow, and a crawler weighs an unlinked page accordingly.
  *    Three Nordic guides sat orphaned this way until #303, found by exactly
@@ -151,6 +154,11 @@ for (const file of files.sort()) {
   for (const m of html.matchAll(/<a\s[^>]*href="https:\/\/apps\.apple\.com[^"]*"[^>]*>/g)) {
     const tag = m[0];
     const attr = (k) => tag.match(new RegExp(`data-umami-event-${k}="([^"]*)"`))?.[1];
+    const href = tag.match(/href="([^"]*)"/)[1].replaceAll('&amp;', '&');
+    const q = new URL(href).searchParams;
+    if (!/^\d+$/.test(q.get('pt') ?? '') || q.get('ct') !== 'site' || q.get('mt') !== '8') {
+      problems.push(`${file}: App Store link without the site campaign (pt, ct=site, mt=8): ${href}`);
+    }
     if (!/data-umami-event="app-store-click"/.test(tag)) {
       problems.push(`${file}: App Store link with no app-store-click event`);
       continue;

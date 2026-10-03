@@ -3,12 +3,10 @@ import Layout from '../../layouts/Layout.astro';
 import Button from '../../components/Button.astro';
 import Card from '../../components/Card.astro';
 import Section from '../../components/Section.astro';
-import { APP_STORE_URL, isAppStoreUrlKnown, SITE_NAME, getCampaignAppStoreUrl } from '../../lib/site';
+import { APP_STORE_URL, isAppStoreUrlKnown, SITE_NAME } from '../../lib/site';
 
-const campaignToken = 'seo_en_track_pouch';
 const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
 const appStoreCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming soon on the App Store';
-const finalAppStoreUrl = getCampaignAppStoreUrl(campaignToken);
 ---
 
 <Layout
@@ -25,7 +23,7 @@ const finalAppStoreUrl = getCampaignAppStoreUrl(campaignToken);
 				Get a clear picture of your daily and weekly patterns and follow a gradual reduction plan that lowers your allowance by 5% each week by default.
 			</p>
 			<div class="cta">
-				<Button placement="hero" variant="primary" href={finalAppStoreUrl} disabled={!appStoreKnown} external={true}>
+				<Button placement="hero" variant="primary" href={APP_STORE_URL} disabled={!appStoreKnown} external={true}>
 					{appStoreCtaLabel}
 				</Button>
 				<Button variant="secondary" href="/">Learn more about Wean Nicotine</Button>
@@ -138,7 +136,7 @@ const finalAppStoreUrl = getCampaignAppStoreUrl(campaignToken);
 		<div class="container">
 			<h2>Start tracking your nicotine pouch use</h2>
 			<p>One tap per pouch. See your patterns, track your progress, and take control.</p>
-			<Button placement="bottom-cta" variant="primary" href={finalAppStoreUrl} disabled={!appStoreKnown} external={true}>
+			<Button placement="bottom-cta" variant="primary" href={APP_STORE_URL} disabled={!appStoreKnown} external={true}>
 				{appStoreCtaLabel}
 			</Button>
 		</div>

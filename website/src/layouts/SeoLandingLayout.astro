@@ -2,7 +2,7 @@
 import Layout from './Layout.astro';
 import Button from '../components/Button.astro';
 import AppStoreBadge from '../components/AppStoreBadge.astro';
-import { APP_STORE_URL, isAppStoreUrlKnown, getCampaignAppStoreUrl } from '../lib/site';
+import { APP_STORE_URL, isAppStoreUrlKnown } from '../lib/site';
 
 interface Props {
 	title: string;
@@ -13,7 +13,6 @@ interface Props {
 	bottomCtaHeading: string;
 	bottomCtaText: string;
 	appStoreCtaLabel?: string;
-	campaignToken?: string;
 	lang?: 'en' | 'da' | 'sv' | 'no';
 	/**
 	 * Locales this SEO landing page is available in. Defaults to the page's
@@ -34,7 +33,6 @@ const {
 	bottomCtaHeading,
 	bottomCtaText,
 	appStoreCtaLabel,
-	campaignToken,
 	lang = 'en',
 	availableLocales,
 } = Astro.props;
@@ -45,8 +43,6 @@ const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
 const defaultCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming soon on the App Store';
 const finalCtaLabel = appStoreCtaLabel || defaultCtaLabel;
 
-// Compute the final trackable URL
-const finalAppStoreUrl = getCampaignAppStoreUrl(campaignToken);
 ---
 
 <Layout title={title} description={description} canonicalPath={canonicalPath} availableLocales={resolvedAvailableLocales}>
@@ -68,9 +64,9 @@ const finalAppStoreUrl = getCampaignAppStoreUrl(campaignToken);
 			<h2>{bottomCtaHeading}</h2>
 			<p>{bottomCtaText}</p>
 			{appStoreKnown ? (
-				<AppStoreBadge href={finalAppStoreUrl} lang={lang} placement="bottom-cta" />
+				<AppStoreBadge href={APP_STORE_URL} lang={lang} placement="bottom-cta" />
 			) : (
-				<Button placement="bottom-cta" variant="primary" href={finalAppStoreUrl} disabled={true}>
+				<Button placement="bottom-cta" variant="primary" href={APP_STORE_URL} disabled={true}>
 					{finalCtaLabel}
 				</Button>
 			)}
