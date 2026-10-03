@@ -14,7 +14,7 @@ This piece is the case for local-first health apps in general, and what to actua
 <figure class="taper-figure">
 <svg viewBox="0 0 800 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="privacy-diagram-title privacy-diagram-desc" class="privacy-diagram">
 	<title id="privacy-diagram-title">Local-first versus cloud-based data flow for a health app</title>
-	<desc id="privacy-diagram-desc">Two side-by-side diagrams. On the left, a typical cloud health app: the phone sends data through the network to a company server, which then exposes it to backups, analytics providers, insurance queries, subpoenas, and breaches. On the right, a local-first app: the phone stores data in an on-device database, and no data leaves the device.</desc>
+	<desc id="privacy-diagram-desc">Two side-by-side diagrams. On the left, a typical cloud health app: the phone sends data through the network to a company server, which then exposes it to backups, analytics providers, insurance queries, subpoenas, and breaches. On the right, a local-first app: the phone stores the logs in an on-device database, and they never leave the device.</desc>
 	<g font-family="var(--font-body)" font-size="13" fill="var(--text-primary)">
 		<text x="200" y="30" text-anchor="middle" font-weight="600" fill="var(--text-secondary)">Typical cloud health app</text>
 		<text x="600" y="30" text-anchor="middle" font-weight="600" fill="var(--primary)">Local-first (Wean)</text>
