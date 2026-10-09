@@ -31,7 +31,10 @@
   --radius-xl: 32px;
 
   /* typography */
-  --font-display: 'Outfit', -apple-system, system-ui, sans-serif;
+  /* The design system's display stack for Wean (dist/identity/wean-nicotine.css),
+     with the family name the self-hosted @fontsource-variable file registers. */
+  --font-display:
+    'Instrument Sans Variable', 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-body: 'Inter', -apple-system, system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
 
