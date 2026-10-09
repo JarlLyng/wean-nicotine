@@ -318,7 +318,7 @@ The fix that holds up:
 
 ### Dependabot alerts that cannot be fixed from this repo
 
-Four open alerts are blocked upstream. They get re-investigated every time someone looks at
+Five open alerts are blocked upstream. They get re-investigated every time someone looks at
 the alert list, so the conclusions are written down here. (List them with
 `gh api --paginate repos/JarlLyng/wean-nicotine/dependabot/alerts`; without `--paginate` the
 API stops at 30 and older alerts go missing from the count.)
@@ -331,12 +331,13 @@ now returns empty. The lesson is the one in the drift section above: "no patch a
 on a transitive Expo dependency often means "not on this SDK patch level", so re-check
 after an SDK move rather than treating it as permanent.
 
-| Alert                                              | Path                                                                         | Why it is stuck                                 |
-| -------------------------------------------------- | ---------------------------------------------------------------------------- | ----------------------------------------------- |
-| `decode-uri-component` (1, medium, CVE-2026-45822) | `expo-router` → `query-string@7.1.3`                                         | Patched at `0.5.0`, but see below.              |
-| `node-forge` (1, high, CVE-2026-85393)             | `@expo/cli` and `expo-updates` → `@expo/code-signing-certificates` → `1.4.0` | No patched release exists; `1.4.0` is the last. |
-| `braces` (1, high, CVE-2026-93687)                 | `jest` → `@jest/core` → `micromatch@4.0.8` → `3.0.3`                         | No patched release exists; `3.0.3` is the last. |
-| `http-cache-semantics` (1, high, CVE-2026-93748)   | website: `astro` → `4.2.0`                                                   | Disputed upstream; no fix is planned.           |
+| Alert                                              | Path                                                                                             | Why it is stuck                                 |
+| -------------------------------------------------- | ------------------------------------------------------------------------------------------------ | ----------------------------------------------- |
+| `decode-uri-component` (1, medium, CVE-2026-45822) | `expo-router` → `query-string@7.1.3`                                                             | Patched at `0.5.0`, but see below.              |
+| `node-forge` (1, high, CVE-2026-85393)             | `@expo/cli` and `expo-updates` → `@expo/code-signing-certificates` → `1.4.0`                     | No patched release exists; `1.4.0` is the last. |
+| `braces` (1, high, CVE-2026-93687)                 | `jest` → `@jest/core` → `micromatch@4.0.8` → `3.0.3`                                             | No patched release exists; `3.0.3` is the last. |
+| `http-cache-semantics` (1, high, CVE-2026-93748)   | website: `astro` → `4.2.0`                                                                       | Disputed upstream; no fix is planned.           |
+| `sprintf-js` (1, medium, CVE-2026-97058)           | `jest-expo` → … → `@istanbuljs/load-nyc-config` → `js-yaml@3.15.2` → `argparse@1.0.10` → `1.0.3` | No patched release exists; `1.1.3` is the last. |
 
 **Do not add an `overrides` entry for `decode-uri-component`.** The patched `0.5.0` is
 pure ESM (`"type": "module"`), while the vulnerable `0.2.2` is CommonJS, and
@@ -386,6 +387,19 @@ caches reuse such responses, and asked GitHub to withdraw the advisory
 `max-stale` (checked by diffing the two published packages), so updating would not clear the
 alert. Astro uses it while building the site; the site is static files, and there is no shared
 HTTP cache of ours for it to misjudge.
+
+**`sprintf-js` (added 2026-10-09).** A denial of service through unbounded precision
+specifiers, in every version up to `1.1.3`, the latest. It arrives through Jest's coverage
+tooling: `babel-plugin-istanbul` → `@istanbuljs/load-nyc-config`, whose `js-yaml` 3 depends on
+`argparse` 1, which depends on `sprintf-js`. It formats our own help and error strings in a
+test tool, never untrusted input, and never ships in the app.
+
+There is a way to drop it, not taken. `argparse` 2, which `js-yaml` 4 uses, has no
+dependencies, and `load-nyc-config` only calls `js-yaml`'s `load`, which `js-yaml` 4 still has.
+Moving the scoped `js-yaml` override in `package.json` from `3.15.2` to `^4` would remove
+`sprintf-js` from the tree. It was left alone because `load-nyc-config` declares `^3.13.1`, so
+the override would step outside its stated range for a dev-only alert. Revisit it if Jest or
+the istanbul packages move to `js-yaml` 4 themselves.
 
 The general rule, and the same lesson as the `brace-expansion` warning above: **check the
 module format and the actual consumer before adding an override, not just the semver
