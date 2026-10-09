@@ -7,11 +7,14 @@ import Card from '../components/Card.astro';
 import Section from '../components/Section.astro';
 import AppStoreBadge from '../components/AppStoreBadge.astro';
 import { APP_STORE_URL, isAppStoreUrlKnown, SITE_NAME } from '../lib/site';
+import { backgroundStyle } from '../lib/backgrounds';
 import heroToday from '../assets/screenshots/05-today.png';
 import heroProgress from '../assets/screenshots/06-progress.png';
 import shotTools from '../assets/screenshots/07-tools.png';
 
 const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
+const screenshotsBgStyle = await backgroundStyle('nordic-1');
+const natureBreakBgStyle = await backgroundStyle('nordic-3');
 const appStoreCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming soon on the App Store';
 
 const faqItems = [
@@ -47,7 +50,7 @@ const faqItems = [
 	{
 		question: 'What does Wean Nicotine cost?',
 		answer:
-			'Wean Nicotine is a one-time purchase of 29 DKK (approximately $4 USD), no subscriptions, no ads, and no data selling. The App Store shows the price in your own currency. You pay once and get every feature, built by an independent solo developer.',
+			'Wean Nicotine is a one-time purchase of 29 DKK in Denmark or $2.99 in the US, no subscriptions, no ads, and no data selling. The App Store shows the price in your own currency. You pay once and get every feature, built by an independent solo developer.',
 	},
 ];
 
@@ -183,7 +186,7 @@ const faqSchema = {
 
 	<!-- ══ SCREENSHOTS ══ -->
 	<section id="screenshots" class="screenshots-section">
-		<div class="nordic-bg" style="background-image: url('/images/unsplash/nordic-1.jpg');"></div>
+		<div class="nordic-bg" style={screenshotsBgStyle}></div>
 		<div class="container">
 			<div class="section-header reveal">
 				<h2>See the app in action</h2>
@@ -266,7 +269,7 @@ const faqSchema = {
 
 	<!-- ══ NATURE BREAK ══ -->
 	<section class="nature-break">
-		<div class="nordic-bg" style="background-image: url('/images/unsplash/nordic-3.jpg');"></div>
+		<div class="nordic-bg" style={natureBreakBgStyle}></div>
 		<div class="container nature-break__inner reveal">
 			<h2>Your pace. Your privacy. Your journey.</h2>
 			<p>Built by someone who gets it, no corporate agenda, no data harvesting. Just a calm tool that helps you take back control.</p>

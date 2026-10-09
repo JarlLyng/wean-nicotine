@@ -9,7 +9,7 @@ A calm, private iPhone app for **gradually reducing** snus and nicotine pouches 
 - **Developer:** [IAMJARL](https://iamjarl.com) (Jarl). The full personal name is never used in copy or docs; see `BRAND_LEGAL.md` in the hub.
 - **Website:** [weannicotine.iamjarl.com](https://weannicotine.iamjarl.com)
 - **License:** [MIT](LICENSE) — open source.
-- **Price:** **29 DKK (~$4) one-time** — no subscription, no in-app purchases, no ads.
+- **Price:** **one-time**, set per storefront: **29 DKK** in Denmark, **39 SEK** and **39 NOK**, **$2.99 / £2.99 / €2.99** — no subscription, no in-app purchases, no ads. Never write a converted price ("~$4", "ca 45 SEK"); the storefronts set their own. Check live with `curl -s 'https://itunes.apple.com/lookup?id=6758867485&country=us'` (swap the country).
 - **Platform:** iPhone (Expo / React Native — the portfolio's one non-SwiftUI app; chosen deliberately).
 - **Current version:** **1.6.2** (iOS build 24) live in App Store since September 2026. `app.config.js` is the source of truth for the current build number; release history is in `CHANGELOG.md`.
 
