@@ -11,6 +11,10 @@
 #
 # See https://docs.github.com/en/code-security/dependabot for the full
 # schema.
+#
+# Every entry waits 7 days before proposing a new version (`cooldown`, #382).
+# Malicious package versions are usually found and pulled within days, so a
+# week keeps most of them out. Security updates are not delayed.
 
 version: 2
 updates:
@@ -22,6 +26,8 @@ updates:
       day: monday
       time: '07:00'
       timezone: Europe/Copenhagen
+    cooldown:
+      default-days: 7
     open-pull-requests-limit: 5
     labels:
       - dependencies
@@ -160,6 +166,8 @@ updates:
       day: monday
       time: '07:00'
       timezone: Europe/Copenhagen
+    cooldown:
+      default-days: 7
     open-pull-requests-limit: 5
     labels:
       - dependencies
@@ -184,6 +192,8 @@ updates:
       day: monday
       time: '07:00'
       timezone: Europe/Copenhagen
+    cooldown:
+      default-days: 7
     open-pull-requests-limit: 3
     labels:
       - dependencies
