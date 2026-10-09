@@ -12,20 +12,20 @@ import { SUPPORT_EMAIL } from '../../lib/site';
 	canonicalPath="/no/support/"
 	availableLocales={ALL_LOCALES}
 >
-	<Section
+	<Section reveal={false}
 		id="support"
 		title="Support"
 		lede="Trenger du hjelp, eller vil du dele tilbakemeldinger? Vi leser hver e-post."
 	>
 		<div class="grid">
-			<Card as="article">
+			<Card reveal={false} as="article">
 				<h3>Kontakt</h3>
 				<p>
 					Send oss en e-post til <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>.
 				</p>
 			</Card>
 
-			<Card as="article">
+			<Card reveal={false} as="article">
 				<h3>Feilsøking</h3>
 				<ul>
 					<li>Hvis varsler ikke fungerer, sjekk iOS-varslingstillatelsene for Wean Nicotine.</li>
@@ -34,7 +34,7 @@ import { SUPPORT_EMAIL } from '../../lib/site';
 				</ul>
 			</Card>
 
-			<Card as="article">
+			<Card reveal={false} as="article">
 				<h3>Personvern</h3>
 				<p>
 					Dataene lagres på enheten din. Les <a href="/no/privacy/">Personvernerklæringen</a>.
