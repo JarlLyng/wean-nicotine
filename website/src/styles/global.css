@@ -5,8 +5,10 @@
 @import '@fontsource/inter/400.css';
 @import '@fontsource/inter/500.css';
 @import '@fontsource/inter/600.css';
-@import '@fontsource/outfit/700.css';
-@import '@fontsource/outfit/800.css';
+/* Display face: Instrument Sans, Wean Nicotine's own (iamjarl-design 1.16, #373).
+   Variable, weights 400 to 700; the latin and latin-ext subsets each load only
+   when a page uses their characters, and æ, ø, å, ä, ö are in latin. */
+@import '@fontsource-variable/instrument-sans';
 
 @import './tokens.css';
 
