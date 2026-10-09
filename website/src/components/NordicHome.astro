@@ -20,6 +20,7 @@ import Card from './Card.astro';
 import Section from './Section.astro';
 import heroToday from '../assets/screenshots/05-today.png';
 import { APP_STORE_URL, isAppStoreUrlKnown } from '../lib/site';
+import { backgroundStyle, type BackgroundName } from '../lib/backgrounds';
 
 export interface NordicHomeContent {
 	meta: { title: string; description: string };
@@ -40,12 +41,13 @@ export interface NordicHomeContent {
 
 interface Props {
 	lang: 'da' | 'sv' | 'no';
-	/** Locale-specific hero background, e.g. '/images/unsplash/nordic-1.jpg'. */
-	bgImage: string;
+	/** Locale-specific hero background, built small by lib/backgrounds.ts. */
+	bg: BackgroundName;
 	content: NordicHomeContent;
 }
 
-const { lang, bgImage, content } = Astro.props;
+const { lang, bg, content } = Astro.props;
+const heroBgStyle = await backgroundStyle(bg);
 
 const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
 const appStoreCtaLabel = appStoreKnown ? content.hero.ctaKnown : content.hero.ctaUnknown;
@@ -72,7 +74,7 @@ const faqSchema = {
 >
 	<script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 	<section class="hero">
-		<div class="nordic-bg" style={`background-image: url('${bgImage}');`}></div>
+		<div class="nordic-bg" style={heroBgStyle}></div>
 		<div class="container hero__inner">
 			<div class="hero__copy reveal">
 				<p class="hero__kicker">{content.hero.kicker}</p>

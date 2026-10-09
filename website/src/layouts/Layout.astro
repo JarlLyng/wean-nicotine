@@ -6,6 +6,7 @@ import { APP_STORE_LISTING_URL, APP_STORE_URL, COMPANY_NAME, isAppStoreUrlKnown,
 import { getLangFromUrl, useTranslations, useTranslatedPath } from '../i18n/utils';
 import { languages } from '../i18n/ui';
 import { NORDIC_FOOTER } from '../i18n/footer-links';
+import { translationsFor } from '../i18n/translations';
 import { appStoreTracking } from '../lib/analytics';
 
 export interface Props {
@@ -48,7 +49,10 @@ const {
 } = Astro.props;
 
 const lang = getLangFromUrl(Astro.url);
-const localesForHreflang = availableLocales ?? [lang];
+// A page in a translation set (guides at different slugs per locale) takes
+// its alternates from the set; everything else swaps the language prefix.
+const translationSet = translationsFor(Astro.url.pathname);
+const localesForHreflang = translationSet ? Object.keys(translationSet) : (availableLocales ?? [lang]);
 const t = useTranslations(lang);
 const translatePath = useTranslatedPath(lang);
 
@@ -98,14 +102,18 @@ const structuredData: Record<string, unknown> = {
 			<link
 				rel="alternate"
 				hreflang={abbr}
-				href={new URL(translatePath(Astro.url.pathname, abbr as keyof typeof languages), Astro.site).toString()}
+				href={new URL(
+					translationSet?.[abbr as keyof typeof translationSet] ??
+						translatePath(Astro.url.pathname, abbr as keyof typeof languages),
+					Astro.site,
+				).toString()}
 			/>
 		))}
 		{localesForHreflang.includes('en') && (
 			<link
 				rel="alternate"
 				hreflang="x-default"
-				href={new URL(translatePath(Astro.url.pathname, 'en'), Astro.site).toString()}
+				href={new URL(translationSet?.en ?? translatePath(Astro.url.pathname, 'en'), Astro.site).toString()}
 			/>
 		)}
 
@@ -199,7 +207,7 @@ const structuredData: Record<string, unknown> = {
 					<a class="nav__link" href="/blog/">{t('nav.blog')}</a>
 					<a class="nav__link" href={translatePath('/privacy')}>{t('nav.privacy')}</a>
 					<a class="nav__link" href={translatePath('/support')}>{t('nav.support')}</a>
-					<LanguageSwitcher availableLocales={localesForHreflang} />
+					<LanguageSwitcher availableLocales={localesForHreflang} translations={translationSet} />
 					<Button
 						variant="primary"
 						href={APP_STORE_URL}
@@ -309,7 +317,7 @@ const structuredData: Record<string, unknown> = {
 					© {new Date().getFullYear()} <a href="https://iamjarl.com" target="_blank" rel="noopener noreferrer">{COMPANY_NAME}</a>. All rights reserved. {t('footer.tagline')}
 				</p>
 				<div class="footer-meta">
-					<LanguageSwitcher availableLocales={localesForHreflang} />
+					<LanguageSwitcher availableLocales={localesForHreflang} translations={translationSet} />
 					<p class="fineprint"><a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a></p>
 				</div>
 			</div>

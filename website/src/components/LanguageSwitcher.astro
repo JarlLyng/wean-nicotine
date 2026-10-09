@@ -1,6 +1,7 @@
 ---
 import { languages, defaultLang } from '../i18n/ui';
 import { getLangFromUrl, useTranslatedPath } from '../i18n/utils';
+import type { TranslationSet } from '../i18n/translations';
 
 interface Props {
 	/**
@@ -9,9 +10,11 @@ interface Props {
 	 * translated current path (which would 404).
 	 */
 	availableLocales?: string[];
+	/** For a guide whose translations live at other slugs, the path in each locale. */
+	translations?: TranslationSet;
 }
 
-const { availableLocales } = Astro.props;
+const { availableLocales, translations } = Astro.props;
 const supported = availableLocales ?? Object.keys(languages);
 
 const currentLang = getLangFromUrl(Astro.url);
@@ -21,7 +24,10 @@ const pathname = Astro.url.pathname;
 const entries = Object.entries(languages).map(([code, label]) => {
 	const isCurrent = code === currentLang;
 	const isAvailable = supported.includes(code);
-	const href = isAvailable
+	const translated = translations?.[code as keyof TranslationSet];
+	const href = translated
+		? translated
+		: isAvailable
 		? translatePath(pathname, code as keyof typeof languages)
 		: code === defaultLang
 			? '/'
