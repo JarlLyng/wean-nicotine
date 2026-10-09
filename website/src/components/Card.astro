@@ -1,13 +1,15 @@
 ---
 export interface Props {
 	as?: 'div' | 'article';
+	/** Fade in on scroll. Off for cards that open a page, which sit above the fold (#381). */
+	reveal?: boolean;
 }
 
-const { as = 'div' } = Astro.props;
+const { as = 'div', reveal = true } = Astro.props;
 const Tag = as;
 ---
 
-<Tag class="card reveal">
+<Tag class:list={['card', reveal && 'reveal']}>
 	<slot />
 </Tag>
 

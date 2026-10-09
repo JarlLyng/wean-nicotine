@@ -3,12 +3,17 @@ export interface Props {
 	id?: string;
 	title?: string;
 	lede?: string;
+	/**
+	 * Fade in on scroll. Turn it off for a section that opens the page: above
+	 * the fold the effect only hides the content until JavaScript runs (#381).
+	 */
+	reveal?: boolean;
 }
 
-const { id, title, lede } = Astro.props;
+const { id, title, lede, reveal = true } = Astro.props;
 ---
 
-<section id={id} class="section reveal">
+<section id={id} class:list={['section', reveal && 'reveal']}>
 	<div class="container">
 		{title && (
 			<header class="section__header">
