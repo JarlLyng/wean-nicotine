@@ -318,8 +318,10 @@ The fix that holds up:
 
 ### Dependabot alerts that cannot be fixed from this repo
 
-Two open alerts are blocked upstream. They get re-investigated every time someone looks at
-the alert list, so the conclusions are written down here.
+Four open alerts are blocked upstream. They get re-investigated every time someone looks at
+the alert list, so the conclusions are written down here. (List them with
+`gh api --paginate repos/JarlLyng/wean-nicotine/dependabot/alerts`; without `--paginate` the
+API stops at 30 and older alerts go missing from the count.)
 
 **Updated 2026-09-18.** The two `image-size` alerts that used to sit here are gone.
 They were marked `patched: NONE` and looked permanent, but realigning the tree with the
@@ -333,6 +335,8 @@ after an SDK move rather than treating it as permanent.
 | -------------------------------------------------- | ---------------------------------------------------------------------------- | ----------------------------------------------- |
 | `decode-uri-component` (1, medium, CVE-2026-45822) | `expo-router` → `query-string@7.1.3`                                         | Patched at `0.5.0`, but see below.              |
 | `node-forge` (1, high, CVE-2026-85393)             | `@expo/cli` and `expo-updates` → `@expo/code-signing-certificates` → `1.4.0` | No patched release exists; `1.4.0` is the last. |
+| `braces` (1, high, CVE-2026-93687)                 | `jest` → `@jest/core` → `micromatch@4.0.8` → `3.0.3`                         | No patched release exists; `3.0.3` is the last. |
+| `http-cache-semantics` (1, high, CVE-2026-93748)   | website: `astro` → `4.2.0`                                                   | Disputed upstream; no fix is planned.           |
 
 **Do not add an `overrides` entry for `decode-uri-component`.** The patched `0.5.0` is
 pure ESM (`"type": "module"`), while the vulnerable `0.2.2` is CommonJS, and
@@ -368,6 +372,20 @@ Expo's packages accept it, and check the module format before any override, as f
 npm ls node-forge                 # both paths, both 1.4.0
 npm view node-forge version       # 1.4.0 until a fix ships
 ```
+
+**`braces` (added 2026-10-09).** A stack-exhaustion denial of service through deeply nested
+glob patterns, in every version up to `3.0.3`, which is the latest. It reaches the tree only
+through Jest's `micromatch`, so it runs on developer machines and in CI against our own test
+globs, never in the app and never on untrusted input.
+
+**`http-cache-semantics` (added 2026-10-09).** The advisory says a request's `max-stale` can
+make a shared cache reuse a response it should not (one with `Set-Cookie`, say). The
+maintainer closed the report as not planned, calling it bogus because RFC 9111 §7.3 lets
+caches reuse such responses, and asked GitHub to withdraw the advisory
+(github/advisory-database#10139). `4.3.0` came out the same day and does not touch
+`max-stale` (checked by diffing the two published packages), so updating would not clear the
+alert. Astro uses it while building the site; the site is static files, and there is no shared
+HTTP cache of ours for it to misjudge.
 
 The general rule, and the same lesson as the `brace-expansion` warning above: **check the
 module format and the actual consumer before adding an override, not just the semver
