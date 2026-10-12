@@ -22,6 +22,9 @@
  *    the event is store-click with store, placement and locale; and the site
  *    loads nothing from a third-party host (jsDelivr, Apple's badge service,
  *    Google Fonts), since fonts and badges are self-hosted.
+ *  - a price written by hand in a page's text (#399). The registry's price
+ *    belongs in the store button's facts line and the JSON-LD Offer only; a
+ *    hand-written copy is how #381's wrong FAQ price shipped.
  *  - orphans: a page no other page links to. A sitemap entry is not a path a
  *    reader can follow, and a crawler weighs an unlinked page accordingly.
  *    Three Nordic guides sat orphaned this way until #303, found by exactly
@@ -181,6 +184,33 @@ const THIRD_PARTY = /https:\/\/(cdn\.jsdelivr\.net|tools\.applemediaservices\.co
 for (const file of [...files, ...globSync('**/*.css', { cwd: DIST })].sort()) {
   const m = readFileSync(join(DIST, file), 'utf8').match(THIRD_PARTY);
   if (m) problems.push(`${file}: loads from a third-party host (${m[1]})`);
+}
+
+// No price written by hand (#399). The price lives in the design system's
+// registry and reaches a page only through the store fragment's facts line and
+// the JSON-LD Offer; a copy in the text is how #381's wrong FAQ price happened.
+// The amounts come from the registry's own offer files, so this follows a
+// price change without being edited.
+const amounts = new Set();
+for (const offerFile of globSync('src/store/*.offer.json')) {
+  const price = String(JSON.parse(readFileSync(offerFile, 'utf8')).price);
+  const [whole, cents = ''] = price.split('.');
+  for (const sep of ['.', ',']) amounts.add(cents ? `${whole}${sep}${cents}` : whole);
+  if (/^0*$/.test(cents)) amounts.add(whole);
+}
+const amount = [...amounts].map((a) => a.replace(/[.,]/g, '[.,]')).join('|');
+const HAND_PRICE = new RegExp(
+  `[$£€]\\s?(?:${amount})(?!\\d)|(?<![\\d.,])(?:${amount})\\s?(?:kr(?:oner|onor)?\\.?|DKK|SEK|NOK|USD|EUR|GBP|€)(?![\\p{L}])`,
+  'u',
+);
+for (const file of files.sort()) {
+  const text = readFileSync(join(DIST, file), 'utf8')
+    .replace(/<p class="ij-store-facts">[\s\S]*?<\/p>/g, ' ')
+    .replace(/<script[\s\S]*?<\/script>/g, ' ')
+    .replace(/<style[\s\S]*?<\/style>/g, ' ')
+    .replace(/<[^>]+>/g, ' ');
+  const m = text.match(HAND_PRICE);
+  if (m) problems.push(`${file}: a price written by hand ("${m[0]}"); let the store button's facts line carry it`);
 }
 
 // Every page needs at least one inbound link. 404 is reachable by definition
