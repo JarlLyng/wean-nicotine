@@ -44,7 +44,59 @@ Alternativer:
 
 ---
 
-## iOS App Version 1.7.0 — Submitted October 2026 (build 25)
+## iOS App Version 1.7.1 — Submitted October 2026 (build 26)
+
+One change, to how Progress shows a day above the plan (#398). **ASO fields (subtitle + keywords) are unchanged from 1.6.0** and carry forward automatically. **Promotional Text must be re-pasted** (ASC wipes it on every new version); reuse the 1.7.0 texts below, which still fit. The Description and Copyright (`2026 IAMJARL`) are unchanged from 1.7.0; check that Copyright carried over.
+
+### What's New (v1.7.1)
+
+**English:**
+
+```
+A day above your plan is met with calm.
+
+• Progress shows a day above your plan in a soft tint instead of red
+• The chart's legend now reads Within plan and Above plan
+• A week with more pouches than the one before is shown plainly, without red
+• The week's summary says how many days stayed within your plan
+```
+
+**Danish:**
+
+```
+En dag over din plan bliver mødt med ro.
+
+• Fremskridt viser en dag over din plan i en blød farvetone i stedet for rødt
+• Grafens forklaring skelner nu mellem inden for planen og over planen
+• En uge med flere poser end ugen før bliver vist roligt, uden rødt
+• Ugens opsummering fortæller, hvor mange dage der holdt sig inden for din plan
+```
+
+**Swedish:**
+
+```
+En dag över din plan möts med lugn.
+
+• Framsteg visar en dag över din plan i en mjuk färgton i stället för rött
+• Diagrammets förklaring skiljer nu på inom planen och över planen
+• En vecka med fler prillor än veckan innan visas lugnt, utan rött
+• Veckans sammanfattning säger hur många dagar som höll sig inom din plan
+```
+
+**Norwegian:**
+
+```
+En dag over planen din blir møtt med ro.
+
+• Fremgang viser en dag over planen din i en myk fargetone i stedet for rødt
+• Forklaringen i diagrammet skiller nå mellom innenfor planen og over planen
+• En uke med flere poser enn uken før vises rolig, uten rødt
+• Ukens oppsummering forteller hvor mange dager som holdt seg innenfor planen din
+```
+
+---
+
+## iOS App Version 1.7.0 — Live in App Store (build 25, approved October 2026)
 
 Export, Send Feedback, guided sessions that keep the screen on, and a faster start. **ASO fields (subtitle + keywords) are unchanged from 1.6.0** and carry forward automatically. **Promotional Text must be re-pasted** (ASC wipes it on every new version); use the 1.7.0 texts below. **Copyright is version-locked: set it to `2026 IAMJARL` with this version** (see Copyright below). The Description is unchanged from 1.6.2.
 
