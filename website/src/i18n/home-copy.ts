@@ -85,9 +85,9 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
     tour: [
       {
         title: 'Today',
-        text: "One tap on Used a pouch logs a pouch, and Craving resisted logs a craving you let pass. The day's allowance shows in whole pouches, and a tap made by mistake can be undone for ten seconds.",
+        text: "One tap on Used a pouch logs a pouch, and Resisted craving logs a craving you let pass. The day's allowance shows in whole pouches, and a tap made by mistake can be undone for ten seconds.",
         screenLabel:
-          "Wean's Today screen with Used a pouch, Craving resisted and the day's allowance.",
+          "Wean's Today screen with Used a pouch, Resisted craving and the day's allowance.",
       },
       {
         title: 'Progress',
@@ -246,8 +246,8 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
     tour: [
       {
         title: 'I dag',
-        text: 'Ét tryk på Used a pouch registrerer en pose, og Craving resisted registrerer en trang, du lod gå forbi. Dagens kvote står i hele poser, og et tryk ved en fejl kan fortrydes i ti sekunder.',
-        screenLabel: 'Weans Today-skærm med Used a pouch, Craving resisted og dagens kvote.',
+        text: 'Ét tryk på Used a pouch registrerer en pose, og Resisted craving registrerer en trang, du lod gå forbi. Dagens kvote står i hele poser, og et tryk ved en fejl kan fortrydes i ti sekunder.',
+        screenLabel: 'Weans Today-skærm med Used a pouch, Resisted craving og dagens kvote.',
       },
       {
         title: 'Fremskridt',
@@ -411,8 +411,8 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
     tour: [
       {
         title: 'I dag',
-        text: 'Ett tryck på Used a pouch loggar en prilla, och Craving resisted loggar ett sug du lät passera. Dagens ranson visas i hela prillor, och ett tryck i misstag kan ångras i tio sekunder.',
-        screenLabel: 'Weans Today-skärm med Used a pouch, Craving resisted och dagens ranson.',
+        text: 'Ett tryck på Used a pouch loggar en prilla, och Resisted craving loggar ett sug du lät passera. Dagens ranson visas i hela prillor, och ett tryck i misstag kan ångras i tio sekunder.',
+        screenLabel: 'Weans Today-skärm med Used a pouch, Resisted craving och dagens ranson.',
       },
       {
         title: 'Framsteg',
@@ -576,8 +576,8 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
     tour: [
       {
         title: 'I dag',
-        text: 'Ett trykk på Used a pouch registrerer en pose, og Craving resisted registrerer et sug du lot passere. Dagens kvote vises i hele poser, og et trykk ved en feil kan angres i ti sekunder.',
-        screenLabel: 'Weans Today-skjerm med Used a pouch, Craving resisted og dagens kvote.',
+        text: 'Ett trykk på Used a pouch registrerer en pose, og Resisted craving registrerer et sug du lot passere. Dagens kvote vises i hele poser, og et trykk ved en feil kan angres i ti sekunder.',
+        screenLabel: 'Weans Today-skjerm med Used a pouch, Resisted craving og dagens kvote.',
       },
       {
         title: 'Fremgang',
