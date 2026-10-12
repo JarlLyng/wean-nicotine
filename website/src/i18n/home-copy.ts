@@ -73,6 +73,20 @@ const oneADayWeeks = (s: Staircase) => {
   return run ? run.toWeek - run.fromWeek + 1 : 0;
 };
 
+/**
+ * Export arrives with 1.7.0 (#43). Until that version is live in the App Store
+ * the page does not describe it: the privacy card stops before its last clause
+ * and the FAQ leaves out its question. Set this to true when 1.7.0 is live.
+ */
+export const EXPORT_IS_LIVE = false;
+
+/** The privacy card's text, with its export clause only once export ships. */
+const withExport = (text: string, exportClause: string) =>
+  EXPORT_IS_LIVE ? `${text}${exportClause}` : `${text}.`;
+
+/** An FAQ item that describes export, kept until export ships. */
+const exportItem = (item: { question: string; answer: string }) => (EXPORT_IS_LIVE ? [item] : []);
+
 export const HOME_COPY: Record<Locale, HomeCopy> = {
   en: {
     meta: {
@@ -169,7 +183,10 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
     assurances: {
       logs: {
         title: 'Your logs stay on your iPhone',
-        text: 'There is no account to make and nothing to sync. Your pouches, your plan and your settings live on the phone, and you can export your log yourself as a file.',
+        text: withExport(
+          'There is no account to make and nothing to sync. Your pouches, your plan and your settings live on the phone',
+          ', and you can export your log yourself as a file.',
+        ),
       },
       paid: {
         title: 'Paid for once',
@@ -210,11 +227,11 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
           answer:
             'On your iPhone. There is no account and nothing syncs to a server. The app sends anonymous crash reports, and your logs and plan are never part of them. The privacy policy has the detail.',
         },
-        {
+        ...exportItem({
           question: 'Can I take my log with me?',
           answer:
             'Yes. Export Data in Settings saves your log as a CSV file that you can keep, open in a spreadsheet or share. There is no import yet, so it is a copy for you, not a way to move the app to a new phone.',
-        },
+        }),
         {
           question: 'Can I delete everything?',
           answer:
@@ -338,7 +355,10 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
     assurances: {
       logs: {
         title: 'Din log bliver på din iPhone',
-        text: 'Der er ingen konto at oprette og intet at synkronisere. Dine poser, din plan og dine indstillinger ligger på telefonen, og du kan selv eksportere din log som en fil.',
+        text: withExport(
+          'Der er ingen konto at oprette og intet at synkronisere. Dine poser, din plan og dine indstillinger ligger på telefonen',
+          ', og du kan selv eksportere din log som en fil.',
+        ),
       },
       paid: {
         title: 'Betalt én gang',
@@ -380,11 +400,11 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
           answer:
             'På din iPhone. Der er ingen konto, og intet bliver synkroniseret til en server. Appen sender anonyme fejlrapporter, og din log og din plan er aldrig en del af dem. Privatlivspolitikken har detaljerne.',
         },
-        {
+        ...exportItem({
           question: 'Kan jeg tage min log med mig?',
           answer:
             'Ja. Export Data under Settings gemmer din log som en CSV-fil, som du kan beholde, åbne i et regneark eller dele. Der er ingen import endnu, så det er en kopi til dig, ikke en måde at flytte appen til en ny telefon.',
-        },
+        }),
         {
           question: 'Kan jeg slette det hele?',
           answer:
@@ -513,7 +533,10 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
     assurances: {
       logs: {
         title: 'Din logg stannar på din iPhone',
-        text: 'Det finns inget konto att skapa och inget att synka. Dina prillor, din plan och dina inställningar finns på telefonen, och du kan själv exportera din logg som en fil.',
+        text: withExport(
+          'Det finns inget konto att skapa och inget att synka. Dina prillor, din plan och dina inställningar finns på telefonen',
+          ', och du kan själv exportera din logg som en fil.',
+        ),
       },
       paid: {
         title: 'Betalt en gång',
@@ -554,11 +577,11 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
           answer:
             'På din iPhone. Det finns inget konto, och inget synkas till en server. Appen skickar anonyma felrapporter, och din logg och din plan ingår aldrig i dem. Integritetspolicyn har detaljerna.',
         },
-        {
+        ...exportItem({
           question: 'Kan jag ta med mig min logg?',
           answer:
             'Ja. Export Data under Settings sparar din logg som en CSV-fil som du kan behålla, öppna i ett kalkylark eller dela. Det finns ingen import än, så det är en kopia till dig, inte ett sätt att flytta appen till en ny telefon.',
-        },
+        }),
         {
           question: 'Kan jag radera allt?',
           answer:
@@ -688,7 +711,10 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
     assurances: {
       logs: {
         title: 'Loggen din blir på iPhonen',
-        text: 'Det er ingen konto å opprette og ingenting å synkronisere. Posene dine, planen og innstillingene ligger på telefonen, og du kan selv eksportere loggen din som en fil.',
+        text: withExport(
+          'Det er ingen konto å opprette og ingenting å synkronisere. Posene dine, planen og innstillingene ligger på telefonen',
+          ', og du kan selv eksportere loggen din som en fil.',
+        ),
       },
       paid: {
         title: 'Betalt én gang',
@@ -730,11 +756,11 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
           answer:
             'På iPhonen din. Det er ingen konto, og ingenting synkroniseres til en server. Appen sender anonyme feilrapporter, og loggen og planen din er aldri en del av dem. Personvernerklæringen har detaljene.',
         },
-        {
+        ...exportItem({
           question: 'Kan jeg ta med meg loggen min?',
           answer:
             'Ja. Export Data under Settings lagrer loggen din som en CSV-fil som du kan beholde, åpne i et regneark eller dele. Det finnes ingen import ennå, så det er en kopi til deg, ikke en måte å flytte appen til en ny telefon.',
-        },
+        }),
         {
           question: 'Kan jeg slette alt?',
           answer:
