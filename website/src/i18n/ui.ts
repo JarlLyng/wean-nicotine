@@ -18,7 +18,6 @@ export const ALL_LOCALES = Object.keys(languages);
 export const ui = {
   en: {
     'nav.skip': 'Skip to content',
-    'nav.label': 'Main',
     'nav.how': 'How it works',
     'nav.plan': 'The plan',
     'nav.faq': 'Questions',
@@ -30,7 +29,6 @@ export const ui = {
   },
   da: {
     'nav.skip': 'Gå til indhold',
-    'nav.label': 'Hovedmenu',
     'nav.how': 'Sådan virker det',
     'nav.plan': 'Planen',
     'nav.faq': 'Spørgsmål',
@@ -42,7 +40,6 @@ export const ui = {
   },
   sv: {
     'nav.skip': 'Till innehållet',
-    'nav.label': 'Huvudmeny',
     'nav.how': 'Så fungerar det',
     'nav.plan': 'Planen',
     'nav.faq': 'Frågor',
@@ -54,7 +51,6 @@ export const ui = {
   },
   no: {
     'nav.skip': 'Gå til innhold',
-    'nav.label': 'Hovedmeny',
     'nav.how': 'Slik fungerer det',
     'nav.plan': 'Planen',
     'nav.faq': 'Spørsmål',

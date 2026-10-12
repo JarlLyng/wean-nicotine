@@ -1,4 +1,4 @@
-/* IAMJARL marketing kit v1.29.0: generated from kit/kit.css, do not edit */
+/* IAMJARL marketing kit v1.29.1: generated from kit/kit.css, do not edit */
 /* The marketing page kit (#65): sections every app site can compose.
 
    Plain HTML with these classes. No JavaScript is needed to read any of it:
@@ -82,6 +82,11 @@
 .ij-section--band .ij-card, .ij-section--band .ij-trait, .ij-section--band .ij-source,
 .ij-section--band .ij-review, .ij-section--band .ij-phone__screen { background: var(--ij-color-bg-app); }
 .ij-measure { max-width: var(--ij-mkt-width-text); }
+/* The kit's own blocks start with no margin, in one rule placed just before
+   the stack so the stack's spacing wins (#88). Set later in this file and as
+   specific, each block's own reset took a stack's spacing away: a source card
+   sat flush on its heading. .ij-page keeps a site's own h2 { margin } out. */
+.ij-page :where(.ij-display, .ij-headline, .ij-title, .ij-numeral, .ij-wordmark, .ij-lede, .ij-card, .ij-source, .ij-review) { margin: 0; }
 .ij-stack > * + * { margin-top: var(--ij-mkt-space-stack); }
 
 /* ---------- Type roles ---------- */
@@ -93,7 +98,6 @@
   font-variation-settings: var(--ij-font-display-axes, normal);
   font-weight: var(--ij-display-weight, 400);
   font-synthesis: none;
-  margin: 0;
   text-wrap: balance;
 }
 .ij-display  { font-size: var(--ij-mkt-display-size);  line-height: var(--ij-mkt-display-leading);  letter-spacing: var(--ij-mkt-display-tracking); }
@@ -106,7 +110,6 @@
   line-height: var(--ij-mkt-lead-leading);
   color: var(--ij-color-text-secondary);
   max-width: 34ch;
-  margin: 0;
   text-wrap: pretty;
 }
 .ij-small { font-size: var(--ij-mkt-small-size); line-height: var(--ij-mkt-small-leading); color: var(--ij-color-text-secondary); }
@@ -466,7 +469,7 @@ ij-store-cta { display: block; }
 
 /* ---------- A dated source for a cited fact ---------- */
 
-.ij-source { margin: 0; padding: var(--ij-mkt-space-stack); background: var(--ij-color-bg-card);
+.ij-source { padding: var(--ij-mkt-space-stack); background: var(--ij-color-bg-card);
              border-radius: var(--ij-radius-lg); display: flex; flex-direction: column; gap: var(--ij-spacing-lg); }
 .ij-source__fact { margin: 0; }
 .ij-source__meta { font-size: var(--ij-mkt-small-size); color: var(--ij-color-text-secondary); }
@@ -478,7 +481,6 @@ ij-store-cta { display: block; }
 
 .ij-reviews { display: grid; gap: var(--ij-spacing-lg); grid-template-columns: minmax(0, 1fr); }
 .ij-review {
-  margin: 0;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

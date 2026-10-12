@@ -2,7 +2,7 @@
 /**
  * Copy what the site uses from the IAMJARL design system into the site (#393, #396).
  *
- *   node scripts/sync-design.mjs v1.29.0
+ *   node scripts/sync-design.mjs v1.29.1
  *
  * One release, all of it:
  *
