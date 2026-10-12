@@ -23,8 +23,8 @@ import { fileURLToPath } from 'node:url';
 
 const TAG = process.argv[2];
 if (!/^v\d+\.\d+\.\d+$/.test(TAG ?? '')) {
-	console.error('Usage: node scripts/sync-store.mjs vX.Y.Z');
-	process.exit(1);
+  console.error('Usage: node scripts/sync-store.mjs vX.Y.Z');
+  process.exit(1);
 }
 
 const APP = 'wean-nicotine';
@@ -33,40 +33,48 @@ const BASE = `https://cdn.jsdelivr.net/gh/jarllyng/iamjarl-design@${TAG}`;
 const SITE = join(dirname(fileURLToPath(import.meta.url)), '..');
 
 async function fetchText(path) {
-	const res = await fetch(`${BASE}/${path}`);
-	if (!res.ok) throw new Error(`${res.status} for ${BASE}/${path}`);
-	return res.text();
+  const res = await fetch(`${BASE}/${path}`);
+  if (!res.ok) throw new Error(`${res.status} for ${BASE}/${path}`);
+  return res.text();
 }
 
 function write(rel, content) {
-	const file = join(SITE, rel);
-	mkdirSync(dirname(file), { recursive: true });
-	writeFileSync(file, content);
-	console.log(`wrote ${rel}`);
+  const file = join(SITE, rel);
+  mkdirSync(dirname(file), { recursive: true });
+  writeFileSync(file, content);
+  console.log(`wrote ${rel}`);
 }
 
 const selfHost = (html) => {
-	const out = html.replaceAll(`${BASE}/badges/`, '/badges/');
-	if (out.includes('cdn.jsdelivr.net')) throw new Error('a third-party URL is left in a fragment');
-	return out;
+  const out = html.replaceAll(`${BASE}/badges/`, '/badges/');
+  // Anything the browser would load (src, srcset) must be ours. The store
+  // link itself (href) is allowed to leave the site; it is a link, not a load.
+  const loaded = [...out.matchAll(/\b(?:src|srcset)="([^"]+)"/g)].map((m) => m[1]);
+  const external = loaded.filter((url) => !url.startsWith('/') || url.startsWith('//'));
+  if (external.length)
+    throw new Error(`a fragment still loads from elsewhere: ${external.join(', ')}`);
+  return out;
 };
 
 // Hero, midpage and nav fragments plus the JSON-LD Offer, per locale.
 for (const loc of Object.keys(LOCALES)) {
-	for (const variant of ['', '.midpage', '.nav']) {
-		const name = `${APP}.${loc}${variant}.html`;
-		write(`src/store/${name}`, selfHost(await fetchText(`dist/store/${name}`)));
-	}
-	write(`src/store/${APP}.${loc}.offer.json`, await fetchText(`dist/store/${APP}.${loc}.offer.json`));
+  for (const variant of ['', '.midpage', '.nav']) {
+    const name = `${APP}.${loc}${variant}.html`;
+    write(`src/store/${name}`, selfHost(await fetchText(`dist/store/${name}`)));
+  }
+  write(
+    `src/store/${APP}.${loc}.offer.json`,
+    await fetchText(`dist/store/${APP}.${loc}.offer.json`),
+  );
 }
 write(`src/store/${APP}.head.html`, await fetchText(`dist/store/${APP}.head.html`));
 
 // The badges, black for light and white for dark, per locale.
 for (const code of Object.values(LOCALES)) {
-	for (const tone of ['black', 'white']) {
-		const name = `app-store-${tone}-${code}.svg`;
-		write(`public/badges/${name}`, await fetchText(`badges/${name}`));
-	}
+  for (const tone of ['black', 'white']) {
+    const name = `app-store-${tone}-${code}.svg`;
+    write(`public/badges/${name}`, await fetchText(`badges/${name}`));
+  }
 }
 
 write('src/store/VERSION', `${TAG}\n`);
