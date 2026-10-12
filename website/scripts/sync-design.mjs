@@ -1,0 +1,161 @@
+#!/usr/bin/env node
+/**
+ * Copy what the site uses from the IAMJARL design system into the site (#393, #396).
+ *
+ *   node scripts/sync-design.mjs v1.24.1
+ *
+ * One release, all of it:
+ *
+ * - public/iamjarl-design/: the tokens, Wean's identity sheet, the display face,
+ *   the marketing kit (kit.css, kit.js) and the <ij-nav> and <ij-footer>
+ *   components, served from the site's own origin.
+ * - src/design/: what runs at build time. kit/loose.js draws the taper staircase
+ *   in the drawings' hand, and the eight coast drawings are inlined in the page,
+ *   where they can take the identity's colours (an <img> cannot). The
+ *   footer's cross-links come along, so they are in the served HTML.
+ * - src/store/ and public/badges/: the store button for each locale, from the
+ *   design system's app registry, so the price, the OS floor, the campaign link
+ *   and the click event have one source. StoreButton.astro renders them.
+ *
+ * The site loads nothing from a third party (check-build.mjs holds it to that),
+ * so instead of jsDelivr links with integrity attributes, each file the release
+ * notes give an SRI hash for is checked against that hash here, before anything
+ * is written. A file that does not match stops the sync.
+ *
+ * Two changes on the way in, both to URLs: the font sheet points at the font
+ * file beside it, and the store fragments' badges point at /badges/. The hub's
+ * store_check.py compares the link and the facts line, which stay as generated.
+ *
+ * Run it again with a newer tag when the design system changes, and commit
+ * what it writes.
+ */
+import { createHash } from 'node:crypto';
+import { mkdirSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const TAG = process.argv[2];
+if (!/^v\d+\.\d+\.\d+$/.test(TAG ?? '')) {
+  console.error('Usage: node scripts/sync-design.mjs vX.Y.Z');
+  process.exit(1);
+}
+
+const APP = 'wean-nicotine';
+const LOCALES = { en: 'en-us', da: 'da-dk', sv: 'sv-se', no: 'no-no' };
+const DRAWINGS = [
+  'shoreline',
+  'flat-rocks',
+  'stones',
+  'mooring-post',
+  'harbour-steps',
+  'breakwater',
+  'boat',
+  'low-tide',
+];
+const BASE = `https://cdn.jsdelivr.net/gh/jarllyng/iamjarl-design@${TAG}`;
+const SITE = join(dirname(fileURLToPath(import.meta.url)), '..');
+
+async function fetchBytes(path) {
+  const res = await fetch(`${BASE}/${path}`);
+  if (!res.ok) throw new Error(`${res.status} for ${BASE}/${path}`);
+  return Buffer.from(await res.arrayBuffer());
+}
+
+function write(rel, content) {
+  const file = join(SITE, rel);
+  mkdirSync(dirname(file), { recursive: true });
+  writeFileSync(file, content);
+  console.log(`wrote ${rel}`);
+}
+
+// The release notes' integrity table: | `dist/kit/kit.css` | `sha384-…` |
+const release = await fetch(
+  `https://api.github.com/repos/JarlLyng/iamjarl-design/releases/tags/${TAG}`,
+  { headers: { accept: 'application/vnd.github+json' } },
+);
+if (!release.ok) throw new Error(`${release.status} reading the release notes for ${TAG}`);
+const notes = (await release.json()).body ?? '';
+const SRI = new Map(
+  [...notes.matchAll(/\|\s*`(dist\/[^`]+)`\s*\|\s*`(sha384-[A-Za-z0-9+/=]+)`\s*\|/g)].map((m) => [
+    m[1],
+    m[2],
+  ]),
+);
+if (SRI.size === 0) throw new Error(`no integrity table in the release notes for ${TAG}`);
+
+/** Fetch a file the release notes hash, and refuse it unless it matches. */
+async function verified(path) {
+  const expected = SRI.get(path);
+  if (!expected) throw new Error(`the release notes give no hash for ${path}`);
+  const bytes = await fetchBytes(path);
+  const actual = `sha384-${createHash('sha384').update(bytes).digest('base64')}`;
+  if (actual !== expected) throw new Error(`${path}: ${actual} does not match ${expected}`);
+  return bytes;
+}
+
+// Collect everything first, so a mismatch leaves the site as it was.
+const out = new Map();
+
+// Served to the browser.
+const SERVED = 'public/iamjarl-design';
+for (const path of [
+  'dist/css/tokens.css',
+  `dist/identity/${APP}.css`,
+  'dist/kit/kit.css',
+  'dist/kit/kit.js',
+  'dist/components/ij-nav.js',
+  'dist/components/ij-footer.js',
+]) {
+  out.set(`${SERVED}/${path.slice('dist/'.length)}`, await verified(path));
+}
+const fontSheet = (await verified('dist/fonts/instrument-sans.css')).toString('utf8');
+if (!fontSheet.includes("url('../../fonts/"))
+  throw new Error('the font sheet no longer points at ../../fonts/; check the rewrite below');
+out.set(`${SERVED}/fonts/instrument-sans.css`, fontSheet.replaceAll("url('../../fonts/", "url('./"));
+for (const name of ['instrument-sans-latin-wght-normal.woff2', 'LICENSE-instrument-sans.txt']) {
+  out.set(`${SERVED}/fonts/${name}`, await fetchBytes(`fonts/${name}`));
+}
+
+// Used at build time.
+out.set('src/design/loose.js', await verified('dist/kit/loose.js'));
+for (const name of DRAWINGS) {
+  out.set(`src/design/drawings/${name}.svg`, await fetchBytes(`dist/drawings/wean/${name}.svg`));
+}
+// The footer's cross-links to the rest of the portfolio, in the served HTML,
+// where crawlers that run no JavaScript can follow them.
+out.set('src/design/cross-links.html', await fetchBytes(`dist/footers/${APP}.html`));
+
+// The store button. The page is light only, so it takes the black badge.
+const selfHost = (html) => {
+  const local = html.replaceAll(`${BASE}/badges/`, '/badges/');
+  // Anything the browser would load (src, srcset) must be ours. The store
+  // link itself (href) is allowed to leave the site; it is a link, not a load.
+  const loaded = [...local.matchAll(/\b(?:src|srcset)="([^"]+)"/g)].map((m) => m[1]);
+  const external = loaded.filter((url) => !url.startsWith('/') || url.startsWith('//'));
+  if (external.length)
+    throw new Error(`a fragment still loads from elsewhere: ${external.join(', ')}`);
+  return local;
+};
+for (const loc of Object.keys(LOCALES)) {
+  for (const variant of ['.black', '.midpage.black', '.footer.black', '.nav']) {
+    const name = `${APP}.${loc}${variant}.html`;
+    out.set(`src/store/${name}`, selfHost((await fetchBytes(`dist/store/${name}`)).toString('utf8')));
+  }
+  const offer = `${APP}.${loc}.offer.json`;
+  out.set(`src/store/${offer}`, await fetchBytes(`dist/store/${offer}`));
+}
+out.set(`src/store/${APP}.head.html`, await fetchBytes(`dist/store/${APP}.head.html`));
+for (const code of Object.values(LOCALES)) {
+  const name = `app-store-black-${code}.svg`;
+  out.set(`public/badges/${name}`, await fetchBytes(`badges/${name}`));
+}
+
+// Replace the generated folders whole, so a file the release dropped goes too.
+for (const dir of [SERVED, 'src/design', 'src/store', 'public/badges']) {
+  mkdirSync(join(SITE, dir), { recursive: true });
+  for (const name of readdirSync(join(SITE, dir))) {
+    rmSync(join(SITE, dir, name), { recursive: true, force: true });
+  }
+}
+for (const [rel, content] of out) write(rel, content);
+write('src/design/VERSION', `${TAG}\n`);
