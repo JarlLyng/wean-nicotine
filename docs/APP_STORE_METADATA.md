@@ -96,28 +96,30 @@ Loggen din kan nå bli med deg.
 
 ### Promotional Text (v1.7.0, max 170 tegn)
 
-**English (138):**
+Promotional text sits above the description, so it sells the app to someone who has never seen it. It is not a list of what changed; that is What's New. It can be changed any time without review (`ASO_GUIDANCE.md`).
+
+**English (162):**
 
 ```
-Export your log as a CSV file, and guided breathing now keeps the screen on. One-time purchase, no account, your logs stay on your iPhone.
+Cut down on snus and nicotine pouches at a pace you choose. One tap to log, a daily number that eases down each week, and your logs stay on your iPhone. Pay once.
 ```
 
-**Danish (146):**
+**Danish (157):**
 
 ```
-Eksportér din log som CSV-fil, og vejrtrækningsøvelsen holder nu skærmen tændt. Engangskøb, ingen konto, dine registreringer bliver på din iPhone.
+Skær ned på snus og nikotinposer i dit eget tempo. Ét tryk pr. pose, et dagligt tal der falder lidt hver uge, og din log bliver på din iPhone. Betal én gang.
 ```
 
-**Swedish (144):**
+**Swedish (163):**
 
 ```
-Exportera din logg som CSV-fil, och andningsövningen håller nu skärmen tänd. Engångsköp, inget konto, dina registreringar stannar på din iPhone.
+Minska snus och nikotinpåsar i din egen takt. Ett tryck per prilla, ett dagligt mål som sjunker lite varje vecka, och loggen stannar på din iPhone. Betala en gång.
 ```
 
-**Norwegian (140):**
+**Norwegian (158):**
 
 ```
-Eksporter loggen din som CSV-fil, og pusteøvelsen holder nå skjermen på. Engangskjøp, ingen konto, registreringene dine blir på iPhonen din.
+Kutt ned på snus og nikotinposer i ditt eget tempo. Ett trykk per pose, et daglig tall som synker litt hver uke, og loggen blir på iPhonen din. Betal én gang.
 ```
 
 ---
