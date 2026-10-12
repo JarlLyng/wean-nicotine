@@ -200,6 +200,9 @@ const year = new Date().getFullYear();
 	</head>
 
 	<body class="ij-page">
+		{/* The kit's skip link (iamjarl-design 1.27, #84): first in the body, so it
+		    works without JavaScript, and <ij-nav> leaves out its own. */}
+		<a class="ij-skip" href="#main">{t('nav.skip')}</a>
 		<ij-nav label={t('nav.label')} skip-to="main" cta-after={ctaAfter}>
 			<a slot="brand" href={home}>Wean</a>
 			<a slot="links" href={`${home}#how`}>{t('nav.how')}</a>

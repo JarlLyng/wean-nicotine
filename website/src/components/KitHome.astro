@@ -259,21 +259,6 @@ const faqSchema = {
 		font-weight: var(--ij-font-weight-semibold);
 	}
 
-	/* The tour's row of screens on a phone. The kit centres the row with
-	   justify-content: center, and a centred row wider than its scroller
-	   overflows to the left, where it cannot be scrolled to: at 375 px the
-	   first screen, Today, was out of reach. Auto margins centre the row when
-	   it fits and start it at the left edge when it does not. */
-	.ij-tour:not(.is-live) .ij-tour__screens {
-		justify-content: flex-start;
-	}
-	.ij-tour:not(.is-live) .ij-tour__screens > :first-child {
-		margin-left: auto;
-	}
-	.ij-tour:not(.is-live) .ij-tour__screens > :last-child {
-		margin-right: auto;
-	}
-
 	/* The guides as cards: the whole card is the link (as on Walkful). */
 	.ij-card--link {
 		color: inherit;

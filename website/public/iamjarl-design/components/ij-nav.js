@@ -1,4 +1,4 @@
-// IAMJARL <ij-nav> v1.24.1: generated, do not edit
+// IAMJARL <ij-nav> v1.27.0: generated, do not edit
 // Sources: components/nav-rules.js, components/ij-nav.js
 
 // The rules <ij-nav> enforces, kept out of the DOM so they are covered by the
@@ -124,6 +124,9 @@ function navWarnings({ brand = 0, links = [], cta = [], secondary = 0 }) {
 // What the component owns:
 //   - a <nav> landmark (aria-label from `label`, default "Main") and a skip link
 //     to #main (or the id in `skip-to`), rendered only if that target exists
+//     and the page has no skip link of its own: a link to the same target
+//     before the nav, such as the kit's .ij-skip, which works without
+//     JavaScript. Two would be two tab stops that say the same (#84)
 //   - aria-current="page" on the link for this page, unless the site set one
 //   - sticky, translucent and blurred; solid where backdrop-filter is missing or
 //     the visitor prefers reduced transparency
@@ -433,12 +436,14 @@ class IjNav extends HTMLElement {
     const label = this.getAttribute('label') || 'Main';
     const skipId = this.getAttribute('skip-to') || 'main';
     const skipTarget = document.getElementById(skipId);
+    const pageSkips = skipTarget && [...document.querySelectorAll('a[href]')].some(a =>
+      a.getAttribute('href') === '#' + skipId && (a.compareDocumentPosition(this) & Node.DOCUMENT_POSITION_FOLLOWING));
     const ownMark = brand.some(el => el.querySelector('svg, img'));
     const folds = links.length > 0 || secondary.length > 0;
 
     this.shadowRoot.innerHTML = `
       <style>${NAV_STYLE}</style>
-      ${skipTarget ? '<a class="skip" href="#' + esc(skipId) + '">Skip to content</a>' : ''}
+      ${skipTarget && !pageSkips ? '<a class="skip" href="#' + esc(skipId) + '">Skip to content</a>' : ''}
       <nav class="bar" aria-label="${esc(label)}">
         <div class="brand">${ownMark ? '' : '<span class="dot" aria-hidden="true"></span>'}<slot name="brand"></slot></div>
         ${folds ? `

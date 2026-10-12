@@ -17,6 +17,7 @@ export const ALL_LOCALES = Object.keys(languages);
 
 export const ui = {
   en: {
+    'nav.skip': 'Skip to content',
     'nav.label': 'Main',
     'nav.how': 'How it works',
     'nav.plan': 'The plan',
@@ -28,6 +29,7 @@ export const ui = {
     'footer.tagline': 'Calm, local-first progress tracking.',
   },
   da: {
+    'nav.skip': 'Gå til indhold',
     'nav.label': 'Hovedmenu',
     'nav.how': 'Sådan virker det',
     'nav.plan': 'Planen',
@@ -39,6 +41,7 @@ export const ui = {
     'footer.tagline': 'Rolig, lokal fremgangssporing.',
   },
   sv: {
+    'nav.skip': 'Till innehållet',
     'nav.label': 'Huvudmeny',
     'nav.how': 'Så fungerar det',
     'nav.plan': 'Planen',
@@ -50,6 +53,7 @@ export const ui = {
     'footer.tagline': 'Lugn, lokal spårning av framsteg.',
   },
   no: {
+    'nav.skip': 'Gå til innhold',
     'nav.label': 'Hovedmeny',
     'nav.how': 'Slik fungerer det',
     'nav.plan': 'Planen',

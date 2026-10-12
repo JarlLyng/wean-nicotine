@@ -1,4 +1,4 @@
-/* IAMJARL marketing kit v1.24.1: generated from kit/kit.css, do not edit */
+/* IAMJARL marketing kit v1.27.0: generated from kit/kit.css, do not edit */
 /* The marketing page kit (#65): sections every app site can compose.
 
    Plain HTML with these classes. No JavaScript is needed to read any of it:
@@ -29,7 +29,7 @@
    rules leave anything with a slot, and anything inside one, to the
    component: the nav's CTA keeps its on-accent text, its links stay text
    colours, the footer's links stay secondary (#72). */
-.ij-page a:not([slot], [slot] *) { color: var(--ij-color-accent-text); text-underline-offset: 0.2em; }
+.ij-page a:not([slot], [slot] *, .ij-skip) { color: var(--ij-color-accent-text); text-underline-offset: 0.2em; }
 .ij-page :is(ij-nav, ij-footer):not(:defined) a { color: var(--ij-color-text-secondary); }
 .ij-page :focus-visible:not([slot], [slot] *) {
   outline: var(--ij-focus-width) solid var(--ij-color-accent-text);
@@ -37,6 +37,31 @@
   border-radius: var(--ij-radius-sm);
 }
 .ij-page img, .ij-page video, .ij-page svg { max-width: 100%; }
+
+/* The skip link (#84): first in the body, so it works without JavaScript,
+   hidden until it takes focus, then above the sticky <ij-nav> in the accent
+   with its on-accent text, which validate.js holds to AA. The link rule above
+   leaves it alone, and <ij-nav> leaves out its own when the page has one. */
+.ij-skip {
+  position: fixed;
+  top: var(--ij-spacing-sm);
+  left: var(--ij-spacing-lg);
+  z-index: var(--ij-z-popover);
+  padding: var(--ij-spacing-sm) var(--ij-spacing-lg);
+  border-radius: var(--ij-radius-md);
+  background: var(--ij-color-accent);
+  color: var(--ij-color-on-accent);
+  font-weight: var(--ij-font-weight-semibold);
+  text-decoration: none;
+  transform: translateY(-200%);
+}
+.ij-skip:focus { transform: none; }
+
+/* <ij-footer> without JavaScript, or before it upgrades, shows its children.
+   A footer with a hand-written fallback (anything in no slot) shows that
+   alone; the slotted links and fineprint would otherwise repeat it (#84).
+   A footer with no fallback shows its slotted content. */
+.ij-page ij-footer:not(:defined):has(> :not([slot])) > [slot] { display: none; }
 
 .ij-container {
   width: min(100% - 2 * var(--ij-mkt-space-gutter), var(--ij-mkt-width-content));
@@ -147,6 +172,69 @@ ij-store-cta { display: block; }
 .ij-phone__frame { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .ij-phone--drawn { background: none; box-shadow: none; }
 
+/* ---------- A television and a watch, in the same spirit (#78) ----------
+
+   Plain frames for a capture from Apple TV and from Apple Watch: a screen with
+   a thin bezel on a small foot, and a watch face between two strap ends. No
+   logo, no crown, no buttons: Apple's marketing rules let a drawn device carry
+   nothing unique to its products, and its own frames never ship from here.
+   The screen fills with the capture: <img> or <video> in the __screen. */
+
+.ij-tv {
+  --_w: var(--ij-tv-width, 560px);
+  position: relative;
+  box-sizing: border-box;
+  width: min(var(--_w), 100%);
+  padding: calc(min(var(--_w), 100%) * 0.018);
+  margin-bottom: 14px;
+  border-radius: calc(min(var(--_w), 100%) * 0.022);
+  background: var(--ij-color-black);
+  box-shadow:
+    inset 0 0 0 1.5px color-mix(in srgb, var(--ij-color-white) 12%, transparent),
+    0 0 0 1px var(--ij-color-border-default);
+}
+.ij-tv__screen { aspect-ratio: 16 / 9; overflow: hidden; border-radius: 3px; background: var(--ij-color-bg-card); }
+.ij-tv__screen > img, .ij-tv__screen > video { display: block; width: 100%; height: 100%; object-fit: cover; }
+.ij-tv::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: 16%;
+  height: 10px;
+  transform: translateX(-50%);
+  border-radius: 0 0 4px 4px;
+  background: var(--ij-color-border-default);
+}
+
+.ij-watch {
+  --_w: var(--ij-watch-width, 170px);
+  position: relative;
+  box-sizing: border-box;
+  width: min(var(--_w), 100%);
+  padding: calc(min(var(--_w), 100%) * 0.075);
+  margin-block: calc(min(var(--_w), 100%) * 0.32);
+  border-radius: calc(min(var(--_w), 100%) * 0.26);
+  background: var(--ij-color-black);
+  box-shadow:
+    inset 0 0 0 1.5px color-mix(in srgb, var(--ij-color-white) 12%, transparent),
+    0 0 0 1px var(--ij-color-border-default);
+}
+.ij-watch__screen { aspect-ratio: 416 / 496; overflow: hidden; border-radius: 22%; background: var(--ij-color-bg-card); }
+.ij-watch__screen > img, .ij-watch__screen > video { display: block; width: 100%; height: 100%; object-fit: cover; }
+.ij-watch::before, .ij-watch::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  width: 64%;
+  height: calc(min(var(--_w), 100%) * 0.34);
+  transform: translateX(-50%);
+  background: var(--ij-color-bg-card);
+  box-shadow: 0 0 0 1px var(--ij-color-border-default);
+}
+.ij-watch::before { bottom: 100%; border-radius: 10px 10px 0 0; }
+.ij-watch::after { top: 100%; border-radius: 0 0 10px 10px; }
+
 /* ---------- A drawing per statement ---------- */
 
 .ij-drawing { display: block; width: 100%; height: auto; color: var(--ij-color-accent); }
@@ -226,6 +314,13 @@ ij-store-cta { display: block; }
   scroll-snap-type: x mandatory;
 }
 .ij-tour__screens > .ij-phone { --ij-phone-width: 220px; scroll-snap-align: center; }
+/* A centred row wider than its scroller overflows on both sides, and the part
+   past the start can't be scrolled to: on a phone the first screen sat half
+   off the edge (#80). Auto margins centre the row when it fits and start it at
+   the edge when it doesn't. */
+.ij-tour:not(.is-live) .ij-tour__screens { justify-content: flex-start; }
+.ij-tour:not(.is-live) .ij-tour__screens > :first-child { margin-inline-start: auto; }
+.ij-tour:not(.is-live) .ij-tour__screens > :last-child { margin-inline-end: auto; }
 .ij-tour__steps { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--ij-mkt-space-stack); }
 .ij-tour__step { display: flex; flex-direction: column; gap: var(--ij-spacing-sm); }
 .ij-tour__step p { margin: 0; color: var(--ij-color-text-secondary); max-width: 40ch; }
@@ -291,9 +386,12 @@ ij-store-cta { display: block; }
             padding: var(--ij-mkt-space-stack); background: var(--ij-color-bg-card); border-radius: var(--ij-radius-lg); }
 .ij-trait p { margin: 0; color: var(--ij-color-text-secondary); }
 .ij-trait .ij-numeral { color: var(--ij-color-text-primary); }
+/* A trait can show its device: a television or a watch above its words. */
+.ij-trait > .ij-tv, .ij-trait > .ij-watch { align-self: center; }
 @media (min-width: 768px) {
   .ij-traits { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .ij-trait--number { grid-column: span 2; grid-row: span 2; }
+  .ij-trait--wide { grid-column: span 2; }
 }
 
 /* ---------- Privacy and price, stated as features ---------- */
@@ -324,6 +422,65 @@ ij-store-cta { display: block; }
              border-radius: var(--ij-radius-lg); display: flex; flex-direction: column; gap: var(--ij-spacing-lg); }
 .ij-source__fact { margin: 0; }
 .ij-source__meta { font-size: var(--ij-mkt-small-size); color: var(--ij-color-text-secondary); }
+
+/* ---------- A scene: a photo across the page, for the mood (#81) ----------
+   For a site whose mood is a place, like WODrounds' gym. The photo sets the
+   mood and never carries the content: the numbers, the app and the words stay
+   the picture. Either a band of its own between sections, with nothing on it,
+   or behind a section's words (the closing wordmark and store button). Never
+   behind the hero, at most two per page, loaded lazily, and nothing moves.
+
+   The photo goes monochrome, so the accent stays the only colour, and is
+   dimmed toward the ground, fading into it at the foot so the scene meets the
+   next section without a seam. Words on a scene keep the photo's own room
+   above them and sit on a scrim of the ground that follows them, at 70%, and
+   all take the primary text colour: then they read at AA over any photo, a
+   white one on a dark site or a black one on a light site (the browser tests
+   prove both). --ij-scene-height sets a band's height. */
+.ij-scene {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  align-items: end;
+  min-height: var(--ij-scene-height, clamp(280px, 50vw, 640px));
+  overflow: hidden;
+  background: var(--ij-color-bg-app);
+  --ij-color-text-secondary: var(--ij-color-text-primary);
+  --ij-color-text-tertiary: var(--ij-color-text-primary);
+  --ij-color-accent-text: var(--ij-color-text-primary);
+}
+.ij-scene__photo {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(1);
+}
+.ij-scene::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(to bottom,
+    color-mix(in srgb, var(--ij-color-bg-app) 30%, transparent),
+    color-mix(in srgb, var(--ij-color-bg-app) 55%, transparent) 60%,
+    var(--ij-color-bg-app));
+}
+.ij-scene > .ij-container {
+  --_fade: var(--ij-mkt-space-section);
+  position: relative;
+  margin-top: clamp(160px, 22vw, 320px);
+  padding-block: var(--ij-mkt-space-stack) var(--ij-mkt-space-section);
+}
+.ij-scene > .ij-container::before {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * var(--_fade)) -100vw 0;
+  z-index: -1;
+  background: linear-gradient(to bottom, transparent, color-mix(in srgb, var(--ij-color-bg-app) 70%, transparent) var(--_fade));
+}
 
 /* ---------- Closing: the wordmark, large ---------- */
 
