@@ -63,10 +63,10 @@ function getWeeklyInsight(
   // Only days with entries count here: a week that is mostly unlogged is not
   // a perfect week, it is an unknown one (#320).
   if (daysUnderLimit >= 7) {
-    return 'Perfect week, you stayed under your limit every single day.';
+    return 'Every day stayed within your plan.';
   }
   if (daysUnderLimit >= 5) {
-    return `Strong week with ${daysUnderLimit} days under your limit.`;
+    return `${daysUnderLimit} days stayed within your plan.`;
   }
   if (cravingsResisted > 0 && pouchesAvoided > 0) {
     return `You resisted ${cravingsResisted} craving${cravingsResisted !== 1 ? 's' : ''} and avoided ${pouchesAvoided} pouches.`;
