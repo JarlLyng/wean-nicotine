@@ -206,8 +206,9 @@ const HAND_PRICE = new RegExp(
 for (const file of files.sort()) {
   const text = readFileSync(join(DIST, file), 'utf8')
     .replace(/<p class="ij-store-facts">[\s\S]*?<\/p>/g, ' ')
-    .replace(/<script[\s\S]*?<\/script>/g, ' ')
-    .replace(/<style[\s\S]*?<\/style>/g, ' ')
+    // Any case, and a closing tag with whitespace or junk before its >.
+    .replace(/<script\b[\s\S]*?<\/script\b[^>]*>/gi, ' ')
+    .replace(/<style\b[\s\S]*?<\/style\b[^>]*>/gi, ' ')
     .replace(/<[^>]+>/g, ' ');
   const m = text.match(HAND_PRICE);
   if (m) problems.push(`${file}: a price written by hand ("${m[0]}"); let the store button's facts line carry it`);
