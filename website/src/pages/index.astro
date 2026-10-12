@@ -1,21 +1,18 @@
 ---
 import { Picture } from 'astro:assets';
+import StoreButton from '../components/StoreButton.astro';
 import Layout from '../layouts/Layout.astro';
 import { ALL_LOCALES } from '../i18n/ui';
-import Button from '../components/Button.astro';
 import Card from '../components/Card.astro';
 import Section from '../components/Section.astro';
-import AppStoreBadge from '../components/AppStoreBadge.astro';
-import { APP_STORE_URL, isAppStoreUrlKnown, SITE_NAME } from '../lib/site';
+import { SITE_NAME } from '../lib/site';
 import { backgroundStyle } from '../lib/backgrounds';
 import heroToday from '../assets/screenshots/05-today.png';
 import heroProgress from '../assets/screenshots/06-progress.png';
 import shotTools from '../assets/screenshots/07-tools.png';
 
-const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
 const screenshotsBgStyle = await backgroundStyle('nordic-1');
 const natureBreakBgStyle = await backgroundStyle('nordic-3');
-const appStoreCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming soon on the App Store';
 
 const faqItems = [
 	{
@@ -95,13 +92,7 @@ const faqSchema = {
 				</p>
 
 				<div class="hero__cta">
-					{appStoreKnown ? (
-						<AppStoreBadge href={APP_STORE_URL} lang="en" />
-					) : (
-						<Button variant="primary" href={APP_STORE_URL} disabled={!appStoreKnown} external={true} placement="hero">
-							{appStoreCtaLabel}
-						</Button>
-					)}
+					<StoreButton locale="en" />
 					<a class="hero__cta-secondary" href="#screenshots">See the app</a>
 				</div>
 
@@ -274,9 +265,7 @@ const faqSchema = {
 			<h2>Your pace. Your privacy. Your journey.</h2>
 			<p>Built by someone who gets it, no corporate agenda, no data harvesting. Just a calm tool that helps you take back control.</p>
 			<div class="hero__cta" style="justify-content: center;">
-				<Button variant="primary" href={APP_STORE_URL} disabled={!appStoreKnown} external={true} placement="midpage">
-					{appStoreCtaLabel}
-				</Button>
+				<StoreButton locale="en" placement="midpage" align="center" />
 			</div>
 		</div>
 	</section>

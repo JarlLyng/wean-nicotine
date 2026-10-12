@@ -2,10 +2,7 @@
 import SeoLandingLayout from '../../../layouts/SeoLandingLayout.astro';
 import Card from '../../../components/Card.astro';
 import Section from '../../../components/Section.astro';
-import { APP_STORE_URL, isAppStoreUrlKnown } from '../../../lib/site';
 
-const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
-const appStoreCtaLabel = appStoreKnown ? 'Last ned i App Store' : 'Kommer snart i App Store';
 ---
 
 <SeoLandingLayout
@@ -16,7 +13,6 @@ const appStoreCtaLabel = appStoreKnown ? 'Last ned i App Store' : 'Kommer snart 
 	lede="Wean Nicotine er en iPhone-app som hjelper deg med å redusere snusbruket ved å senke den daglige kvoten din med 5 % per uke som standard. En Cochrane-oversikt om røykeslutt fant at ingen av de to metodene ga bedre resultater enn den andre (Lindson et al., Cochrane Database of Systematic Reviews, 2019). Appen gjør prosessen privat og enkel."
 	bottomCtaHeading="Klar for å redusere snusbruket?"
 	bottomCtaText="Start med ditt nåværende forbruk og la Wean Nicotine guide deg steg for steg."
-	appStoreCtaLabel={appStoreCtaLabel}
 	lang="no"
 >
 	<script type="application/ld+json" slot="after-guide">

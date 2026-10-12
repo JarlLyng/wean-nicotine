@@ -2,10 +2,7 @@
 import SeoLandingLayout from '../../layouts/SeoLandingLayout.astro';
 import Card from '../../components/Card.astro';
 import Section from '../../components/Section.astro';
-import { APP_STORE_URL, isAppStoreUrlKnown } from '../../lib/site';
 
-const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
-const appStoreCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming soon on the App Store';
 ---
 
 <SeoLandingLayout
@@ -16,7 +13,6 @@ const appStoreCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming s
 	lede="A 2019 Cochrane review of 51 trials in cigarette smokers found moderate-certainty evidence that neither cutting down first nor quitting abruptly produces better long-term quit rates. Those trials studied smoking, not snus, so read them as the closest available evidence. Both can work, and the question is which one you can sustain."
 	bottomCtaHeading="Ready to try gradual reduction?"
 	bottomCtaText="Wean Nicotine drops your daily allowance by 5% per week, so each step is a small fraction of your current number rather than all of it at once."
-	appStoreCtaLabel={appStoreCtaLabel}
 	lang="en"
 >
 	<script type="application/ld+json" slot="after-guide">

@@ -2,10 +2,7 @@
 import SeoLandingLayout from '../../layouts/SeoLandingLayout.astro';
 import Card from '../../components/Card.astro';
 import Section from '../../components/Section.astro';
-import { APP_STORE_URL, isAppStoreUrlKnown } from '../../lib/site';
 
-const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
-const appStoreCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming soon on the App Store';
 ---
 
 <SeoLandingLayout
@@ -16,7 +13,6 @@ const appStoreCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming s
 	lede="Wean Nicotine is a snus reduction app for iPhone that helps you cut down gradually, the app reduces your daily allowance by 5% each week by default, so you use fewer pouches over time without quitting cold turkey. In cigarette smokers, a Cochrane review found neither cutting down first nor quitting abruptly produced better long-term quit rates (Lindson et al., Cochrane Database of Systematic Reviews, 2019). At the default 5% a week, your allowance halves by week 14 whatever your starting point."
 	bottomCtaHeading="Ready to reduce your snus use?"
 	bottomCtaText="Start with your current daily amount and let Wean Nicotine guide you down step by step."
-	appStoreCtaLabel={appStoreCtaLabel}
 	lang="en"
 >
 	<script type="application/ld+json" slot="after-guide">

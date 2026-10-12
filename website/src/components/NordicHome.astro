@@ -13,13 +13,13 @@
  * would trade duplication for a conditional mega-component.
  */
 import { Picture } from 'astro:assets';
+import StoreButton from './StoreButton.astro';
 import Layout from '../layouts/Layout.astro';
 import { ALL_LOCALES } from '../i18n/ui';
 import Button from './Button.astro';
 import Card from './Card.astro';
 import Section from './Section.astro';
 import heroToday from '../assets/screenshots/05-today.png';
-import { APP_STORE_URL, isAppStoreUrlKnown } from '../lib/site';
 import { backgroundStyle, type BackgroundName } from '../lib/backgrounds';
 
 export interface NordicHomeContent {
@@ -28,8 +28,6 @@ export interface NordicHomeContent {
 		kicker: string;
 		heading: string;
 		subline: string;
-		ctaKnown: string;
-		ctaUnknown: string;
 		privacyLabel: string;
 		fineprint: string;
 		imageAlt: string;
@@ -49,8 +47,6 @@ interface Props {
 const { lang, bg, content } = Astro.props;
 const heroBgStyle = await backgroundStyle(bg);
 
-const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
-const appStoreCtaLabel = appStoreKnown ? content.hero.ctaKnown : content.hero.ctaUnknown;
 
 const faqSchema = {
 	'@context': 'https://schema.org',
@@ -82,9 +78,7 @@ const faqSchema = {
 				<p class="hero__subline">{content.hero.subline}</p>
 
 				<div class="hero__cta">
-					<Button placement="hero" variant="primary" href={APP_STORE_URL} disabled={!appStoreKnown} external={true}>
-						{appStoreCtaLabel}
-					</Button>
+					<StoreButton locale={lang} />
 					<Button variant="secondary" href={`/${lang}/privacy/`}>{content.hero.privacyLabel}</Button>
 				</div>
 

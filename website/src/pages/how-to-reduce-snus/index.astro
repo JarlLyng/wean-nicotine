@@ -1,12 +1,9 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import Button from '../../components/Button.astro';
+import StoreButton from '../../components/StoreButton.astro';
 import Card from '../../components/Card.astro';
 import Section from '../../components/Section.astro';
-import { APP_STORE_URL, isAppStoreUrlKnown, SITE_NAME } from '../../lib/site';
 
-const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
-const appStoreCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming soon on the App Store';
 ---
 
 <Layout
@@ -146,9 +143,7 @@ const appStoreCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming s
 		<div class="container">
 			<h2>Start reducing your snus use today</h2>
 			<p>Wean Nicotine makes it simple with a daily allowance, one-tap tracking, and craving support.</p>
-			<Button placement="bottom-cta" variant="primary" href={APP_STORE_URL} disabled={!appStoreKnown} external={true}>
-				{appStoreCtaLabel}
-			</Button>
+			<StoreButton locale="en" placement="midpage" align="center" />
 		</div>
 	</section>
 </Layout>
