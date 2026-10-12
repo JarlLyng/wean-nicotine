@@ -56,10 +56,16 @@ xcrun simctl status_bar <UDID> override --time 9:41 --batteryState discharging -
 Reboot the simulator after the locale change. The status bar override does not survive a reboot,
 so set it last.
 
-## 3. The Today loop
+## 3. Light appearance
 
-Launch the app (each launch reseeds), start recording, tap Used a pouch once, wait about six
-seconds and stop with Ctrl-C:
+The site is light, so the captures are too. The app starts dark, and its Light Mode switch is
+stored with the plan, which the seed replaces on every launch. So after each launch, turn Light
+Mode on in Settings, go back to Today, and capture in that same session without relaunching.
+
+## 4. The Today loop
+
+Launch the app (each launch reseeds), turn on Light Mode (step 3), start recording, tap Used a
+pouch once, wait about six seconds and stop with Ctrl-C:
 
 ```bash
 xcrun simctl io <UDID> recordVideo --codec h264 --force today-raw.mov
@@ -76,18 +82,21 @@ swift scripts/encode-loop.swift today-raw.mov website/public/site/today-loop.mp4
 That gives a silent H.264 loop at 602 px wide of about 300 KB: 2 of 6, the tap, 3 of 6 with the
 undo toast and the optional trigger chips. The poster is the frame before the tap.
 
-## 4. The tour screens
+## 5. The tour screens
 
 ```bash
 xcrun simctl io <UDID> screenshot tour-today.png
 ```
 
-Take Today straight after a fresh launch, Progress with **Last Week** selected (a whole week,
-whatever day it is; This Week holds only the days so far), and Tools. Then scale them to the
-loop's width:
+Take Today after a fresh launch with Light Mode on and before any tap, Progress with **Last
+Week** selected (a whole week, whatever day it is; This Week holds only the days so far), and
+Tools. Then scale them to the loop's width:
 
 ```bash
 sips -s format jpeg -s formatOptions 82 --resampleWidth 602 tour-today.png --out website/src/assets/site/tour-today.jpg
 ```
 
 The app is not localized yet (#315), so the captures are English on every locale's page.
+
+The social card (`website/public/og-image.png`) uses `tour-today.jpg`, so remake it afterwards
+with `node website/scripts/make-social-card.mjs`.
