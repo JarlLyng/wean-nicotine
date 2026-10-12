@@ -2,6 +2,14 @@ import { StyleSheet, TextStyle, ViewStyle } from 'react-native';
 import type { useDesignTokens } from '@/lib/design';
 import { spacing, typography } from '@/lib/theme';
 
+/**
+ * A day above its plan: the accent at 40%, the same bar as any other day and
+ * never the error colour. Going over is met with calm (#398); the bar already
+ * shows it by reaching past the allowance line.
+ */
+export const abovePlanColor = (colors: ReturnType<typeof useDesignTokens>['colors']) =>
+  `${colors.primary}66`;
+
 /** Styles shared by the Progress cards: titles, the stat grid and money rows. */
 export const createProgressCardStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) =>
   StyleSheet.create({

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **A day above the plan is no longer red.** Progress draws it in a soft tint of the app's accent, and the legend says Within plan and Above plan. A week with more pouches than the last is stated without red, and the week's summary says how many days stayed within the plan instead of calling it a perfect week. (#398)
+
 ## [1.7.0] - 2026-10-04
 
 iOS build 25, submitted October 2026. Two additions in Settings, a fix for the guided tools, and a faster start.

@@ -4,7 +4,7 @@ import { Card } from '@/components/ui/Card';
 import { useDesignTokens } from '@/lib/design';
 import type { DailyBreakdown } from '@/lib/progress';
 import { spacing, typography } from '@/lib/theme';
-import { createProgressCardStyles } from './progress-styles';
+import { abovePlanColor, createProgressCardStyles } from './progress-styles';
 import { WeekBarChart } from './WeekBarChart';
 
 interface DailyUsageCardProps {
@@ -24,9 +24,9 @@ export const DailyUsageCard = memo(function DailyUsageCard({ data, style }: Dail
         <Text style={shared.cardTitle}>Daily Usage</Text>
         <View style={s.legendRow}>
           <View style={[s.legendDot, { backgroundColor: colors.primary }]} />
-          <Text style={s.legendText}>Under limit</Text>
-          <View style={[s.legendDot, { backgroundColor: colors.error }]} />
-          <Text style={s.legendText}>Over</Text>
+          <Text style={s.legendText}>Within plan</Text>
+          <View style={[s.legendDot, { backgroundColor: abovePlanColor(colors) }]} />
+          <Text style={s.legendText}>Above plan</Text>
           <View style={[s.legendDot, { backgroundColor: colors.border.default }]} />
           <Text style={s.legendText}>No data</Text>
           <View style={[s.legendDot, { backgroundColor: colors.border.subtle }]} />
