@@ -67,14 +67,13 @@ const appStoreAttrs = isAppStoreLink && !disabled ? storeTracking(placement ?? '
 		font-weight: var(--font-weight-bold);
 		letter-spacing: -0.01em;
 		text-decoration: none;
-		transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+		transition: border-color 0.2s ease;
 		cursor: pointer;
 		white-space: nowrap;
 	}
 
-	.btn:active {
-		transform: scale(0.96);
-	}
+	/* .btn.btn--x, not .btn--x: the kit gives every content link the text
+	   magenta (.ij-page a), and that selector would outrank a single class. */
 
 	/* IAMJARL focus ring: 2px outline, 2px offset. Visible only for keyboard /
 	   assistive nav, not mouse clicks. */
@@ -83,41 +82,36 @@ const appStoreAttrs = isAppStoreLink && !disabled ? storeTracking(placement ?? '
 		outline-offset: 2px;
 	}
 
-	.btn--primary {
-		background: var(--primary);
-		color: var(--on-primary);
-		border: 1px solid color-mix(in oklab, var(--primary), white 20%);
-		box-shadow: 0 10px 30px color-mix(in oklab, var(--primary), transparent 80%);
+	/* The identity's accent as a fill, with its on-colour: magenta and black
+	   (#396). The label underlines on hover rather than the button moving. */
+	.btn.btn--primary {
+		background: var(--accent);
+		color: var(--on-accent);
+		border: 1px solid transparent;
 	}
 
-	.btn--primary:hover {
-		transform: translateY(-4px);
-		box-shadow: 0 20px 40px color-mix(in oklab, var(--primary), transparent 70%);
-		background: color-mix(in oklab, var(--primary), white 10%);
+	.btn.btn--primary:hover {
+		text-decoration: underline;
+		text-underline-offset: 0.2em;
 	}
 
-	.btn--secondary {
-		background: var(--glass-bg);
-		backdrop-filter: blur(var(--glass-blur));
-		-webkit-backdrop-filter: blur(var(--glass-blur));
+	.btn.btn--secondary {
+		background: var(--surface);
 		color: var(--text-primary);
-		border: 1px solid var(--glass-border);
-		box-shadow: var(--shadow-premium);
+		border: 1px solid var(--border-default);
 	}
 
-	.btn--secondary:hover {
-		transform: translateY(-4px);
-		background: color-mix(in oklab, var(--glass-bg), white 20%);
-		border-color: color-mix(in oklab, var(--primary), transparent 50%);
+	.btn.btn--secondary:hover {
+		border-color: var(--accent);
 	}
 
-	.btn--ghost {
+	.btn.btn--ghost {
 		background: transparent;
 		color: var(--text-secondary);
 		border: 1px solid transparent;
 	}
 
-	.btn--ghost:hover {
+	.btn.btn--ghost:hover {
 		background: var(--bg-muted);
 		color: var(--text-primary);
 	}

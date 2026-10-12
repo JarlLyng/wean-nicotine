@@ -1,35 +1,27 @@
 ---
 export interface Props {
 	as?: 'div' | 'article';
-	/** Fade in on scroll. Off for cards that open a page, which sit above the fold (#381). */
-	reveal?: boolean;
 }
 
-const { as = 'div', reveal = true } = Astro.props;
+const { as = 'div' } = Astro.props;
 const Tag = as;
 ---
 
-<Tag class:list={['card', reveal && 'reveal']}>
+<Tag class="card">
 	<slot />
 </Tag>
 
 <style>
 	.card {
 		background: var(--glass-bg);
-		backdrop-filter: blur(var(--glass-blur));
-		-webkit-backdrop-filter: blur(var(--glass-blur));
 		border: 1px solid var(--glass-border);
 		border-radius: var(--radius-lg);
 		padding: var(--space-xxl);
-		box-shadow: var(--shadow-premium);
-		transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+		transition: border-color 0.2s ease;
 	}
 
 	.card:hover {
-		transform: translateY(-12px);
-		box-shadow: 0 40px 80px rgba(0, 0, 0, 0.12);
-		border-color: color-mix(in oklab, var(--primary), transparent 40%);
-		background: color-mix(in oklab, var(--glass-bg), white 5%);
+		border-color: var(--accent);
 	}
 </style>
 

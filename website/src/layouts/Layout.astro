@@ -1,14 +1,26 @@
 ---
+/**
+ * Every page's frame: head, <ij-nav>, the page, the guides and <ij-footer>.
+ *
+ * The site takes Wean's identity from the IAMJARL design system (#396): a misty
+ * grey-blue ground, charcoal text, magenta for strokes and Instrument Sans for
+ * headlines, light whatever the visitor's setting. The design system's files
+ * are copied into public/iamjarl-design/ by scripts/sync-design.mjs and served
+ * from this origin, so the site still loads nothing from a third party. The
+ * home pages are built from the marketing kit's sections (KitHome.astro); the
+ * other pages keep their own sections and take the identity through
+ * styles/tokens.css.
+ */
 import '../styles/global.css';
 import LanguageSwitcher from '../components/LanguageSwitcher.astro';
-import { APP_STORE_URL, COMPANY_NAME, SITE_NAME, SUPPORT_EMAIL } from '../lib/site';
 import StoreButton from '../components/StoreButton.astro';
+import { COMPANY_NAME, SITE_NAME } from '../lib/site';
 import smartAppBanner from '../store/wean-nicotine.head.html?raw';
-import { getLangFromUrl, useTranslations, useTranslatedPath } from '../i18n/utils';
+import crossLinks from '../design/cross-links.html?raw';
+import { getLangFromUrl, languageLinks, useTranslations, useTranslatedPath } from '../i18n/utils';
 import { languages } from '../i18n/ui';
-import { NORDIC_FOOTER } from '../i18n/footer-links';
+import { GUIDE_LINKS } from '../i18n/footer-links';
 import { translationsFor } from '../i18n/translations';
-import { storeTracking } from '../lib/analytics';
 
 export interface Props {
 	title?: string;
@@ -37,6 +49,12 @@ export interface Props {
 	 * every post was missing (#307).
 	 */
 	ogType?: 'website' | 'article';
+	/** More JSON-LD for this page, such as the home page's FAQPage. */
+	structuredData?: Record<string, unknown>[];
+	/** A line after the copyright in the footer's fineprint. */
+	fineprint?: string;
+	/** Hide the nav's Download button while this element is on screen. */
+	ctaAfter?: string;
 }
 
 const {
@@ -47,6 +65,9 @@ const {
 	availableLocales,
 	ogImage,
 	ogType = 'website',
+	structuredData = [],
+	fineprint,
+	ctaAfter,
 } = Astro.props;
 
 const lang = getLangFromUrl(Astro.url);
@@ -56,6 +77,9 @@ const translationSet = translationsFor(Astro.url.pathname);
 const localesForHreflang = translationSet ? Object.keys(translationSet) : (availableLocales ?? [lang]);
 const t = useTranslations(lang);
 const translatePath = useTranslatedPath(lang);
+const home = translatePath('/');
+const otherLanguages = languageLinks(Astro.url, localesForHreflang, translationSet).filter((l) => !l.isCurrent);
+const guides = GUIDE_LINKS[lang];
 
 const pageTitle = title ? `${title} | ${SITE_NAME}` : `${SITE_NAME}, Snus & Nicotine Pouch Reduction App`;
 const pageDescription =
@@ -77,7 +101,7 @@ const offers = import.meta.glob<Record<string, string>>('../store/*.offer.json',
 });
 const offer = offers[`../store/wean-nicotine.${lang}.offer.json`] ?? offers['../store/wean-nicotine.en.offer.json'];
 
-const structuredData: Record<string, unknown> = {
+const appData: Record<string, unknown> = {
 	'@context': 'https://schema.org',
 	'@type': 'MobileApplication',
 	name: SITE_NAME,
@@ -89,6 +113,7 @@ const structuredData: Record<string, unknown> = {
 	downloadUrl: offer.url,
 	installUrl: offer.url,
 };
+const year = new Date().getFullYear();
 ---
 
 <!doctype html>
@@ -104,9 +129,10 @@ const structuredData: Record<string, unknown> = {
 		<title>{pageTitle}</title>
 		<meta name="description" content={pageDescription} />
 		<link rel="canonical" href={canonicalUrl} />
+		<meta name="theme-color" content="#E6ECEF" />
 		<!-- Safari's Smart App Banner, from the design system's registry (#393) -->
 		<Fragment set:html={smartAppBanner} />
-		
+
 		{localesForHreflang.map((abbr) => (
 			<link
 				rel="alternate"
@@ -150,433 +176,108 @@ const structuredData: Record<string, unknown> = {
 		<meta name="twitter:image:alt" content={`${SITE_NAME}, reduce snus and nicotine pouches step by step`} />
 
 		<meta name="generator" content={Astro.generator} />
-		<script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+		{[appData, ...structuredData].map((data) => (
+			<script type="application/ld+json" set:html={JSON.stringify(data)} />
+		))}
+
+		<!-- The IAMJARL design system, one release, from this origin (scripts/sync-design.mjs).
+		     Light only: the identity sheet holds the page on grey-blue whatever the
+		     visitor's setting. The display face is preloaded for the first headline. -->
+		<link rel="preload" href="/iamjarl-design/fonts/instrument-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
+		<link rel="stylesheet" href="/iamjarl-design/css/tokens.css" />
+		<link rel="stylesheet" href="/iamjarl-design/identity/wean-nicotine.css" />
+		<link rel="stylesheet" href="/iamjarl-design/fonts/instrument-sans.css" />
+		<link rel="stylesheet" href="/iamjarl-design/kit/kit.css" />
+		<script type="module" src="/iamjarl-design/components/ij-nav.js"></script>
+		<script type="module" src="/iamjarl-design/components/ij-footer.js"></script>
+		<script type="module" src="/iamjarl-design/kit/kit.js"></script>
 
 		<!-- Umami Analytics (privacy-friendly, cookie-free) -->
 		<script defer src="https://umami-iamjarl.vercel.app/script.js" data-website-id="ab39d27c-ff32-49c4-b9e3-4c8407aad2b8"></script>
-
-		<!-- Typography is self-hosted via @fontsource. See styles/global.css.
-		     Removed the render-blocking Google Fonts <link> that previously
-		     stalled first paint and required preconnect hints. -->
-
-		<!-- The old raw-PNG hero preload was removed with #142: the hero now
-		     ships as hashed AVIF/WebP via astro:assets, so a fixed-URL preload
-		     would double-fetch (preload the PNG, render the AVIF). The <img>
-		     carries fetchpriority="high" instead, and the preload also fired
-		     wastefully on every non-home page. -->
-
-		<!-- Marks the document as script-capable before first paint. The
-		     `.reveal` hidden state hangs off this class (see global.css), so a
-		     browser with JavaScript off or blocked renders the content instead
-		     of an invisible page. -->
-		<script is:inline>
-			document.documentElement.classList.add('js');
-		</script>
-
-		<!-- Scroll Reveal Script -->
-		<script is:inline>
-			function handleReveal() {
-				const reveals = document.querySelectorAll('.reveal');
-				const observer = new IntersectionObserver((entries) => {
-					entries.forEach(entry => {
-						if (entry.isIntersecting) {
-							entry.target.classList.add('active');
-						}
-					});
-				}, { threshold: 0.1 });
-				
-				reveals.forEach(reveal => observer.observe(reveal));
-			}
-
-			// Run on initial load
-			document.addEventListener('DOMContentLoaded', handleReveal);
-			// Run on Astro page navigation if applicable
-			document.addEventListener('astro:page-load', handleReveal);
-		</script>
 	</head>
 
-	<body>
-		<a class="skip-link" href="#main">{t('nav.skip')}</a>
-
-		<header class="site-header">
-			<div class="container site-header__inner">
-				<a class="brand" href={translatePath('/')} aria-label={`${SITE_NAME} home`}>
-					<span class="brand__dot" aria-hidden="true"></span>
-					<span class="brand__name">{SITE_NAME}</span>
-				</a>
-
-				<button class="nav-toggle" aria-label={t('nav.toggle')} aria-controls="primary-nav" aria-expanded="false">
-					<span class="nav-toggle__bar"></span>
-					<span class="nav-toggle__bar"></span>
-					<span class="nav-toggle__bar"></span>
-				</button>
-
-				<nav class="nav" id="primary-nav" aria-label="Primary">
-					<a class="nav__link" href="/blog/">{t('nav.blog')}</a>
-					<a class="nav__link" href={translatePath('/privacy')}>{t('nav.privacy')}</a>
-					<a class="nav__link" href={translatePath('/support')}>{t('nav.support')}</a>
-					<LanguageSwitcher availableLocales={localesForHreflang} translations={translationSet} />
-					<StoreButton locale={lang} placement="nav" />
-				</nav>
-			</div>
-		</header>
-
-		<script is:inline>
-			const toggle = document.querySelector('.nav-toggle');
-			const nav = document.querySelector('.nav');
-			if (toggle && nav) {
-				const closeNav = (refocus) => {
-					if (!nav.classList.contains('nav--open')) return;
-					nav.classList.remove('nav--open');
-					toggle.classList.remove('nav-toggle--open');
-					toggle.setAttribute('aria-expanded', 'false');
-					// Send focus back to the control that opened it, so a keyboard
-					// user is not dropped at the top of the document.
-					if (refocus) toggle.focus();
-				};
-
-				toggle.addEventListener('click', () => {
-					const open = nav.classList.toggle('nav--open');
-					toggle.classList.toggle('nav-toggle--open', open);
-					toggle.setAttribute('aria-expanded', String(open));
-				});
-
-				nav.querySelectorAll('a').forEach(link => {
-					// Following a link leaves the page, so do not steal focus.
-					link.addEventListener('click', () => closeNav(false));
-				});
-
-				// Escape closes it. Deliberately NOT a modal focus trap: this is
-				// ordinary navigation, and trapping focus in it would be worse
-				// than leaving it open (see #302).
-				document.addEventListener('keydown', (e) => {
-					if (e.key === 'Escape') closeNav(true);
-				});
-			}
-		</script>
+	<body class="ij-page">
+		<ij-nav label={t('nav.label')} skip-to="main" cta-after={ctaAfter}>
+			<a slot="brand" href={home}>Wean</a>
+			<a slot="links" href={`${home}#how`}>{t('nav.how')}</a>
+			<a slot="links" href={`${home}#plan`}>{t('nav.plan')}</a>
+			<a slot="links" href={`${home}#faq`}>{t('nav.faq')}</a>
+			<LanguageSwitcher availableLocales={localesForHreflang} translations={translationSet} />
+			<StoreButton locale={lang} placement="nav" />
+		</ij-nav>
 
 		<main id="main">
 			<slot />
 		</main>
 
-		<footer class="site-footer">
-			<div class:list={['container', 'site-footer__grid', { 'site-footer__grid--compact': lang !== 'en' }]}>
-				<div class="site-footer__col">
-					<p class="footer-heading">{SITE_NAME}</p>
-					<a href="/blog/">{t('nav.blog')}</a>
-					<a href={translatePath('/privacy')}>{t('nav.privacy')}</a>
-					<a href={translatePath('/support')}>{t('nav.support')}</a>
-					<a href={APP_STORE_URL} target="_blank" rel="noopener noreferrer" {...storeTracking('footer', lang)}>App Store</a>
-				</div>
-				{/* Resources/Guides link to EN-only SEO landing pages (see #98),
-				    so they're hidden on DA/SV/NO to avoid yanking the user back
-				    to English. Localize these pages first to surface them here. */}
-				{NORDIC_FOOTER[lang] && (
-					<div class="site-footer__col">
-						<p class="footer-heading">{NORDIC_FOOTER[lang].heading}</p>
-						{NORDIC_FOOTER[lang].links.map((link) => (
-							<a href={link.href}>{link.label}</a>
+		{/* The guides, linked from every page in the reader's own language, so
+		    each locale's cluster is reachable from anywhere in it (#303). English
+		    readers are not sent to Nordic pages, nor the other way (#98). */}
+		<nav class="ij-container site-guides" aria-label={guides.label}>
+			{guides.groups.map((group) => (
+				<div>
+					<p class="site-guides__heading">{group.heading}</p>
+					<ul>
+						{group.links.map((link) => (
+							<li><a href={link.href}>{link.label}</a></li>
 						))}
-					</div>
-				)}
-				{lang === 'en' && (
-					<Fragment>
-						<div class="site-footer__col">
-							<p class="footer-heading">Resources</p>
-							<a href="/snus-reduction-app/">Snus Reduction App</a>
-							<a href="/nicotine-pouch-reduction-app/">Nicotine Pouch Reduction</a>
-							<a href="/how-to-reduce-snus/">How to Reduce Snus</a>
-							<a href="/how-to-quit-nicotine-pouches/">How to Quit Nicotine Pouches</a>
-							<a href="/wean-vs-habit-tracker/">Wean vs. Habit Tracker</a>
-						</div>
-						<div class="site-footer__col">
-							<p class="footer-heading">Guides</p>
-							<a href="/how-to-handle-nicotine-cravings/">Handle Nicotine Cravings</a>
-							<a href="/taper-nicotine/">Taper Nicotine</a>
-							<a href="/gradual-reduction-vs-cold-turkey/">Gradual vs. Cold Turkey</a>
-							<a href="/track-snus-use/">Track Snus Use</a>
-							<a href="/track-nicotine-pouches/">Track Nicotine Pouches</a>
-							<a href="/private-quit-nicotine-app/">Private Quit App</a>
-						</div>
-					</Fragment>
-				)}
-				<div class="site-footer__col">
-					<p class="footer-heading">{t('footer.more')}</p>
-					<a href="https://iamjarl.com" target="_blank" rel="noopener noreferrer">IAMJARL Portfolio</a>
-					<a href="https://wodrounds.iamjarl.com" target="_blank" rel="noopener noreferrer">WODrounds</a>
-					<a href="https://madebyhuman.iamjarl.com" target="_blank" rel="noopener noreferrer">Made by Human</a>
+					</ul>
 				</div>
-			</div>
-			<div class="container site-footer__bottom">
-				<p class="fineprint">
-					© {new Date().getFullYear()} <a href="https://iamjarl.com" target="_blank" rel="noopener noreferrer">{COMPANY_NAME}</a>. All rights reserved. {t('footer.tagline')}
-				</p>
-				<div class="footer-meta">
-					<LanguageSwitcher availableLocales={localesForHreflang} translations={translationSet} />
-					<p class="fineprint"><a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a></p>
-				</div>
-			</div>
-		</footer>
+			))}
+		</nav>
+
+		<ij-footer app="wean-nicotine" tagline={t('footer.tagline')}>
+			<a slot="links" href="/blog/">{t('nav.blog')}</a>
+			<a slot="links" href={translatePath('/privacy')}>{t('nav.privacy')}</a>
+			<a slot="links" href={translatePath('/support')}>{t('nav.support')}</a>
+			{otherLanguages.map((l) => (
+				<a slot="links" href={l.href} hreflang={l.code} lang={l.code}>{l.label}</a>
+			))}
+			<Fragment set:html={crossLinks} />
+			<p slot="fineprint">© {year} <a href="https://iamjarl.com">{COMPANY_NAME}</a>.{fineprint && ` ${fineprint}`}</p>
+			{/* No slot on purpose: shown only if the component never loads. */}
+			<p>
+				<a href="/blog/">{t('nav.blog')}</a> · <a href={translatePath('/privacy')}>{t('nav.privacy')}</a> ·
+				<a href={translatePath('/support')}>{t('nav.support')}</a> · © {year} {COMPANY_NAME}.{fineprint && ` ${fineprint}`}
+			</p>
+		</ij-footer>
 	</body>
 </html>
 
 <style>
-	.skip-link {
-		position: absolute;
-		left: -9999px;
-		top: auto;
-		width: 1px;
-		height: 1px;
-		overflow: hidden;
+	/* A link inside the fineprint is not slotted itself, so neither the kit nor
+	   <ij-footer> colours it; it takes the fineprint's own colour. */
+	ij-footer [slot='fineprint'] a {
+		color: inherit;
 	}
-	.skip-link:focus {
-		position: fixed;
-		top: var(--space-sm);
-		left: var(--space-sm);
-		width: auto;
-		height: auto;
-		padding: var(--space-sm) var(--space-md);
-		background: var(--bg-app);
-		color: var(--primary);
-		border: 1px solid var(--primary);
-		border-radius: var(--radius-md);
-		z-index: 100;
-		font-weight: 600;
-	}
-
-	.site-header {
-		position: sticky;
-		top: 0;
-		z-index: 50;
-		background: linear-gradient(
-			to bottom,
-			color-mix(in oklab, var(--bg-app), transparent 10%),
-			color-mix(in oklab, var(--bg-app), transparent 25%)
-		);
-		backdrop-filter: blur(24px);
-		-webkit-backdrop-filter: blur(24px);
-		border-bottom: 1px solid color-mix(in oklab, var(--border-subtle), transparent 40%);
-		box-shadow: 0 4px 24px color-mix(in oklab, #000000, transparent 97%);
-	}
-
-	.site-header__inner {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: var(--space-lg);
-		padding-top: var(--space-lg);
-		padding-bottom: var(--space-lg);
-	}
-
-	.brand {
-		display: inline-flex;
-		align-items: center;
-		gap: 10px;
-		text-decoration: none;
-	}
-
-	.brand__dot {
-		width: 12px;
-		height: 12px;
-		border-radius: 9999px;
-		background: var(--primary);
-		box-shadow: 0 0 0 6px color-mix(in oklab, var(--primary), transparent 75%);
-	}
-
-	.brand__name {
-		font-weight: 700;
-		letter-spacing: -0.02em;
-	}
-
-	.nav-toggle {
-		display: none;
-		background: none;
-		border: none;
-		padding: var(--space-sm);
-		cursor: pointer;
-		flex-direction: column;
-		gap: 5px;
-		z-index: 60;
-	}
-
-	.nav-toggle__bar {
-		display: block;
-		width: 22px;
-		height: 2px;
-		background: var(--text-primary);
-		border-radius: 2px;
-		transition: transform 0.3s ease, opacity 0.3s ease;
-	}
-
-	.nav-toggle--open .nav-toggle__bar:nth-child(1) {
-		transform: translateY(7px) rotate(45deg);
-	}
-	.nav-toggle--open .nav-toggle__bar:nth-child(2) {
-		opacity: 0;
-	}
-	.nav-toggle--open .nav-toggle__bar:nth-child(3) {
-		transform: translateY(-7px) rotate(-45deg);
-	}
-
-	.nav {
-		display: flex;
-		align-items: center;
-		gap: var(--space-lg);
-	}
-
-	.nav__link {
-		color: var(--text-secondary);
-		font-weight: 600;
-	}
-
-	.nav__link:hover {
-		color: var(--text-primary);
-		text-decoration: none;
-	}
-
-	/* Switch to the compact menu well before the header runs out of room.
-	   At 700px the desktop header still rendered, and at 768px the App Store
-	   CTA ended ~84px outside the viewport, hidden only by the body's
-	   overflow-x: hidden. Keep this in step with LanguageSwitcher's own
-	   breakpoint. */
-	@media (max-width: 960px) {
-		.nav-toggle {
-			display: flex;
-		}
-
-		.nav {
-			display: none;
-			position: absolute;
-			top: 100%;
-			left: 0;
-			right: 0;
-			flex-direction: column;
-			align-items: stretch;
-			gap: 0;
-			background: var(--bg-app);
-			border-bottom: 1px solid var(--border-subtle);
-			box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
-			padding: var(--space-sm) var(--space-xl);
-		}
-
-		.nav--open {
-			display: flex;
-		}
-
-		.nav__link {
-			padding: var(--space-md) 0;
-			border-bottom: 1px solid var(--border-subtle);
-		}
-
-		.nav :global(.btn) {
-			margin-top: var(--space-md);
-			margin-bottom: var(--space-md);
-			text-align: center;
-		}
-	}
-
-	main {
-		min-height: calc(100vh - 120px);
-	}
-
-	.site-footer {
-		border-top: 1px solid var(--border-subtle);
-		padding: var(--space-huge) 0 var(--space-xxl);
-	}
-
-	.site-footer__grid {
+	.site-guides {
 		display: grid;
-		grid-template-columns: repeat(4, 1fr);
-		gap: var(--space-xxl);
-		padding-bottom: var(--space-xxl);
-		border-bottom: 1px solid var(--border-subtle);
-		margin-bottom: var(--space-xl);
+		grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+		gap: var(--ij-spacing-xxl);
+		padding-block: var(--ij-mkt-space-block) 0;
+		border-top: 1px solid var(--ij-color-border-subtle);
+		margin-top: var(--ij-mkt-space-section);
 	}
-
-	/* Non-EN locales drop the two EN-only link columns and gain one per-locale
-	   Guides column (#303), so they run brand + Guides + "More from IAMJARL".
-	   Three tracks, not the four English uses, so they are not stranded in the
-	   first three. Was 2 before the Guides column existed. */
-	.site-footer__grid--compact {
-		grid-template-columns: repeat(3, 1fr);
+	.site-guides__heading {
+		margin: 0 0 var(--ij-spacing-sm);
+		font-size: var(--ij-mkt-small-size);
+		font-weight: var(--ij-font-weight-semibold);
+		color: var(--ij-color-text-primary);
 	}
-
-	.site-footer__col {
-		display: flex;
-		flex-direction: column;
-		gap: var(--space-sm);
+	.site-guides ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: var(--ij-spacing-sm);
 	}
-
-	.site-footer__col a {
-		color: var(--text-secondary);
-		font-size: var(--font-size-sm);
-	}
-
-	.site-footer__col a:hover {
-		color: var(--text-primary);
+	.site-guides a {
+		font-size: var(--ij-mkt-small-size);
+		color: var(--ij-color-text-secondary);
 		text-decoration: none;
 	}
-
-	.footer-heading {
-		margin: 0 0 var(--space-sm);
-		font-weight: 700;
-		font-size: var(--font-size-sm);
-		color: var(--text-primary);
-	}
-
-	.site-footer__bottom {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		flex-wrap: wrap;
-		gap: var(--space-lg);
-	}
-
-	.footer-meta {
-		display: flex;
-		align-items: center;
-		gap: var(--space-lg);
-		flex-wrap: wrap;
-	}
-
-	.fineprint {
-		margin: 0;
-		color: var(--text-tertiary);
-		font-size: 13px;
-	}
-
-	.fineprint a {
-		color: var(--text-tertiary);
-	}
-
-	.fineprint a:hover {
-		color: var(--text-primary);
-	}
-
-	.disabled-link {
-		color: var(--text-tertiary);
-		font-size: var(--font-size-sm);
-	}
-
-	@media (max-width: 900px) {
-		.site-footer__grid {
-			grid-template-columns: repeat(2, 1fr);
-		}
-	}
-
-	@media (max-width: 700px) {
-		.site-footer__grid {
-			grid-template-columns: 1fr;
-			text-align: center;
-		}
-
-		.site-footer__col {
-			align-items: center;
-		}
-
-		.site-footer__bottom {
-			flex-direction: column;
-			text-align: center;
-		}
+	.site-guides a:hover {
+		color: var(--ij-color-accent-text);
+		text-decoration: underline;
 	}
 </style>

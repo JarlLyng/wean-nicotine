@@ -11,11 +11,26 @@
  * Owner-approved, kept word for word: the English headline, the English line
  * under it and the English maker note. The Danish maker note needs the
  * owner's approval before it ships.
+ *
+ * The English section headings are the ones in the design system's Wean
+ * example (iamjarl-design kit/wean.html); the meta titles and descriptions
+ * are the old home pages', so search snippets stay as they were.
  */
 import type { Staircase } from '../lib/staircase';
 import type { Locale } from './translations';
 
 export interface HomeCopy {
+  /** The page's title and description. Unchanged from the old home pages, so search snippets stay. */
+  meta: { title?: string; description: string };
+  /** Section headings and labels that are not in a section's own copy. */
+  sections: {
+    statements: string;
+    tour: string;
+    assurances: string;
+    /** The maker note's section has no heading, so it gets an accessible name. */
+    maker: string;
+    closing: string;
+  };
   hero: {
     headline: string;
     lede: string;
@@ -34,8 +49,6 @@ export interface HomeCopy {
     paceNote: string;
     /** The one honest line, in place of a source. No health claims. */
     honest: string;
-    axisPerDay: string;
-    axisWeek: string;
     tableCaption: string;
     tableWeeks: string;
     tablePerDay: string;
@@ -62,6 +75,17 @@ const oneADayWeeks = (s: Staircase) => {
 
 export const HOME_COPY: Record<Locale, HomeCopy> = {
   en: {
+    meta: {
+      description:
+        'Reduce snus and nicotine pouches gradually with a calm, private app. Track your daily allowance, log use in one tap, and get support when cravings hit.',
+    },
+    sections: {
+      statements: 'Cutting down, gently.',
+      tour: 'Three screens, all you need.',
+      assurances: 'Private, and paid for once.',
+      maker: 'A note from the maker',
+      closing: 'Download Wean',
+    },
     hero: {
       headline: 'A gentler way to quit nicotine.',
       lede: 'Cut down on snus and nicotine pouches a little at a time, at a pace you choose. Everything stays on your iPhone, and a day over the limit is met with calm.',
@@ -111,8 +135,6 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
       paceNote: 'Your own pace can be anywhere from 3% to 15% a week.',
       honest:
         'Wean is made for people who would rather cut down than stop from one day to the next.',
-      axisPerDay: 'Pouches a day',
-      axisWeek: 'Week',
       tableCaption: 'The example, week by week',
       tableWeeks: 'Weeks',
       tablePerDay: 'Allowance',
@@ -138,7 +160,7 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
           href: '/gradual-reduction-vs-cold-turkey/',
         },
         {
-          title: 'When a craving comes',
+          title: 'Handling cravings',
           text: 'Six techniques for the moment a craving arrives.',
           href: '/how-to-handle-nicotine-cravings/',
         },
@@ -223,6 +245,18 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
   },
 
   da: {
+    meta: {
+      title: 'Nedtrapning af Snus & Nikotinposer App',
+      description:
+        'Skær gradvist ned for snus og nikotinposer med en rolig, privat app. Følg din daglige kvote, registrer forbrug med ét tryk, og få støtte, når trangen melder sig.',
+    },
+    sections: {
+      statements: 'Skær ned, stille og roligt.',
+      tour: 'Tre skærme, alt hvad du behøver.',
+      assurances: 'Privat, og betalt én gang.',
+      maker: 'Et par ord fra udvikleren',
+      closing: 'Hent Wean',
+    },
     hero: {
       headline: 'En blidere måde at stoppe med nikotin på.',
       lede: 'Skær ned på snus og nikotinposer lidt ad gangen, i et tempo du selv vælger. Alt bliver på din iPhone, og en dag over grænsen bliver mødt med ro.',
@@ -270,8 +304,6 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
       paceNote: 'Dit eget tempo kan ligge alt fra 3 % til 15 % om ugen.',
       honest:
         'Wean er lavet til dem, der hellere vil skære ned end stoppe fra den ene dag til den anden.',
-      axisPerDay: 'Poser om dagen',
-      axisWeek: 'Uge',
       tableCaption: 'Eksemplet uge for uge',
       tableWeeks: 'Uger',
       tablePerDay: 'Kvote',
@@ -297,7 +329,7 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
           href: '/da/trappe-ned-snus/',
         },
         {
-          title: 'Når trangen kommer',
+          title: 'Hjælp til nikotintrang',
           text: 'Seks teknikker til det øjeblik, trangen melder sig.',
           href: '/da/nikotin-trang-hjaelp/',
         },
@@ -388,6 +420,18 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
   },
 
   sv: {
+    meta: {
+      title: 'Minska Snus & Nikotinpåsar | App för Nedtrappning',
+      description:
+        'Trappa ner på snus och nikotinpåsar gradvis med en lugn, privat app. Följ din dagliga kvot, registrera med ett klick och få stöd när suget slår till.',
+    },
+    sections: {
+      statements: 'Dra ner, i lugn och ro.',
+      tour: 'Tre skärmar, allt du behöver.',
+      assurances: 'Privat, och betalt en gång.',
+      maker: 'Några ord från utvecklaren',
+      closing: 'Hämta Wean',
+    },
     hero: {
       headline: 'Ett mildare sätt att sluta med nikotin.',
       lede: 'Minska snus och nikotinpåsar lite i taget, i en takt du själv väljer. Allt stannar på din iPhone, och en dag över gränsen möts med lugn.',
@@ -435,8 +479,6 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
         `Från ${s.baseline} om dagen når ransonen noll efter ${s.weeksToZero} veckor. Stegen är stora i början och små senare, med ${oneADayWeeks(s)} veckor på en om dagen på slutet.`,
       paceNote: 'Din egen takt kan ligga var som helst från 3 % till 15 % i veckan.',
       honest: 'Wean är gjort för den som hellre vill minska än sluta från en dag till nästa.',
-      axisPerDay: 'Prillor om dagen',
-      axisWeek: 'Vecka',
       tableCaption: 'Exemplet vecka för vecka',
       tableWeeks: 'Veckor',
       tablePerDay: 'Ranson',
@@ -462,7 +504,7 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
           href: '/sv/trappa-ner-snus/',
         },
         {
-          title: 'När suget kommer',
+          title: 'Hjälp mot nikotinsug',
           text: 'Sex tekniker för stunden då suget kommer.',
           href: '/sv/nikotinsug-hjalp/',
         },
@@ -553,6 +595,18 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
   },
 
   no: {
+    meta: {
+      title: 'Nedtrapping av Snus & Nikotinposer App',
+      description:
+        'Trapp gradvis ned på snus og nikotinposer med en rolig, privat app. Følg dagens kvote, logg bruk med ett trykk, og få hjelp med suget.',
+    },
+    sections: {
+      statements: 'Kutt ned, i ro og mak.',
+      tour: 'Tre skjermer, alt du trenger.',
+      assurances: 'Privat, og betalt én gang.',
+      maker: 'Noen ord fra utvikleren',
+      closing: 'Last ned Wean',
+    },
     hero: {
       headline: 'En mildere måte å slutte med nikotin på.',
       lede: 'Kutt ned på snus og nikotinposer litt om gangen, i et tempo du velger selv. Alt blir på iPhonen din, og en dag over grensen blir møtt med ro.',
@@ -600,8 +654,6 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
       paceNote: 'Ditt eget tempo kan ligge hvor som helst fra 3 % til 15 % i uken.',
       honest:
         'Wean er laget for dem som heller vil kutte ned enn slutte fra den ene dagen til den andre.',
-      axisPerDay: 'Poser om dagen',
-      axisWeek: 'Uke',
       tableCaption: 'Eksempelet uke for uke',
       tableWeeks: 'Uker',
       tablePerDay: 'Kvote',
@@ -627,7 +679,7 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
           href: '/no/trappe-ned-snus/',
         },
         {
-          title: 'Når suget kommer',
+          title: 'Hjelp mot nikotinsug',
           text: 'Seks teknikker for øyeblikket når suget melder seg.',
           href: '/no/nikotinsug-hjelp/',
         },

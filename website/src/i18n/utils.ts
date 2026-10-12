@@ -1,4 +1,4 @@
-import { ui, defaultLang } from './ui';
+import { ui, defaultLang, languages } from './ui';
 
 export function getLangFromUrl(url: URL) {
   const [, lang] = url.pathname.split('/');
@@ -40,4 +40,29 @@ export function useTranslatedPath(lang: keyof typeof ui) {
 
     return !isDefault ? `/${l}${unlocalizedPath}` : unlocalizedPath;
   };
+}
+
+/**
+ * Where each language's version of this page is. A locale the page is not
+ * available in links to that locale's home instead of the translated path,
+ * which would 404; a guide whose translations live at other slugs links to
+ * them (`translations`).
+ */
+export function languageLinks(
+  url: URL,
+  availableLocales: string[],
+  translations?: Partial<Record<string, string>>,
+) {
+  const current = getLangFromUrl(url);
+  const translatePath = useTranslatedPath(current);
+  return Object.entries(languages).map(([code, label]) => {
+    const href =
+      translations?.[code] ??
+      (availableLocales.includes(code)
+        ? translatePath(url.pathname, code)
+        : code === defaultLang
+          ? '/'
+          : `/${code}/`);
+    return { code, label, href, isCurrent: code === current };
+  });
 }

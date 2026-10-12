@@ -232,15 +232,17 @@ Canonical implementation: [`lib/notifications.ts`](../lib/notifications.ts)
 
 ### Key files
 
-- [`website/src/lib/site.ts`](../website/src/lib/site.ts): site metadata, constants, and **Campaign Tracking logic** (`getCampaignAppStoreUrl`)
-- [`website/src/layouts/SeoLandingLayout.astro`](../website/src/layouts/SeoLandingLayout.astro): standard programmatic wrapper for high-intent SEO pages
-- [`website/src/components/AppStoreBadge.astro`](../website/src/components/AppStoreBadge.astro): localized official Apple Store badges (SVG)
-- `website/src/pages/index.astro`: homepage
-- `website/src/pages/privacy.astro`: privacy policy
-- `website/src/pages/support.astro`: support page
-- `website/src/pages/*/index.astro`: SEO landing pages
-- `website/src/pages/da`, `website/src/pages/no`, `website/src/pages/sv`: localized folders with SEO-optimized pathnames
-- [`website/src/components/NordicHome.astro`](../website/src/components/NordicHome.astro): shared da/sv/no home template — those three `index.astro` pages are content-only objects passed in (the EN home is standalone; it's structurally richer). Hero images are optimized to AVIF/WebP via `astro:assets` (`Picture`) from `website/src/assets/`.
+The site is light only, on Wean's identity from the IAMJARL design system (#396): a misty grey-blue ground, charcoal text, the icon's magenta, Instrument Sans for headlines.
+
+- [`website/src/layouts/Layout.astro`](../website/src/layouts/Layout.astro): every page's frame: the head (meta, hreflang, JSON-LD), `<ij-nav>`, the guides list and `<ij-footer>`.
+- [`website/src/components/KitHome.astro`](../website/src/components/KitHome.astro): the home page in all four languages, the site brief's eight sections on the design system's marketing kit, with the coast drawings inlined. Its copy is in [`website/src/i18n/home-copy.ts`](../website/src/i18n/home-copy.ts); the Today loop and tour screens are made as in [`SITE_CAPTURES.md`](./SITE_CAPTURES.md).
+- [`website/src/components/Staircase.astro`](../website/src/components/Staircase.astro) and [`website/src/lib/staircase.ts`](../website/src/lib/staircase.ts): the taper as a staircase, computed with the app's own `lib/taper-plan.ts` and drawn in the drawings' loose stroke at build time.
+- [`website/scripts/sync-design.mjs`](../website/scripts/sync-design.mjs): copies one design-system release into the site (`public/iamjarl-design/`, `src/design/`, `src/store/`), checking each file against the release's SRI hashes. The site serves it from its own origin and loads nothing from a third party.
+- [`website/src/components/StoreButton.astro`](../website/src/components/StoreButton.astro): the store button from the design system's registry: price, OS floor, campaign link and the `store-click` event.
+- [`website/src/styles/tokens.css`](../website/src/styles/tokens.css): the site's own variable names, pointed at the design system's tokens, for the pages outside the home page.
+- [`website/src/layouts/SeoLandingLayout.astro`](../website/src/layouts/SeoLandingLayout.astro): the wrapper for the guide and landing pages.
+- [`website/scripts/check-build.mjs`](../website/scripts/check-build.mjs): post-build checks for hreflang, links, orphans, store-link tracking and third-party loads (`npm run check` in `website/`).
+- `website/src/pages/da`, `website/src/pages/no`, `website/src/pages/sv`: the localized pages, with guides at their own slugs ([`translations.ts`](../website/src/i18n/translations.ts)).
 
 ### Strategy linkage
 
@@ -250,7 +252,7 @@ The website uses a **programmatic SEO approach**:
 
 1.  New landing pages are created in localized folders (e.g., `/da/stop-med-snus-app/`).
 2.  Each page uses `SeoLandingLayout.astro`, which handles standard headers, CTAs, and SEO metadata.
-3.  Each layout instance is provided a `campaignToken` (e.g., `seo_da_app`), which is used by `getCampaignAppStoreUrl` to append Apple Search Ads / App Store Connect metrics (`pt` and `ct` parameters).
+3.  Every App Store link is the design system's store fragment (`StoreButton.astro`), with one campaign for the whole site (`pt`, `ct=site`, `mt=8`, #366). Where a click came from is measured by the `store-click` event's placement, and `check-build.mjs` fails a link without it.
 
 SEO/ASO strategy, keyword targets, competitive positioning, and channel plans are tracked in the private IAMJARL strategy hub — see `WeanNicotine/` in [JarlLyng/iamjarl-strategy](https://github.com/JarlLyng/iamjarl-strategy) (access-restricted). Anything you wouldn't want a competitor reading lives there, not here.
 
