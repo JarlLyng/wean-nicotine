@@ -147,7 +147,7 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
     assurances: {
       logs: {
         title: 'Your logs stay on your iPhone',
-        text: 'There is no account to make and nothing to sync. Your pouches, your plan and your settings live on the phone, and you can export them yourself as a file.',
+        text: 'There is no account to make and nothing to sync. Your pouches, your plan and your settings live on the phone, and you can export your log yourself as a file.',
       },
       paid: {
         title: 'Paid for once',
@@ -306,7 +306,7 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
     assurances: {
       logs: {
         title: 'Din log bliver på din iPhone',
-        text: 'Der er ingen konto at oprette og intet at synkronisere. Dine poser, din plan og dine indstillinger ligger på telefonen, og du kan selv eksportere dem som en fil.',
+        text: 'Der er ingen konto at oprette og intet at synkronisere. Dine poser, din plan og dine indstillinger ligger på telefonen, og du kan selv eksportere din log som en fil.',
       },
       paid: {
         title: 'Betalt én gang',
@@ -471,7 +471,7 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
     assurances: {
       logs: {
         title: 'Din logg stannar på din iPhone',
-        text: 'Det finns inget konto att skapa och inget att synka. Dina prillor, din plan och dina inställningar finns på telefonen, och du kan själv exportera dem som en fil.',
+        text: 'Det finns inget konto att skapa och inget att synka. Dina prillor, din plan och dina inställningar finns på telefonen, och du kan själv exportera din logg som en fil.',
       },
       paid: {
         title: 'Betalt en gång',
@@ -636,7 +636,7 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
     assurances: {
       logs: {
         title: 'Loggen din blir på iPhonen',
-        text: 'Det er ingen konto å opprette og ingenting å synkronisere. Posene dine, planen og innstillingene ligger på telefonen, og du kan selv eksportere dem som en fil.',
+        text: 'Det er ingen konto å opprette og ingenting å synkronisere. Posene dine, planen og innstillingene ligger på telefonen, og du kan selv eksportere loggen din som en fil.',
       },
       paid: {
         title: 'Betalt én gang',
