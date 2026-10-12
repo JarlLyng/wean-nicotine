@@ -61,7 +61,7 @@ export const WeeklyStatsCard = memo(function WeeklyStatsCard({
             {Number(week.daysUnderLimit ?? 0) + Number(week.daysOverLimit ?? 0)}
           </Text>
           <Text style={shared.statLabel}>
-            {Number(week.daysWithoutData ?? 0) > 0 ? 'Days logged' : 'Days on track'}
+            {Number(week.daysWithoutData ?? 0) > 0 ? 'Days logged' : 'Days within plan'}
           </Text>
         </View>
         <View style={shared.statBox}>
@@ -74,7 +74,13 @@ export const WeeklyStatsCard = memo(function WeeklyStatsCard({
       {/* Trend indicator */}
       {trend && (
         <View style={s.trendRow}>
-          <Text style={[s.trendArrow, { color: trend.isPositive ? colors.success : colors.error }]}>
+          {/* A week above the last is stated, not alarmed (#398). */}
+          <Text
+            style={[
+              s.trendArrow,
+              { color: trend.isPositive ? colors.success : colors.text.secondary },
+            ]}
+          >
             {trend.arrow} {trend.label}
           </Text>
           <Text style={s.trendLabel}>

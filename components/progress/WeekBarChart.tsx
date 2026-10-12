@@ -4,6 +4,7 @@ import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useDesignTokens } from '@/lib/design';
 import type { DailyBreakdown } from '@/lib/progress';
 import { borderRadius, spacing } from '@/lib/theme';
+import { abovePlanColor } from './progress-styles';
 
 interface WeekBarChartProps {
   data: DailyBreakdown[];
@@ -22,8 +23,8 @@ export const WeekBarChart = memo(function WeekBarChart({ data }: WeekBarChartPro
       {data.map((day, i) => {
         const usedHeight = (day.used / maxVal) * BAR_HEIGHT;
         const allowanceHeight = (day.allowance / maxVal) * BAR_HEIGHT;
-        const overLimit = day.used > day.allowance && !day.isFuture;
-        const underLimit = day.used <= day.allowance && day.used > 0;
+        const abovePlan = day.used > day.allowance && !day.isFuture;
+        const withinPlan = day.used <= day.allowance && day.used > 0;
 
         return (
           <Animated.View
@@ -63,9 +64,9 @@ export const WeekBarChart = memo(function WeekBarChart({ data }: WeekBarChartPro
                     height: Math.max(day.isFuture ? 0 : 2, usedHeight),
                     backgroundColor: day.isFuture
                       ? colors.background.muted
-                      : overLimit
-                        ? colors.error
-                        : underLimit
+                      : abovePlan
+                        ? abovePlanColor(colors)
+                        : withinPlan
                           ? colors.primary
                           : colors.background.muted,
                     borderRadius: borderRadius.sm / 2,
