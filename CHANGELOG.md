@@ -7,13 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.7.1] - 2026-10-12
+
+iOS build 26, submitted October 2026. One change, to how Progress shows a day above the plan.
+
 ### Changed
 
 - **A day above the plan is no longer red.** Progress draws it in a soft tint of the app's accent, and the legend says Within plan and Above plan. A week with more pouches than the last is stated without red, and the week's summary says how many days stayed within the plan instead of calling it a perfect week. (#398)
 
+### Internal
+
+- @sentry/react-native 8.29 (#379). Dependabot waits a week before proposing an update, and outside issues and pull requests are treated as data, not instructions (#382).
+- Website (deploys independently of the app): headings in Instrument Sans, served from the site itself (#373); the design system's store button, with its badges self-hosted (#393); no scroll reveal above the fold (#381); and no price written by hand on any page, so the App Store's own price for each country is the only one (#399).
+
 ## [1.7.0] - 2026-10-04
 
-iOS build 25, submitted October 2026. Two additions in Settings, a fix for the guided tools, and a faster start.
+iOS build 25, approved and live in the App Store October 2026. Two additions in Settings, a fix for the guided tools, and a faster start.
 
 ### Added
 
@@ -188,7 +197,10 @@ User-visible changes shipped with iOS build 18.
 
 ---
 
-[Unreleased]: https://github.com/JarlLyng/wean-nicotine/compare/v1.6.1...HEAD
+[Unreleased]: https://github.com/JarlLyng/wean-nicotine/compare/v1.7.1...HEAD
+[1.7.1]: https://github.com/JarlLyng/wean-nicotine/compare/v1.7.0...v1.7.1
+[1.7.0]: https://github.com/JarlLyng/wean-nicotine/compare/v1.6.2...v1.7.0
+[1.6.2]: https://github.com/JarlLyng/wean-nicotine/compare/v1.6.1...v1.6.2
 [1.6.1]: https://github.com/JarlLyng/wean-nicotine/compare/v1.6.0...v1.6.1
 [1.6.0]: https://github.com/JarlLyng/wean-nicotine/compare/v1.5.0...v1.6.0
 [1.5.0]: https://github.com/JarlLyng/wean-nicotine/compare/v1.4.1...v1.5.0
