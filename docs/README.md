@@ -95,6 +95,7 @@ This makes the docs easier for LLMs to classify correctly and reduces accidental
 - [`SENTRY.md`](./SENTRY.md): Sentry setup, privacy hardening, and troubleshooting.
 - [`APP_STORE_METADATA.md`](./APP_STORE_METADATA.md): App Store listing copy and metadata for all storefronts.
 - [`PRIVACY_APP_STORE.md`](./PRIVACY_APP_STORE.md): App privacy answers for App Store Connect.
+- [`SITE_CAPTURES.md`](./SITE_CAPTURES.md): How the site's Today loop and tour screens are recorded from a capture build.
 - [`decisions/storage.md`](./decisions/storage.md): ADR for local persistence.
 
 ### At the repo root
