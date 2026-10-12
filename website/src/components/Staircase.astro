@@ -1,0 +1,121 @@
+---
+/**
+ * The taper as a staircase (#396), drawn from the app's own maths.
+ *
+ * The steps come from lib/staircase.ts, which calls the app's
+ * calculateDailyAllowance, getDisplayAllowance and estimateWeeksToZero. The
+ * line is the page's one magenta line and does not animate. The same plan is
+ * in the served HTML as a table, for screen readers and crawlers.
+ *
+ * The stroke is plain for now. When the design repo's coast drawings ship
+ * (iamjarl-design#75), the line takes their loose stroke.
+ */
+import { EXAMPLE_STAIRCASE } from '../lib/staircase';
+import { HOME_COPY } from '../i18n/home-copy';
+import type { Locale } from '../i18n/translations';
+
+interface Props {
+	locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = HOME_COPY[locale].staircase;
+const s = EXAMPLE_STAIRCASE;
+
+// Geometry: one column per week, plus one after zero so the last step reads.
+const W = 640;
+const H = 280;
+const pad = { left: 36, right: 16, top: 16, bottom: 36 };
+const cols = s.weeksToZero + 1;
+const r1 = (n: number) => Math.round(n * 10) / 10;
+const x = (week: number) => r1(pad.left + (week / cols) * (W - pad.left - pad.right));
+const y = (perDay: number) => r1(pad.top + (1 - perDay / s.baseline) * (H - pad.top - pad.bottom));
+
+let d = `M ${x(0)} ${y(s.steps[0].perDay)}`;
+for (const step of s.steps) {
+	d += ` V ${y(step.perDay)} H ${x(step.week + 1)}`;
+}
+
+const summary = copy.summary(s);
+const titleId = `staircase-title-${locale}`;
+const descId = `staircase-desc-${locale}`;
+---
+
+<figure class="staircase">
+	<figcaption class="staircase__label">{copy.exampleLabel}</figcaption>
+	<svg viewBox={`0 0 ${W} ${H}`} role="img" aria-labelledby={`${titleId} ${descId}`} class="staircase__chart">
+		<title id={titleId}>{copy.exampleLabel}</title>
+		<desc id={descId}>{summary}</desc>
+		<line class="staircase__axis" x1={pad.left} y1={y(0)} x2={W - pad.right} y2={y(0)} />
+		<text class="staircase__tick" x={pad.left - 8} y={y(s.baseline) + 4} text-anchor="end">{s.baseline}</text>
+		<text class="staircase__tick" x={pad.left - 8} y={y(1) + 4} text-anchor="end">1</text>
+		<text class="staircase__tick" x={pad.left - 8} y={y(0) + 4} text-anchor="end">0</text>
+		<text class="staircase__tick" x={x(0)} y={H - 12}>{copy.axisWeek} 1</text>
+		<text class="staircase__tick" x={x(s.weeksToZero)} y={H - 12} text-anchor="middle">{s.weeksToZero + 1}</text>
+		<path class="staircase__line" d={d} />
+	</svg>
+	<p class="staircase__summary">{summary}</p>
+	<details class="staircase__table">
+		<summary>{copy.tableCaption}</summary>
+		<table>
+			<thead>
+				<tr><th scope="col">{copy.tableWeeks}</th><th scope="col">{copy.tablePerDay}</th></tr>
+			</thead>
+			<tbody>
+				{s.runs.map((run, i) => (
+					<tr>
+						<td>{copy.weeks(run.fromWeek, run.toWeek, i === s.runs.length - 1)}</td>
+						<td>{copy.perDay(run.perDay)}</td>
+					</tr>
+				))}
+			</tbody>
+		</table>
+	</details>
+</figure>
+
+<style>
+	.staircase {
+		margin: 0;
+	}
+	.staircase__label {
+		font-size: var(--font-size-sm);
+		color: var(--text-secondary);
+		margin-bottom: var(--space-sm);
+	}
+	.staircase__chart {
+		display: block;
+		width: 100%;
+		height: auto;
+	}
+	.staircase__line {
+		fill: none;
+		stroke: var(--ij-color-accent-family, #f140fe);
+		stroke-width: 3;
+		stroke-linejoin: round;
+		stroke-linecap: round;
+	}
+	.staircase__axis {
+		stroke: var(--border-default, currentColor);
+		stroke-width: 1;
+	}
+	.staircase__tick {
+		font-size: 12px;
+		fill: var(--text-secondary, currentColor);
+	}
+	.staircase__summary {
+		margin: var(--space-md) 0 0;
+	}
+	.staircase__table {
+		margin-top: var(--space-sm);
+		font-size: var(--font-size-sm);
+	}
+	.staircase__table table {
+		border-collapse: collapse;
+		margin-top: var(--space-sm);
+	}
+	.staircase__table th,
+	.staircase__table td {
+		text-align: left;
+		padding: 4px 16px 4px 0;
+	}
+</style>
