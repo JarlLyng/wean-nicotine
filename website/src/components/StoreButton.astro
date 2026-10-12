@@ -1,0 +1,42 @@
+---
+/**
+ * The design system's store button (#393), rendered into the served HTML so
+ * crawlers and AI assistants see the badge, link and facts without JavaScript.
+ *
+ * The fragments in src/store/ are generated in iamjarl-design from its app
+ * registry and copied in by scripts/sync-store.mjs: price, OS floor, campaign
+ * link and the store-click event all come from there. Do not hand-write a
+ * store link, price or OS line next to one of these.
+ *
+ * - hero: the page's main badge, with the facts line.
+ * - midpage: a later repeat further down, so the click says where it was.
+ * - nav: the header's text link; Apple allows one badge per layout.
+ */
+import type { Locale } from '../i18n/translations';
+
+interface Props {
+	locale: Locale;
+	placement?: 'hero' | 'midpage' | 'nav';
+	/** Centre the badge and facts line, for a centred section. */
+	align?: 'start' | 'center';
+}
+
+const { locale, placement = 'hero', align = 'start' } = Astro.props;
+
+const fragments = import.meta.glob<string>('../store/*.html', {
+	query: '?raw',
+	import: 'default',
+	eager: true,
+});
+const suffix = placement === 'hero' ? '' : `.${placement}`;
+const html = fragments[`../store/wean-nicotine.${locale}${suffix}.html`];
+if (!html) throw new Error(`No store fragment for ${locale} ${placement}; run scripts/sync-store.mjs`);
+---
+
+{
+	placement === 'nav' ? (
+		<span class="store-nav" set:html={html} />
+	) : (
+		<div class:list={['store-cta', align === 'center' && 'store-cta--center']} set:html={html} />
+	)
+}

@@ -18,6 +18,10 @@
  *  - App Store links without the site's campaign (pt, ct=site, mt=8). Until
  *    #366 most had none, and 27 carried a placeholder provider token with a
  *    per-page campaign that Apple would never have shown.
+ *  - since #393 the store links come from the design system's fragments, so
+ *    the event is store-click with store, placement and locale; and the site
+ *    loads nothing from a third-party host (jsDelivr, Apple's badge service,
+ *    Google Fonts), since fonts and badges are self-hosted.
  *  - orphans: a page no other page links to. A sitemap entry is not a path a
  *    reader can follow, and a crawler weighs an unlinked page accordingly.
  *    Three Nordic guides sat orphaned this way until #303, found by exactly
@@ -148,7 +152,7 @@ for (const file of files.sort()) {
 
 // Every App Store link must carry the same event with a placement and a
 // locale, or the click data cannot tell surfaces apart (#304).
-const PLACEMENTS = new Set(['header', 'hero', 'midpage', 'bottom-cta', 'in-article', 'footer']);
+const PLACEMENTS = new Set(['nav', 'hero', 'midpage', 'footer', 'in-article']);
 for (const file of files.sort()) {
   const html = readFileSync(join(DIST, file), 'utf8');
   for (const m of html.matchAll(/<a\s[^>]*href="https:\/\/apps\.apple\.com[^"]*"[^>]*>/g)) {
@@ -159,8 +163,8 @@ for (const file of files.sort()) {
     if (!/^\d+$/.test(q.get('pt') ?? '') || q.get('ct') !== 'site' || q.get('mt') !== '8') {
       problems.push(`${file}: App Store link without the site campaign (pt, ct=site, mt=8): ${href}`);
     }
-    if (!/data-umami-event="app-store-click"/.test(tag)) {
-      problems.push(`${file}: App Store link with no app-store-click event`);
+    if (!/data-umami-event="store-click"/.test(tag) || attr('store') !== 'app-store') {
+      problems.push(`${file}: App Store link without the store-click event and store="app-store"`);
       continue;
     }
     const placement = attr('placement');
@@ -169,6 +173,14 @@ for (const file of files.sort()) {
       problems.push(`${file}: App Store link has unknown placement "${placement}"`);
     if (!attr('locale')) problems.push(`${file}: App Store link has no locale`);
   }
+}
+
+// Nothing from a third-party host: fonts (#373) and store badges (#393) are
+// self-hosted, and a pasted fragment or a stylesheet must not bring them back.
+const THIRD_PARTY = /https:\/\/(cdn\.jsdelivr\.net|tools\.applemediaservices\.com|fonts\.(googleapis|gstatic)\.com)\//;
+for (const file of [...files, ...globSync('**/*.css', { cwd: DIST })].sort()) {
+  const m = readFileSync(join(DIST, file), 'utf8').match(THIRD_PARTY);
+  if (m) problems.push(`${file}: loads from a third-party host (${m[1]})`);
 }
 
 // Every page needs at least one inbound link. 404 is reachable by definition

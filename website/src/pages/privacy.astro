@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import { ALL_LOCALES } from '../i18n/ui';
 import { COMPANY_NAME, SITE_URL, SUPPORT_EMAIL } from '../lib/site';
 
-const lastUpdated = '2026-10-03';
+const lastUpdated = '2026-10-12';
 ---
 
 <Layout
@@ -75,7 +75,7 @@ const lastUpdated = '2026-10-03';
 			<ul>
 				<li><strong>No cookies.</strong> Umami does not store any cookie or local-storage entry on your device.</li>
 				<li><strong>No personal data.</strong> No IP addresses, fingerprints, or unique IDs are collected. Page-view counts, referrer hostnames and download-link clicks are recorded in aggregate.</li>
-				<li><strong>What a click records.</strong> Clicking a link to the App Store sends the event name, where on the page the link sat (one of: header, hero, mid-page, bottom call-to-action, in-article, footer) and the page's language. All three are fixed values chosen when the site is built. Nothing is read from you or your device.</li>
+				<li><strong>What a click records.</strong> Clicking a link to the App Store sends the event name, which store the link points to, where on the page it sat (one of: header, hero, mid-page, footer, in-article) and the page's language. All four are fixed values chosen when the site is built. Nothing is read from you or your device.</li>
 				<li><strong>No cross-site tracking.</strong> Umami cannot follow you to other sites and does not feed any ad network.</li>
 				<li><strong>No GDPR consent banner.</strong> Because nothing personal is collected and no cookie is set, no consent is required under GDPR / ePrivacy. We deliberately avoid the cookie wall.</li>
 				<li><strong>Self-hosted instance</strong> at <a href="https://umami-iamjarl.vercel.app/" rel="noopener noreferrer" target="_blank">umami-iamjarl.vercel.app</a>. No third party receives the data.</li>

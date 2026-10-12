@@ -1,12 +1,10 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import StoreButton from '../../components/StoreButton.astro';
 import Button from '../../components/Button.astro';
 import Card from '../../components/Card.astro';
 import Section from '../../components/Section.astro';
-import { APP_STORE_URL, isAppStoreUrlKnown, SITE_NAME } from '../../lib/site';
 
-const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
-const appStoreCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming soon on the App Store';
 ---
 
 <Layout
@@ -23,9 +21,7 @@ const appStoreCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming s
 				It is a one-time purchase for 29 DKK in Denmark or $2.99 in the US, and your nicotine reduction journey stays on your device.
 			</p>
 			<div class="cta">
-				<Button placement="hero" variant="primary" href={APP_STORE_URL} disabled={!appStoreKnown} external={true}>
-					{appStoreCtaLabel}
-				</Button>
+				<StoreButton locale="en" />
 				<Button variant="secondary" href="/">Learn more about Wean Nicotine</Button>
 			</div>
 		</div>
@@ -136,9 +132,7 @@ const appStoreCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming s
 		<div class="container">
 			<h2>Reduce nicotine privately</h2>
 			<p>No accounts, no cloud sync, no usage tracking. Just a calm app that helps you cut down step by step.</p>
-			<Button placement="bottom-cta" variant="primary" href={APP_STORE_URL} disabled={!appStoreKnown} external={true}>
-				{appStoreCtaLabel}
-			</Button>
+			<StoreButton locale="en" placement="midpage" align="center" />
 		</div>
 	</section>
 </Layout>

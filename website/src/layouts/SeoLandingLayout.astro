@@ -1,8 +1,6 @@
 ---
 import Layout from './Layout.astro';
-import Button from '../components/Button.astro';
-import AppStoreBadge from '../components/AppStoreBadge.astro';
-import { APP_STORE_URL, isAppStoreUrlKnown } from '../lib/site';
+import StoreButton from '../components/StoreButton.astro';
 
 interface Props {
 	title: string;
@@ -12,7 +10,6 @@ interface Props {
 	lede: string;
 	bottomCtaHeading: string;
 	bottomCtaText: string;
-	appStoreCtaLabel?: string;
 	lang?: 'en' | 'da' | 'sv' | 'no';
 	/**
 	 * Locales this SEO landing page is available in. Defaults to the page's
@@ -32,16 +29,12 @@ const {
 	lede,
 	bottomCtaHeading,
 	bottomCtaText,
-	appStoreCtaLabel,
 	lang = 'en',
 	availableLocales,
 } = Astro.props;
 
 const resolvedAvailableLocales = availableLocales ?? [lang];
 
-const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
-const defaultCtaLabel = appStoreKnown ? 'Download on the App Store' : 'Coming soon on the App Store';
-const finalCtaLabel = appStoreCtaLabel || defaultCtaLabel;
 
 ---
 
@@ -63,13 +56,7 @@ const finalCtaLabel = appStoreCtaLabel || defaultCtaLabel;
 		<div class="container">
 			<h2>{bottomCtaHeading}</h2>
 			<p>{bottomCtaText}</p>
-			{appStoreKnown ? (
-				<AppStoreBadge href={APP_STORE_URL} lang={lang} placement="bottom-cta" />
-			) : (
-				<Button placement="bottom-cta" variant="primary" href={APP_STORE_URL} disabled={true}>
-					{finalCtaLabel}
-				</Button>
-			)}
+			<StoreButton locale={lang} placement="midpage" align="center" />
 		</div>
 	</section>
 </Layout>

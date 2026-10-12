@@ -2,10 +2,7 @@
 import SeoLandingLayout from '../../../layouts/SeoLandingLayout.astro';
 import Card from '../../../components/Card.astro';
 import Section from '../../../components/Section.astro';
-import { APP_STORE_URL, isAppStoreUrlKnown } from '../../../lib/site';
 
-const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
-const appStoreCtaLabel = appStoreKnown ? 'Last ned i App Store' : 'Kommer snart i App Store';
 ---
 
 <SeoLandingLayout
@@ -16,7 +13,6 @@ const appStoreCtaLabel = appStoreKnown ? 'Last ned i App Store' : 'Kommer snart 
 	lede="Du slutter med snus ved å sette en daglig kvote og senke den gradvis. En Cochrane-oversikt om røykeslutt fant at verken nedtrapping eller brått stopp ga bedre resultater enn det andre (Lindson et al., Cochrane Database of Systematic Reviews, 2019). Studiene handlet om sigaretter, ikke snus. Ca. 1,1 millioner mennesker i Sverige bruker snus daglig (Folkhälsomyndigheten), og mange finner veien ut via nettopp denne metoden."
 	bottomCtaHeading="Begynn å redusere snusbruket ditt i dag"
 	bottomCtaText="Wean Nicotine gjør det enkelt med en daglig kvote, ett-trykks-sporing og verktøy mot nikotinsug."
-	appStoreCtaLabel={appStoreCtaLabel}
 	lang="no"
 >
 	<script type="application/ld+json" slot="after-guide">

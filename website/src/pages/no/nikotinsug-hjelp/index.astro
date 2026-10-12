@@ -2,10 +2,7 @@
 import SeoLandingLayout from '../../../layouts/SeoLandingLayout.astro';
 import Card from '../../../components/Card.astro';
 import Section from '../../../components/Section.astro';
-import { APP_STORE_URL, isAppStoreUrlKnown } from '../../../lib/site';
 
-const appStoreKnown = isAppStoreUrlKnown(APP_STORE_URL);
-const appStoreCtaLabel = appStoreKnown ? 'Last ned i App Store' : 'Kommer snart i App Store';
 ---
 
 <SeoLandingLayout
@@ -16,7 +13,6 @@ const appStoreCtaLabel = appStoreKnown ? 'Last ned i App Store' : 'Kommer snart 
 	lede="Nikotinsug avtar vanligvis etter noen minutter, hvis du kan ri av de korte minuttene, forsvinner suget av seg selv. Nøkkelen er å ha praktiske teknikker klare før suget slår til. Her finner du seks praktiske strategier som virker i selve øyeblikket, uansett om du reduserer snus eller nikotinposer."
 	bottomCtaHeading="Få hjelp mot suget når du trenger det"
 	bottomCtaText="Wean Nicotine har pusteøvelser, urge surfing og refleksjonsverktøy innebygd, klare akkurat når du har nådd dagskvoten din og suget melder seg."
-	appStoreCtaLabel={appStoreCtaLabel}
 	lang="no"
 >
 	<script type="application/ld+json" slot="after-guide">
