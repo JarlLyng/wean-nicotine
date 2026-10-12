@@ -74,11 +74,11 @@ const oneADayWeeks = (s: Staircase) => {
 };
 
 /**
- * Export arrives with 1.7.0 (#43). Until that version is live in the App Store
- * the page does not describe it: the privacy card stops before its last clause
- * and the FAQ leaves out its question. Set this to true when 1.7.0 is live.
+ * Export arrived with 1.7.0 (#43), live in the App Store since 2026-10-12.
+ * Until then the page did not describe it: the privacy card stopped before its
+ * last clause and the FAQ left out its question.
  */
-export const EXPORT_IS_LIVE = false;
+export const EXPORT_IS_LIVE = true;
 
 /** The privacy card's text, with its export clause only once export ships. */
 const withExport = (text: string, exportClause: string) =>
@@ -102,7 +102,7 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
     },
     hero: {
       headline: 'A gentler way to quit nicotine.',
-      lede: 'Cut down on snus and nicotine pouches a little at a time, at a pace you choose. Everything stays on your iPhone, and a day over the limit is met with calm.',
+      lede: 'Cut down on snus and nicotine pouches a little at a time, at a pace you choose. Your logs stay on your iPhone, and a day over the limit is met with calm.',
       loopLabel:
         "Wean's Today screen. One tap on Used a pouch, the count goes up, and the day's allowance stays in view.",
     },
@@ -276,7 +276,7 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
     },
     hero: {
       headline: 'En blidere måde at stoppe med nikotin på.',
-      lede: 'Skær ned på snus og nikotinposer lidt ad gangen, i et tempo du selv vælger. Alt bliver på din iPhone, og en dag over grænsen bliver mødt med ro.',
+      lede: 'Skær ned på snus og nikotinposer lidt ad gangen, i et tempo du selv vælger. Din log bliver på din iPhone, og en dag over grænsen bliver mødt med ro.',
       loopLabel:
         'Weans Today-skærm. Ét tryk på Used a pouch, tallet går op, og dagens kvote står stadig på skærmen.',
     },
@@ -454,7 +454,7 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
     },
     hero: {
       headline: 'Ett mildare sätt att sluta med nikotin.',
-      lede: 'Minska snus och nikotinpåsar lite i taget, i en takt du själv väljer. Allt stannar på din iPhone, och en dag över gränsen möts med lugn.',
+      lede: 'Minska snus och nikotinpåsar lite i taget, i en takt du själv väljer. Din logg stannar på din iPhone, och en dag över gränsen möts med lugn.',
       loopLabel:
         'Weans Today-skärm. Ett tryck på Used a pouch, siffran går upp, och dagens ranson syns hela tiden.',
     },
@@ -632,7 +632,7 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
     },
     hero: {
       headline: 'En mildere måte å slutte med nikotin på.',
-      lede: 'Kutt ned på snus og nikotinposer litt om gangen, i et tempo du velger selv. Alt blir på iPhonen din, og en dag over grensen blir møtt med ro.',
+      lede: 'Kutt ned på snus og nikotinposer litt om gangen, i et tempo du velger selv. Loggen din blir på iPhonen din, og en dag over grensen blir møtt med ro.',
       loopLabel:
         'Weans Today-skjerm. Ett trykk på Used a pouch, tallet går opp, og dagens kvote står fortsatt på skjermen.',
     },
