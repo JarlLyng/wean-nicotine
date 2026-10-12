@@ -1,4 +1,4 @@
-/* IAMJARL marketing kit v1.27.0: generated from kit/kit.css, do not edit */
+/* IAMJARL marketing kit v1.29.0: generated from kit/kit.css, do not edit */
 /* The marketing page kit (#65): sections every app site can compose.
 
    Plain HTML with these classes. No JavaScript is needed to read any of it:
@@ -80,7 +80,7 @@
    Cards on a band swap to the page colour, so they still read as cards. */
 .ij-section--band { background: var(--ij-color-bg-card); }
 .ij-section--band .ij-card, .ij-section--band .ij-trait, .ij-section--band .ij-source,
-.ij-section--band .ij-phone__screen { background: var(--ij-color-bg-app); }
+.ij-section--band .ij-review, .ij-section--band .ij-phone__screen { background: var(--ij-color-bg-app); }
 .ij-measure { max-width: var(--ij-mkt-width-text); }
 .ij-stack > * + * { margin-top: var(--ij-mkt-space-stack); }
 
@@ -235,6 +235,31 @@ ij-store-cta { display: block; }
 .ij-watch::before { bottom: 100%; border-radius: 10px 10px 0 0; }
 .ij-watch::after { top: 100%; border-radius: 0 0 10px 10px; }
 
+/* ---------- A Mac window (#83) ----------
+   A Mac capture carries its own window chrome, so the kit draws no frame. It
+   clips the capture to the window's own corners, so a video, whose corners
+   are masked to black, never shows black against the ground, and a still's
+   transparent corners match; then it adds the border colour's edge and a soft
+   shadow. The corner is 2% of the width, a hair over macOS's own (1.9% on It's
+   mono's captures). --ij-window-width sizes it: 900px by default, a capture's
+   width in points. A screen recording in it is a video.ij-loop, as in a phone. */
+.ij-window {
+  --_w: var(--ij-window-width, 900px);
+  flex: none;
+  width: min(var(--_w), 100%);
+  container-type: inline-size;
+}
+.ij-window > img, .ij-window > video {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 2cqi;
+  box-shadow:
+    0 0 0 1px var(--ij-color-border-default),
+    0 40px 80px -40px color-mix(in srgb, var(--ij-color-black) 60%, transparent);
+}
+.ij-hero__media > .ij-window { margin-inline: auto; }
+
 /* ---------- A drawing per statement ---------- */
 
 .ij-drawing { display: block; width: 100%; height: auto; color: var(--ij-color-accent); }
@@ -318,6 +343,7 @@ ij-store-cta { display: block; }
    past the start can't be scrolled to: on a phone the first screen sat half
    off the edge (#80). Auto margins centre the row when it fits and start it at
    the edge when it doesn't. */
+.ij-tour__screens > .ij-window { --ij-window-width: 520px; scroll-snap-align: center; }
 .ij-tour:not(.is-live) .ij-tour__screens { justify-content: flex-start; }
 .ij-tour:not(.is-live) .ij-tour__screens > :first-child { margin-inline-start: auto; }
 .ij-tour:not(.is-live) .ij-tour__screens > :last-child { margin-inline-end: auto; }
@@ -343,12 +369,13 @@ ij-store-cta { display: block; }
   overflow: visible;
   padding: 0;
 }
-.ij-tour.is-live .ij-tour__screens > .ij-phone {
+.ij-tour.is-live .ij-tour__screens > :is(.ij-phone, .ij-window) {
   --ij-phone-width: inherit;
+  --ij-window-width: inherit;
   grid-area: 1 / 1;
   opacity: 0;
 }
-.ij-tour.is-live .ij-tour__screens > .ij-phone.is-active { opacity: 1; }
+.ij-tour.is-live .ij-tour__screens > :is(.ij-phone, .ij-window).is-active { opacity: 1; }
 .ij-tour.is-live .ij-tour__steps {
   grid-template-columns: minmax(0, 1fr);
   gap: 0;
@@ -376,7 +403,17 @@ ij-store-cta { display: block; }
 .ij-tour.is-live .ij-tour__step.is-active > :first-child::before { background: var(--ij-color-accent); }
 /* Transitions only once the live state has settled, so becoming live on load
    moves nothing: the first screen never animates. */
-.ij-tour.is-ready .ij-tour__screens > .ij-phone { transition: opacity var(--ij-duration-slow) var(--ij-easing-standard); }
+.ij-tour.is-ready .ij-tour__screens > :is(.ij-phone, .ij-window) { transition: opacity var(--ij-duration-slow) var(--ij-easing-standard); }
+
+/* The window that stays (#83): the same tour with a Mac window in place of
+   the phone. The window takes the wider column, and holds still centred on
+   the middle of the viewport: its height is 0.711 of its width. */
+.ij-tour--window.is-live { --ij-window-width: 640px; grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr); }
+.ij-tour--window.is-live .ij-tour__screens {
+  top: max(var(--ij-mkt-space-block), calc(50vh - var(--ij-window-width) * 0.356));
+  grid-template-columns: minmax(0, var(--ij-window-width));
+}
+.ij-tour--window.is-live .ij-tour__steps { padding-bottom: max(0px, calc(var(--ij-window-width) * 0.356 - 35vh)); }
 .ij-tour.is-ready .ij-tour__step > :first-child::before { transition: background-color var(--ij-duration-slow) var(--ij-easing-standard); }
 
 /* ---------- Where it works: short traits, one large number ---------- */
@@ -385,9 +422,20 @@ ij-store-cta { display: block; }
 .ij-trait { display: flex; flex-direction: column; justify-content: flex-end; gap: var(--ij-spacing-sm);
             padding: var(--ij-mkt-space-stack); background: var(--ij-color-bg-card); border-radius: var(--ij-radius-lg); }
 .ij-trait p { margin: 0; color: var(--ij-color-text-secondary); }
+.ij-trait { min-width: 0; }
+.ij-trait .ij-title { overflow-wrap: break-word; }
 .ij-trait .ij-numeral { color: var(--ij-color-text-primary); }
 /* A trait can show its device: a television or a watch above its words. */
 .ij-trait > .ij-tv, .ij-trait > .ij-watch { align-self: center; }
+/* Or a drawing: a machine above its name, as It's mono shows its samplers. */
+.ij-trait > .ij-drawing { margin-bottom: auto; }
+/* Many short traits, like It's mono's eight samplers, stand two a row on a
+   phone instead of one long column; the number keeps the full row. */
+@media (max-width: 767px) {
+  .ij-traits--pairs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ij-traits--pairs > .ij-trait { padding: var(--ij-spacing-lg); }
+  .ij-traits--pairs > .ij-trait--number { grid-column: 1 / -1; }
+}
 @media (min-width: 768px) {
   .ij-traits { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .ij-trait--number { grid-column: span 2; grid-row: span 2; }
@@ -422,6 +470,39 @@ ij-store-cta { display: block; }
              border-radius: var(--ij-radius-lg); display: flex; flex-direction: column; gap: var(--ij-spacing-lg); }
 .ij-source__fact { margin: 0; }
 .ij-source__meta { font-size: var(--ij-mkt-small-size); color: var(--ij-color-text-secondary); }
+
+/* ---------- Reviews, set as type (#83) ----------
+   Real reviews only, word for word, with the reviewer's name and country as
+   the store shows them. No stars and no avatars: the words are the proof. A
+   card beside them can carry what backs them, such as the source code. */
+
+.ij-reviews { display: grid; gap: var(--ij-spacing-lg); grid-template-columns: minmax(0, 1fr); }
+.ij-review {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--ij-mkt-space-stack);
+  padding: var(--ij-mkt-space-stack);
+  background: var(--ij-color-bg-card);
+  border-radius: var(--ij-radius-lg);
+}
+.ij-review blockquote { margin: 0; display: flex; flex-direction: column; gap: var(--ij-spacing-sm); }
+.ij-review blockquote > p {
+  margin: 0;
+  font-family: var(--ij-font-display, var(--ij-font-ui));
+  font-variation-settings: var(--ij-font-display-axes, normal);
+  font-size: var(--ij-mkt-title-size);
+  line-height: var(--ij-mkt-title-leading);
+}
+.ij-review figcaption { font-size: var(--ij-mkt-small-size); color: var(--ij-color-text-secondary); }
+@media (min-width: 768px) {
+  .ij-reviews { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+/* Bordered panels (#83): a site whose identity says "panels": "bordered"
+   draws its cards with a thin line, as in a hardware manual. Flat otherwise. */
+.ij-card, .ij-trait, .ij-source, .ij-review { border: var(--ij-panel-border, 0); }
 
 /* ---------- A scene: a photo across the page, for the mood (#81) ----------
    For a site whose mood is a place, like WODrounds' gym. The photo sets the

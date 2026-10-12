@@ -16,7 +16,6 @@ import LanguageSwitcher from '../components/LanguageSwitcher.astro';
 import StoreButton from '../components/StoreButton.astro';
 import { COMPANY_NAME, SITE_NAME } from '../lib/site';
 import smartAppBanner from '../store/wean-nicotine.head.html?raw';
-import crossLinks from '../design/cross-links.html?raw';
 import { getLangFromUrl, languageLinks, useTranslations, useTranslatedPath } from '../i18n/utils';
 import { languages } from '../i18n/ui';
 import { GUIDE_LINKS } from '../i18n/footer-links';
@@ -80,6 +79,14 @@ const translatePath = useTranslatedPath(lang);
 const home = translatePath('/');
 const otherLanguages = languageLinks(Astro.url, localesForHreflang, translationSet).filter((l) => !l.isCurrent);
 const guides = GUIDE_LINKS[lang];
+// The footer's cross-links, in this page's language (iamjarl-design 1.29).
+const crossLinkFragments = import.meta.glob<string>('../design/cross-links.*.html', {
+	query: '?raw',
+	import: 'default',
+	eager: true,
+});
+const crossLinks = crossLinkFragments[`../design/cross-links.${lang}.html`];
+if (!crossLinks) throw new Error(`No cross-links for ${lang}; run scripts/sync-design.mjs`);
 
 const pageTitle = title ? `${title} | ${SITE_NAME}` : `${SITE_NAME}, Snus & Nicotine Pouch Reduction App`;
 const pageDescription =

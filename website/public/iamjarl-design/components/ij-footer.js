@@ -1,5 +1,5 @@
-// IAMJARL <ij-footer> v1.27.0: generated, do not edit
-// Sources: components/select-links.js, components/ij-footer.js, apps.json
+// IAMJARL <ij-footer> v1.29.0: generated, do not edit
+// Sources: components/select-links.js, components/labels.js, components/ij-footer.js, apps.json
 
 const REGISTRY = {
   "apps": [
@@ -244,6 +244,43 @@ function selectLinks(registry, siteId, options = {}) {
   return { self, siblings, topUp, always, links: [...siblings, ...topUp, ...always] };
 }
 
+// The words <ij-nav> and <ij-footer> print themselves, in the languages the
+// portfolio's sites are written in (#80). Until 1.29.0 they were English on
+// every page, so Wean's Danish, Swedish and Norwegian pages and WODrounds' six
+// translations said "Menu" and "More from IAMJARL" in English.
+//
+// A component reads the language from the nearest lang attribute, so a Danish
+// page gets Danish without setting anything. An attribute on the element
+// (skip-label, menu-label, more-label, projects-label) overrides a word, for a
+// language not listed here or a site's own phrasing. Anything unknown is English.
+//
+// Pure apart from langOf, which reads the DOM: the build imports labelsFor to
+// write the footer fragments in each language.
+
+const LABELS = {
+  en: { skip: 'Skip to content', menu: 'Menu', more: 'More from IAMJARL', projects: 'All projects' },
+  da: { skip: 'Gå til indhold', menu: 'Menu', more: 'Mere fra IAMJARL', projects: 'Alle projekter' },
+  de: { skip: 'Zum Inhalt springen', menu: 'Menü', more: 'Mehr von IAMJARL', projects: 'Alle Projekte' },
+  es: { skip: 'Saltar al contenido', menu: 'Menú', more: 'Más de IAMJARL', projects: 'Todos los proyectos' },
+  fr: { skip: 'Aller au contenu', menu: 'Menu', more: 'Plus d’IAMJARL', projects: 'Tous les projets' },
+  nb: { skip: 'Gå til innhold', menu: 'Meny', more: 'Mer fra IAMJARL', projects: 'Alle prosjekter' },
+  sv: { skip: 'Till innehållet', menu: 'Meny', more: 'Mer från IAMJARL', projects: 'Alla projekt' },
+};
+
+// Norwegian pages are often marked "no" or "nn"; the words are Bokmål's.
+const ALIASES = { no: 'nb', nn: 'nb' };
+
+function labelsFor(lang) {
+  const base = String(lang || 'en').toLowerCase().split(/[-_]/)[0];
+  return LABELS[ALIASES[base] ?? base] ?? LABELS.en;
+}
+
+// The registry's link to the whole portfolio is a phrase, not a name, so it is
+// the one cross-link that is translated.
+const PROJECTS_ID = 'iamjarl';
+
+const langOf = el => el.closest('[lang]')?.getAttribute('lang') || document.documentElement.lang || 'en';
+
 // <ij-footer app="tonvault" tagline="…" layout="stacked|columns">
 //
 // Renders a site's footer with cross-links to the rest of the portfolio,
@@ -270,8 +307,10 @@ function selectLinks(registry, siteId, options = {}) {
 // groups with links stacked under each heading.
 //
 // links-label names the group holding the site's OWN links (slot="links") and
-// defaults to the app's name. The cross-links heading, "More from IAMJARL", is
-// fixed; setting links-label to it prints the string twice.
+// defaults to the app's name. The cross-links heading, "More from IAMJARL", and
+// the portfolio link, "All projects", follow the page's language (nearest lang
+// attribute, components/labels.js), or more-label and projects-label (#80);
+// setting links-label to the heading prints it twice.
 //
 // Alignment follows the page. Labels, tagline and fineprint inherit text-align
 // through the shadow boundary; the link rows are flex and cannot, so they take
@@ -377,10 +416,10 @@ const escape = s => String(s).replace(/[&<>"]/g, c =>
 
 // Name only. Neither reference footer annotates links with a platform, and the
 // suffix turned a scannable list into noise.
-const linkHtml = app => `<a href="${escape(app.url)}">${escape(app.name)}</a>`;
+const linkHtml = (app, projects) => `<a href="${escape(app.url)}">${escape(app.id === PROJECTS_ID ? projects : app.name)}</a>`;
 
 class IjFooter extends HTMLElement {
-  static observedAttributes = ['app', 'tagline', 'layout', 'links-label'];
+  static observedAttributes = ['app', 'tagline', 'layout', 'links-label', 'more-label', 'projects-label'];
 
   connectedCallback() {
     this.render();
@@ -418,6 +457,10 @@ class IjFooter extends HTMLElement {
     const provided = this.querySelector('[slot="cross-links"]') !== null;
     const tagline = this.getAttribute('tagline');
     const ownLabel = this.getAttribute('links-label') ?? self.name;
+    // The heading and the portfolio link in the page's language (#80).
+    const words = labelsFor(langOf(this));
+    const moreLabel = this.getAttribute('more-label') || words.more;
+    const projectsLabel = this.getAttribute('projects-label') || words.projects;
     // A site with no links of its own gets no group for them. Rendered anyway,
     // it was a label above an empty row. It's mono set links-label="" to hide
     // the label and still got the empty row and its gap.
@@ -433,10 +476,10 @@ class IjFooter extends HTMLElement {
             <div class="links"><slot name="links"></slot></div>
           </div>` : ''}
           <nav class="group" aria-labelledby="more">
-            <p class="label" id="more">More from IAMJARL</p>
+            <p class="label" id="more">${escape(moreLabel)}</p>
             <div class="links">${provided
               ? '<slot name="cross-links"></slot>'
-              : related.map(linkHtml).join('')}</div>
+              : related.map(app => linkHtml(app, projectsLabel)).join('')}</div>
           </nav>
         </div>
         <div class="fineprint"><slot name="fineprint"></slot></div>

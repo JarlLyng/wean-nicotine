@@ -2,7 +2,7 @@
 /**
  * Copy what the site uses from the IAMJARL design system into the site (#393, #396).
  *
- *   node scripts/sync-design.mjs v1.27.0
+ *   node scripts/sync-design.mjs v1.29.0
  *
  * One release, all of it:
  *
@@ -122,8 +122,12 @@ for (const name of DRAWINGS) {
   out.set(`src/design/drawings/${name}.svg`, await fetchBytes(`dist/drawings/wean/${name}.svg`));
 }
 // The footer's cross-links to the rest of the portfolio, in the served HTML,
-// where crawlers that run no JavaScript can follow them.
-out.set('src/design/cross-links.html', await fetchBytes(`dist/footers/${APP}.html`));
+// where crawlers that run no JavaScript can follow them. One per language:
+// they differ only in the portfolio link's words. English has no suffix.
+for (const loc of Object.keys(LOCALES)) {
+  const source = loc === 'en' ? `${APP}.html` : `${APP}.${loc}.html`;
+  out.set(`src/design/cross-links.${loc}.html`, await fetchBytes(`dist/footers/${source}`));
+}
 
 // The store button. The page is light only, so it takes the black badge.
 const selfHost = (html) => {

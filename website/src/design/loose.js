@@ -1,4 +1,4 @@
-// IAMJARL marketing kit v1.27.0: generated from kit/loose.js, do not edit
+// IAMJARL marketing kit v1.29.0: generated from kit/loose.js, do not edit
 // A loose, hand-drawn stroke for a line given as points (#75).
 //
 // The drawings and a site's own data lines take the same hand: Wean's taper

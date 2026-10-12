@@ -1,5 +1,5 @@
-// IAMJARL <ij-nav> v1.27.0: generated, do not edit
-// Sources: components/nav-rules.js, components/ij-nav.js
+// IAMJARL <ij-nav> v1.29.0: generated, do not edit
+// Sources: components/nav-rules.js, components/labels.js, components/ij-nav.js
 
 // The rules <ij-nav> enforces, kept out of the DOM so they are covered by the
 // same dependency-free contract tests as the tokens. The element is a rendering
@@ -106,6 +106,43 @@ function navWarnings({ brand = 0, links = [], cta = [], secondary = 0 }) {
   return out;
 }
 
+// The words <ij-nav> and <ij-footer> print themselves, in the languages the
+// portfolio's sites are written in (#80). Until 1.29.0 they were English on
+// every page, so Wean's Danish, Swedish and Norwegian pages and WODrounds' six
+// translations said "Menu" and "More from IAMJARL" in English.
+//
+// A component reads the language from the nearest lang attribute, so a Danish
+// page gets Danish without setting anything. An attribute on the element
+// (skip-label, menu-label, more-label, projects-label) overrides a word, for a
+// language not listed here or a site's own phrasing. Anything unknown is English.
+//
+// Pure apart from langOf, which reads the DOM: the build imports labelsFor to
+// write the footer fragments in each language.
+
+const LABELS = {
+  en: { skip: 'Skip to content', menu: 'Menu', more: 'More from IAMJARL', projects: 'All projects' },
+  da: { skip: 'Gå til indhold', menu: 'Menu', more: 'Mere fra IAMJARL', projects: 'Alle projekter' },
+  de: { skip: 'Zum Inhalt springen', menu: 'Menü', more: 'Mehr von IAMJARL', projects: 'Alle Projekte' },
+  es: { skip: 'Saltar al contenido', menu: 'Menú', more: 'Más de IAMJARL', projects: 'Todos los proyectos' },
+  fr: { skip: 'Aller au contenu', menu: 'Menu', more: 'Plus d’IAMJARL', projects: 'Tous les projets' },
+  nb: { skip: 'Gå til innhold', menu: 'Meny', more: 'Mer fra IAMJARL', projects: 'Alle prosjekter' },
+  sv: { skip: 'Till innehållet', menu: 'Meny', more: 'Mer från IAMJARL', projects: 'Alla projekt' },
+};
+
+// Norwegian pages are often marked "no" or "nn"; the words are Bokmål's.
+const ALIASES = { no: 'nb', nn: 'nb' };
+
+function labelsFor(lang) {
+  const base = String(lang || 'en').toLowerCase().split(/[-_]/)[0];
+  return LABELS[ALIASES[base] ?? base] ?? LABELS.en;
+}
+
+// The registry's link to the whole portfolio is a phrase, not a name, so it is
+// the one cross-link that is translated.
+const PROJECTS_ID = 'iamjarl';
+
+const langOf = el => el.closest('[lang]')?.getAttribute('lang') || document.documentElement.lang || 'en';
+
 // <ij-nav label="Main" skip-to="main" cta-after="#hero-cta">
 //   <a slot="brand" href="/">Echolume</a>
 //   <a slot="links" href="/how-it-works.html">How it works</a>
@@ -122,6 +159,9 @@ function navWarnings({ brand = 0, links = [], cta = [], secondary = 0 }) {
 // JavaScript it is a row of plain links.
 //
 // What the component owns:
+//   - its own words in the page's language: the skip link's and the menu
+//     button's, from the nearest lang attribute (components/labels.js), or
+//     from skip-label and menu-label (#80)
 //   - a <nav> landmark (aria-label from `label`, default "Main") and a skip link
 //     to #main (or the id in `skip-to`), rendered only if that target exists
 //     and the page has no skip link of its own: a link to the same target
@@ -384,7 +424,7 @@ const esc = s => String(s).replace(/[&<>"]/g, c =>
   ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
 class IjNav extends HTMLElement {
-  static observedAttributes = ['label', 'skip-to', 'cta-after'];
+  static observedAttributes = ['label', 'skip-to', 'cta-after', 'skip-label', 'menu-label'];
 
   constructor() {
     super();
@@ -434,6 +474,10 @@ class IjNav extends HTMLElement {
     const secondary = this._slotted('secondary');
 
     const label = this.getAttribute('label') || 'Main';
+    // Its own words in the page's language (#80), unless the site sets them.
+    const words = labelsFor(langOf(this));
+    const skipLabel = this.getAttribute('skip-label') || words.skip;
+    const menuLabel = this.getAttribute('menu-label') || words.menu;
     const skipId = this.getAttribute('skip-to') || 'main';
     const skipTarget = document.getElementById(skipId);
     const pageSkips = skipTarget && [...document.querySelectorAll('a[href]')].some(a =>
@@ -443,7 +487,7 @@ class IjNav extends HTMLElement {
 
     this.shadowRoot.innerHTML = `
       <style>${NAV_STYLE}</style>
-      ${skipTarget && !pageSkips ? '<a class="skip" href="#' + esc(skipId) + '">Skip to content</a>' : ''}
+      ${skipTarget && !pageSkips ? '<a class="skip" href="#' + esc(skipId) + '">' + esc(skipLabel) + '</a>' : ''}
       <nav class="bar" aria-label="${esc(label)}">
         <div class="brand">${ownMark ? '' : '<span class="dot" aria-hidden="true"></span>'}<slot name="brand"></slot></div>
         ${folds ? `
@@ -456,7 +500,7 @@ class IjNav extends HTMLElement {
         <button class="toggle" type="button" aria-expanded="false" aria-controls="menu">
           <svg class="when-closed" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">${ICON_LIST}</svg>
           <svg class="when-open" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">${ICON_X}</svg>
-          <span class="visually-hidden">Menu</span>
+          <span class="visually-hidden">${esc(menuLabel)}</span>
         </button>` : ''}
       </nav>`;
 
