@@ -6,11 +6,11 @@
  *   node scripts/make-social-card.mjs
  *
  * On the site's identity since the redesign (#396): the misty grey-blue, the
- * charcoal, Instrument Sans and the hero's shoreline with its magenta
- * waterline, beside the Today screen in the kit's plain phone. It is drawn
- * from the same files the site serves (public/iamjarl-design/, the drawing in
- * src/design/, the capture in src/assets/site/), rendered by headless Chrome
- * at 1200 x 630. Set CHROME to another Chromium's binary if Chrome is not in
+ * charcoal and Instrument Sans, beside the Today screen in the kit's plain
+ * phone. It is drawn from the same files the site serves
+ * (public/iamjarl-design/, the capture in src/assets/site/), rendered by
+ * headless Chrome at 1200 x 630. The hero's shoreline drawing is off the card
+ * with the rest of the drawings until they are redrawn (iamjarl-design#90). Set CHROME to another Chromium's binary if Chrome is not in
  * /Applications.
  *
  * Remake it when the headline, the identity or the Today capture changes: the
@@ -18,7 +18,7 @@
  * it again by hand in the repo's Settings, Social preview.
  */
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, statSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -34,8 +34,6 @@ const NAME = 'Wean Nicotine';
 const HEADLINE = 'A gentler way to quit nicotine.';
 const LINE = 'Cut down on snus and nicotine pouches a little at a time, at a pace you choose.';
 const DOMAIN = 'weannicotine.iamjarl.com';
-
-const shoreline = readFileSync(join(SITE, 'src/design/drawings/shoreline.svg'), 'utf8');
 
 const html = `<!doctype html>
 <html lang="en">
@@ -53,8 +51,7 @@ const html = `<!doctype html>
   .words { position: absolute; left: 72px; top: 76px; width: 610px; display: flex; flex-direction: column; align-items: flex-start; }
   .name { font-family: var(--ij-font-display); font-weight: 600; font-size: 32px; letter-spacing: -0.01em; margin: 0 0 26px; }
   .name::before { content: ""; display: inline-block; width: 14px; height: 14px; border-radius: 50%; background: var(--ij-color-accent); margin-right: 14px; vertical-align: 0.12em; }
-  h1 { font-family: var(--ij-font-display); font-weight: 500; font-size: 66px; line-height: 1.04; letter-spacing: -0.025em; margin: 0; text-wrap: balance; }
-  .ij-drawing { width: 380px; margin: 14px 0 12px -6px; }
+  h1 { font-family: var(--ij-font-display); font-weight: 500; font-size: 66px; line-height: 1.04; letter-spacing: -0.025em; margin: 0 0 28px; text-wrap: balance; }
   .line { font-size: 26px; line-height: 1.42; color: var(--ij-color-text-secondary); margin: 0; max-width: 540px; }
   .domain { position: absolute; left: 72px; bottom: 64px; margin: 0; font-size: 24px; font-weight: 600; color: var(--ij-color-accent-text); }
   /* The product, bleeding off the bottom edge. */
@@ -65,7 +62,6 @@ const html = `<!doctype html>
   <div class="words">
     <p class="name">${NAME}</p>
     <h1>${HEADLINE}</h1>
-    ${shoreline}
     <p class="line">${LINE}</p>
   </div>
   <p class="domain">${DOMAIN}</p>

@@ -65,7 +65,6 @@ export interface HomeCopy {
   };
   maker: { note: string; signature: string };
   faq: { title: string; items: { question: string; answer: string }[] };
-  fineprint: { illustrations: string };
 }
 
 const oneADayWeeks = (s: Staircase) => {
@@ -258,7 +257,6 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
         },
       ],
     },
-    fineprint: { illustrations: 'Illustrations drawn with AI' },
   },
 
   da: {
@@ -436,7 +434,6 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
         },
       ],
     },
-    fineprint: { illustrations: 'Illustrationer tegnet med AI' },
   },
 
   sv: {
@@ -614,7 +611,6 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
         },
       ],
     },
-    fineprint: { illustrations: 'Illustrationer ritade med AI' },
   },
 
   no: {
@@ -792,6 +788,5 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
         },
       ],
     },
-    fineprint: { illustrations: 'Illustrasjoner tegnet med AI' },
   },
 };

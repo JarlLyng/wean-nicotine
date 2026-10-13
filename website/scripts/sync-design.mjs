@@ -11,8 +11,10 @@
  *   components, served from the site's own origin.
  * - src/design/: what runs at build time. kit/loose.js draws the taper staircase
  *   in the drawings' hand, and the eight coast drawings are inlined in the page,
- *   where they can take the identity's colours (an <img> cannot). The
- *   footer's cross-links come along, so they are in the served HTML.
+ *   where they can take the identity's colours (an <img> cannot). Both are off
+ *   the page until the drawings are redrawn (iamjarl-design#90), and still
+ *   synced so they can go back in. The footer's cross-links come along, so
+ *   they are in the served HTML.
  * - src/store/ and public/badges/: the store button for each locale, from the
  *   design system's app registry, so the price, the OS floor, the campaign link
  *   and the click event have one source. StoreButton.astro renders them.
