@@ -1,4 +1,4 @@
-/* IAMJARL marketing kit v1.29.1: generated from kit/kit.css, do not edit */
+/* IAMJARL marketing kit v1.31.0: generated from kit/kit.css, do not edit */
 /* The marketing page kit (#65): sections every app site can compose.
 
    Plain HTML with these classes. No JavaScript is needed to read any of it:
@@ -100,10 +100,16 @@
   font-synthesis: none;
   text-wrap: balance;
 }
+/* The numbers may have a face of their own (#91): Anvil sets its headlines in
+   Outfit and its weights and reps in JetBrains Mono. */
+.ij-numeral {
+  font-family: var(--ij-font-numeral, var(--ij-font-display, var(--ij-font-ui)));
+  font-variation-settings: var(--ij-font-numeral-axes, var(--ij-font-display-axes, normal));
+}
 .ij-display  { font-size: var(--ij-mkt-display-size);  line-height: var(--ij-mkt-display-leading);  letter-spacing: var(--ij-mkt-display-tracking); }
 .ij-headline { font-size: var(--ij-mkt-headline-size); line-height: var(--ij-mkt-headline-leading); letter-spacing: var(--ij-mkt-headline-tracking); }
 .ij-title    { font-size: var(--ij-mkt-title-size);    line-height: var(--ij-mkt-title-leading);    letter-spacing: var(--ij-mkt-title-tracking); }
-.ij-numeral  { font-size: var(--ij-mkt-numeral-size);  line-height: var(--ij-mkt-numeral-leading);  letter-spacing: var(--ij-mkt-numeral-tracking); font-variant-numeric: tabular-nums; }
+.ij-numeral  { font-size: var(--ij-mkt-numeral-size);  line-height: var(--ij-mkt-numeral-leading);  letter-spacing: var(--ij-mkt-numeral-tracking); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .ij-wordmark { font-size: var(--ij-mkt-wordmark-size); line-height: var(--ij-mkt-wordmark-leading); letter-spacing: var(--ij-mkt-wordmark-tracking); }
 .ij-lede {
   font-size: var(--ij-mkt-lead-size);
@@ -289,8 +295,12 @@ ij-store-cta { display: block; }
 .ij-statement { display: grid; gap: var(--ij-mkt-space-stack); align-items: center; }
 .ij-statement__text { display: flex; flex-direction: column; gap: var(--ij-spacing-lg); }
 .ij-statement__text p { margin: 0; color: var(--ij-color-text-secondary); max-width: 40ch; }
+/* Statements without drawings stand side by side, as short columns (#90). */
+.ij-statement:not(:has(> .ij-drawing)) { grid-template-columns: minmax(0, 1fr); }
 @media (min-width: 768px) {
   .ij-statement { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--ij-mkt-space-block); }
+  .ij-statement:not(:has(> .ij-drawing)) { grid-template-columns: minmax(0, 1fr); }
+  .ij-statements:not(:has(.ij-drawing)) { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--ij-mkt-space-block); }
   .ij-statement:nth-child(even) .ij-drawing { order: 2; }
 }
 
@@ -306,6 +316,7 @@ ij-store-cta { display: block; }
   min-width: 0;
 }
 .ij-card p { margin: 0; color: var(--ij-color-text-secondary); }
+.ij-card .ij-numeral { color: var(--ij-color-text-primary); }
 .ij-card__piece { display: flex; align-items: center; justify-content: center; min-height: 160px; }
 .ij-card__piece > img { display: block; height: auto; border-radius: var(--ij-radius-md); }
 
@@ -467,6 +478,59 @@ ij-store-cta { display: block; }
 .ij-maker__sign { font-family: var(--ij-font-display, var(--ij-font-ui)); font-variation-settings: var(--ij-font-display-axes, normal); font-size: var(--ij-mkt-title-size); margin: 0; }
 .ij-maker__sign .ij-drawing { width: 140px; margin-top: var(--ij-spacing-xs); }
 
+/* ---------- A waveform, from real audio (#91) ----------
+   kit/wave.js draws it from a sample's peaks at build time. The outline is
+   filled with the accent and edged in the text colour, so a light accent still
+   reads on a light ground: TonVault's lime is 1.1:1 on its paper, and the ink
+   edge carries the shape while the lime fills it like a highlighter. */
+.ij-wave { display: block; width: 100%; height: auto; overflow: visible; }
+.ij-data .ij-wave { width: 7em; }
+.ij-wave path {
+  fill: var(--ij-color-accent);
+  stroke: var(--ij-color-text-primary);
+  stroke-width: 1;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+/* ---------- Figures in a table (#91) ----------
+   The app's data as the picture: a week of sets, a health check's findings.
+   Names in the body face, numbers in the numeral face with tabular figures,
+   rows ruled in the border colour. */
+.ij-data { width: 100%; border-collapse: collapse; font-size: var(--ij-mkt-small-size); line-height: var(--ij-mkt-small-leading); }
+.ij-data :is(th, td) { padding: 0.5em 0.75em 0.5em 0; text-align: left; font-weight: 400; vertical-align: baseline; }
+.ij-data :is(th, td):last-child { padding-right: 0; }
+.ij-data tr + tr :is(th, td) { border-top: 1px solid var(--ij-color-border-default); }
+.ij-data th { color: var(--ij-color-text-secondary); }
+.ij-data .ij-num {
+  font-family: var(--ij-font-numeral, var(--ij-font-display, var(--ij-font-ui)));
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* ---------- A highlighter and a label (#91) ----------
+   The accent as a fill behind on-accent text, the way TonVault uses its lime:
+   never as text on a light ground. And a label in the display face's capitals,
+   the way a manual numbers its sections. */
+.ij-page :is(mark, .ij-highlight) {
+  padding: 0 0.2em;
+  border-radius: 2px;
+  background: var(--ij-color-accent);
+  color: var(--ij-color-on-accent);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+.ij-label {
+  margin: 0;
+  font-family: var(--ij-font-display, var(--ij-font-ui));
+  font-variation-settings: var(--ij-font-display-axes, normal);
+  font-size: var(--ij-mkt-small-size);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ij-color-text-secondary);
+}
+
 /* ---------- A dated source for a cited fact ---------- */
 
 .ij-source { padding: var(--ij-mkt-space-stack); background: var(--ij-color-bg-card);
@@ -550,6 +614,21 @@ ij-store-cta { display: block; }
     color-mix(in srgb, var(--ij-color-bg-app) 30%, transparent),
     color-mix(in srgb, var(--ij-color-bg-app) 55%, transparent) 60%,
     var(--ij-color-bg-app));
+}
+/* A photo shown mirrored, when the brief needs its line to run the other
+   way (Wean's waterline falls left to right). Its line is mirrored with it. */
+.ij-scene__photo--mirrored { transform: scaleX(-1); }
+/* The scene's one magenta line, drawn on the photo by hand (#90): an SVG the
+   size of the photo that crops exactly as the photo does, above the scene's
+   dimming, so the line stays vivid on the quiet picture. */
+.ij-scene__line {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
 }
 .ij-scene > .ij-container {
   --_fade: var(--ij-mkt-space-section);

@@ -1,22 +1,25 @@
 ---
 /**
  * The home page, in every language (#396): the site brief's eight sections on
- * the IAMJARL marketing kit, with Wean's identity and its coast drawings.
+ * the IAMJARL marketing kit, with Wean's identity and two photographs.
  *
  *   1. Hero: the headline, the line under it, the store button, and the Today
  *      loop in the kit's plain phone.
- *   2. Three calm statements.
+ *   2. Three calm statements, then the tide going out: a band of tidal flats
+ *      with the magenta waterline drawn on it, falling left to right.
  *   3. The phone that stays: Today, Progress, the craving tools.
  *   4. How the plan works: an example plan from the app's maths, then the
  *      guides as cards.
  *   5. Privacy and price, with the App Store's privacy label as Apple shows it.
  *   6. A note from the maker, signed Jarl.
  *   7. The FAQ, mirrored word for word in the FAQPage JSON-LD.
- *   8. The wordmark and the store button, then the footer.
+ *   8. The wordmark and the store button on the open flats, then the footer.
  *
- * The coast drawings are off the page until the design system redraws them
- * (iamjarl-design#90); the owner found them not good enough. sync-design.mjs
- * still brings them, so they can go back where the brief places them.
+ * The photographs replace the coast drawings (iamjarl-design#90), by the
+ * owner's choice: Julia Taubitz's, free under the Unsplash License, served
+ * from the site at 960, 1280 and 1920 px. The kit's .ij-scene makes them
+ * monochrome and fades them into the ground. The waterline comes from the
+ * design system (src/design/scenes/) and crops exactly as its photo does.
  *
  * Every section is complete in the served HTML. Only two things move, the loop
  * and the phone that stays, and kit.js stops both under "reduce motion".
@@ -33,6 +36,9 @@ import type { Locale } from '../i18n/translations';
 import tourToday from '../assets/site/tour-today.jpg';
 import tourProgress from '../assets/site/tour-progress.jpg';
 import tourTools from '../assets/site/tour-tools.jpg';
+import tidalFlats from '../assets/site/tidal-flats.jpg';
+import openFlats from '../assets/site/open-flats.jpg';
+import waterline from '../design/scenes/tidal-flats.svg?raw';
 
 interface Props {
 	locale: Locale;
@@ -105,6 +111,22 @@ const faqSchema = {
 			</div>
 		</div>
 	</section>
+
+	<!-- The tide going out, its waterline the one magenta line. The photo is
+	     mirrored so the line falls left to right, and stays centred, so the line
+	     crops with it at any width. -->
+	<div class="ij-scene" aria-hidden="true">
+		<Image
+			src={tidalFlats}
+			alt=""
+			class="ij-scene__photo ij-scene__photo--mirrored"
+			widths={[960, 1280, 1920]}
+			sizes="100vw"
+			loading="lazy"
+			decoding="async"
+		/>
+		<Fragment set:html={waterline} />
+	</div>
 
 	<!-- 3. The phone that stays -->
 	<section class="ij-section ij-section--band" aria-labelledby="tour-h">
@@ -214,8 +236,17 @@ const faqSchema = {
 		</div>
 	</section>
 
-	<!-- 8. Closing -->
-	<section class="ij-section" aria-label={copy.sections.closing}>
+	<!-- 8. Closing: the wordmark on the open flats -->
+	<section class="ij-scene" aria-label={copy.sections.closing}>
+		<Image
+			src={openFlats}
+			alt=""
+			class="ij-scene__photo"
+			widths={[960, 1280, 1920]}
+			sizes="100vw"
+			loading="lazy"
+			decoding="async"
+		/>
 		<div class="ij-container ij-closing">
 			<p class="ij-wordmark">Wean</p>
 			<StoreButton locale={locale} placement="footer" />
