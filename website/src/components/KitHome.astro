@@ -3,16 +3,20 @@
  * The home page, in every language (#396): the site brief's eight sections on
  * the IAMJARL marketing kit, with Wean's identity and its coast drawings.
  *
- *   1. Hero: the headline, the waterline, the line under it, the store button,
- *      and the Today loop in the kit's plain phone.
- *   2. Three calm statements, one drawing each.
+ *   1. Hero: the headline, the line under it, the store button, and the Today
+ *      loop in the kit's plain phone.
+ *   2. Three calm statements.
  *   3. The phone that stays: Today, Progress, the craving tools.
- *   4. How the plan works: the taper as a staircase from the app's maths, then
- *      the guides as cards.
+ *   4. How the plan works: an example plan from the app's maths, then the
+ *      guides as cards.
  *   5. Privacy and price, with the App Store's privacy label as Apple shows it.
  *   6. A note from the maker, signed Jarl.
  *   7. The FAQ, mirrored word for word in the FAQPage JSON-LD.
  *   8. The wordmark and the store button, then the footer.
+ *
+ * The coast drawings are off the page until the design system redraws them
+ * (iamjarl-design#90); the owner found them not good enough. sync-design.mjs
+ * still brings them, so they can go back where the brief places them.
  *
  * Every section is complete in the served HTML. Only two things move, the loop
  * and the phone that stays, and kit.js stops both under "reduce motion".
@@ -29,14 +33,6 @@ import type { Locale } from '../i18n/translations';
 import tourToday from '../assets/site/tour-today.jpg';
 import tourProgress from '../assets/site/tour-progress.jpg';
 import tourTools from '../assets/site/tour-tools.jpg';
-import shoreline from '../design/drawings/shoreline.svg?raw';
-import flatRocks from '../design/drawings/flat-rocks.svg?raw';
-import stones from '../design/drawings/stones.svg?raw';
-import mooringPost from '../design/drawings/mooring-post.svg?raw';
-import harbourSteps from '../design/drawings/harbour-steps.svg?raw';
-import breakwater from '../design/drawings/breakwater.svg?raw';
-import boat from '../design/drawings/boat.svg?raw';
-import lowTide from '../design/drawings/low-tide.svg?raw';
 
 interface Props {
 	locale: Locale;
@@ -45,7 +41,6 @@ interface Props {
 const { locale } = Astro.props;
 const copy = HOME_COPY[locale];
 
-const statementDrawings = [flatRocks, stones, mooringPost];
 const tourScreens = [tourToday, tourProgress, tourTools];
 
 const faqSchema = {
@@ -64,7 +59,6 @@ const faqSchema = {
 	description={copy.meta.description}
 	availableLocales={ALL_LOCALES}
 	structuredData={[faqSchema]}
-	fineprint={`${copy.fineprint.illustrations}.`}
 	ctaAfter="#hero-cta"
 >
 	<!-- 1. Hero -->
@@ -72,7 +66,6 @@ const faqSchema = {
 		<div class="ij-container ij-hero__inner">
 			<div class="ij-hero__text">
 				<h1 class="ij-display">{copy.hero.headline}</h1>
-				<Fragment set:html={shoreline} />
 				<p class="ij-lede">{copy.hero.lede}</p>
 				<div id="hero-cta"><StoreButton locale={locale} placement="hero" /></div>
 			</div>
@@ -98,19 +91,15 @@ const faqSchema = {
 		</div>
 	</section>
 
-	<!-- 2. Three calm statements, one drawing each. The drawings are written as
-	     SVG with AI in iamjarl-design (#75), and the footer says so. -->
+	<!-- 2. Three calm statements, as the kit's trait cards -->
 	<section class="ij-section" id="how" aria-labelledby="how-h">
 		<div class="ij-container">
 			<h2 class="ij-headline section-heading" id="how-h">{copy.sections.statements}</h2>
-			<div class="ij-statements">
-				{copy.statements.map((statement, i) => (
-					<div class="ij-statement">
-						<Fragment set:html={statementDrawings[i]} />
-						<div class="ij-statement__text">
-							<h3 class="ij-title">{statement.title}</h3>
-							<p>{statement.text}</p>
-						</div>
+			<div class="ij-traits statements">
+				{copy.statements.map((statement) => (
+					<div class="ij-trait">
+						<h3 class="ij-title">{statement.title}</h3>
+						<p>{statement.text}</p>
 					</div>
 				))}
 			</div>
@@ -143,7 +132,6 @@ const faqSchema = {
 						<li class="ij-tour__step" data-step={i + 1}>
 							<h3 class="ij-title">{step.title}</h3>
 							<p>{step.text}</p>
-							{i === copy.tour.length - 1 && <Fragment set:html={breakwater} />}
 						</li>
 					))}
 				</ol>
@@ -151,16 +139,13 @@ const faqSchema = {
 		</div>
 	</section>
 
-	<!-- 4. How the plan works: the staircase, then the guides -->
+	<!-- 4. How the plan works: an example plan, then the guides -->
 	<section class="ij-section" id="plan" aria-labelledby="plan-h">
 		<div class="ij-container ij-stack">
-			<div class="ij-row">
-				<Fragment set:html={harbourSteps} />
-				<div class="ij-row__text">
-					<h2 class="ij-headline" id="plan-h">{copy.staircase.title}</h2>
-					<p>{copy.staircase.intro}</p>
-					<p>{copy.staircase.honest}</p>
-				</div>
+			<div class="plan-intro ij-measure">
+				<h2 class="ij-headline" id="plan-h">{copy.staircase.title}</h2>
+				<p>{copy.staircase.intro}</p>
+				<p>{copy.staircase.honest}</p>
 			</div>
 			<Staircase locale={locale} />
 			<h3 class="ij-title guides-heading" id="guides">{copy.guides.title}</h3>
@@ -178,7 +163,6 @@ const faqSchema = {
 	<!-- 5. Privacy and price, as features -->
 	<section class="ij-section ij-section--band" aria-labelledby="privacy-h">
 		<div class="ij-container ij-stack">
-			<Fragment set:html={boat} />
 			<h2 class="ij-headline" id="privacy-h">{copy.sections.assurances}</h2>
 			<div class="ij-assurances">
 				<div class="ij-assurance">
@@ -233,7 +217,6 @@ const faqSchema = {
 	<!-- 8. Closing -->
 	<section class="ij-section" aria-label={copy.sections.closing}>
 		<div class="ij-container ij-closing">
-			<Fragment set:html={lowTide} />
 			<p class="ij-wordmark">Wean</p>
 			<StoreButton locale={locale} placement="footer" />
 		</div>
@@ -247,6 +230,19 @@ const faqSchema = {
 	}
 	.section-heading {
 		margin-bottom: var(--ij-mkt-space-block);
+	}
+	/* The statements are read top-down, so each card starts with its title. */
+	.statements .ij-trait {
+		justify-content: flex-start;
+	}
+	.plan-intro {
+		display: flex;
+		flex-direction: column;
+		gap: var(--ij-spacing-lg);
+	}
+	.plan-intro p {
+		margin: 0;
+		color: var(--ij-color-text-secondary);
 	}
 	.guides-heading {
 		margin-top: var(--ij-mkt-space-block);
