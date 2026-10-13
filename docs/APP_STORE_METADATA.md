@@ -44,7 +44,7 @@ Alternativer:
 
 ---
 
-## iOS App Version 1.7.1 — Submitted October 2026 (build 26)
+## iOS App Version 1.7.1 — Live in App Store (build 26, approved October 2026)
 
 One change, to how Progress shows a day above the plan (#398). **ASO fields (subtitle + keywords) are unchanged from 1.6.0** and carry forward automatically. **Promotional Text must be re-pasted** (ASC wipes it on every new version); reuse the 1.7.0 texts below, which still fit. The Description and Copyright (`2026 IAMJARL`) are unchanged from 1.7.0; check that Copyright carried over.
 
@@ -96,7 +96,7 @@ En dag over planen din blir møtt med ro.
 
 ---
 
-## iOS App Version 1.7.0 — Live in App Store (build 25, approved October 2026)
+## iOS App Version 1.7.0 — Superseded by 1.7.1 (build 25, was live October 2026)
 
 Export, Send Feedback, guided sessions that keep the screen on, and a faster start. **ASO fields (subtitle + keywords) are unchanged from 1.6.0** and carry forward automatically. **Promotional Text must be re-pasted** (ASC wipes it on every new version); use the 1.7.0 texts below. **Copyright is version-locked: set it to `2026 IAMJARL` with this version** (see Copyright below). The Description is unchanged from 1.6.2.
 
