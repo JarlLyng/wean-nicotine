@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.7.1] - 2026-10-12
 
-iOS build 26, submitted October 2026. One change, to how Progress shows a day above the plan.
+iOS build 26, approved and live in the App Store October 2026. One change, to how Progress shows a day above the plan.
 
 ### Changed
 
