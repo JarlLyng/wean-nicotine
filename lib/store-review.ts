@@ -15,6 +15,7 @@
  * no user data — the request goes straight to StoreKit.
  */
 
+import { CAPTURE_MODE } from './capture-mode';
 import { Platform } from 'react-native';
 import * as StoreReview from 'expo-store-review';
 import { getPreference, setPreference } from './db-preferences';
@@ -33,6 +34,8 @@ const DAY_MS = 24 * 60 * 60 * 1000;
  * issued (useful for tests), false when any gate declined.
  */
 export async function maybeRequestReview(planStartDate: number): Promise<boolean> {
+  // Capture builds (#396) must never put a review dialog in a screenshot.
+  if (CAPTURE_MODE) return false;
   if (Platform.OS === 'web') return false;
 
   try {

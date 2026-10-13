@@ -105,6 +105,9 @@ module.exports = {
       // Inlined at build time when EAS sets EXPO_PUBLIC_SENTRY_DSN;
       // guarantees DSN in production build
       sentryDsn: process.env.EXPO_PUBLIC_SENTRY_DSN ?? '',
+      // Seeds a calm sample month for the site's screenshots (lib/capture-mode.ts, #396).
+      // Only the `capture` EAS profile turns it on; a production build never can.
+      captureMode: process.env.EAS_BUILD_PROFILE === 'capture',
     },
     runtimeVersion: {
       policy: 'appVersion',

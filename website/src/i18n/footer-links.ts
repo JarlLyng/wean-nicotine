@@ -1,58 +1,98 @@
 /**
- * Per-locale footer guide links (#303).
+ * The guides, listed above the footer on every page (#303, #396).
  *
- * The English Resources/Guides columns are declared inline in Layout.astro and
- * gated on `lang === 'en'`. That gate is deliberate (#98): Nordic readers
- * should not be dropped into English pages from a Danish footer.
+ * Each locale links only within itself (#98): a Danish reader is not dropped
+ * into English pages from a Danish page, nor the other way. The list is also
+ * how most guides are reached at all; check-build fails a page nothing links
+ * to, and three Nordic guides sat orphaned that way until #303.
  *
- * The side effect was that the Nordic locales got no guide links at all, so
- * each locale's content cluster was reachable only from inside itself. The
- * three craving guides had zero inbound links anywhere on the site, and a
- * reader landing on /da/ had no path to a single Danish page.
- *
- * This gives each Nordic locale its own column, linking only within that
- * locale. English stays where it is: it has ten pages across two themed
- * columns, and squeezing that into the same shape as a four-page locale would
- * misrepresent both.
+ * English has ten pages in two groups. The Nordic locales have four each.
  */
+import type { Locale } from './translations';
 
-export interface FooterLink {
+export interface GuideLink {
   href: string;
   label: string;
 }
 
-export interface LocaleFooter {
+export interface GuideGroup {
   heading: string;
-  links: FooterLink[];
+  links: GuideLink[];
 }
 
-/** Locales with their own content cluster. English is handled in Layout.astro. */
-export const NORDIC_FOOTER: Record<string, LocaleFooter> = {
+export interface LocaleGuides {
+  /** The accessible name of the list's <nav>. */
+  label: string;
+  groups: GuideGroup[];
+}
+
+export const GUIDE_LINKS: Record<Locale, LocaleGuides> = {
+  en: {
+    label: 'Guides',
+    groups: [
+      {
+        heading: 'Resources',
+        links: [
+          { href: '/snus-reduction-app/', label: 'Snus Reduction App' },
+          { href: '/nicotine-pouch-reduction-app/', label: 'Nicotine Pouch Reduction' },
+          { href: '/how-to-reduce-snus/', label: 'How to Reduce Snus' },
+          { href: '/how-to-quit-nicotine-pouches/', label: 'How to Quit Nicotine Pouches' },
+          { href: '/wean-vs-habit-tracker/', label: 'Wean vs. Habit Tracker' },
+        ],
+      },
+      {
+        heading: 'Guides',
+        links: [
+          { href: '/how-to-handle-nicotine-cravings/', label: 'Handle Nicotine Cravings' },
+          { href: '/taper-nicotine/', label: 'Taper Nicotine' },
+          { href: '/gradual-reduction-vs-cold-turkey/', label: 'Gradual vs. Cold Turkey' },
+          { href: '/track-snus-use/', label: 'Track Snus Use' },
+          { href: '/track-nicotine-pouches/', label: 'Track Nicotine Pouches' },
+          { href: '/private-quit-nicotine-app/', label: 'Private Quit App' },
+        ],
+      },
+    ],
+  },
   da: {
-    heading: 'Guider',
-    links: [
-      { href: '/da/trappe-ned-snus/', label: 'Trappe ned på snus' },
-      { href: '/da/hvordan-stopper-man-med-snus/', label: 'Sådan stopper du med snus' },
-      { href: '/da/nikotin-trang-hjaelp/', label: 'Hjælp til nikotintrang' },
-      { href: '/da/stop-med-snus-app/', label: 'Appen til nedtrapning' },
+    label: 'Guider',
+    groups: [
+      {
+        heading: 'Guider',
+        links: [
+          { href: '/da/trappe-ned-snus/', label: 'Trappe ned på snus' },
+          { href: '/da/hvordan-stopper-man-med-snus/', label: 'Sådan stopper du med snus' },
+          { href: '/da/nikotin-trang-hjaelp/', label: 'Hjælp til nikotintrang' },
+          { href: '/da/stop-med-snus-app/', label: 'Appen til nedtrapning' },
+        ],
+      },
     ],
   },
   sv: {
-    heading: 'Guider',
-    links: [
-      { href: '/sv/trappa-ner-snus/', label: 'Trappa ner snus' },
-      { href: '/sv/hur-slutar-man-snusa/', label: 'Så slutar du snusa' },
-      { href: '/sv/nikotinsug-hjalp/', label: 'Hjälp mot nikotinsug' },
-      { href: '/sv/sluta-snusa-app/', label: 'Appen för nedtrappning' },
+    label: 'Guider',
+    groups: [
+      {
+        heading: 'Guider',
+        links: [
+          { href: '/sv/trappa-ner-snus/', label: 'Trappa ner snus' },
+          { href: '/sv/hur-slutar-man-snusa/', label: 'Så slutar du snusa' },
+          { href: '/sv/nikotinsug-hjalp/', label: 'Hjälp mot nikotinsug' },
+          { href: '/sv/sluta-snusa-app/', label: 'Appen för nedtrappning' },
+        ],
+      },
     ],
   },
   no: {
-    heading: 'Guider',
-    links: [
-      { href: '/no/trappe-ned-snus/', label: 'Trappe ned snus' },
-      { href: '/no/hvordan-slutte-med-snus/', label: 'Slik slutter du med snus' },
-      { href: '/no/nikotinsug-hjelp/', label: 'Hjelp mot nikotinsug' },
-      { href: '/no/slutte-med-snus-app/', label: 'Appen for nedtrapping' },
+    label: 'Guider',
+    groups: [
+      {
+        heading: 'Guider',
+        links: [
+          { href: '/no/trappe-ned-snus/', label: 'Trappe ned snus' },
+          { href: '/no/hvordan-slutte-med-snus/', label: 'Slik slutter du med snus' },
+          { href: '/no/nikotinsug-hjelp/', label: 'Hjelp mot nikotinsug' },
+          { href: '/no/slutte-med-snus-app/', label: 'Appen for nedtrapping' },
+        ],
+      },
     ],
   },
 };

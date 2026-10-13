@@ -1,0 +1,307 @@
+---
+/**
+ * The home page, in every language (#396): the site brief's eight sections on
+ * the IAMJARL marketing kit, with Wean's identity and its coast drawings.
+ *
+ *   1. Hero: the headline, the waterline, the line under it, the store button,
+ *      and the Today loop in the kit's plain phone.
+ *   2. Three calm statements, one drawing each.
+ *   3. The phone that stays: Today, Progress, the craving tools.
+ *   4. How the plan works: the taper as a staircase from the app's maths, then
+ *      the guides as cards.
+ *   5. Privacy and price, with the App Store's privacy label as Apple shows it.
+ *   6. A note from the maker, signed Jarl.
+ *   7. The FAQ, mirrored word for word in the FAQPage JSON-LD.
+ *   8. The wordmark and the store button, then the footer.
+ *
+ * Every section is complete in the served HTML. Only two things move, the loop
+ * and the phone that stays, and kit.js stops both under "reduce motion".
+ * The copy is in i18n/home-copy.ts; the captures are made as in
+ * docs/SITE_CAPTURES.md, with true numbers (#338).
+ */
+import { Image } from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+import Staircase from './Staircase.astro';
+import StoreButton from './StoreButton.astro';
+import { HOME_COPY } from '../i18n/home-copy';
+import { ALL_LOCALES } from '../i18n/ui';
+import type { Locale } from '../i18n/translations';
+import tourToday from '../assets/site/tour-today.jpg';
+import tourProgress from '../assets/site/tour-progress.jpg';
+import tourTools from '../assets/site/tour-tools.jpg';
+import shoreline from '../design/drawings/shoreline.svg?raw';
+import flatRocks from '../design/drawings/flat-rocks.svg?raw';
+import stones from '../design/drawings/stones.svg?raw';
+import mooringPost from '../design/drawings/mooring-post.svg?raw';
+import harbourSteps from '../design/drawings/harbour-steps.svg?raw';
+import breakwater from '../design/drawings/breakwater.svg?raw';
+import boat from '../design/drawings/boat.svg?raw';
+import lowTide from '../design/drawings/low-tide.svg?raw';
+
+interface Props {
+	locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = HOME_COPY[locale];
+
+const statementDrawings = [flatRocks, stones, mooringPost];
+const tourScreens = [tourToday, tourProgress, tourTools];
+
+const faqSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'FAQPage',
+	mainEntity: copy.faq.items.map((item) => ({
+		'@type': 'Question',
+		name: item.question,
+		acceptedAnswer: { '@type': 'Answer', text: item.answer },
+	})),
+};
+---
+
+<Layout
+	title={copy.meta.title}
+	description={copy.meta.description}
+	availableLocales={ALL_LOCALES}
+	structuredData={[faqSchema]}
+	fineprint={`${copy.fineprint.illustrations}.`}
+	ctaAfter="#hero-cta"
+>
+	<!-- 1. Hero -->
+	<section class="ij-hero ij-hero--split" id="hero">
+		<div class="ij-container ij-hero__inner">
+			<div class="ij-hero__text">
+				<h1 class="ij-display">{copy.hero.headline}</h1>
+				<Fragment set:html={shoreline} />
+				<p class="ij-lede">{copy.hero.lede}</p>
+				<div id="hero-cta"><StoreButton locale={locale} placement="hero" /></div>
+			</div>
+			<div class="ij-hero__media">
+				<div class="ij-phone" style="--ij-phone-width: 300px">
+					<div class="ij-phone__screen">
+						<video
+							class="ij-loop"
+							muted
+							loop
+							playsinline
+							preload="none"
+							poster="/site/today-loop-poster.jpg"
+							width="602"
+							height="1302"
+							aria-label={copy.hero.loopLabel}
+						>
+							<source src="/site/today-loop.mp4" type="video/mp4" />
+						</video>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- 2. Three calm statements, one drawing each. The drawings are written as
+	     SVG with AI in iamjarl-design (#75), and the footer says so. -->
+	<section class="ij-section" id="how" aria-labelledby="how-h">
+		<div class="ij-container">
+			<h2 class="ij-headline section-heading" id="how-h">{copy.sections.statements}</h2>
+			<div class="ij-statements">
+				{copy.statements.map((statement, i) => (
+					<div class="ij-statement">
+						<Fragment set:html={statementDrawings[i]} />
+						<div class="ij-statement__text">
+							<h3 class="ij-title">{statement.title}</h3>
+							<p>{statement.text}</p>
+						</div>
+					</div>
+				))}
+			</div>
+		</div>
+	</section>
+
+	<!-- 3. The phone that stays -->
+	<section class="ij-section ij-section--band" aria-labelledby="tour-h">
+		<div class="ij-container ij-stack">
+			<h2 class="ij-headline" id="tour-h">{copy.sections.tour}</h2>
+			<div class="ij-tour">
+				<div class="ij-tour__screens">
+					{tourScreens.map((screen, i) => (
+						<div class="ij-phone" data-step={i + 1}>
+							<div class="ij-phone__screen">
+								<Image
+									src={screen}
+									alt={copy.tour[i].screenLabel}
+									widths={[300, 602]}
+									sizes="300px"
+									loading="lazy"
+									decoding="async"
+								/>
+							</div>
+						</div>
+					))}
+				</div>
+				<ol class="ij-tour__steps">
+					{copy.tour.map((step, i) => (
+						<li class="ij-tour__step" data-step={i + 1}>
+							<h3 class="ij-title">{step.title}</h3>
+							<p>{step.text}</p>
+							{i === copy.tour.length - 1 && <Fragment set:html={breakwater} />}
+						</li>
+					))}
+				</ol>
+			</div>
+		</div>
+	</section>
+
+	<!-- 4. How the plan works: the staircase, then the guides -->
+	<section class="ij-section" id="plan" aria-labelledby="plan-h">
+		<div class="ij-container ij-stack">
+			<div class="ij-row">
+				<Fragment set:html={harbourSteps} />
+				<div class="ij-row__text">
+					<h2 class="ij-headline" id="plan-h">{copy.staircase.title}</h2>
+					<p>{copy.staircase.intro}</p>
+					<p>{copy.staircase.honest}</p>
+				</div>
+			</div>
+			<Staircase locale={locale} />
+			<h3 class="ij-title guides-heading" id="guides">{copy.guides.title}</h3>
+			<div class="ij-bento">
+				{copy.guides.cards.map((card) => (
+					<a class="ij-card ij-card--link" href={card.href}>
+						<h4 class="ij-title">{card.title}</h4>
+						<p>{card.text}</p>
+					</a>
+				))}
+			</div>
+		</div>
+	</section>
+
+	<!-- 5. Privacy and price, as features -->
+	<section class="ij-section ij-section--band" aria-labelledby="privacy-h">
+		<div class="ij-container ij-stack">
+			<Fragment set:html={boat} />
+			<h2 class="ij-headline" id="privacy-h">{copy.sections.assurances}</h2>
+			<div class="ij-assurances">
+				<div class="ij-assurance">
+					<h3 class="ij-title">{copy.assurances.logs.title}</h3>
+					<p>{copy.assurances.logs.text}</p>
+				</div>
+				<div class="ij-assurance">
+					<h3 class="ij-title">{copy.assurances.paid.title}</h3>
+					<p>{copy.assurances.paid.text}</p>
+				</div>
+				{/* The label in the App Store's own words for this language. */}
+				<div class="ij-assurance ij-assurance--label">
+					<p class="ij-small label-heading">{copy.assurances.label.heading}</p>
+					<h3 class="ij-title">{copy.assurances.label.type}</h3>
+					<p>{copy.assurances.label.explanation} <strong>{copy.assurances.label.category}</strong></p>
+					<p>{copy.assurances.label.note}</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- 6. A note from the maker -->
+	<section class="ij-section" aria-label={copy.sections.maker}>
+		<div class="ij-container">
+			<div class="ij-maker">
+				<p>{copy.maker.note}</p>
+				<p class="ij-maker__sign">
+					{copy.maker.signature}
+					<svg class="ij-drawing" viewBox="0 0 140 14" aria-hidden="true"><path d="M2 9c20-6 40-6 62-2s46 4 74-3" fill="none" style="stroke: var(--ij-color-accent)" stroke-width="2.4" stroke-linecap="round"></path></svg>
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<!-- 7. FAQ. The FAQPage JSON-LD in the head mirrors this word for word. -->
+	<section class="ij-section ij-section--band" id="faq" aria-labelledby="faq-h">
+		<div class="ij-container">
+			<div class="ij-stack ij-measure">
+				<h2 class="ij-headline" id="faq-h">{copy.faq.title}</h2>
+				<div class="faq">
+					{copy.faq.items.map((item) => (
+						<details>
+							<summary>{item.question}</summary>
+							<p>{item.answer}</p>
+						</details>
+					))}
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- 8. Closing -->
+	<section class="ij-section" aria-label={copy.sections.closing}>
+		<div class="ij-container ij-closing">
+			<Fragment set:html={lowTide} />
+			<p class="ij-wordmark">Wean</p>
+			<StoreButton locale={locale} placement="footer" />
+		</div>
+	</section>
+</Layout>
+
+<style>
+	/* The kit's Wean example sets the headlines at 500 (iamjarl-design kit/wean.html). */
+	:global(:root) {
+		--ij-display-weight: 500;
+	}
+	.section-heading {
+		margin-bottom: var(--ij-mkt-space-block);
+	}
+	.guides-heading {
+		margin-top: var(--ij-mkt-space-block);
+	}
+	.label-heading {
+		margin: 0;
+	}
+	.ij-assurance strong {
+		color: var(--ij-color-text-primary);
+		font-weight: var(--ij-font-weight-semibold);
+	}
+
+	/* The guides as cards: the whole card is the link (as on Walkful). */
+	.ij-card--link {
+		color: inherit;
+		text-decoration: none;
+		border: 1px solid transparent;
+		transition: border-color var(--ij-duration-fast, 150ms) var(--ij-easing-standard, ease);
+	}
+	.ij-card--link .ij-title {
+		color: var(--ij-color-text-primary);
+	}
+	.ij-card--link:hover {
+		border-color: var(--ij-color-accent);
+	}
+	.ij-card--link:hover .ij-title {
+		text-decoration: underline;
+		text-decoration-color: var(--ij-color-accent);
+		text-underline-offset: 0.2em;
+	}
+
+	/* The FAQ: plain disclosures, readable with or without script. */
+	.faq {
+		display: grid;
+		gap: var(--ij-spacing-sm);
+	}
+	.faq details {
+		background: var(--ij-color-bg-app);
+		border: 1px solid var(--ij-color-border-subtle);
+		border-radius: var(--ij-radius-md);
+		padding: var(--ij-spacing-lg);
+	}
+	.faq summary {
+		cursor: pointer;
+		font-family: var(--ij-font-display, var(--ij-font-ui));
+		font-size: var(--ij-mkt-title-size);
+		line-height: var(--ij-mkt-title-leading);
+		color: var(--ij-color-text-primary);
+		list-style-position: inside;
+	}
+	.faq summary::marker {
+		color: var(--ij-color-accent);
+	}
+	.faq details p {
+		margin: var(--ij-spacing-md) 0 0;
+		color: var(--ij-color-text-secondary);
+	}
+</style>

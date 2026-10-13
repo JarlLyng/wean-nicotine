@@ -1,21 +1,13 @@
-/* Self-hosted typography — only the weights actually used.
-   Replaces the render-blocking Google Fonts <link>. @fontsource defaults to
-   font-display: swap so text paints with the system fallback while the web
-   font is downloading. */
-@import '@fontsource/inter/400.css';
-@import '@fontsource/inter/500.css';
-@import '@fontsource/inter/600.css';
-/* Display face: Instrument Sans, Wean Nicotine's own (iamjarl-design 1.16, #373).
-   Variable, weights 400 to 700; the latin and latin-ext subsets each load only
-   when a page uses their characters, and æ, ø, å, ä, ö are in latin. */
-@import '@fontsource-variable/instrument-sans';
+/* The site's shared styles, on Wean's identity (#396).
+
+   The page itself (ground, text colour, the UI face at 18 px and more) is set by
+   the design system's kit on <body class="ij-page">, and the display face comes
+   from its font sheet; Layout.astro loads both from public/iamjarl-design/.
+   This file maps the site's own variable names onto that (tokens.css) and keeps
+   the few utilities the guide pages share. Nothing here animates in: on Wean's
+   pages only the hero loop and the phone that stays move. */
 
 @import './tokens.css';
-
-/* Color scheme follows system preference via tokens.css */
-:root {
-  color-scheme: light dark;
-}
 
 * {
   box-sizing: border-box;
@@ -26,46 +18,34 @@ body {
   margin: 0;
   padding: 0;
   min-height: 100vh;
-  background-color: var(--bg-app);
-  color: var(--text-primary);
-  font-family: var(--font-body);
-  font-size: var(--font-size-base);
-  line-height: var(--line-height-normal);
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+}
+
+/* clip, not hidden: hidden makes the body a scroll container, and then
+   <ij-nav>'s sticky bar scrolls away with the page. */
+body {
+  overflow-x: clip;
 }
 
 h1,
 h2,
 h3,
-h4,
-.brand__name {
+h4 {
   font-family: var(--font-display);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
   margin: 0;
+  text-wrap: balance;
 }
 
 h1 {
   font-size: var(--font-size-hero);
   line-height: var(--line-height-tight);
-  letter-spacing: -0.04em;
+  letter-spacing: -0.02em;
 }
 h2 {
   font-size: var(--font-size-xxl);
   line-height: var(--line-height-snug);
-  letter-spacing: -0.03em;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-  transition: all 0.2s ease;
-}
-
-a:hover {
-  color: var(--primary);
+  letter-spacing: -0.01em;
 }
 
 .container {
@@ -76,99 +56,28 @@ a:hover {
   padding-right: var(--space-xl);
 }
 
-/* Glassmorphism Classes */
-.glass {
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Cards on the guide pages: the identity's card colour, with no glass. */
+.glass,
+.glass-card {
   background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
   border: 1px solid var(--glass-border);
-  box-shadow: var(--shadow-premium);
+  border-radius: var(--radius-lg);
 }
 
 .glass-card {
-  background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-lg);
   padding: var(--space-xxl);
-  transition:
-    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.3s ease;
-}
-
-.glass-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
-  border-color: color-mix(in oklab, var(--primary), transparent 60%);
-}
-
-/* Nordic Background System */
-.nordic-bg {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
-.nordic-bg::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to bottom,
-    color-mix(in oklab, var(--bg-app), transparent 20%),
-    var(--bg-app) 95%
-  );
-}
-
-/* Animation Utilities */
-/* The hidden start state is gated on `.js`, which the inline head script in
-   Layout.astro sets. Without JavaScript (or if that script never runs) the
-   class is absent and the content simply renders, instead of staying at
-   opacity 0 forever waiting for an IntersectionObserver that will not fire. */
-.js .reveal {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.js .reveal.active {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-20px);
-  }
-}
-
-.anim-float {
-  animation: float 10s ease-in-out infinite;
-}
-
-/* Site-wide reduced-motion. Previously this lived only in index.astro's
-   scoped <style>, so it never applied to NordicHome (the DA/SV/NO home
-   pages) or to any other component using these global classes. */
-@media (prefers-reduced-motion: reduce) {
-  .anim-float,
-  .hero__aurora-orb {
-    animation: none !important;
-  }
-
-  .js .reveal,
-  .js .reveal.active {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
 }
 
 /* Grid Utilities */
@@ -208,61 +117,7 @@ a:hover {
   line-height: var(--line-height-relaxed);
 }
 
-/* Store button (#393). The design system's fragments bring no styles; these are
-   its README defaults on this site's tokens. */
-.ij-store {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--space-xs);
-}
-.ij-store .ij-store-facts {
-  margin: 0;
-  font-size: var(--font-size-sm);
-  color: var(--text-secondary);
-}
-.ij-store-badge {
-  display: inline-block;
-  transition: transform 0.2s ease;
-}
-.ij-store-badge:hover {
-  transform: translateY(-2px);
-}
-.ij-store-badge img {
-  display: block;
-  height: 52px;
-  width: auto;
-}
+/* The store button's placement in a guide (#393). The kit styles the button. */
 .store-cta--center .ij-store {
   align-items: center;
-}
-
-/* The header's call to action is the fragment's text link, dressed as the
-   site's primary button (one badge per layout). */
-.store-nav a {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px 20px;
-  border-radius: var(--radius-xl);
-  font-family: var(--font-display);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-bold);
-  text-decoration: none;
-  white-space: nowrap;
-  background: var(--primary);
-  color: var(--on-primary);
-  border: 1px solid color-mix(in oklab, var(--primary), white 20%);
-  transition:
-    background 0.2s ease,
-    transform 0.2s ease;
-}
-.store-nav a:hover {
-  background: color-mix(in oklab, var(--primary), white 10%);
-  transform: translateY(-1px);
-}
-.store-nav a:focus-visible,
-.ij-store-badge:focus-visible {
-  outline: 2px solid var(--primary);
-  outline-offset: 2px;
 }

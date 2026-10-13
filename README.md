@@ -71,7 +71,7 @@ Wean helps users:
 ### Daily tracking
 
 - One‑tap log: _Used a pouch_
-- One‑tap log: _Craving resisted_
+- One‑tap log: _Resisted craving_
 - Daily allowance based on taper plan
 - Calm, non-judgmental UI even if you go over the limit
 

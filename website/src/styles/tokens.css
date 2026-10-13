@@ -1,53 +1,50 @@
 /*
- * Wean Nicotine website tokens.
+ * Wean Nicotine website tokens: the site's own names, pointed at the design system.
  *
- * Hand-written for this site. This is NOT the IAMJARL design system's
- * tokens.css, whatever the old header here claimed ("IAMJARL Design Tokens
- * v1.2.0"): it declares no --ij-* variables at all, only 82 local custom
- * properties, 43 of which the site's stylesheets reference.
+ * The pages outside the home page were written against these local names
+ * (--bg-app, --text-secondary, --primary and so on). Since #396 each one takes
+ * its value from the IAMJARL tokens and Wean's identity sheet, which Layout.astro
+ * loads from public/iamjarl-design/ (scripts/sync-design.mjs). That is the
+ * migration #326 describes: the names stay, and the values come from one source.
  *
- * Do not replace it with the design system's file or a CDN link to one. That
- * would delete every property below and leave the site unstyled with no error.
- * Adopting the design system here is a migration, mapping each local variable
- * to its --ij-* equivalent, and it is tracked in #326. #282 proposed the
- * replacement on the strength of the old header and was closed for that reason.
+ * Declare no --ij-* names here. They belong to the design system, and the hub's
+ * design_adoption.py reports any it does not define as counterfeit.
+ *
+ * Light only. The identity sheet holds the page on its grey-blue whatever the
+ * visitor's setting, so there is no dark block here any more.
  */
 
 :root {
   /* spacing */
-  --space-xs: 4px;
-  --space-sm: 8px;
-  --space-md: 12px;
-  --space-lg: 16px;
-  --space-xl: 24px;
-  --space-xxl: 32px;
+  --space-xs: var(--ij-spacing-xs);
+  --space-sm: var(--ij-spacing-sm);
+  --space-md: var(--ij-spacing-md);
+  --space-lg: var(--ij-spacing-lg);
+  --space-xl: var(--ij-spacing-xxl);
+  --space-xxl: var(--ij-spacing-xxxl);
   --space-xxxl: 48px;
-  --space-huge: clamp(64px, 10vw, 128px);
+  --space-huge: var(--ij-mkt-space-section);
 
   /* radii */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 20px;
-  --radius-xl: 32px;
+  --radius-sm: var(--ij-radius-sm);
+  --radius-md: var(--ij-radius-md);
+  --radius-lg: var(--ij-radius-lg);
+  --radius-xl: 24px;
 
-  /* typography */
-  /* The design system's display stack for Wean (dist/identity/wean-nicotine.css),
-     with the family name the self-hosted @fontsource-variable file registers. */
-  --font-display:
-    'Instrument Sans Variable', 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-body: 'Inter', -apple-system, system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  /* typography: Instrument Sans for headings, the UI face for copy (#396) */
+  --font-display: var(--ij-font-display);
+  --font-body: var(--ij-font-ui);
+  --font-mono: var(--ij-font-mono);
 
-  --font-size-xs: 12px;
-  --font-size-sm: 14px;
-  --font-size-base: 16px;
-  --font-size-lg: 18px;
-  --font-size-xl: 24px;
-  --font-size-xxl: clamp(32px, 5vw, 48px);
-  /* The 48px floor used to win on every phone: at 390px wide 8vw is 31px, so
-     the clamp never scaled down and a three-line Danish H1 ate the first
-     screen. 34px lets small screens breathe while desktop is unchanged (#301). */
-  --font-size-hero: clamp(34px, 8vw, 84px);
+  --font-size-sm: var(--ij-mkt-small-size);
+  --font-size-base: var(--ij-mkt-body-size);
+  --font-size-lg: var(--ij-mkt-lead-size);
+  --font-size-xl: var(--ij-mkt-title-size);
+  /* Page titles on the guides and posts take the kit's headline size; its
+     display size is for the home page's hero, and fills a 720 px column. */
+  --font-size-hero: var(--ij-mkt-headline-size);
+  /* Between the kit's headline and title, for the guides' section headings. */
+  --font-size-xxl: clamp(1.75rem, 1.4rem + 1.5vw, 2.5rem);
 
   --line-height-tight: 1.1;
   --line-height-snug: 1.3;
@@ -58,86 +55,29 @@
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
-  --font-weight-extrabold: 800;
 
-  /* colors – light (IAMJARL Day) */
-  --primary: #a435d2;
-  --primary-hover: #8e2bb8;
-  --primary-pressed: #7a2499;
-  --primary-subtle: rgba(164, 53, 210, 0.12);
-  --primary-muted: var(--primary-subtle);
-  --on-primary: #ffffff;
+  /* colours. --primary is the magenta that is safe as text (links, outlines);
+     --accent is the bright one, for fills and strokes, with black on it. */
+  --primary: var(--ij-color-accent-text);
+  --primary-subtle: color-mix(in srgb, var(--ij-color-accent) 14%, transparent);
+  --accent: var(--ij-color-accent);
+  --on-accent: var(--ij-color-on-accent);
 
-  --bg-app: #f8fafc;
-  --bg-muted: color-mix(in oklab, var(--bg-app), #000000 5%);
-  --surface: #ffffff;
-  --surface-raised: #ffffff;
+  --bg-app: var(--ij-color-bg-app);
+  --bg-muted: var(--ij-color-bg-card);
+  --surface: var(--ij-color-bg-card);
 
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  /* WCAG AA (4.5:1) on both --bg-app (4.55) and --surface (4.76). The old
-	   #94a3b8 measured 2.45:1 on --bg-app, and it carries meaning-bearing
-	   small text: hero fineprint about price and privacy, blog metadata,
-	   footer copy. */
-  --text-tertiary: #64748b;
-  --text-inverse: #ffffff;
+  --text-primary: var(--ij-color-text-primary);
+  --text-secondary: var(--ij-color-text-secondary);
+  --text-tertiary: var(--ij-color-text-tertiary);
 
-  --border-subtle: rgba(15, 23, 42, 0.08);
-  --border-default: rgba(15, 23, 42, 0.12);
-  --border-glass: rgba(255, 255, 255, 0.4);
+  --border-subtle: var(--ij-color-border-subtle);
+  --border-default: var(--ij-color-border-default);
 
-  /* state — IAMJARL light */
-  --success: #2e7d32;
-  --on-success: #ffffff;
-  --warning: #c2410c;
-  --on-warning: #ffffff;
-  --error: #d70015;
-  --on-error: #ffffff;
-
-  /* Glassmorphism Tokens */
-  --glass-bg: rgba(255, 255, 255, 0.6);
-  --glass-border: rgba(255, 255, 255, 0.5);
-  --glass-blur: 16px;
-  --shadow-premium: 0 20px 50px rgba(0, 0, 0, 0.1);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* colors – dark (IAMJARL Night) */
-    --primary: #d0ff00;
-    --primary-hover: #b8e000;
-    --primary-pressed: #a0c400;
-    --primary-subtle: rgba(208, 255, 0, 0.15);
-    --primary-muted: var(--primary-subtle);
-    --on-primary: #000000;
-
-    --bg-app: #020617;
-    --bg-muted: #0f172a;
-    --surface: #0f172a;
-    --surface-raised: #1e293b;
-
-    --text-primary: #f8fafc;
-    --text-secondary: #94a3b8;
-    /* Dark failed AA too, which the review flagged only as worth checking:
-		   #64748b measured 4.24:1 on --bg-app but 3.75 on --surface and 3.07
-		   on --surface-raised. #94a3b8 clears it everywhere (7.87 / 6.96 /
-		   5.71), so the two theme values simply trade places. */
-    --text-tertiary: #94a3b8;
-    --text-inverse: #020617;
-
-    --border-subtle: rgba(255, 255, 255, 0.08);
-    --border-default: rgba(255, 255, 255, 0.12);
-    --border-glass: rgba(255, 255, 255, 0.1);
-
-    /* state — IAMJARL dark */
-    --success: #4caf50;
-    --warning: #ff6b35;
-    --error: #ff453a;
-
-    /* Glassmorphism Tokens Dark */
-    --glass-bg: rgba(15, 23, 42, 0.6);
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --glass-blur: 24px;
-    --shadow-premium: 0 25px 60px rgba(0, 0, 0, 0.4);
-  }
+  /* The cards of the old pages, now plain cards on the identity's card colour. */
+  --glass-bg: var(--ij-color-bg-card);
+  --glass-border: var(--ij-color-border-subtle);
+  --glass-blur: 0px;
+  --shadow-premium: 0 24px 48px -32px
+    color-mix(in srgb, var(--ij-color-text-primary) 40%, transparent);
 }

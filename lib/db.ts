@@ -5,6 +5,7 @@
  */
 
 import { Platform } from 'react-native';
+import { buildCaptureData, CAPTURE_MODE } from './capture-mode';
 
 // Type for SQLite database (avoiding direct import for web compatibility)
 type SQLiteParam = string | number | null | boolean;
@@ -178,6 +179,47 @@ export async function runInTransaction(
   }
 }
 
+/**
+ * Capture builds only (#396): replace everything with the calm sample month
+ * from capture-mode.ts, on every launch, so the dates are always current.
+ * Raw SQL, because this runs inside initDatabase, before getDatabase resolves.
+ */
+async function seedCaptureData(database: SQLiteDatabase): Promise<void> {
+  const { settings, entries } = buildCaptureData();
+  const now = Date.now();
+  await runInTransaction(database, async () => {
+    for (const table of [
+      'log_entries',
+      'taper_settings',
+      'app_preferences',
+      'breathing_sessions',
+      'reflections',
+    ]) {
+      await database.runAsync(`DELETE FROM ${table}`);
+    }
+    await database.runAsync(
+      `INSERT INTO taper_settings (baseline_pouches_per_day, price_per_can, currency, weekly_reduction_percent, start_date, triggers, created_at, updated_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        settings.baselinePouchesPerDay,
+        settings.pricePerCan ?? null,
+        settings.currency ?? 'DKK',
+        settings.weeklyReductionPercent,
+        settings.startDate,
+        JSON.stringify(settings.triggers ?? []),
+        now,
+        now,
+      ],
+    );
+    for (const entry of entries) {
+      await database.runAsync(
+        'INSERT INTO log_entries (type, timestamp, trigger, created_at) VALUES (?, ?, ?, ?)',
+        [entry.type, entry.timestamp, entry.trigger ?? null, entry.timestamp],
+      );
+    }
+  });
+}
+
 async function runMigrations(database: SQLiteDatabase): Promise<void> {
   await database.execAsync(
     `CREATE TABLE IF NOT EXISTS schema_version (version INTEGER PRIMARY KEY)`,
@@ -271,6 +313,7 @@ export async function initDatabase(): Promise<SQLiteDatabase> {
       await db.execAsync(`CREATE INDEX IF NOT EXISTS idx_log_entries_type ON log_entries(type);`);
 
       await runMigrations(db);
+      if (CAPTURE_MODE) await seedCaptureData(db);
 
       return db;
     } catch (error) {

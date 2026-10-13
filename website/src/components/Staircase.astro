@@ -1,0 +1,86 @@
+---
+/**
+ * The taper as a staircase (#396), drawn from the app's own maths.
+ *
+ * The steps come from lib/staircase.ts, which calls the app's
+ * calculateDailyAllowance, getDisplayAllowance and estimateWeeksToZero. The
+ * line is drawn at build time through the design system's loose stroke
+ * (src/design/loose.js, iamjarl-design#75), so it reads as one of the coast
+ * drawings rather than a chart, and the page ships it as plain SVG with no
+ * script. Same values and seed, same path, every build. It does not animate.
+ *
+ * The same plan is in the served HTML as text: the caption, and the table
+ * week by week, for screen readers and crawlers.
+ */
+import { loosePath, stairsPoints } from '../design/loose.js';
+import { EXAMPLE_STAIRCASE } from '../lib/staircase';
+import { HOME_COPY } from '../i18n/home-copy';
+import type { Locale } from '../i18n/translations';
+
+interface Props {
+	locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = HOME_COPY[locale].staircase;
+const s = EXAMPLE_STAIRCASE;
+
+// One tread per week, weeks 0 to the first at zero, in the box the kit's
+// example uses.
+const values = s.steps.map((step) => step.perDay);
+const d = loosePath(stairsPoints(values, { x: 16, y: 14, width: 608, height: 176, max: s.baseline }), { seed: 7 });
+const captionId = `staircase-${locale}`;
+---
+
+<figure class="ij-card staircase">
+	<svg class="ij-staircase" viewBox="0 0 640 210" fill="none" role="img" aria-labelledby={captionId}>
+		<path class="ij-loose" d={d} />
+	</svg>
+	<figcaption class="ij-small" id={captionId}>
+		<strong>{copy.exampleLabel}.</strong>{` ${copy.summary(s)} ${copy.paceNote}`}
+	</figcaption>
+	<details class="staircase__table">
+		<summary>{copy.tableCaption}</summary>
+		<table>
+			<thead>
+				<tr><th scope="col">{copy.tableWeeks}</th><th scope="col">{copy.tablePerDay}</th></tr>
+			</thead>
+			<tbody>
+				{s.runs.map((run, i) => (
+					<tr>
+						<td>{copy.weeks(run.fromWeek, run.toWeek, i === s.runs.length - 1)}</td>
+						<td>{copy.perDay(run.perDay)}</td>
+					</tr>
+				))}
+			</tbody>
+		</table>
+	</details>
+</figure>
+
+<style>
+	.staircase figcaption strong {
+		color: var(--ij-color-text-primary);
+		font-weight: var(--ij-font-weight-semibold);
+	}
+	.staircase__table {
+		font-size: var(--ij-mkt-small-size);
+		color: var(--ij-color-text-secondary);
+	}
+	.staircase__table summary {
+		cursor: pointer;
+		color: var(--ij-color-text-primary);
+	}
+	.staircase__table summary::marker {
+		color: var(--ij-color-accent);
+	}
+	.staircase__table table {
+		border-collapse: collapse;
+		margin-top: var(--ij-spacing-sm);
+	}
+	.staircase__table th,
+	.staircase__table td {
+		text-align: left;
+		padding: var(--ij-spacing-xs) var(--ij-spacing-lg) var(--ij-spacing-xs) 0;
+		font-variant-numeric: tabular-nums;
+	}
+</style>

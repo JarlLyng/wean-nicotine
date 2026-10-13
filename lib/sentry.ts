@@ -22,6 +22,7 @@ import * as Sentry from '@sentry/react-native';
 import { reactNavigationIntegration } from '@sentry/react-native';
 import Constants from 'expo-constants';
 import { Platform } from 'react-native';
+import { CAPTURE_MODE } from './capture-mode';
 
 /**
  * Keys that must never reach Sentry. If any captureError caller passes one of
@@ -127,6 +128,11 @@ export function isSentryConfigured(): boolean {
 export function initSentry(): void {
   // Skip Sentry initialization on web (Sentry React Native doesn't support web)
   if (Platform.OS === 'web') {
+    return;
+  }
+
+  // Capture builds (#396) are for screenshots; their crashes are not the app's.
+  if (CAPTURE_MODE) {
     return;
   }
 

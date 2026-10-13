@@ -23,6 +23,17 @@
         "resourceClass": "m-medium"
       },
       "channel": "production"
+    },
+    "capture": {
+      "distribution": "internal",
+      "environment": "preview",
+      "ios": {
+        "simulator": true
+      },
+      "channel": "capture",
+      "env": {
+        "SENTRY_DISABLE_AUTO_UPLOAD": "true"
+      }
     }
   },
   "submit": {

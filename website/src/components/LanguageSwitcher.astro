@@ -1,114 +1,113 @@
 ---
-import { languages, defaultLang } from '../i18n/ui';
-import { getLangFromUrl, useTranslatedPath } from '../i18n/utils';
+/**
+ * The language menu in <ij-nav>'s one secondary slot (#396).
+ *
+ * Four languages do not fit the nav as links, so it is a disclosure: the
+ * current language, and the other three under it. Each goes to the same page
+ * in that language where it exists, and to that language's home otherwise
+ * (languageLinks). It works without JavaScript; the small script only closes
+ * it on Escape or a click elsewhere. The footer lists the same links.
+ */
 import type { TranslationSet } from '../i18n/translations';
+import { getLangFromUrl, languageLinks, useTranslations } from '../i18n/utils';
 
 interface Props {
-	/**
-	 * Locales the current page is available in. If a locale is not in this
-	 * list, the switcher links to that locale's home page instead of the
-	 * translated current path (which would 404).
-	 */
-	availableLocales?: string[];
-	/** For a guide whose translations live at other slugs, the path in each locale. */
+	availableLocales: string[];
 	translations?: TranslationSet;
 }
 
 const { availableLocales, translations } = Astro.props;
-const supported = availableLocales ?? Object.keys(languages);
-
-const currentLang = getLangFromUrl(Astro.url);
-const translatePath = useTranslatedPath(currentLang);
-const pathname = Astro.url.pathname;
-
-const entries = Object.entries(languages).map(([code, label]) => {
-	const isCurrent = code === currentLang;
-	const isAvailable = supported.includes(code);
-	const translated = translations?.[code as keyof TranslationSet];
-	const href = translated
-		? translated
-		: isAvailable
-		? translatePath(pathname, code as keyof typeof languages)
-		: code === defaultLang
-			? '/'
-			: `/${code}/`;
-	return { code, label, href, isCurrent };
-});
+const links = languageLinks(Astro.url, availableLocales, translations);
+const current = links.find((l) => l.isCurrent)!;
+const t = useTranslations(getLangFromUrl(Astro.url));
 ---
 
-<nav class="language-switcher" aria-label="Language">
+<details slot="secondary" class="lang-menu">
+	<summary><span class="visually-hidden">{t('nav.language')}: </span>{current.label}</summary>
 	<ul>
-		{entries.map(({ code, label, href, isCurrent }) => (
-			<li>
-				<a
-					href={href}
-					hreflang={code}
-					aria-current={isCurrent ? 'true' : undefined}
-					class={isCurrent ? 'is-current' : undefined}
-				>
-					<span class="lang-code">{code.toUpperCase()}</span>
-					<span class="lang-label">{label}</span>
-				</a>
-			</li>
-		))}
+		{
+			links
+				.filter((l) => !l.isCurrent)
+				.map((l) => (
+					<li>
+						<a href={l.href} hreflang={l.code} lang={l.code}>
+							{l.label}
+						</a>
+					</li>
+				))
+		}
 	</ul>
-</nav>
+</details>
+
+<script>
+	const menu = document.querySelector<HTMLDetailsElement>('details.lang-menu');
+	if (menu) {
+		document.addEventListener('click', (e) => {
+			if (menu.open && !menu.contains(e.target as Node)) menu.open = false;
+		});
+		menu.addEventListener('keydown', (e) => {
+			if (e.key === 'Escape' && menu.open) {
+				menu.open = false;
+				menu.querySelector('summary')?.focus();
+			}
+		});
+	}
+</script>
 
 <style>
-	.language-switcher {
-		display: inline-flex;
+	/* <ij-nav> makes its secondary item an inline-flex button; open, the list
+	   goes under the language, not beside it. */
+	.lang-menu {
+		position: relative;
+		flex-direction: column;
+		align-items: stretch;
 	}
-	.language-switcher ul {
-		display: inline-flex;
+	.lang-menu summary {
+		cursor: pointer;
 		list-style: none;
-		margin: 0;
-		padding: 4px;
-		gap: 2px;
-		background: var(--bg-muted);
-		border-radius: var(--radius-full, 999px);
-		border: 1px solid var(--border-subtle);
 	}
-	.language-switcher a {
-		display: inline-flex;
-		align-items: center;
-		gap: 6px;
-		padding: 6px 10px;
-		border-radius: 999px;
-		font-size: var(--font-size-xs);
-		font-weight: var(--font-weight-semibold);
-		color: var(--text-secondary);
-		text-decoration: none;
-		min-height: 32px;
-		min-width: 44px;
-		justify-content: center;
-		transition: color 0.15s ease, background-color 0.15s ease;
-	}
-	.language-switcher a:hover {
-		color: var(--text-primary);
-		background: var(--surface);
-	}
-	.language-switcher a:focus-visible {
-		outline: 2px solid var(--primary);
-		outline-offset: 2px;
-	}
-	.language-switcher a.is-current {
-		background: var(--surface);
-		color: var(--text-primary);
-		cursor: default;
-	}
-	.lang-label {
+	.lang-menu summary::-webkit-details-marker {
 		display: none;
 	}
-	/* Full language names only once the desktop header is actually shown
-	   (Layout.astro switches to the compact menu at 960px). Expanding these
-	   at 768px while the desktop nav was still up is what pushed the CTA
-	   out of the viewport. */
-	@media (min-width: 961px) {
-		.lang-code {
-			display: none;
-		}
-		.lang-label {
-			display: inline;
+	.lang-menu summary::after {
+		content: '';
+		display: inline-block;
+		width: 0.4em;
+		height: 0.4em;
+		margin-left: 0.5em;
+		border-right: 1.5px solid currentColor;
+		border-bottom: 1.5px solid currentColor;
+		transform: translateY(-0.2em) rotate(45deg);
+	}
+	.lang-menu ul {
+		list-style: none;
+		margin: 0;
+		padding: var(--ij-spacing-xs) 0;
+	}
+	.lang-menu a {
+		display: block;
+		padding: var(--ij-spacing-sm) 0;
+		color: var(--ij-color-text-primary);
+		text-decoration: none;
+	}
+	.lang-menu a:hover {
+		text-decoration: underline;
+		text-decoration-color: var(--ij-color-accent);
+		text-underline-offset: 0.2em;
+	}
+	/* On wide screens the nav is one bar, so the list drops below it. Below
+	   768px <ij-nav> folds this into its menu, where the list stays in flow. */
+	@media (min-width: 768px) {
+		.lang-menu ul {
+			position: absolute;
+			top: calc(100% + var(--ij-spacing-sm));
+			right: 0;
+			min-width: 9em;
+			padding: var(--ij-spacing-xs) var(--ij-spacing-lg);
+			background: var(--ij-color-bg-card);
+			border: 1px solid var(--ij-color-border-subtle);
+			border-radius: var(--ij-radius-md);
+			box-shadow: 0 12px 32px -16px color-mix(in srgb, var(--ij-color-text-primary) 35%, transparent);
 		}
 	}
 </style>
