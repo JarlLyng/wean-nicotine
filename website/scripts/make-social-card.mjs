@@ -9,8 +9,8 @@
  * charcoal and Instrument Sans, beside the Today screen in the kit's plain
  * phone. It is drawn from the same files the site serves
  * (public/iamjarl-design/, the capture in src/assets/site/), rendered by
- * headless Chrome at 1200 x 630. The hero's shoreline drawing is off the card
- * with the rest of the drawings until they are redrawn (iamjarl-design#90). Set CHROME to another Chromium's binary if Chrome is not in
+ * headless Chrome at 1200 x 630. The page's photographs are not in the hero,
+ * so the card carries none. Set CHROME to another Chromium's binary if Chrome is not in
  * /Applications.
  *
  * Remake it when the headline, the identity or the Today capture changes: the

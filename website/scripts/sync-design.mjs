@@ -2,19 +2,19 @@
 /**
  * Copy what the site uses from the IAMJARL design system into the site (#393, #396).
  *
- *   node scripts/sync-design.mjs v1.29.1
+ *   node scripts/sync-design.mjs v1.31.0
  *
  * One release, all of it:
  *
  * - public/iamjarl-design/: the tokens, Wean's identity sheet, the display face,
  *   the marketing kit (kit.css, kit.js) and the <ij-nav> and <ij-footer>
  *   components, served from the site's own origin.
- * - src/design/: what runs at build time. kit/loose.js draws the taper staircase
- *   in the drawings' hand, and the eight coast drawings are inlined in the page,
- *   where they can take the identity's colours (an <img> cannot). Both are off
- *   the page until the drawings are redrawn (iamjarl-design#90), and still
- *   synced so they can go back in. The footer's cross-links come along, so
- *   they are in the served HTML.
+ * - src/design/: what is inlined at build time. The tidal-flats scene's
+ *   magenta waterline (iamjarl-design#90) goes in the page's HTML right after
+ *   its photo, where it takes the identity's accent (an <img> cannot). The
+ *   photos themselves are Unsplash's, not the design system's, and live in
+ *   src/assets/site/. The footer's cross-links come along too, so they are in
+ *   the served HTML.
  * - src/store/ and public/badges/: the store button for each locale, from the
  *   design system's app registry, so the price, the OS floor, the campaign link
  *   and the click event have one source. StoreButton.astro renders them.
@@ -44,16 +44,7 @@ if (!/^v\d+\.\d+\.\d+$/.test(TAG ?? '')) {
 
 const APP = 'wean-nicotine';
 const LOCALES = { en: 'en-us', da: 'da-dk', sv: 'sv-se', no: 'no-no' };
-const DRAWINGS = [
-  'shoreline',
-  'flat-rocks',
-  'stones',
-  'mooring-post',
-  'harbour-steps',
-  'breakwater',
-  'boat',
-  'low-tide',
-];
+const SCENES = ['tidal-flats'];
 const BASE = `https://cdn.jsdelivr.net/gh/jarllyng/iamjarl-design@${TAG}`;
 const SITE = join(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -119,9 +110,8 @@ for (const name of ['instrument-sans-latin-wght-normal.woff2', 'LICENSE-instrume
 }
 
 // Used at build time.
-out.set('src/design/loose.js', await verified('dist/kit/loose.js'));
-for (const name of DRAWINGS) {
-  out.set(`src/design/drawings/${name}.svg`, await fetchBytes(`dist/drawings/wean/${name}.svg`));
+for (const name of SCENES) {
+  out.set(`src/design/scenes/${name}.svg`, await fetchBytes(`dist/scenes/${APP}/${name}.svg`));
 }
 // The footer's cross-links to the rest of the portfolio, in the served HTML,
 // where crawlers that run no JavaScript can follow them. One per language:
