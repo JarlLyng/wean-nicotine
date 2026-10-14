@@ -2,7 +2,7 @@
 /**
  * Copy what the site uses from the IAMJARL design system into the site (#393, #396).
  *
- *   node scripts/sync-design.mjs v1.31.0
+ *   node scripts/sync-design.mjs v1.32.1
  *
  * One release, all of it:
  *
@@ -45,13 +45,29 @@ if (!/^v\d+\.\d+\.\d+$/.test(TAG ?? '')) {
 const APP = 'wean-nicotine';
 const LOCALES = { en: 'en-us', da: 'da-dk', sv: 'sv-se', no: 'no-no' };
 const SCENES = ['tidal-flats'];
-const BASE = `https://cdn.jsdelivr.net/gh/jarllyng/iamjarl-design@${TAG}`;
+// The files come from GitHub's copy of the tag. The design system's own links
+// point at jsDelivr, which mirrors it; the store fragments' badge links are
+// rewritten from that address below.
+const SOURCE = `https://raw.githubusercontent.com/JarlLyng/iamjarl-design/${TAG}`;
+const CDN = `https://cdn.jsdelivr.net/gh/jarllyng/iamjarl-design@${TAG}`;
 const SITE = join(dirname(fileURLToPath(import.meta.url)), '..');
 
-async function fetchBytes(path) {
-  const res = await fetch(`${BASE}/${path}`);
-  if (!res.ok) throw new Error(`${res.status} for ${BASE}/${path}`);
-  return Buffer.from(await res.arrayBuffer());
+// Not from jsDelivr: it fetches a tagged file from GitHub the first time
+// anyone asks for it, and that first request can hang or answer 503 for
+// minutes (iamjarl-design#100). Each request still gets a deadline, and a few
+// tries.
+async function fetchBytes(path, tries = 6) {
+  for (let attempt = 1; ; attempt++) {
+    try {
+      const res = await fetch(`${SOURCE}/${path}`, { signal: AbortSignal.timeout(30_000) });
+      if (!res.ok) throw new Error(`${res.status} for ${SOURCE}/${path}`);
+      return Buffer.from(await res.arrayBuffer());
+    } catch (error) {
+      if (attempt >= tries) throw error;
+      console.log(`retrying ${path} (${error.message})`);
+      await new Promise((resolve) => setTimeout(resolve, attempt * 5_000));
+    }
+  }
 }
 
 function write(rel, content) {
@@ -123,7 +139,7 @@ for (const loc of Object.keys(LOCALES)) {
 
 // The store button. The page is light only, so it takes the black badge.
 const selfHost = (html) => {
-  const local = html.replaceAll(`${BASE}/badges/`, '/badges/');
+  const local = html.replaceAll(`${CDN}/badges/`, '/badges/');
   // Anything the browser would load (src, srcset) must be ours. The store
   // link itself (href) is allowed to leave the site; it is a link, not a load.
   const loaded = [...local.matchAll(/\b(?:src|srcset)="([^"]+)"/g)].map((m) => m[1]);

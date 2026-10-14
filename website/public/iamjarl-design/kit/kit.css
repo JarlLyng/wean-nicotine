@@ -1,4 +1,4 @@
-/* IAMJARL marketing kit v1.31.0: generated from kit/kit.css, do not edit */
+/* IAMJARL marketing kit v1.32.1: generated from kit/kit.css, do not edit */
 /* The marketing page kit (#65): sections every app site can compose.
 
    Plain HTML with these classes. No JavaScript is needed to read any of it:
@@ -86,7 +86,7 @@
    the stack so the stack's spacing wins (#88). Set later in this file and as
    specific, each block's own reset took a stack's spacing away: a source card
    sat flush on its heading. .ij-page keeps a site's own h2 { margin } out. */
-.ij-page :where(.ij-display, .ij-headline, .ij-title, .ij-numeral, .ij-wordmark, .ij-lede, .ij-card, .ij-source, .ij-review) { margin: 0; }
+.ij-page :where(.ij-display, .ij-headline, .ij-title, .ij-numeral, .ij-wordmark, .ij-lede, .ij-label, .ij-card, .ij-source, .ij-review, .ij-compare, .ij-chips) { margin: 0; }
 .ij-stack > * + * { margin-top: var(--ij-mkt-space-stack); }
 
 /* ---------- Type roles ---------- */
@@ -175,7 +175,12 @@ ij-store-cta { display: block; }
   overflow: hidden;
   background: var(--ij-color-bg-card);
 }
-.ij-phone__screen > img, .ij-phone__screen > video {
+/* A <picture> stands in for its <img> wherever the kit sizes one (#99), so a
+   site can serve AVIF and WebP with a fallback: it lays out as if it weren't
+   there, and the rules below reach the <img> inside it. */
+:is(.ij-phone__screen, .ij-tv__screen, .ij-watch__screen, .ij-window, .ij-card__piece, .ij-compare__item) > picture { display: contents; }
+
+.ij-phone__screen > :is(img, video), .ij-phone__screen > picture > img {
   display: block; width: 100%; height: 100%; object-fit: cover; object-position: top;
 }
 .ij-phone__frame { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
@@ -203,7 +208,7 @@ ij-store-cta { display: block; }
     0 0 0 1px var(--ij-color-border-default);
 }
 .ij-tv__screen { aspect-ratio: 16 / 9; overflow: hidden; border-radius: 3px; background: var(--ij-color-bg-card); }
-.ij-tv__screen > img, .ij-tv__screen > video { display: block; width: 100%; height: 100%; object-fit: cover; }
+.ij-tv__screen > :is(img, video), .ij-tv__screen > picture > img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .ij-tv::after {
   content: "";
   position: absolute;
@@ -230,7 +235,7 @@ ij-store-cta { display: block; }
     0 0 0 1px var(--ij-color-border-default);
 }
 .ij-watch__screen { aspect-ratio: 416 / 496; overflow: hidden; border-radius: 22%; background: var(--ij-color-bg-card); }
-.ij-watch__screen > img, .ij-watch__screen > video { display: block; width: 100%; height: 100%; object-fit: cover; }
+.ij-watch__screen > :is(img, video), .ij-watch__screen > picture > img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .ij-watch::before, .ij-watch::after {
   content: "";
   position: absolute;
@@ -258,7 +263,7 @@ ij-store-cta { display: block; }
   width: min(var(--_w), 100%);
   container-type: inline-size;
 }
-.ij-window > img, .ij-window > video {
+.ij-window > :is(img, video), .ij-window > picture > img {
   display: block;
   width: 100%;
   height: auto;
@@ -318,7 +323,7 @@ ij-store-cta { display: block; }
 .ij-card p { margin: 0; color: var(--ij-color-text-secondary); }
 .ij-card .ij-numeral { color: var(--ij-color-text-primary); }
 .ij-card__piece { display: flex; align-items: center; justify-content: center; min-height: 160px; }
-.ij-card__piece > img { display: block; height: auto; border-radius: var(--ij-radius-md); }
+.ij-card__piece > img, .ij-card__piece > picture > img { display: block; height: auto; border-radius: var(--ij-radius-md); }
 
 .ij-bento { display: grid; gap: var(--ij-spacing-lg); grid-template-columns: minmax(0, 1fr); }
 @media (min-width: 768px) {
@@ -502,10 +507,64 @@ ij-store-cta { display: block; }
 .ij-data :is(th, td):last-child { padding-right: 0; }
 .ij-data tr + tr :is(th, td) { border-top: 1px solid var(--ij-color-border-default); }
 .ij-data th { color: var(--ij-color-text-secondary); }
-.ij-data .ij-num {
+.ij-page .ij-num {
   font-family: var(--ij-font-numeral, var(--ij-font-display, var(--ij-font-ui)));
+  font-variation-settings: var(--ij-font-numeral-axes, normal);
   font-variant-numeric: tabular-nums;
-  text-align: right;
+  white-space: nowrap;
+}
+.ij-data .ij-num { text-align: right; }
+
+/* ---------- Before and after (#96) ----------
+   The same real photo twice, at its original size and at its new one, each
+   labelled with its size, and the settings that made it under them: the
+   result is the picture. Side by side when there's room, stacked when not, so
+   it works in a card and at full width. The photos are the site's own. */
+.ij-compare {
+  display: grid;
+  gap: var(--ij-spacing-lg) var(--ij-mkt-space-stack);
+  /* Two columns at most, each at least 240px: side by side when both fit,
+     stacked when not, in a card or at full width. */
+  grid-template-columns: repeat(auto-fit, minmax(max(min(100%, 240px), calc(50% - var(--ij-mkt-space-stack))), 1fr));
+}
+.ij-compare__item { margin: 0; display: flex; flex-direction: column; gap: var(--ij-spacing-sm); min-width: 0; }
+.ij-compare__item > img, .ij-compare__item > picture > img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  border-radius: var(--ij-radius-md);
+  box-shadow: 0 0 0 1px var(--ij-color-border-default);
+}
+.ij-compare__item > figcaption {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--ij-spacing-sm);
+  font-size: var(--ij-mkt-small-size);
+  color: var(--ij-color-text-secondary);
+}
+.ij-compare__item > figcaption .ij-num { color: var(--ij-color-text-primary); }
+.ij-compare > figcaption { grid-column: 1 / -1; font-size: var(--ij-mkt-small-size); color: var(--ij-color-text-secondary); }
+
+/* ---------- Size chips (#96) ----------
+   A file's size before and after, and what was saved, set loose on the page
+   with no card around them: 4.2 MB → 0.9 MB. In the numeral face. */
+.ij-chips { display: flex; flex-wrap: wrap; gap: var(--ij-spacing-sm); padding: 0; list-style: none; }
+.ij-chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.55em;
+  padding: 0.4em 0.9em;
+  border: 1px solid var(--ij-color-border-default);
+  border-radius: var(--ij-radius-lg);
+  background: var(--ij-color-bg-card);
+  color: var(--ij-color-text-primary);
+  font-family: var(--ij-font-numeral, var(--ij-font-display, var(--ij-font-ui)));
+  font-variation-settings: var(--ij-font-numeral-axes, normal);
+  font-size: var(--ij-mkt-small-size);
+  font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 
@@ -522,7 +581,6 @@ ij-store-cta { display: block; }
   box-decoration-break: clone;
 }
 .ij-label {
-  margin: 0;
   font-family: var(--ij-font-display, var(--ij-font-ui));
   font-variation-settings: var(--ij-font-display-axes, normal);
   font-size: var(--ij-mkt-small-size);
