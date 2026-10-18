@@ -8,14 +8,8 @@ import { spacing, borderRadius } from '@/lib/theme';
 import { useDesignTokens, typography } from '@/lib/design';
 import { getReflections, deleteReflection } from '@/lib/db-reflections';
 import { captureError } from '@/lib/sentry';
+import { formatMediumDate } from '@/lib/date-format';
 import type { Reflection } from '@/lib/models';
-
-function formatDate(ts: number): string {
-  const d = new Date(ts);
-  const day = d.getDate();
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  return `${day} ${months[d.getMonth()]} ${d.getFullYear()}`;
-}
 
 export default function ReflectionJournalScreen() {
   const { colors } = useDesignTokens();
@@ -62,7 +56,7 @@ export default function ReflectionJournalScreen() {
     <Animated.View entering={FadeInDown.delay(index * 50).duration(200)}>
       <View style={s.card}>
         <View style={s.cardHeader}>
-          <Text style={s.date}>{formatDate(item.createdAt)}</Text>
+          <Text style={s.date}>{formatMediumDate(item.createdAt)}</Text>
           <View style={s.categoryChip}>
             <Text style={s.categoryText}>{item.category}</Text>
           </View>
@@ -82,9 +76,7 @@ export default function ReflectionJournalScreen() {
         <View style={s.emptyContainer}>
           <Icon name="notebook" size={48} color={colors.text.tertiary} />
           <Text style={s.emptyTitle}>No reflections yet</Text>
-          <Text style={s.emptyText}>
-            Start by answering a prompt and saving your thoughts.
-          </Text>
+          <Text style={s.emptyText}>Start by answering a prompt and saving your thoughts.</Text>
         </View>
       </Screen>
     );
