@@ -18,6 +18,7 @@ iOS build 27. One fix: dates and times follow the phone's region. It also carrie
 ### Internal
 
 - One helper, `lib/date-format.ts`, for every date and time the app shows, with tests. Cost Savings groups its weeks and months by date and formats the labels last.
+- Capture builds can price the sample month in dollars (`CAPTURE_CURRENCY=USD`), for the App Store's English screenshots. Production builds never read it. (#410)
 
 ## [1.7.1] - 2026-10-12
 
