@@ -69,6 +69,15 @@ describe('buildCaptureData', () => {
     }
   });
 
+  it('prices the can in kroner for the site and in dollars for the App Store set', () => {
+    const dkk = buildCaptureData(now, 'DKK').settings;
+    expect(dkk.currency).toBe('DKK');
+    expect(dkk.pricePerCan).toBe(5000);
+    const usd = buildCaptureData(now, 'USD').settings;
+    expect(usd.currency).toBe('USD');
+    expect(usd.pricePerCan).toBe(600);
+  });
+
   it('never logs in the future, even when captured early in the morning', () => {
     const early = new Date(2026, 9, 12, 6, 30);
     const { entries } = check(early);

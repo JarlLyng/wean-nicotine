@@ -1,5 +1,6 @@
 /**
- * Capture mode, for the marketing site's screenshots and the Today loop (#396).
+ * Capture mode, for the marketing site's screenshots and the Today loop (#396),
+ * and the App Store screenshots (#409).
  *
  * Fills the database with a calm sample month so the screens show numbers the
  * app really computes (#338), not hand-made ones: a 10-a-day plan at 10% a
@@ -19,12 +20,26 @@ import { calculateDailyAllowance, getDisplayAllowance } from './taper-plan';
 
 export const CAPTURE_MODE: boolean = Constants.expoConfig?.extra?.captureMode === true;
 
+/**
+ * The price of a can, in minor units, per capture currency: kroner for the
+ * site, dollars for the App Store's English set, which every storefront falls
+ * back to (#409).
+ */
+const CAPTURE_PRICES = {
+  DKK: 5000, // 50 kr
+  USD: 600, // $6
+} as const;
+
+export type CaptureCurrency = keyof typeof CAPTURE_PRICES;
+
+/** Set at build time with CAPTURE_CURRENCY; anything but USD gives kroner. */
+export const CAPTURE_CURRENCY: CaptureCurrency =
+  Constants.expoConfig?.extra?.captureCurrency === 'USD' ? 'USD' : 'DKK';
+
 /** The site's staircase example: 10 a day at 10% a week. */
 export const CAPTURE_PLAN = {
   baselinePouchesPerDay: 10,
   weeklyReductionPercent: 10,
-  pricePerCan: 5000, // 50 kr, in øre
-  currency: 'DKK' as const,
   triggers: ['Coffee', 'After meals', 'Stress'],
 };
 
@@ -64,13 +79,21 @@ const SLOTS: { h: number; m: number; trigger?: string }[] = [
   { h: 21, m: 30 },
 ];
 
-export function buildCaptureData(now: Date = new Date()): CaptureData {
+export function buildCaptureData(
+  now: Date = new Date(),
+  currency: CaptureCurrency = CAPTURE_CURRENCY,
+): CaptureData {
   const today = new Date(now);
   today.setHours(0, 0, 0, 0);
   const start = new Date(today);
   start.setDate(today.getDate() - DAYS_IN);
 
-  const settings = { ...CAPTURE_PLAN, startDate: start.getTime() };
+  const settings = {
+    ...CAPTURE_PLAN,
+    pricePerCan: CAPTURE_PRICES[currency],
+    currency,
+    startDate: start.getTime(),
+  };
   const plan = settings as TaperSettings;
   const entries: CaptureEntry[] = [];
 

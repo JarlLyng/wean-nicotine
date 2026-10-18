@@ -16,7 +16,8 @@ Source of truth:
 Related files:
 
 - [`scripts/encode-loop.swift`](../scripts/encode-loop.swift)
-- [`app.config.js`](../app.config.js) (`extra.captureMode`)
+- [`app.config.js`](../app.config.js) (`extra.captureMode`, `extra.captureCurrency`)
+- [`appstore/README.md`](../appstore/README.md): the App Store posters, from the same capture mode
 
 Update when:
 
@@ -38,6 +39,9 @@ The `capture` profile builds for the simulator and sets `extra.captureMode`, whi
 replace its database with a calm sample month on every launch (`lib/capture-mode.ts`): a 10-a-day
 plan at 10% a week, four weeks in, every day under its allowance, today at 2 of 6. Sentry and the
 review prompt stay off. Never install a capture build on a phone that holds a real plan.
+
+The sample can is priced in kroner. A build with `CAPTURE_CURRENCY=USD` prices it in dollars, which
+is what the App Store's English set uses (`appstore/README.md`).
 
 Download the simulator build from the EAS build page, unpack it and install the `.app`.
 
