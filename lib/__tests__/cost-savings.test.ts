@@ -7,7 +7,7 @@
  * - over-baseline days (clamped to 0 avoided, no negative savings)
  * - missing pricePerCan (zero pricePerPouch → zero savings)
  * - daily rate and projected monthly extrapolation
- * - week and month grouping
+ * - week and month grouping, and their locale-formatted labels
  */
 
 import type { LogEntry, TaperSettings } from '../models';
@@ -18,6 +18,7 @@ jest.mock('../db-log-entries', () => ({
 
 import { getLogEntries } from '../db-log-entries';
 import { calculateCostSavings } from '../cost-savings';
+import { formatDayMonth, formatMonthYear } from '../date-format';
 
 const mockedGetLogEntries = getLogEntries as jest.MockedFunction<typeof getLogEntries>;
 
@@ -209,6 +210,33 @@ describe('calculateCostSavings', () => {
     // Each weekly entry sums to a positive saved amount (no zero-day artifacts)
     for (const w of result.weeklySavings) {
       expect(w.saved).toBeGreaterThan(0);
+    }
+  });
+
+  it('labels weeks by their Monday and months by name, in the device locale (#409)', async () => {
+    // Thursday 27 Aug to Friday 18 Sep 2026: four weeks, two months.
+    jest.useFakeTimers({ now: new Date(2026, 8, 18, 12) });
+    try {
+      const start = new Date(2026, 7, 27);
+      mockedGetLogEntries.mockResolvedValue(coverDays(start, new Date()));
+      const result = await calculateCostSavings(makeSettings({ startDate: start.getTime() }));
+
+      expect(result.weeklySavings.map((w) => w.weekLabel)).toEqual(
+        [
+          new Date(2026, 7, 24),
+          new Date(2026, 7, 31),
+          new Date(2026, 8, 7),
+          new Date(2026, 8, 14),
+        ].map((monday) => formatDayMonth(monday)),
+      );
+      expect(result.monthlySavings.map((m) => m.monthLabel)).toEqual([
+        formatMonthYear(new Date(2026, 7, 1)),
+        formatMonthYear(new Date(2026, 8, 1)),
+      ]);
+      // The week of 24 Aug only has Thu to Sun in the plan: 4 days × 10.
+      expect(result.weeklySavings[0].saved).toBe(40);
+    } finally {
+      jest.useRealTimers();
     }
   });
 

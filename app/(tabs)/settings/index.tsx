@@ -4,7 +4,9 @@ import { Card } from '@/components/ui/Card';
 import { Icon } from '@/components/ui/Icon';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { setPreferredColorScheme } from '@/lib/color-scheme';
+import { DEFAULT_CHECK_IN_HOUR } from '@/lib/constants';
 import { formatMoney } from '@/lib/currency';
+import { formatTimeOfDay } from '@/lib/date-format';
 import { buildFeedbackMailto, SUPPORT_EMAIL } from '@/lib/feedback';
 import { buildLogCsv, exportFileName } from '@/lib/export-csv';
 import { getLogEntries } from '@/lib/db-log-entries';
@@ -123,7 +125,7 @@ export default function SettingsScreen() {
     }
     try {
       if (enabled) {
-        const id = await scheduleDailyCheckIn(20, 0);
+        const id = await scheduleDailyCheckIn(DEFAULT_CHECK_IN_HOUR, 0);
         if (id) setDailyCheckInEnabled(true);
         else Alert.alert('Error', 'Failed to enable daily check-in');
       } else {
@@ -149,7 +151,9 @@ export default function SettingsScreen() {
               </View>
               <View style={s.rowText}>
                 <Text style={s.rowTitle}>Daily Check-In</Text>
-                <Text style={s.rowDescription}>Reminder at 20:00 to log progress</Text>
+                <Text style={s.rowDescription}>
+                  Reminder at {formatTimeOfDay(DEFAULT_CHECK_IN_HOUR)} to log progress
+                </Text>
               </View>
               <Switch
                 value={dailyCheckInEnabled && hasPermission}

@@ -3,6 +3,7 @@ import { StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native';
 import Animated, { FadeInRight } from 'react-native-reanimated';
 import { Card } from '@/components/ui/Card';
 import { Icon } from '@/components/ui/Icon';
+import { formatNumericDate } from '@/lib/date-format';
 import { useDesignTokens } from '@/lib/design';
 import type { Milestone } from '@/lib/progress';
 import { animations, spacing, typography } from '@/lib/theme';
@@ -70,9 +71,7 @@ export const MilestonesList = memo(function MilestonesList({
             </View>
             <View style={s.milestoneContent}>
               <Text style={s.milestoneTitle}>{milestone.title}</Text>
-              <Text style={s.milestoneDate}>
-                {new Date(milestone.achievedAt).toLocaleDateString()}
-              </Text>
+              <Text style={s.milestoneDate}>{formatNumericDate(milestone.achievedAt)}</Text>
             </View>
           </Animated.View>
         );
