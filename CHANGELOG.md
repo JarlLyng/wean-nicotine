@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.7.2] - 2026-10-18
+
+iOS build 27. One fix: dates and times follow the phone's region. It also carries a new set of App Store screenshots (#409).
+
 ### Fixed
 
 - **Dates and times follow your phone's region.** Cost Savings wrote its dates day first on every phone, so a US phone read 18/9/2026 there and 9/18/2026 on Progress, and Settings promised a reminder at 20:00 on a phone that uses a 12-hour clock. Cost Savings, the reflection journal, Progress and the reminder times in Settings now write dates and times the way the phone does, such as 9/18/2026 and 8:00 PM on a US phone. The words stay in English for now (#315). (#411)
@@ -205,7 +209,8 @@ User-visible changes shipped with iOS build 18.
 
 ---
 
-[Unreleased]: https://github.com/JarlLyng/wean-nicotine/compare/v1.7.1...HEAD
+[Unreleased]: https://github.com/JarlLyng/wean-nicotine/compare/v1.7.2...HEAD
+[1.7.2]: https://github.com/JarlLyng/wean-nicotine/compare/v1.7.1...v1.7.2
 [1.7.1]: https://github.com/JarlLyng/wean-nicotine/compare/v1.7.0...v1.7.1
 [1.7.0]: https://github.com/JarlLyng/wean-nicotine/compare/v1.6.2...v1.7.0
 [1.6.2]: https://github.com/JarlLyng/wean-nicotine/compare/v1.6.1...v1.6.2

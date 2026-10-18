@@ -11,7 +11,7 @@ A calm, private iPhone app for **gradually reducing** snus and nicotine pouches 
 - **License:** [MIT](LICENSE) — open source.
 - **Price:** **one-time**, set per storefront: **29 DKK** in Denmark, **39 SEK** and **39 NOK**, **$2.99 / £2.99 / €2.99** — no subscription, no in-app purchases, no ads. Never write a converted price ("~$4", "ca 45 SEK"); the storefronts set their own. Check live with `curl -s 'https://itunes.apple.com/lookup?id=6758867485&country=us'` (swap the country). On the website the store button, facts line (price, OS floor), campaign link and JSON-LD `Offer` come from the design system's registry: fragments in `website/src/store/`, rendered by `StoreButton.astro`, refreshed with `node website/scripts/sync-design.mjs vX.Y.Z` (which also brings the design system's kit, Wean's identity and the magenta waterline for the tidal-flats photo, all served from the site itself). Never hand-write a price or store link next to a call to action.
 - **Platform:** iPhone (Expo / React Native — the portfolio's one non-SwiftUI app; chosen deliberately).
-- **Current version:** **1.7.1** (iOS build 26) live in App Store since October 2026. `app.config.js` is the source of truth for the current build number; release history is in `CHANGELOG.md`.
+- **Current version:** **1.7.1** (iOS build 26) live in App Store since October 2026, and **1.7.2** (iOS build 27) is on its way. `app.config.js` is the source of truth for the current build number; release history is in `CHANGELOG.md`.
 
 ## Boundaries: work only in this repo
 
