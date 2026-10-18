@@ -2,6 +2,9 @@
   "app": "Wean Nicotine",
   "mode": "light",
   "accent": "#F140FE",
+  "ground": "#E6ECEF",
+  "text": "#22292E",
+  "chip_text": "#000000",
   "shapes": false,
   "out_dir": "1.7.1",
   "shots": [
