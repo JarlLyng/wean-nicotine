@@ -83,14 +83,14 @@ same session without relaunching.
 
 In order, each in the same session after Light Mode is on:
 
-| Raw            | How to get there                                                                                      |
-| -------------- | ----------------------------------------------------------------------------------------------------- |
-| `today.png`    | Today, before any tap: 2 of 6                                                                         |
-| `progress.png` | Progress, then **Last Week** (a whole week, whatever day it is; This Week holds only the days so far) |
-| `settings.png` | Settings, scrolled to the top: the reminder, Light Mode, Your Plan and Export                         |
-| `patterns.png` | Progress, scrolled until the Patterns card sits under the title, with Milestones below it             |
-| `tools.png`    | Tools                                                                                                 |
-| `export.png`   | Settings, then Export: the share sheet with the CSV file. Close it afterwards without sending         |
+| Raw            | How to get there                                                                                                                                                                                                                      |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `today.png`    | Today, before any tap: 2 of 6                                                                                                                                                                                                         |
+| `progress.png` | Progress, then **Last Week** (a whole week, whatever day it is; This Week holds only the days so far)                                                                                                                                 |
+| `settings.png` | Settings, scrolled to the top: the reminder, Light Mode, Your Plan and Export                                                                                                                                                         |
+| `patterns.png` | Progress, scrolled until the Patterns card sits under the title, with Milestones below it                                                                                                                                             |
+| `tools.png`    | Tools                                                                                                                                                                                                                                 |
+| `export.png`   | Settings scrolled to the top, then Export. Wait about five seconds, until the sheet has settled: the file name, "Text Document" and the preview sharp, and nothing red showing through the glass. Close it afterwards without sending |
 
 Wait for any system banner to go before a capture (a new simulator shows one for Apple
 Intelligence), and check each raw for one afterwards. Every simulator capture also has a 3 × 3
