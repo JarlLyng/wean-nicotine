@@ -62,7 +62,7 @@ One fix: dates and times follow the phone's region (#411). The version also carr
 Dates and times now follow your iPhone's region.
 
 • The daily reminder in Settings shows its time the way your iPhone does, such as 8:00 PM or 20:00
-• Cost Savings, Progress and the reflection journal write dates in your region's order
+• Cost Savings, Progress and the Reflection Journal write dates in your region's order
 ```
 
 **Danish:**
@@ -70,8 +70,8 @@ Dates and times now follow your iPhone's region.
 ```
 Datoer og klokkeslæt følger nu din iPhones region.
 
-• Den daglige påmindelse i Indstillinger viser tiden, som din iPhone gør, fx 20.00 eller 8:00 PM
-• Besparelser, Fremskridt og refleksionsdagbogen skriver datoer i din regions rækkefølge
+• Den daglige påmindelse under “Settings” viser tiden, som din iPhone gør, fx 20.00 eller 8:00 PM
+• “Cost Savings”, “Progress” og “Reflection Journal” skriver datoer i din regions rækkefølge
 ```
 
 **Swedish:**
@@ -79,8 +79,8 @@ Datoer og klokkeslæt følger nu din iPhones region.
 ```
 Datum och tider följer nu din iPhones region.
 
-• Den dagliga påminnelsen i Inställningar visar tiden som din iPhone gör, till exempel 20:00 eller 8:00 PM
-• Besparingar, Framsteg och reflektionsdagboken skriver datum i din regions ordning
+• Den dagliga påminnelsen under ”Settings” visar tiden som din iPhone gör, till exempel 20:00 eller 8:00 PM
+• ”Cost Savings”, ”Progress” och ”Reflection Journal” skriver datum i din regions ordning
 ```
 
 **Norwegian:**
@@ -88,8 +88,8 @@ Datum och tider följer nu din iPhones region.
 ```
 Datoer og klokkeslett følger nå regionen på iPhonen din.
 
-• Den daglige påminnelsen i Innstillinger viser tiden slik iPhonen din gjør, for eksempel 20:00 eller 8:00 PM
-• Sparing, Fremgang og refleksjonsdagboken skriver datoer i regionens rekkefølge
+• Den daglige påminnelsen under «Settings» viser tiden slik iPhonen din gjør, for eksempel 20:00 eller 8:00 PM
+• «Cost Savings», «Progress» og «Reflection Journal» skriver datoer i regionens rekkefølge
 ```
 
 ---
