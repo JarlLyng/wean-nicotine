@@ -27,12 +27,14 @@ Update when:
 
 ---
 
-## The set (October 2026, app version 1.7.1)
+## The set (October 2026, app version 1.7.2)
 
 Six posters at 6.9" (1320 × 2868), in English. Apple scales them down to every smaller iPhone.
 The Danish, Norwegian and Swedish listings show the English set: the app's interface is English
 (#315), so a localized caption would sit above an English screen. Localized captions come when
 the app is localized.
+
+The set goes out with 1.7.2, because App Store Connect places screenshots on a version that isn't live yet, not on an approved one. The captures come from a 1.7.2 capture build, so the reminder on posters 3 and 6 reads 8:00 PM, as on a US iPhone (#411).
 
 The first three show in search results, so they carry the three things a shopper decides on:
 the method, the tone and the price. The other three follow the app the way it is used.

@@ -9,7 +9,7 @@ why each shot is there are in [`docs/APP_STORE_SCREENSHOT_CAPTIONS.md`](../docs/
 
 - `raw/`: unretouched simulator captures from the capture build, `<screen>.png`, 1320 × 2868
 - `manifest.json`: what gets composed, in upload order, with the caption for each shot
-- `1.7.1/`: the composed posters, `iphone-6.9-<n>.png`, 1320 × 2868, English
+- `1.7.2/`: the composed posters, `iphone-6.9-<n>.png`, 1320 × 2868, English
 
 Superseded sets are deleted rather than kept. Git history has them.
 
