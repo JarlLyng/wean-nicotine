@@ -108,6 +108,9 @@ module.exports = {
       // Seeds a calm sample month for the site's screenshots (lib/capture-mode.ts, #396).
       // Only the `capture` EAS profile turns it on; a production build never can.
       captureMode: process.env.EAS_BUILD_PROFILE === 'capture',
+      // The sample month's currency: kroner for the site, CAPTURE_CURRENCY=USD for the
+      // App Store's English set (#409). Read only in capture mode.
+      captureCurrency: process.env.CAPTURE_CURRENCY ?? 'DKK',
     },
     runtimeVersion: {
       policy: 'appVersion',
