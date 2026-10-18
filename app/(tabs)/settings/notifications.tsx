@@ -1,5 +1,16 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView, Switch, Alert, Pressable, Linking, TextStyle, ViewStyle } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Switch,
+  Alert,
+  Pressable,
+  Linking,
+  TextStyle,
+  ViewStyle,
+} from 'react-native';
 import { Screen } from '@/components/Screen';
 import { Card } from '@/components/ui/Card';
 import { Icon } from '@/components/ui/Icon';
@@ -37,7 +48,10 @@ export default function NotificationsScreen() {
   const [dailyCheckInEnabled, setDailyCheckInEnabled] = useState(false);
   const [checkInHour] = useState(20);
   const [triggerRemindersEnabled, setTriggerRemindersEnabled] = useState(false);
-  const [triggerReminderTime, setTriggerReminderTime] = useState<ReminderTime>({ hour: 20, minute: 0 });
+  const [triggerReminderTime, setTriggerReminderTime] = useState<ReminderTime>({
+    hour: 20,
+    minute: 0,
+  });
   const [selectedTriggers, setSelectedTriggers] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -68,13 +82,11 @@ export default function NotificationsScreen() {
 
         const notifications = await getAllScheduledNotifications();
         if (cancelled) return;
-        const hasDailyCheckIn = notifications.some(
-          (n) => n.content.data?.type === 'daily_checkin'
-        );
+        const hasDailyCheckIn = notifications.some((n) => n.content.data?.type === 'daily_checkin');
         setDailyCheckInEnabled(hasDailyCheckIn);
 
         const triggerReminder = notifications.find(
-          (n) => n.content.data?.type === 'trigger_reminder'
+          (n) => n.content.data?.type === 'trigger_reminder',
         );
         const hasTriggerReminder = Boolean(triggerReminder);
         setTriggerRemindersEnabled(hasTriggerReminder);
@@ -89,11 +101,17 @@ export default function NotificationsScreen() {
             if (typeof parsed.hour === 'number' && typeof parsed.minute === 'number') {
               storedTime = { hour: parsed.hour, minute: parsed.minute };
             }
-          } catch { /* ignore */ }
+          } catch {
+            /* ignore */
+          }
         }
 
         let scheduledTime: ReminderTime | null = null;
-        if (triggerReminder && triggerReminder.trigger && typeof triggerReminder.trigger === 'object') {
+        if (
+          triggerReminder &&
+          triggerReminder.trigger &&
+          typeof triggerReminder.trigger === 'object'
+        ) {
           const t = triggerReminder.trigger as Record<string, unknown>;
           if (typeof t.hour === 'number' && typeof t.minute === 'number') {
             scheduledTime = { hour: t.hour, minute: t.minute };
@@ -117,7 +135,11 @@ export default function NotificationsScreen() {
           !didSelfHealRef.current
         ) {
           didSelfHealRef.current = true;
-          const id = await scheduleTriggerReminders(triggers, effectiveTime.hour, effectiveTime.minute);
+          const id = await scheduleTriggerReminders(
+            triggers,
+            effectiveTime.hour,
+            effectiveTime.minute,
+          );
           if (cancelled) return;
           if (id) {
             setTriggerRemindersEnabled(true);
@@ -148,26 +170,25 @@ export default function NotificationsScreen() {
       { hour: 22, minute: 0 },
     ];
 
-    Alert.alert(
-      'Trigger reminder time',
-      'Choose a time for your daily trigger reminder.',
-      [
-        ...options.map((t) => ({
-          text: formatTime(t),
-          onPress: async () => {
-            setTriggerReminderTime(t);
-            await setPreference(PREF_TRIGGER_REMINDERS_TIME, JSON.stringify(t));
-            if (triggerRemindersEnabled && hasPermission) {
-              const id = await scheduleTriggerReminders(selectedTriggers, t.hour, t.minute);
-              if (!id) {
-                Alert.alert('Not available', 'Notifications require a development build (they do not work in Expo Go).');
-              }
+    Alert.alert('Trigger reminder time', 'Choose a time for your daily trigger reminder.', [
+      ...options.map((t) => ({
+        text: formatTime(t),
+        onPress: async () => {
+          setTriggerReminderTime(t);
+          await setPreference(PREF_TRIGGER_REMINDERS_TIME, JSON.stringify(t));
+          if (triggerRemindersEnabled && hasPermission) {
+            const id = await scheduleTriggerReminders(selectedTriggers, t.hour, t.minute);
+            if (!id) {
+              Alert.alert(
+                'Not available',
+                'Notifications require a development build (they do not work in Expo Go).',
+              );
             }
-          },
-        })),
-        { text: 'Cancel', style: 'cancel' },
-      ]
-    );
+          }
+        },
+      })),
+      { text: 'Cancel', style: 'cancel' },
+    ]);
   };
 
   const handleToggleDailyCheckIn = async (enabled: boolean) => {
@@ -223,7 +244,11 @@ export default function NotificationsScreen() {
     }
     try {
       if (enabled) {
-        const id = await scheduleTriggerReminders(selectedTriggers, triggerReminderTime.hour, triggerReminderTime.minute);
+        const id = await scheduleTriggerReminders(
+          selectedTriggers,
+          triggerReminderTime.hour,
+          triggerReminderTime.minute,
+        );
         if (id) {
           await setPreference(PREF_TRIGGER_REMINDERS_ENABLED, '1');
           await setPreference(PREF_TRIGGER_REMINDERS_TIME, JSON.stringify(triggerReminderTime));
@@ -240,7 +265,8 @@ export default function NotificationsScreen() {
       }
     } catch (error) {
       if (__DEV__) console.error('Error toggling trigger reminders:', error);
-      if (error instanceof Error) captureError(error, { context: 'notifications_toggle_trigger_reminders' });
+      if (error instanceof Error)
+        captureError(error, { context: 'notifications_toggle_trigger_reminders' });
       Alert.alert('Error', 'Failed to update notification settings');
     }
   };
@@ -293,9 +319,7 @@ export default function NotificationsScreen() {
               </View>
               <View style={s.cardHeaderText}>
                 <Text style={s.cardTitle}>Trigger Reminders</Text>
-                <Text style={s.cardDescription}>
-                  Daily reminder to help you handle cravings
-                </Text>
+                <Text style={s.cardDescription}>Daily reminder to help you handle cravings</Text>
               </View>
               <Switch
                 value={triggerRemindersEnabled && hasPermission}
@@ -313,7 +337,8 @@ export default function NotificationsScreen() {
                 onPress={chooseTriggerReminderTime}
                 accessibilityRole="button"
                 accessibilityLabel="Change trigger reminder time"
-                style={s.timeButton}>
+                style={s.timeButton}
+              >
                 <Text style={s.timeValue}>{formatTime(triggerReminderTime)}</Text>
                 <Text style={s.changeText}>Change</Text>
               </Pressable>
