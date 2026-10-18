@@ -1,0 +1,57 @@
+{
+  "app": "Wean Nicotine",
+  "mode": "light",
+  "accent": "#F140FE",
+  "ground": "#E6ECEF",
+  "text": "#22292E",
+  "chip_text": "#000000",
+  "shapes": false,
+  "out_dir": "1.7.2",
+  "shots": [
+    {
+      "raw": "raw/today.png",
+      "slot": "iphone-6.9",
+      "out": "iphone-6.9-1.png",
+      "caption": "Less snus,\nfewer pouches,\n[week by week]",
+      "caption_pos": "top",
+      "bleed": true
+    },
+    {
+      "raw": "raw/progress.png",
+      "slot": "iphone-6.9",
+      "out": "iphone-6.9-2.png",
+      "caption": "Progress without\n[the pressure]",
+      "caption_pos": "bottom"
+    },
+    {
+      "raw": "raw/settings.png",
+      "slot": "iphone-6.9",
+      "out": "iphone-6.9-3.png",
+      "caption": "Pay once.\n[No subscription.]",
+      "caption_pos": "top",
+      "bleed": true
+    },
+    {
+      "raw": "raw/patterns.png",
+      "slot": "iphone-6.9",
+      "out": "iphone-6.9-4.png",
+      "caption": "Learn when\nand why you\n[reach for one]",
+      "caption_pos": "bottom"
+    },
+    {
+      "raw": "raw/tools.png",
+      "slot": "iphone-6.9",
+      "out": "iphone-6.9-5.png",
+      "caption": "Ride out\n[a craving]",
+      "caption_pos": "top",
+      "bleed": true
+    },
+    {
+      "raw": "raw/export.png",
+      "slot": "iphone-6.9",
+      "out": "iphone-6.9-6.png",
+      "caption": "Your log stays\non your iPhone,\n[until you share it]",
+      "caption_pos": "bottom"
+    }
+  ]
+}

@@ -1,103 +1,85 @@
-# App Store Screenshot Captions
+# App Store screenshot captions
 
-This file proposes caption text for the App Store screenshot frames, optimized to surface target keywords *before* the user reads the long description. App Store search now ranks screenshot text — captions matter for ASO almost as much as keywords.
+Purpose:
 
-**Source files:** `Screenshots/v1.2/` (raw simulator output) → upscaled / framed deliverables in `App store screens/V1.2/`.
+- The captions on the App Store posters, what each poster shows, and why it is in the set
 
-**Convention:**
-- 1 strong benefit per screenshot.
-- One target keyword per caption (English: *snus*, *nicotine pouches*, *taper*, *cravings*, *progress*, *private*). Localized variants below.
-- Plain prose, sentence case. No emoji. No exclamation marks (calmer feel; matches "wean, don't punish").
-- ≤ 60 characters per line, ≤ 2 lines.
+Audience:
 
----
+- Maintainers remaking or reordering the set
+- LLMs asked to write or check screenshot copy
 
-## Screenshot order (8 total)
+Source of truth:
 
-| # | Screen | Source file (Screenshots/v1.2/) |
-|---|--------|----------------------------------|
-| 1 | Onboarding — Welcome | `01-onboarding.png` |
-| 2 | Onboarding — Baseline | `02-baseline.png` |
-| 3 | Onboarding — Price | `03-price.png` |
-| 4 | Onboarding — Triggers | `04-triggers.png` |
-| 5 | Today / Daily allowance | `05-today.png` |
-| 6 | Progress (weekly chart) | `06-progress.png` |
-| 7 | Tools (breathing / urge) | `07-tools.png` |
-| 8 | Cost savings | `08-savings.png` |
+- [`appstore/manifest.json`](../appstore/manifest.json) holds the captions the posters are built from. If this file and the manifest disagree, the manifest wins, and this file is out of date
+- The app's code for every claim a caption makes
 
----
+Related files:
 
-## English (en-US, en-GB, en-CA — App Store primary)
+- [`appstore/README.md`](../appstore/README.md): how the captures and posters are made
+- [`docs/APP_STORE_METADATA.md`](./APP_STORE_METADATA.md): the rest of the listing copy
+- [`lib/capture-mode.ts`](../lib/capture-mode.ts): the sample month on every screen
 
-| # | Headline (≤ 30 char) | Sub-line (≤ 60 char) |
-|---|----------------------|----------------------|
-| 1 | Cut snus, your pace | A calm app to reduce nicotine pouches. |
-| 2 | Start where you are | Set a real baseline — no judgment, no shame. |
-| 3 | See the money saved | Optional cost tracking in your currency. |
-| 4 | Know your triggers | Pick the moments cravings hit hardest. |
-| 5 | Today's allowance | One‑tap log. Undo any mistake in 5 seconds. |
-| 6 | Watch progress build | Weekly chart, gentle milestones, no streaks. |
-| 7 | Tools for cravings | Breathing, urge‑surfing, short reflections. |
-| 8 | Money back in pocket | See how much your taper has already saved you. |
+Update when:
+
+- A caption, the order or a screen in the set changes
+- The app changes something a caption claims
 
 ---
 
-## Danish (da)
+## The set (October 2026, app version 1.7.2)
 
-| # | Headline | Sub-line |
-|---|----------|----------|
-| 1 | Skær ned på snus | En rolig app til at trappe nikotin ned. |
-| 2 | Start hvor du er | Sæt et ærligt udgangspunkt — uden skam. |
-| 3 | Se hvad du sparer | Valgfri prissporing i din valuta. |
-| 4 | Kend dine triggere | Vælg de situationer hvor trangen rammer. |
-| 5 | Dagens ration | Ét tryk for at logge. Fortryd inden 5 sek. |
-| 6 | Følg din fremgang | Ugentlig graf, milepæle, ingen streaks. |
-| 7 | Værktøjer mod trang | Vejrtrækning, urge‑surfing, refleksion. |
-| 8 | Penge tilbage i lommen | Se hvor meget din nedtrapning har sparet. |
+Six posters at 6.9" (1320 × 2868), in English. Apple scales them down to every smaller iPhone.
+The Danish, Norwegian and Swedish listings show the English set: the app's interface is English
+(#315), so a localized caption would sit above an English screen. Localized captions come when
+the app is localized.
 
----
+The set goes out with 1.7.2, because App Store Connect places screenshots on a version that isn't live yet, not on an approved one. The captures come from a 1.7.2 capture build, so the reminder on posters 3 and 6 reads 8:00 PM, as on a US iPhone (#411).
 
-## Swedish (sv)
+The first three show in search results, so they carry the three things a shopper decides on:
+the method, the tone and the price. The other three follow the app the way it is used.
 
-| # | Headline | Sub-line |
-|---|----------|----------|
-| 1 | Minska snuset i din takt | En lugn app för att trappa ner nikotin. |
-| 2 | Börja där du är | Sätt en ärlig utgångspunkt — utan skam. |
-| 3 | Se vad du sparar | Frivillig prisspårning i din valuta. |
-| 4 | Känn dina triggers | Välj stunderna när suget slår till. |
-| 5 | Dagens ranson | Ett tryck för att logga. Ångra inom 5 sek. |
-| 6 | Följ dina framsteg | Veckodiagram, mjuka milstolpar, inga streaks. |
-| 7 | Verktyg mot suget | Andning, urge‑surfing, korta reflektioner. |
-| 8 | Pengar tillbaka | Se hur mycket nedtrappningen redan sparat. |
+| #   | File               | Screen                                         | Caption                                               |
+| --- | ------------------ | ---------------------------------------------- | ----------------------------------------------------- |
+| 1   | `iphone-6.9-1.png` | Today, 2 of 6 pouches                          | Less snus, fewer pouches, **week by week**            |
+| 2   | `iphone-6.9-2.png` | Progress, last week, every day within the plan | Progress without **the pressure**                     |
+| 3   | `iphone-6.9-3.png` | Settings: reminder, plan, export               | Pay once. **No subscription.**                        |
+| 4   | `iphone-6.9-4.png` | Progress, Patterns and milestones              | Learn when and why you **reach for one**              |
+| 5   | `iphone-6.9-5.png` | Tools for cravings                             | Ride out **a craving**                                |
+| 6   | `iphone-6.9-6.png` | Export, the share sheet with the CSV file      | Your log stays on your iPhone, **until you share it** |
 
----
+The phrase in bold is the one emphasis on each poster: a magenta chip with black text, never
+magenta text on the light ground.
 
-## Norwegian (no — Bokmål)
+## What each caption rests on
 
-| # | Headline | Sub-line |
-|---|----------|----------|
-| 1 | Trapp ned snusen | En rolig app for å redusere nikotin. |
-| 2 | Start der du er | Sett et ærlig utgangspunkt — uten skam. |
-| 3 | Se hva du sparer | Valgfri prissporing i din valuta. |
-| 4 | Kjenn triggerne | Velg situasjonene der suget slår til. |
-| 5 | Dagens kvote | Ett trykk for å logge. Angre innen 5 sek. |
-| 6 | Følg fremgangen | Ukentlig graf, milepæler, ingen streaks. |
-| 7 | Verktøy mot sug | Pusteøvelser, urge‑surfing, refleksjon. |
-| 8 | Penger spart | Se hvor mye nedtrappingen har spart deg for. |
+1. **Less snus, fewer pouches, week by week.** The daily allowance steps down every week at the
+   pace the user picks (`calculateDailyAllowance` in `lib/taper-plan.ts`). Both words people
+   search for, snus and pouches, are in the first caption.
+2. **Progress without the pressure.** There is no streak or "days clean" counter, a day above the
+   plan is drawn in a soft tint rather than red (1.7.1, #398), and the screen says "Every day
+   stayed within your plan."
+3. **Pay once. No subscription.** The app is a one-time purchase on every storefront. There are no
+   in-app purchases, no subscription and no ads in the code or the listing. The caption names no
+   price, since each storefront sets its own and Apple asks for none on screenshots. Never "free".
+4. **Learn when and why you reach for one.** The Patterns card counts pouches by time of day and
+   by tagged trigger over the last 30 days (`getUsagePatterns` in `lib/progress.ts`).
+5. **Ride out a craving.** The guided breathing exercise, urge surfing and reflection prompts.
+6. **Your log stays on your iPhone, until you share it.** The log is kept in SQLite on the phone
+   with no account. Export writes a CSV and opens the share sheet, so the file goes only where the
+   user sends it (#43). The caption says "your log", not "everything", because crash reports do
+   leave the phone (Sentry, `docs/PRIVACY_APP_STORE.md`).
 
----
+## Rules the captions follow
 
-## Notes
-
-- **Headlines** include or imply a target keyword that App Store search indexes (snus / snuset / snusen, nicotine, taper, cravings, trang, sug).
-- **Sub-lines** carry a secondary benefit phrase that matches search intent ("reduce nicotine pouches", "trappe ned", "minska snuset", etc.).
-- Avoid claims we can't substantiate ("the easiest", "guaranteed", "scientifically proven"). Apple's review team rejects unsubstantiated superlatives in screenshots.
-- Re-export framed PNGs from the `.sdev` source in `App store screens/Taper.sdev` once captions are finalized.
-
-## Next steps
-
-1. Review wording with native Swedish + Norwegian speakers (current text is best-effort).
-2. Update `App store screens/Taper.sdev` with the new captions.
-3. Export framed deliverables to `App store screens/V1.3/` (mirroring the existing V1.2 layout).
-4. Upload to App Store Connect under **Previews and Screenshots** → **Phone** for each localization.
-5. Keep the raw simulator captures in `Screenshots/v1.2/` (already there) so future edits can re-frame without losing the source images.
+- One benefit per poster, and at most one emphasis.
+- The hub's `VOICE.md` with Wean's overlay: no em-dashes, no exclamation marks, no hype, and the
+  gentlest tone in the portfolio. No streak, shame or war language (nothing about fighting or
+  beating anything), and a day over the plan is never framed as failure.
+- No claim the app can't back, no medical claim, and no "quit" or "cured" promise.
+- No third-party brand on any poster, and no price.
+- Line breaks are set by hand in the manifest, so the emphasis never wraps across lines.
+- Every number on screen comes from the capture build's sample month, which the app computed.
+  The sample can is priced in dollars, so the English set shows no kroner.
+- The repo is public, so this file and any text about the set go through the hub's
+  `tools/public_text_check.py`.
