@@ -8,32 +8,14 @@ import type { TaperSettings } from './models';
 import { getLogEntries } from './db-log-entries';
 import { POUCHES_PER_CAN, PROJECTED_MONTH_DAYS } from './constants';
 import { daysWithLogs, toDayKey } from './day-coverage';
+import { formatDayMonth, formatMonthYear } from './date-format';
 
-function toWeekLabel(date: Date): string {
-  const d = new Date(date);
-  d.setHours(0, 0, 0, 0);
-  const dayOfWeek = (d.getDay() + 6) % 7;
-  const monday = new Date(d);
-  monday.setDate(d.getDate() - dayOfWeek);
-  return `${monday.getDate()}/${monday.getMonth() + 1}`;
-}
-
-function toMonthLabel(date: Date): string {
-  const months = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec',
-  ];
-  return `${months[date.getMonth()]} ${date.getFullYear()}`;
+/** Monday of the week `date` falls in, at local midnight. */
+function mondayOf(date: Date): Date {
+  const monday = new Date(date);
+  monday.setHours(0, 0, 0, 0);
+  monday.setDate(monday.getDate() - ((monday.getDay() + 6) % 7));
+  return monday;
 }
 
 export interface WeekSaving {
@@ -83,9 +65,10 @@ export async function calculateCostSavings(settings: TaperSettings): Promise<Cos
     usedByDay.set(key, (usedByDay.get(key) ?? 0) + 1);
   }
 
-  // Walk each day from start to today
-  const weekMap = new Map<string, number>();
-  const monthMap = new Map<string, number>();
+  // Walk each day from start to today. Buckets are keyed by date, not by the
+  // visible label, which is formatted for the device locale at the end.
+  const weekMap = new Map<string, { start: Date; saved: number }>();
+  const monthMap = new Map<string, { start: Date; saved: number }>();
   let totalAvoided = 0;
   let dayCount = 0;
 
@@ -112,11 +95,16 @@ export async function calculateCostSavings(settings: TaperSettings): Promise<Cos
 
     totalAvoided += avoided;
 
-    const wk = toWeekLabel(current);
-    weekMap.set(wk, (weekMap.get(wk) ?? 0) + savedCents);
+    const monday = mondayOf(current);
+    const weekKey = toDayKey(monday);
+    const wk = weekMap.get(weekKey) ?? { start: monday, saved: 0 };
+    wk.saved += savedCents;
+    weekMap.set(weekKey, wk);
 
-    const mo = toMonthLabel(current);
-    monthMap.set(mo, (monthMap.get(mo) ?? 0) + savedCents);
+    const monthKey = `${current.getFullYear()}-${current.getMonth()}`;
+    const mo = monthMap.get(monthKey) ?? { start: new Date(current), saved: 0 };
+    mo.saved += savedCents;
+    monthMap.set(monthKey, mo);
 
     dayCount++;
     current.setDate(current.getDate() + 1);
@@ -126,9 +114,12 @@ export async function calculateCostSavings(settings: TaperSettings): Promise<Cos
   const dailyRate = dayCount > 0 ? Math.round(totalSaved / dayCount) : 0;
   const projectedMonthlySaving = dailyRate * PROJECTED_MONTH_DAYS;
 
-  const weeklySavings = [...weekMap.entries()].map(([weekLabel, saved]) => ({ weekLabel, saved }));
-  const monthlySavings = [...monthMap.entries()].map(([monthLabel, saved]) => ({
-    monthLabel,
+  const weeklySavings = [...weekMap.values()].map(({ start, saved }) => ({
+    weekLabel: formatDayMonth(start),
+    saved,
+  }));
+  const monthlySavings = [...monthMap.values()].map(({ start, saved }) => ({
+    monthLabel: formatMonthYear(start),
     saved,
   }));
 

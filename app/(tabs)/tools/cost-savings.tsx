@@ -10,6 +10,7 @@ import { useDesignTokens, typography } from '@/lib/design';
 import { getTaperSettings } from '@/lib/db-settings';
 import { calculateCostSavings, type CostSavingsData } from '@/lib/cost-savings';
 import { formatMoney, type CurrencyCode } from '@/lib/currency';
+import { formatNumericDate } from '@/lib/date-format';
 import { captureError } from '@/lib/sentry';
 
 export default function CostSavingsScreen() {
@@ -77,10 +78,7 @@ export default function CostSavingsScreen() {
             <Icon name="piggy-bank" size={40} color={colors.primary} weight="duotone" />
             <Text style={s.heroAmount}>{fmt(data.totalSaved)}</Text>
             <Text style={s.heroSubtitle}>
-              saved since{' '}
-              {startDate
-                ? `${startDate.getDate()}/${startDate.getMonth() + 1}/${startDate.getFullYear()}`
-                : '—'}
+              saved since {startDate ? formatNumericDate(startDate) : '—'}
             </Text>
             {data.daysWithoutData > 0 && (
               <Text style={s.heroNote}>

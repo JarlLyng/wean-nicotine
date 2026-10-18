@@ -17,6 +17,8 @@ import { Icon } from '@/components/ui/Icon';
 import { spacing } from '@/lib/theme';
 import { useDesignTokens, typography } from '@/lib/design';
 import { captureError } from '@/lib/sentry';
+import { DEFAULT_CHECK_IN_HOUR } from '@/lib/constants';
+import { formatTimeOfDay } from '@/lib/date-format';
 import { getTaperSettings } from '@/lib/db-settings';
 import { getPreference, setPreference } from '@/lib/db-preferences';
 import {
@@ -33,20 +35,12 @@ const PREF_TRIGGER_REMINDERS_TIME = 'triggerRemindersTime';
 
 type ReminderTime = { hour: number; minute: number };
 
-function pad2(n: number) {
-  return String(n).padStart(2, '0');
-}
-
-function formatTime(t: ReminderTime) {
-  return `${pad2(t.hour)}:${pad2(t.minute)}`;
-}
-
 export default function NotificationsScreen() {
   const { colors } = useDesignTokens();
   const s = useMemo(() => createStyles(colors), [colors]);
   const [hasPermission, setHasPermission] = useState(false);
   const [dailyCheckInEnabled, setDailyCheckInEnabled] = useState(false);
-  const [checkInHour] = useState(20);
+  const [checkInHour] = useState(DEFAULT_CHECK_IN_HOUR);
   const [triggerRemindersEnabled, setTriggerRemindersEnabled] = useState(false);
   const [triggerReminderTime, setTriggerReminderTime] = useState<ReminderTime>({
     hour: 20,
@@ -172,7 +166,7 @@ export default function NotificationsScreen() {
 
     Alert.alert('Trigger reminder time', 'Choose a time for your daily trigger reminder.', [
       ...options.map((t) => ({
-        text: formatTime(t),
+        text: formatTimeOfDay(t.hour, t.minute),
         onPress: async () => {
           setTriggerReminderTime(t);
           await setPreference(PREF_TRIGGER_REMINDERS_TIME, JSON.stringify(t));
@@ -307,7 +301,7 @@ export default function NotificationsScreen() {
               />
             </View>
             {dailyCheckInEnabled && hasPermission && (
-              <Text style={s.timeDetail}>Scheduled for {checkInHour}:00 daily</Text>
+              <Text style={s.timeDetail}>Scheduled for {formatTimeOfDay(checkInHour)} daily</Text>
             )}
           </Card>
 
@@ -339,7 +333,9 @@ export default function NotificationsScreen() {
                 accessibilityLabel="Change trigger reminder time"
                 style={s.timeButton}
               >
-                <Text style={s.timeValue}>{formatTime(triggerReminderTime)}</Text>
+                <Text style={s.timeValue}>
+                  {formatTimeOfDay(triggerReminderTime.hour, triggerReminderTime.minute)}
+                </Text>
                 <Text style={s.changeText}>Change</Text>
               </Pressable>
             </View>
