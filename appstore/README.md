@@ -15,15 +15,17 @@ Superseded sets are deleted rather than kept. Git history has them.
 
 ## Wean's settings
 
-| Setting  | Value                                                    | Why                                                                               |
-| -------- | -------------------------------------------------------- | --------------------------------------------------------------------------------- |
-| Slot     | `iphone-6.9`                                             | Apple scales the 6.9" set down to every smaller iPhone, so one set covers them    |
-| Mode     | `light`                                                  | Wean is light only: a calm app, a calm poster                                     |
-| Ground   | `#E6ECEF`                                                | Wean's misty grey-blue, from its identity in `iamjarl-design`                     |
-| Accent   | `#F140FE`                                                | Wean's magenta, for strokes and fills with black on it                            |
-| Emphasis | a chip, `[phrase]`                                       | `*phrase*` would set magenta text on a light ground. At most one per poster       |
-| Shapes   | off                                                      | Magenta blurs would tint the grey-blue toward pink. The plain ground reads calmer |
-| Layout   | captions alternate top and bottom, bleed on the top ones | The hub's rhythm for a set, so six posters don't read as one template             |
+| Setting      | Value                                                    | Why                                                                                        |
+| ------------ | -------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| Slot         | `iphone-6.9`                                             | Apple scales the 6.9" set down to every smaller iPhone, so one set covers them             |
+| Mode         | `light`                                                  | Wean is light only: a calm app, a calm poster                                              |
+| Ground       | `#E6ECEF`                                                | Wean's misty grey-blue, from its identity in `iamjarl-design` (`"ground"` in the manifest) |
+| Caption text | `#22292E`                                                | Wean's charcoal (`"text"`)                                                                 |
+| Accent       | `#F140FE`                                                | Wean's magenta, for strokes and fills with black on it                                     |
+| Chip text    | `#000000`                                                | Pinned (`"chip_text"`), since magenta sits right at the tool's black-or-white threshold    |
+| Emphasis     | a chip, `[phrase]`                                       | `*phrase*` would set magenta text on a light ground. At most one per poster                |
+| Shapes       | off                                                      | Magenta blurs would tint the grey-blue toward pink. The plain ground reads calmer          |
+| Layout       | captions alternate top and bottom, bleed on the top ones | The hub's rhythm for a set, so six posters don't read as one template                      |
 
 The screens inside the posters are light too, to match.
 
@@ -101,7 +103,8 @@ xcrun simctl io <UDID> screenshot appstore/raw/<screen>.png
 
 ### 3. The posters
 
-From the repo root, with the hub cloned alongside (`../iamjarl-strategy`):
+From the repo root, with the hub cloned alongside (`../iamjarl-strategy`). The `ground`, `text` and
+`chip_text` keys need the hub's tool at d5c330f or later:
 
 ```bash
 ../iamjarl-strategy/.venv/bin/python ../iamjarl-strategy/tools/appstore_screenshots.py batch appstore/manifest.json
