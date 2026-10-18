@@ -44,6 +44,56 @@ Alternativer:
 
 ---
 
+## iOS App Version 1.7.2, on its way (build 27, October 2026)
+
+One fix: dates and times follow the phone's region (#411). The version also carries the new App Store screenshots and an English keyword change, both placed by the hub through the App Store Connect API once the owner has created the version.
+
+- **Keywords (English, en-US) change with this version.** zyn and velo (brand names) and chew (nothing in the app fits chewing tobacco) come out, and smokeless and urge (Urge Surfing) go in. Owner's decision, 2026-10-18. The Danish, Norwegian and Swedish keywords are unchanged.
+  `taper,pouch,quit,stop,cut,down,gradual,tracker,cessation,tobacco,dip,habit,craving,smokeless,urge` (97 characters)
+- **Subtitle:** unchanged from 1.6.0 in every locale.
+- **Screenshots:** the new 6.9" set from `appstore/1.7.2/` (six posters, English, shown in every locale), and the old 6.5" set comes off in the same step. Captions and order: [`APP_STORE_SCREENSHOT_CAPTIONS.md`](./APP_STORE_SCREENSHOT_CAPTIONS.md).
+- **The hub fills the version's fields.** Promotional Text has to go in again (ASC wipes it on every new version): reuse the 1.7.0 texts below, which still fit. The Description and Copyright (`2026 IAMJARL`) are unchanged; check that Copyright carried over.
+
+### What's New (v1.7.2)
+
+**English:**
+
+```
+Dates and times now follow your iPhone's region.
+
+• The daily reminder in Settings shows its time the way your iPhone does, such as 8:00 PM or 20:00
+• Cost Savings, Progress and the reflection journal write dates in your region's order
+```
+
+**Danish:**
+
+```
+Datoer og klokkeslæt følger nu din iPhones region.
+
+• Den daglige påmindelse i Indstillinger viser tiden, som din iPhone gør, fx 20.00 eller 8:00 PM
+• Besparelser, Fremskridt og refleksionsdagbogen skriver datoer i din regions rækkefølge
+```
+
+**Swedish:**
+
+```
+Datum och tider följer nu din iPhones region.
+
+• Den dagliga påminnelsen i Inställningar visar tiden som din iPhone gör, till exempel 20:00 eller 8:00 PM
+• Besparingar, Framsteg och reflektionsdagboken skriver datum i din regions ordning
+```
+
+**Norwegian:**
+
+```
+Datoer og klokkeslett følger nå regionen på iPhonen din.
+
+• Den daglige påminnelsen i Innstillinger viser tiden slik iPhonen din gjør, for eksempel 20:00 eller 8:00 PM
+• Sparing, Fremgang og refleksjonsdagboken skriver datoer i regionens rekkefølge
+```
+
+---
+
 ## iOS App Version 1.7.1 — Live in App Store (build 26, approved October 2026)
 
 One change, to how Progress shows a day above the plan (#398). **ASO fields (subtitle + keywords) are unchanged from 1.6.0** and carry forward automatically. **Promotional Text must be re-pasted** (ASC wipes it on every new version); reuse the 1.7.0 texts below, which still fit. The Description and Copyright (`2026 IAMJARL`) are unchanged from 1.7.0; check that Copyright carried over.
