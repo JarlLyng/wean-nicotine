@@ -44,7 +44,7 @@ Alternativer:
 
 ---
 
-## iOS App Version 1.7.2, on its way (build 27, October 2026)
+## iOS App Version 1.7.2, live in the App Store (build 27, 2026-10-19)
 
 One fix: dates and times follow the phone's region (#411). The version also carries the new App Store screenshots and an English keyword change, both placed by the hub through the App Store Connect API once the owner has created the version.
 
@@ -94,7 +94,7 @@ Datoer og klokkeslett følger nå regionen på iPhonen din.
 
 ---
 
-## iOS App Version 1.7.1 — Live in App Store (build 26, approved October 2026)
+## iOS App Version 1.7.1, superseded by 1.7.2 (build 26, was live October 2026)
 
 One change, to how Progress shows a day above the plan (#398). **ASO fields (subtitle + keywords) are unchanged from 1.6.0** and carry forward automatically. **Promotional Text must be re-pasted** (ASC wipes it on every new version); reuse the 1.7.0 texts below, which still fit. The Description and Copyright (`2026 IAMJARL`) are unchanged from 1.7.0; check that Copyright carried over.
 
