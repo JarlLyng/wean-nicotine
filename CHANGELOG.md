@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.7.2] - 2026-10-18
 
-iOS build 27. One fix: dates and times follow the phone's region. It also carries a new set of App Store screenshots (#409).
+iOS build 27, live in the App Store since 2026-10-19. One fix: dates and times follow the phone's region. It also carries a new set of App Store screenshots (#409).
 
 ### Fixed
 
