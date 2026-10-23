@@ -14,19 +14,20 @@ import { SUPPORT_EMAIL } from '../../lib/site';
 >
 	<Section
 		id="support"
+		level={1}
 		title="Support"
 		lede="Har du brug for hjælp eller vil du dele feedback? Vi læser alle e-mails."
 	>
 		<div class="grid">
 			<Card as="article">
-				<h3>Kontakt</h3>
+				<h2>Kontakt</h2>
 				<p>
 					Send en e-mail til <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>.
 				</p>
 			</Card>
 
 			<Card as="article">
-				<h3>Fejlfinding</h3>
+				<h2>Fejlfinding</h2>
 				<ul>
 					<li>Hvis notifikationer ikke virker, tjek dine iOS-tilladelser for Wean Nicotine.</li>
 					<li>Hvis din plan føles for aggressiv, juster dine start- og nedtrapningsindstillinger i appen.</li>
@@ -35,7 +36,7 @@ import { SUPPORT_EMAIL } from '../../lib/site';
 			</Card>
 
 			<Card as="article">
-				<h3>Privatliv</h3>
+				<h2>Privatliv</h2>
 				<p>
 					Dine registreringer og din plan gemmes kun på din enhed. Læs vores <a href="/da/privacy/">Privatlivspolitik</a>.
 				</p>
@@ -51,7 +52,7 @@ import { SUPPORT_EMAIL } from '../../lib/site';
 		grid-template-columns: repeat(3, minmax(0, 1fr));
 	}
 
-	h3 {
+	h2 {
 		margin: 0 0 var(--space-sm);
 		font-size: 18px;
 		letter-spacing: -0.01em;

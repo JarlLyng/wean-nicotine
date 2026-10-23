@@ -1,5 +1,5 @@
 ---
-title: '5 tips for reducing snus without going cold turkey'
+title: '5 tips for reducing snus without cold turkey'
 description: 'Quitting snus all at once works for some people and fails for many more. Here are five things that make gradual reduction stick, without shame, streaks, or willpower theater.'
 pubDate: 2026-06-03
 tags: ['tapering', 'snus', 'nicotine-pouches', 'how-to']

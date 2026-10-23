@@ -3,6 +3,9 @@ title: 'Welcome to the Wean Nicotine blog'
 description: 'A short note on why we built Wean Nicotine and what we plan to write about here. Tapering, harm reduction, privacy-first health apps, and the indie route.'
 pubDate: 2026-05-31
 tags: ['intro', 'wean-nicotine']
+# Retired in #415: a note about the blog itself has nothing for a searcher, and
+# Google never indexed it. Kept here rather than deleted, in case it is wanted.
+published: false
 ---
 
 This is the first post on the Wean Nicotine blog. The product exists for one reason: quitting snus cold turkey is brutally hard, and "all or nothing" is the only style most apps support. Wean takes the opposite stance. Pick a baseline, choose a pace, and reduce a little each week until you hit zero. No accounts. No cloud. No streak anxiety.
