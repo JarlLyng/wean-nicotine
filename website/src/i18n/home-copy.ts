@@ -1,7 +1,7 @@
 /**
  * Copy for the redesigned home page (#396), in all four languages.
  *
- * Written to the hub's VOICE.md and Wean's overlay: calm, first person where
+ * Written to the portfolio's voice rules and Wean's overlay: calm, first person where
  * the maker speaks, no em-dashes, no bullet lists, no war metaphors, no
  * streaks or "days clean", no medical claims. Prices are never written here:
  * the store fragment's facts line carries them, from the design system's
