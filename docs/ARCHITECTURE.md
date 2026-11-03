@@ -57,13 +57,13 @@ Update when:
 ### 3. Documentation
 
 - Path: `docs/`
-- Purpose: architecture summaries, strategy, release ops, App Store material
+- Purpose: architecture summaries, decisions, release ops, App Store material
 
 ### 4. Maintainer scripts
 
 - Path: `scripts/`
-- Runtime: Python (one dependency, `pyjwt[crypto]`, in a gitignored `.venv`)
-- Purpose: local tooling. `asc_downloads.py` pulls App Store Connect download/sales numbers from the command line. No secrets in the repo — credentials come from a gitignored `.env` and the `.p8` key stays out of git. See [`scripts/README.md`](../scripts/README.md).
+- Runtime: Node and Swift, nothing to install
+- Purpose: `changelog-section.mjs` gives the Release workflow a version's notes from `CHANGELOG.md`, and `encode-loop.swift` encodes the site's Today loop. See [`scripts/README.md`](../scripts/README.md).
 
 ## System Boundaries
 
@@ -254,8 +254,6 @@ The website uses a **programmatic SEO approach**:
 2.  Each page uses `SeoLandingLayout.astro`, which handles standard headers, CTAs, and SEO metadata.
 3.  Every App Store link is the design system's store fragment (`StoreButton.astro`), with one campaign for the whole site (`pt`, `ct=site`, `mt=8`, #366). Where a click came from is measured by the `store-click` event's placement, and `check-build.mjs` fails a link without it.
 
-SEO/ASO strategy, keyword targets, competitive positioning, and channel plans are tracked in the private IAMJARL strategy hub — see `WeanNicotine/` in [JarlLyng/iamjarl-strategy](https://github.com/JarlLyng/iamjarl-strategy) (access-restricted). Anything you wouldn't want a competitor reading lives there, not here.
-
 ## Source Of Truth By Concern
 
 - Product behavior: code in `app/` and `lib/`
@@ -420,7 +418,7 @@ so its source of truth lives where it stays current on its own:
 
 - **In progress / deferred / prioritized:** the [GitHub issue tracker](https://github.com/JarlLyng/wean-nicotine/issues), using the P0–P3 labels (taxonomy in [`CONTRIBUTING.md`](../CONTRIBUTING.md)).
 - **What shipped, and when:** [`CHANGELOG.md`](../CHANGELOG.md) and the git log.
-- **What the App Store sees:** the EAS build history (`eas build:list`), and download/sales numbers via [`scripts/asc_downloads.py`](../scripts/asc_downloads.py).
+- **What the App Store sees:** the EAS build history (`eas build:list`).
 
 Keep this document to the durable parts above (architecture, business rules,
 and especially the hard-won pitfalls). When in doubt, prefer a pointer to the

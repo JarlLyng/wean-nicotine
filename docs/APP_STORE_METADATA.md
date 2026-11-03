@@ -12,7 +12,7 @@ Audience:
 Source of truth:
 
 - App Store Connect is the final published state
-- Product positioning should stay aligned with [`ARCHITECTURE.md`](./ARCHITECTURE.md). Marketing positioning, SEO/ASO playbooks, competitive analysis, and channel plans live in the private IAMJARL strategy hub (not in this public repo) — see `WeanNicotine/` in [JarlLyng/iamjarl-strategy](https://github.com/JarlLyng/iamjarl-strategy) (access-restricted).
+- Product positioning should stay aligned with [`ARCHITECTURE.md`](./ARCHITECTURE.md). Marketing positioning, SEO and ASO playbooks and competitive analysis are not kept in this public repo.
 
 Related files:
 
@@ -46,13 +46,13 @@ Alternativer:
 
 ## iOS App Version 1.7.2, live in the App Store (build 27, 2026-10-19)
 
-One fix: dates and times follow the phone's region (#411). The version also carries the new App Store screenshots and an English keyword change, both placed by the hub through the App Store Connect API once the owner has created the version.
+One fix: dates and times follow the phone's region (#411). The version also carries the new App Store screenshots and an English keyword change, both placed through the App Store Connect API once the owner had created the version.
 
 - **Keywords (English, en-US) change with this version.** zyn and velo (brand names) and chew (nothing in the app fits chewing tobacco) come out, and smokeless and urge (Urge Surfing) go in. Owner's decision, 2026-10-18. The Danish, Norwegian and Swedish keywords are unchanged.
   `taper,pouch,quit,stop,cut,down,gradual,tracker,cessation,tobacco,dip,habit,craving,smokeless,urge` (97 characters)
 - **Subtitle:** unchanged from 1.6.0 in every locale.
 - **Screenshots:** the new 6.9" set from `appstore/1.7.2/` (six posters, English, shown in every locale), and the old 6.5" set comes off in the same step. Captions and order: [`APP_STORE_SCREENSHOT_CAPTIONS.md`](./APP_STORE_SCREENSHOT_CAPTIONS.md).
-- **The hub fills the version's fields.** Promotional Text has to go in again (ASC wipes it on every new version): reuse the 1.7.0 texts below, which still fit. The Description and Copyright (`2026 IAMJARL`) are unchanged; check that Copyright carried over.
+- **The version's fields are filled in App Store Connect.** Promotional Text has to go in again (ASC wipes it on every new version): reuse the 1.7.0 texts below, which still fit. The Description and Copyright (`2026 IAMJARL`) are unchanged; check that Copyright carried over.
 
 ### What's New (v1.7.2)
 
@@ -328,7 +328,7 @@ Finpuss og en liten personvernforbedring.
 
 ## iOS App Version 1.6.0 — Superseded by 1.6.1 (build 22, was live July 2026)
 
-Small quality release that also carries the ASO metadata pass: new subtitles (SV + NO) and rebuilt keyword fields per locale, plus re-pasted Promotional Text (ASC wipes it on every new version). Release notes and promo text are written per the portfolio voice rules (no em-dashes; bullets are allowed on the store surface). Rationale for the keyword/subtitle choices lives in the private hub (`WeanNicotine/aso-pass-draft.md`).
+Small quality release that also carries the ASO metadata pass: new subtitles (SV + NO) and rebuilt keyword fields per locale, plus re-pasted Promotional Text (ASC wipes it on every new version). Release notes and promo text are written per the portfolio voice rules (no em-dashes; bullets are allowed on the store surface).
 
 ### ASO fields shipped with 1.6.0 (final, as submitted)
 

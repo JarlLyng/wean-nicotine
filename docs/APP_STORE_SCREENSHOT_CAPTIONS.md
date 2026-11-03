@@ -73,7 +73,7 @@ magenta text on the light ground.
 ## Rules the captions follow
 
 - One benefit per poster, and at most one emphasis.
-- The hub's `VOICE.md` with Wean's overlay: no em-dashes, no exclamation marks, no hype, and the
+- The portfolio's voice rules with Wean's overlay: no em-dashes, no exclamation marks, no hype, and the
   gentlest tone in the portfolio. No streak, shame or war language (nothing about fighting or
   beating anything), and a day over the plan is never framed as failure.
 - No claim the app can't back, no medical claim, and no "quit" or "cured" promise.
@@ -81,5 +81,5 @@ magenta text on the light ground.
 - Line breaks are set by hand in the manifest, so the emphasis never wraps across lines.
 - Every number on screen comes from the capture build's sample month, which the app computed.
   The sample can is priced in dollars, so the English set shows no kroner.
-- The repo is public, so this file and any text about the set go through the hub's
-  `tools/public_text_check.py`.
+- The repo is public, so this file and any text about the set go through the portfolio's check
+  for measured numbers before they are published.

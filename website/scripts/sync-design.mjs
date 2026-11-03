@@ -25,8 +25,8 @@
  * is written. A file that does not match stops the sync.
  *
  * Two changes on the way in, both to URLs: the font sheet points at the font
- * file beside it, and the store fragments' badges point at /badges/. The hub's
- * store_check.py compares the link and the facts line, which stay as generated.
+ * file beside it, and the store fragments' badges point at /badges/. The link
+ * and the facts line stay as generated, so a check against the registry holds.
  *
  * Run it again with a newer tag when the design system changes, and commit
  * what it writes.
@@ -120,7 +120,10 @@ for (const path of [
 const fontSheet = (await verified('dist/fonts/instrument-sans.css')).toString('utf8');
 if (!fontSheet.includes("url('../../fonts/"))
   throw new Error('the font sheet no longer points at ../../fonts/; check the rewrite below');
-out.set(`${SERVED}/fonts/instrument-sans.css`, fontSheet.replaceAll("url('../../fonts/", "url('./"));
+out.set(
+  `${SERVED}/fonts/instrument-sans.css`,
+  fontSheet.replaceAll("url('../../fonts/", "url('./"),
+);
 for (const name of ['instrument-sans-latin-wght-normal.woff2', 'LICENSE-instrument-sans.txt']) {
   out.set(`${SERVED}/fonts/${name}`, await fetchBytes(`fonts/${name}`));
 }
@@ -151,7 +154,10 @@ const selfHost = (html) => {
 for (const loc of Object.keys(LOCALES)) {
   for (const variant of ['.black', '.midpage.black', '.footer.black', '.nav']) {
     const name = `${APP}.${loc}${variant}.html`;
-    out.set(`src/store/${name}`, selfHost((await fetchBytes(`dist/store/${name}`)).toString('utf8')));
+    out.set(
+      `src/store/${name}`,
+      selfHost((await fetchBytes(`dist/store/${name}`)).toString('utf8')),
+    );
   }
   const offer = `${APP}.${loc}.offer.json`;
   out.set(`src/store/${offer}`, await fetchBytes(`dist/store/${offer}`));

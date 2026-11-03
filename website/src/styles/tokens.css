@@ -7,8 +7,8 @@
  * loads from public/iamjarl-design/ (scripts/sync-design.mjs). That is the
  * migration #326 describes: the names stay, and the values come from one source.
  *
- * Declare no --ij-* names here. They belong to the design system, and the hub's
- * design_adoption.py reports any it does not define as counterfeit.
+ * Declare no --ij-* names here. They belong to the design system, and the
+ * portfolio's adoption check reports any it does not define as counterfeit.
  *
  * Light only. The identity sheet holds the page on its grey-blue whatever the
  * visitor's setting, so there is no dark block here any more.

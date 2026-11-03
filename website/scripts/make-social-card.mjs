@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * The social card: public/og-image.png, which is both the site's og:image and
- * the repo's GitHub social preview (the hub's DESIGN.md, "Social cards").
+ * the repo's GitHub social preview (the portfolio's design rules, "Social cards").
  *
  *   node scripts/make-social-card.mjs
  *
