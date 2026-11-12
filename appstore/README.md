@@ -1,8 +1,8 @@
 # App Store screenshots
 
-Posters for the App Store listing, built to the portfolio standard in the private hub
-(`DESIGN.md`, "App Store screenshots", implemented by `tools/appstore_screenshots.py`). Capture
-happens here, composition happens there, so every IAMJARL app shares one look. The captions and
+Posters for the App Store listing, built to the IAMJARL portfolio's screenshot standard. Capture
+happens here; composition happens in the portfolio's shared screenshot tool, which is not in this
+repo, so every IAMJARL app shares one look. The captions and
 why each shot is there are in [`docs/APP_STORE_SCREENSHOT_CAPTIONS.md`](../docs/APP_STORE_SCREENSHOT_CAPTIONS.md).
 
 ## Layout
@@ -25,7 +25,7 @@ Superseded sets are deleted rather than kept. Git history has them.
 | Chip text    | `#000000`                                                | Pinned (`"chip_text"`), since magenta sits right at the tool's black-or-white threshold    |
 | Emphasis     | a chip, `[phrase]`                                       | `*phrase*` would set magenta text on a light ground. At most one per poster                |
 | Shapes       | off                                                      | Magenta blurs would tint the grey-blue toward pink. The plain ground reads calmer          |
-| Layout       | captions alternate top and bottom, bleed on the top ones | The hub's rhythm for a set, so six posters don't read as one template                      |
+| Layout       | captions alternate top and bottom, bleed on the top ones | The portfolio's rhythm for a set, so six posters don't read as one template                |
 
 The screens inside the posters are light too, to match.
 
@@ -103,15 +103,11 @@ xcrun simctl io <UDID> screenshot appstore/raw/<screen>.png
 
 ### 3. The posters
 
-From the repo root, with the hub cloned alongside (`../iamjarl-strategy`). The `ground`, `text` and
-`chip_text` keys need the hub's tool at d5c330f or later:
+The portfolio's screenshot tool composes the set from `appstore/manifest.json` (its `batch`
+command), with the ground, text and chip colours above. `AGENTS.md` says where the tool lives.
 
-```bash
-../iamjarl-strategy/.venv/bin/python ../iamjarl-strategy/tools/appstore_screenshots.py batch appstore/manifest.json
-```
-
-Then check the result before uploading: the captions against the hub's `VOICE.md`, no warnings
-from the tool, and no `kr.` anywhere in the English set.
+Then check the result before uploading: the captions against the portfolio's voice rules, no
+warnings from the tool, and no `kr.` anywhere in the English set.
 
 ## Uploading
 

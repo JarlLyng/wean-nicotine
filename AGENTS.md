@@ -54,7 +54,7 @@ vouching for it (DKCERT, 2026-08-24).
 
 ## Strategy lives in the private hub
 
-Target audience, positioning, pricing reasoning, SEO/ASO playbooks, and competitor analysis are **not** in this public repo — they're in the private [iamjarl-strategy](https://github.com/JarlLyng/iamjarl-strategy) hub (folder `WeanNicotine/`). Before doing any audience/positioning/pricing/marketing-planning work, read that repo's `CONVENTIONS.md` and write results there, not here. (This is already documented in `docs/README.md` and `docs/ARCHITECTURE.md`.)
+Target audience, positioning, pricing reasoning, SEO/ASO playbooks, and competitor analysis are **not** in this public repo — they're in the private [iamjarl-strategy](https://github.com/JarlLyng/iamjarl-strategy) hub (folder `WeanNicotine/`). Before doing any audience/positioning/pricing/marketing-planning work, read that repo's `CONVENTIONS.md` and write results there, not here. This file is the one place in the repo that points to the hub; docs, READMEs and issue templates don't, since visitors can't open it.
 
 ### Read these hub files before the task they govern
 
@@ -67,7 +67,9 @@ The hub holds rules that this repo cannot follow unless it knows they exist. Rea
   battling or beating an addiction).
 - **`BRAND_LEGAL.md`** before anything naming the maker, copyright or a third-party product.
   The public identity is IAMJARL; a human name is the first name only.
-- **`DESIGN.md`** before App Store screenshots or any visual that carries the brand.
+- **`DESIGN.md`** before App Store screenshots or any visual that carries the brand. The posters
+  are composed by the hub's `tools/appstore_screenshots.py` (`batch appstore/manifest.json`, with
+  the hub cloned alongside as `../iamjarl-strategy`); `appstore/README.md` has the capture steps.
 - **`ASO_GUIDANCE.md`** before touching App Store metadata; **`SEO_GUIDANCE.md`** before site SEO.
 - **Public issues carry findings, never measured numbers.** No download, sales, revenue,
   rating-count or traffic figures in this repo or its issues. State the finding, drop the number.

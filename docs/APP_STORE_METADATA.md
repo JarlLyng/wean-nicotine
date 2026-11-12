@@ -12,7 +12,7 @@ Audience:
 Source of truth:
 
 - App Store Connect is the final published state
-- Product positioning should stay aligned with [`ARCHITECTURE.md`](./ARCHITECTURE.md). Marketing positioning, SEO/ASO playbooks, competitive analysis, and channel plans live in the private IAMJARL strategy hub (not in this public repo) — see `WeanNicotine/` in [JarlLyng/iamjarl-strategy](https://github.com/JarlLyng/iamjarl-strategy) (access-restricted).
+- Product positioning should stay aligned with [`ARCHITECTURE.md`](./ARCHITECTURE.md). Marketing positioning, SEO and ASO playbooks and competitive analysis are not kept in this public repo.
 
 Related files:
 
@@ -34,8 +34,10 @@ Brug felterne nedenfor i App Store Connect. Screenshots tilføjer du selv under 
 ### Subtitle (max 30 tegn)
 
 ```
-Reduce nicotine at your pace
+Reduce snus at your pace
 ```
+
+Live in en-US since 1.6.0 (see "ASO fields shipped with 1.6.0").
 
 Alternativer:
 
@@ -44,15 +46,165 @@ Alternativer:
 
 ---
 
+## Next version: the descriptions (#420)
+
+The live descriptions are older than the ones this doc recorded as current: en-US still carries a "What's new in 1.2" block, and all four locales have em-dashes. Descriptions are version-locked, so these go in with the next version, in all four locales, replacing what is live. They are checked against the app as it ships in 1.7.2: export, the calm Progress, the trigger tags and the Patterns card are in, the absolute "all data stays on your device" is out (crash reports go to Sentry, so it is "your log"), and the first line doesn't repeat the app name. Screens and buttons keep the names the app shows (Settings, Export Data, Patterns), since the app is in English; the Nordic texts say so. No em-dashes, feature lists allowed, as the store surface permits.
+
+After the version goes live, pull the live listing and confirm all four.
+
+### English (en-US)
+
+```
+Cut down on snus and nicotine pouches a little at a time, at a pace you choose. Your daily allowance steps down each week, a day over the limit is met with calm, and your log stays on your iPhone.
+
+HOW IT WORKS
+• Start from your usual pouches a day and pick a weekly pace from 3% to 15%, with a preview of when you reach zero
+• Log a pouch, or a craving you let pass, with one tap, and undo a mistake within 10 seconds
+• Tag what set a pouch off if you like, such as coffee, stress or after meals
+• The day's allowance is always a whole number of pouches
+• Change your baseline, pace or price in Settings at any time without losing your log
+• Going over most days? Wean offers to adjust the pace, and stays quiet for a week if you say no
+
+PROGRESS WITHOUT PRESSURE
+• Each week's daily bars, where a day above the plan is shown calmly, never in red
+• Pouches avoided against where you started and, if you add a price, the money saved
+• Gentle milestones instead of a streak to break
+• A Patterns card with the times of day and the triggers behind your pouches
+
+WHEN A CRAVING COMES
+• Guided breathing and an urge-surfing timer, which keep the screen on while they run
+• Reflection prompts with an optional journal
+• A savings calculator by week and month
+• Optional local reminders for a daily check-in
+
+YOUR LOG IS YOURS
+There is no account and nothing to sync. Your log, your plan and your settings live on your iPhone, and Export Data saves the log as a CSV file whenever you want a copy. Anonymous crash reports go to Sentry so bugs can be fixed, and they never include your log. No ads and no tracking.
+
+PAY ONCE
+One purchase. No subscription and no in-app purchases.
+
+Wean is for personal tracking and for cutting down at your own pace. It is not medical advice. If you have health concerns, talk to your doctor or a health professional.
+```
+
+### Danish (da)
+
+```
+Skær ned på snus og nikotinposer lidt ad gangen, i et tempo du selv vælger. Din daglige kvote falder lidt hver uge, en dag over grænsen bliver mødt med ro, og din log bliver på din iPhone.
+
+SÅDAN FUNGERER DET
+• Start fra dit normale antal poser om dagen, og vælg et ugentligt tempo fra 3 % til 15 %, med et overblik over hvornår du når nul
+• Log en pose, eller en trang du lod gå forbi, med ét tryk, og fortryd en fejl inden for 10 sekunder
+• Mærk gerne, hvad der satte en pose i gang, fx kaffe, stress eller efter et måltid
+• Dagens kvote er altid et helt antal poser
+• Ret udgangspunkt, tempo eller pris i Settings når som helst uden at miste din log
+• Går du over de fleste dage, foreslår Wean at justere tempoet og er stille en uge, hvis du siger nej tak
+
+FREMSKRIDT UDEN PRES
+• Ugens søjler dag for dag, hvor en dag over planen vises roligt og aldrig i rødt
+• Poser undgået i forhold til, hvor du startede, og de sparede penge, hvis du angiver en pris
+• Stille milepæle i stedet for en streak, der kan knække
+• Et Patterns-kort med tidspunkterne på dagen og de triggere, der ligger bag dine poser
+
+NÅR TRANGEN KOMMER
+• Guidet vejrtrækning og en timer til urge surfing, som holder skærmen tændt, mens de kører
+• Refleksionsspørgsmål med en valgfri dagbog
+• En spareberegner pr. uge og måned
+• Valgfri lokale påmindelser til et dagligt tjek
+
+DIN LOG ER DIN
+Der er ingen konto og intet at synkronisere. Din log, din plan og dine indstillinger ligger på din iPhone, og Export Data gemmer loggen som en CSV-fil, når du vil have en kopi. Anonyme fejlrapporter sendes til Sentry, så fejl kan rettes, og de indeholder aldrig din log. Ingen reklamer og ingen sporing.
+
+BETAL ÉN GANG
+Ét køb. Intet abonnement og ingen køb i appen.
+
+Appens skærme er på engelsk.
+
+Wean er til personlig registrering og til at skære ned i dit eget tempo. Det er ikke lægelig rådgivning. Har du bekymringer om dit helbred, så tal med din læge eller sundhedspersonale.
+```
+
+### Swedish (sv)
+
+```
+Minska snus och nikotinpåsar lite i taget, i en takt du själv väljer. Din dagliga ranson sjunker lite varje vecka, en dag över gränsen möts med lugn, och din logg stannar på din iPhone.
+
+SÅ HÄR FUNGERAR DET
+• Börja från ditt vanliga antal prillor om dagen och välj en veckotakt från 3 % till 15 %, med en förhandsvisning av när du når noll
+• Logga en prilla, eller ett sug du lät passera, med ett tryck, och ångra ett misstag inom 10 sekunder
+• Märk gärna vad som satte igång en prilla, till exempel kaffe, stress eller efter maten
+• Dagens ranson är alltid ett helt antal prillor
+• Ändra utgångsläge, takt eller pris i Settings när som helst utan att förlora din logg
+• Går du över de flesta dagar föreslår Wean att justera takten, och är tyst en vecka om du tackar nej
+
+FRAMSTEG UTAN PRESS
+• Veckans staplar dag för dag, där en dag över planen visas lugnt och aldrig i rött
+• Prillor du har undvikit jämfört med där du började och, om du anger ett pris, pengarna du har sparat
+• Lugna milstolpar i stället för en streak som kan brytas
+• Ett Patterns-kort med tiderna på dagen och triggrarna bakom dina prillor
+
+NÄR SUGET KOMMER
+• Guidad andning och en timer för urge surfing, som håller skärmen tänd medan de pågår
+• Reflektionsfrågor med en valfri dagbok
+• En sparkalkylator per vecka och månad
+• Valfria lokala påminnelser för en daglig avstämning
+
+DIN LOGG ÄR DIN
+Det finns inget konto och inget att synka. Din logg, din plan och dina inställningar finns på din iPhone, och Export Data sparar loggen som en CSV-fil när du vill ha en kopia. Anonyma kraschrapporter skickas till Sentry så att fel kan rättas, och de innehåller aldrig din logg. Inga annonser och ingen spårning.
+
+BETALA EN GÅNG
+Ett köp. Ingen prenumeration och inga köp i appen.
+
+Appens skärmar är på engelska.
+
+Wean är till för personlig loggning och för att minska i din egen takt. Det är inte medicinsk rådgivning. Har du hälsobekymmer, prata med din läkare eller vårdpersonal.
+```
+
+### Norwegian (no)
+
+```
+Kutt ned på snus og nikotinposer litt om gangen, i et tempo du velger selv. Den daglige kvoten din synker litt hver uke, en dag over grensen blir møtt med ro, og loggen din blir på iPhonen din.
+
+SLIK FUNGERER DET
+• Start fra ditt vanlige antall poser om dagen og velg et ukentlig tempo fra 3 % til 15 %, med en forhåndsvisning av når du når null
+• Logg en pose, eller et sug du lot gå forbi, med ett trykk, og angre en feil innen 10 sekunder
+• Merk gjerne hva som satte i gang en pose, for eksempel kaffe, stress eller etter maten
+• Dagens kvote er alltid et helt antall poser
+• Endre utgangspunkt, tempo eller pris i Settings når som helst uten å miste loggen din
+• Går du over de fleste dagene, foreslår Wean å justere tempoet, og er stille en uke hvis du sier nei takk
+
+FREMGANG UTEN PRESS
+• Ukens søyler dag for dag, der en dag over planen vises rolig og aldri i rødt
+• Poser du har unngått sammenlignet med der du startet og, hvis du oppgir en pris, pengene du har spart
+• Rolige milepæler i stedet for en streak som kan brytes
+• Et Patterns-kort med tidene på døgnet og triggerne bak posene dine
+
+NÅR SUGET KOMMER
+• Guidet pusting og en timer for urge surfing, som holder skjermen på mens de pågår
+• Refleksjonsspørsmål med en valgfri dagbok
+• En sparekalkulator per uke og måned
+• Valgfrie lokale påminnelser for en daglig sjekk
+
+LOGGEN DIN ER DIN
+Det er ingen konto og ingenting å synkronisere. Loggen, planen og innstillingene dine ligger på iPhonen din, og Export Data lagrer loggen som en CSV-fil når du vil ha en kopi. Anonyme krasjrapporter sendes til Sentry slik at feil kan rettes, og de inneholder aldri loggen din. Ingen reklame og ingen sporing.
+
+BETAL ÉN GANG
+Ett kjøp. Ingen abonnement og ingen kjøp i appen.
+
+Appens skjermer er på engelsk.
+
+Wean er for personlig loggføring og for å kutte ned i ditt eget tempo. Det er ikke medisinsk rådgivning. Har du helsebekymringer, snakk med legen din eller helsepersonell.
+```
+
+---
+
 ## iOS App Version 1.7.2, live in the App Store (build 27, 2026-10-19)
 
-One fix: dates and times follow the phone's region (#411). The version also carries the new App Store screenshots and an English keyword change, both placed by the hub through the App Store Connect API once the owner has created the version.
+One fix: dates and times follow the phone's region (#411). The version also carries the new App Store screenshots and an English keyword change, both placed through the App Store Connect API once the owner had created the version.
 
 - **Keywords (English, en-US) change with this version.** zyn and velo (brand names) and chew (nothing in the app fits chewing tobacco) come out, and smokeless and urge (Urge Surfing) go in. Owner's decision, 2026-10-18. The Danish, Norwegian and Swedish keywords are unchanged.
   `taper,pouch,quit,stop,cut,down,gradual,tracker,cessation,tobacco,dip,habit,craving,smokeless,urge` (97 characters)
 - **Subtitle:** unchanged from 1.6.0 in every locale.
 - **Screenshots:** the new 6.9" set from `appstore/1.7.2/` (six posters, English, shown in every locale), and the old 6.5" set comes off in the same step. Captions and order: [`APP_STORE_SCREENSHOT_CAPTIONS.md`](./APP_STORE_SCREENSHOT_CAPTIONS.md).
-- **The hub fills the version's fields.** Promotional Text has to go in again (ASC wipes it on every new version): reuse the 1.7.0 texts below, which still fit. The Description and Copyright (`2026 IAMJARL`) are unchanged; check that Copyright carried over.
+- **The version's fields are filled in App Store Connect.** Promotional Text has to go in again (ASC wipes it on every new version): reuse the 1.7.0 texts below, which still fit. The Description and Copyright (`2026 IAMJARL`) are unchanged; check that Copyright carried over.
 
 ### What's New (v1.7.2)
 
@@ -328,7 +480,7 @@ Finpuss og en liten personvernforbedring.
 
 ## iOS App Version 1.6.0 — Superseded by 1.6.1 (build 22, was live July 2026)
 
-Small quality release that also carries the ASO metadata pass: new subtitles (SV + NO) and rebuilt keyword fields per locale, plus re-pasted Promotional Text (ASC wipes it on every new version). Release notes and promo text are written per the portfolio voice rules (no em-dashes; bullets are allowed on the store surface). Rationale for the keyword/subtitle choices lives in the private hub (`WeanNicotine/aso-pass-draft.md`).
+Small quality release that also carries the ASO metadata pass: new subtitles (SV + NO) and rebuilt keyword fields per locale, plus re-pasted Promotional Text (ASC wipes it on every new version). Release notes and promo text are written per the portfolio voice rules (no em-dashes; bullets are allowed on the store surface).
 
 ### ASO fields shipped with 1.6.0 (final, as submitted)
 
@@ -679,7 +831,7 @@ Pick your own taper pace. Edit your plan anytime. Undo accidental logs. All data
 
 ### Description (fuld beskrivelse, SEO-optimeret)
 
-**Første 1-2 sætninger** vises i søgeresultater, så hold dem klare og med nøgleord. Revideret med 1.6.2, se noten under Localized Storefronts.
+**Første 1-2 sætninger** vises i søgeresultater, så hold dem klare og med nøgleord. Revideret med 1.6.2, se noten under Localized Storefronts. **Afløses med næste version** af beskrivelsen under "Next version: the descriptions" øverst (#420).
 
 ```
 Wean Nicotine helps you reduce nicotine use step by step, whether you use snus, pouches, or similar products. Set your baseline, log your daily use, and follow a gradual weekly reduction. All data stays on your device.
@@ -752,7 +904,7 @@ Appen er kun til iPhone (`ios.supportsTablet: false`). Udfyld kun "Phone" med iP
 
 ## Localized Storefronts (submitted 2026-04-24)
 
-> **Superseded for subtitle / keywords / promo by 1.6.0.** The Swedish and Norwegian **subtitles**, all four **keyword** fields, and the **promotional texts** were refreshed in the 1.6.0 ASO pass — see "ASO fields shipped with 1.6.0" near the top of this file for the current values. The **descriptions** below are current and were revised with 1.6.2: the stale "NYT I 1.3" sections were removed, the undo window corrected from 5 to 10 seconds, and em-dashes replaced per VOICE.md (#296). They are no longer a v1.3 historical record. Descriptions are version-locked in App Store Connect, so they can only be edited when a new version exists.
+> **Superseded for subtitle / keywords / promo by 1.6.0.** The Swedish and Norwegian **subtitles**, all four **keyword** fields, and the **promotional texts** were refreshed in the 1.6.0 ASO pass — see "ASO fields shipped with 1.6.0" near the top of this file for the current values. The **descriptions** below were revised with 1.6.2 and are **replaced with the next version** by the ones under "Next version: the descriptions" near the top (#420): the stale "NYT I 1.3" sections were removed, the undo window corrected from 5 to 10 seconds, and em-dashes replaced per VOICE.md (#296). They are no longer a v1.3 historical record. Descriptions are version-locked in App Store Connect, so they can only be edited when a new version exists.
 
 Endelige tekster som er indsendt til App Store Connect for v1.3 på dansk, svensk og norsk. Disse subtitles, promo-tekster, descriptions og keywords er stadig aktuelle for v1.4.x (kun "What's New" ændres mellem patch-releases — find 1.4.1 og 1.3.1 release notes længere oppe). Promo-tekster for v1.4.x findes længere oppe i denne fil.
 

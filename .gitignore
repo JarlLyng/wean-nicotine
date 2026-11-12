@@ -80,3 +80,6 @@ CLAUDE.local.md
 # Python virtualenv for scripts/
 .venv/
 __pycache__/
+
+# Editor settings stay local
+.vscode/
