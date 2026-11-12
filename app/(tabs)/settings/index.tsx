@@ -59,7 +59,8 @@ export default function SettingsScreen() {
       const entries = await getLogEntries();
       const file = new File(Paths.cache, exportFileName(new Date()));
       file.create({ overwrite: true });
-      file.write(buildLogCsv(entries));
+      // Asynchronous since SDK 58: the file must be written before it is shared.
+      await file.write(buildLogCsv(entries));
       await Share.share({ url: file.uri });
     } catch (error) {
       if (error instanceof Error) captureError(error, { context: 'settings_export_csv' });

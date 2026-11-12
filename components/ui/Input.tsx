@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  type TextInputInstance,
   type TextInputProps,
   TextStyle,
   View,
@@ -34,7 +35,7 @@ export interface InputProps extends Omit<TextInputProps, 'style'> {
  * - Supports a `display` variant for the hero number input used in baseline / price.
  * - `accessibilityLabel` falls back to `label` for screen readers.
  */
-export const Input = forwardRef<TextInput, InputProps>(function Input(
+export const Input = forwardRef<TextInputInstance, InputProps>(function Input(
   {
     label,
     hint,
@@ -52,11 +53,7 @@ export const Input = forwardRef<TextInput, InputProps>(function Input(
   const { colors } = useDesignTokens();
   const [focused, setFocused] = useState(false);
 
-  const borderColor = error
-    ? colors.error
-    : focused
-      ? colors.primary
-      : colors.border.subtle;
+  const borderColor = error ? colors.error : focused ? colors.primary : colors.border.subtle;
 
   const styles = createStyles(colors, variant);
 
@@ -67,7 +64,9 @@ export const Input = forwardRef<TextInput, InputProps>(function Input(
         ref={ref}
         {...rest}
         accessibilityLabel={accessibilityLabel ?? label}
-        accessibilityState={error ? { ...(rest.accessibilityState ?? {}), busy: false } : rest.accessibilityState}
+        accessibilityState={
+          error ? { ...(rest.accessibilityState ?? {}), busy: false } : rest.accessibilityState
+        }
         placeholderTextColor={colors.text.tertiary}
         onFocus={(e) => {
           setFocused(true);
