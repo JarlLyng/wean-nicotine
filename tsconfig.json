@@ -6,7 +6,9 @@
     "workspaces, so `expo` is not resolvable from website/ and the whole build",
     "failed with `Tsconfig not found expo/tsconfig.base` (see #280).",
     "The compilerOptions below are inlined verbatim from expo/tsconfig.base",
-    "(Expo SDK 55) plus our own `strict` and `paths`. Verified with",
+    "(Expo SDK 58) plus our own `types`, `strict` and `paths`. TypeScript 6",
+    "no longer loads every @types package by itself, so the test globals are",
+    "named in `types`. Verified with",
     "`tsc --showConfig` to resolve identically to the previous extends-based",
     "setup. If Expo changes its base in a future SDK, re-diff this against",
     "node_modules/expo/tsconfig.base.json as part of the upgrade."
@@ -14,7 +16,7 @@
   "compilerOptions": {
     "allowJs": true,
     "esModuleInterop": true,
-    "jsx": "react-native",
+    "jsx": "react-jsx",
     "lib": ["DOM", "ESNext"],
     "module": "preserve",
     "moduleDetection": "force",
@@ -24,6 +26,7 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "target": "ESNext",
+    "types": ["jest"],
     "strict": true,
     "paths": {
       "@/*": ["./*"]
@@ -38,6 +41,7 @@
     "website",
     "babel.config.js",
     "metro.config.js",
-    "jest.config.js"
+    "jest.config.js",
+    ".claude"
   ]
 }
