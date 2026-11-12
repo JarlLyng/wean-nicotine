@@ -48,7 +48,7 @@
     "@react-navigation/elements": "^2.6.3",
     "@react-navigation/native": "^7.1.8",
     "@sentry/react-native": "^8",
-    "expo": "~55.0.26",
+    "expo": "~58.0.25",
     "expo-constants": "~55.0.16",
     "expo-file-system": "~55.0.26",
     "expo-font": "~55.0.8",
