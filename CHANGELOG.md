@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **Wean needs iOS 16.4 or later.** It is built on Expo SDK 58, which builds with Xcode 27 and Apple's scene life cycle, as App Store uploads need from April 2027. iPhones that cannot run iOS 16.4 (iPhone 6s, 7 and the first SE) keep the version they have. (#352)
+
+### Internal
+
+- Expo SDK 55 to 58, one SDK at a time: React Native 0.88, React 19.3, Reanimated 4.7, TypeScript 6 and Jest 30. expo-router no longer uses React Navigation, and no longer brings in `decode-uri-component`, which clears its security alerts (#431). React Compiler's lint rules are met in Button, the progress ring, breathing and Start Over. Export Data writes its file with `writeSync`, as `write()` turned asynchronous.
+
 ## [1.7.2] - 2026-10-18
 
 iOS build 27, live in the App Store since 2026-10-19. One fix: dates and times follow the phone's region. It also carries a new set of App Store screenshots (#409).

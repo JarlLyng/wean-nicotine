@@ -90,7 +90,7 @@ The App Store screenshots are made as [`appstore/README.md`](appstore/README.md)
 
 ### How it is put together
 
-Expo SDK 55 on React Native's New Architecture, Expo Router, SQLite through `expo-sqlite` for everything the app stores, local notifications, and Sentry for crash reports. There is no backend. The app is iPhone only; the web target only renders the UI for design previews.
+Expo SDK 58 (React Native 0.88, New Architecture, iOS 16.4 or later), Expo Router, SQLite through `expo-sqlite` for everything the app stores, local notifications, and Sentry for crash reports. There is no backend. The app is iPhone only; the web target only renders the UI for design previews.
 
 ```
 app/
