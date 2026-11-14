@@ -3,12 +3,12 @@ import Layout from '../layouts/Layout.astro';
 import { ALL_LOCALES } from '../i18n/ui';
 import { COMPANY_NAME, SITE_URL, SUPPORT_EMAIL } from '../lib/site';
 
-const lastUpdated = '2026-10-12';
+const lastUpdated = '2026-11-14';
 ---
 
 <Layout
 	title="Privacy Policy"
-	description="Privacy Policy for the Wean Nicotine iOS app."
+	description="Privacy Policy for the Wean Nicotine app for iPhone and Android."
 	canonicalPath="/privacy/"
 	availableLocales={ALL_LOCALES}
 >
@@ -19,7 +19,7 @@ const lastUpdated = '2026-10-12';
 
 			<h2>Who we are</h2>
 			<p>
-				This Privacy Policy applies to the Wean Nicotine iOS app (“Wean Nicotine”, “the app”). The data controller is{' '}
+				This Privacy Policy applies to the Wean Nicotine app for iPhone and Android (“Wean Nicotine”, “the app”). The data controller is{' '}
 				<strong>{COMPANY_NAME}</strong>.
 			</p>
 			<ul>
@@ -31,7 +31,7 @@ const lastUpdated = '2026-10-12';
 
 			<h2>Data stored on your device</h2>
 			<p>
-				Wean Nicotine is local‑first. The app stores your information on your iPhone (and does not require an
+				Wean Nicotine is local‑first. The app stores your information on your phone (and does not require an
 				account).
 			</p>
 			<ul>
@@ -52,18 +52,38 @@ const lastUpdated = '2026-10-12';
 
 			<h2>Notifications</h2>
 			<p>
-				If you enable notifications, Wean Nicotine uses local notifications on your device (subject to your iOS
-				permissions) for features like daily check‑ins and reminders.
+				If you enable notifications, Wean Nicotine uses local notifications on your device (subject to the
+				notification permission on your phone) for features like daily check‑ins and reminders.
 			</p>
 
 			<h2>Third‑party services</h2>
 			<p>
 				If enabled in the build, Wean Nicotine uses <strong>Sentry</strong> for crash and error reporting to help us
 				improve app stability. Sentry receives exception messages, stack traces, and basic device/app context
-				(app version, device model, OS version) plus screen-transition timing for performance monitoring.
+				(app version, device model, OS version) plus screen-transition timing for performance monitoring. It also
+				records when each app session starts and ends, so we can see how often the app runs without crashing.
 				Your pouch logs, plan settings, baseline, price, currency, and triggers are <em>never</em> sent to Sentry.
 				This is enforced both by how we call Sentry and by an automatic scrubber that strips known sensitive
 				fields before transmission. We do not use Sentry for advertising.
+			</p>
+			<p>
+				Sentry's software in the app also gives each installation a random ID and sends it with crash reports and
+				sessions. It tells us whether a problem happens on one phone or on many. The ID is created by the app on
+				your phone and isn't tied to your name, an email address or an account. See
+				<a href="https://sentry.io/privacy/" rel="noopener noreferrer" target="_blank">Sentry's privacy policy</a>.
+			</p>
+			<p>
+				When the app starts, it asks <strong>Expo</strong>'s update service (<code>u.expo.dev</code>) whether a newer
+				version of the app's code is available. That's how a small fix can reach you without a new App Store or
+				Google Play release. The request says which platform, app version and update the app is running, and it
+				carries a random ID the app creates for this (Expo calls it the EAS client ID). If the app failed to start
+				the last time, a short technical error message goes along. Nothing from your logs, plan, price or triggers
+				is part of the request. See
+				<a href="https://expo.dev/privacy" rel="noopener noreferrer" target="_blank">Expo's privacy policy</a>.
+			</p>
+			<p>
+				Like any server on the internet, Sentry and Expo see the IP address a request comes from. The app doesn't
+				put it in a report, and what each service keeps is covered by its privacy policy.
 			</p>
 
 			<h2>Website analytics</h2>

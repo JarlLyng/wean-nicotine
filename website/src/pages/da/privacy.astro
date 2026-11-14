@@ -3,12 +3,12 @@ import Layout from '../../layouts/Layout.astro';
 import { ALL_LOCALES } from '../../i18n/ui';
 import { COMPANY_NAME, SITE_URL, SUPPORT_EMAIL } from '../../lib/site';
 
-const lastUpdated = '2026-10-12';
+const lastUpdated = '2026-11-14';
 ---
 
 <Layout
 	title="Privatlivspolitik"
-	description="Privatlivspolitik for Wean Nicotine iOS-appen."
+	description="Privatlivspolitik for Wean Nicotine-appen til iPhone og Android."
 	canonicalPath="/da/privacy/"
 	availableLocales={ALL_LOCALES}
 >
@@ -19,7 +19,7 @@ const lastUpdated = '2026-10-12';
 
 			<h2>Hvem vi er</h2>
 			<p>
-				Denne privatlivspolitik gælder for Wean Nicotine iOS-appen (“Wean Nicotine”, “appen”). Dataansvarlig er{' '}
+				Denne privatlivspolitik gælder for Wean Nicotine-appen til iPhone og Android (“Wean Nicotine”, “appen”). Dataansvarlig er{' '}
 				<strong>{COMPANY_NAME}</strong>.
 			</p>
 			<ul>
@@ -31,7 +31,7 @@ const lastUpdated = '2026-10-12';
 
 			<h2>Data der gemmes på din enhed</h2>
 			<p>
-				Wean Nicotine er lokal-først. Appen gemmer dine oplysninger på din iPhone (og kræver ikke en konto).
+				Wean Nicotine er lokal-først. Appen gemmer dine oplysninger på din telefon (og kræver ikke en konto).
 			</p>
 			<ul>
 				<li>Brugslogfiler (f.eks. “Brugte en pose”, “Modstod trang” med tidsstempler)</li>
@@ -50,12 +50,21 @@ const lastUpdated = '2026-10-12';
 
 			<h2>Notifikationer</h2>
 			<p>
-				Hvis du aktiverer notifikationer, bruger Wean Nicotine lokale notifikationer på din enhed (afhængigt af dine iOS-tilladelser) til funktioner som daglige tjek-ind og påmindelser.
+				Hvis du aktiverer notifikationer, bruger Wean Nicotine lokale notifikationer på din enhed (afhængigt af notifikationstilladelsen på din telefon) til funktioner som daglige tjek-ind og påmindelser.
 			</p>
 
 			<h2>Tredjepartstjenester</h2>
 			<p>
-				Hvis det er aktiveret i buildet, bruger Wean Nicotine <strong>Sentry</strong> til fejlrapportering for at hjælpe os med at forbedre appens stabilitet. Sentry modtager fejldata og grundlæggende oplysninger til diagnostik (f.eks. app-version, enhedsmodel, operativsystem og et fejlspor) plus skærmskift-timing til performance-monitorering. Dine posefloger, planindstillinger, baseline, pris, valuta og triggere sendes <em>aldrig</em> til Sentry. Det håndhæves både af måden vi kalder Sentry på, og af en automatisk scrubber der fjerner kendte følsomme felter inden afsendelse. Vi bruger aldrig Sentry til reklame.
+				Hvis det er aktiveret i buildet, bruger Wean Nicotine <strong>Sentry</strong> til fejlrapportering for at hjælpe os med at forbedre appens stabilitet. Sentry modtager fejldata og grundlæggende oplysninger til diagnostik (f.eks. app-version, enhedsmodel, operativsystem og et fejlspor) plus skærmskift-timing til performance-monitorering. Sentry registrerer også, hvornår hver brug af appen starter og slutter, så vi kan se, hvor ofte appen kører uden at gå ned. Din poselog, planindstillinger, baseline, pris, valuta og triggere sendes <em>aldrig</em> til Sentry. Det håndhæves både af måden vi kalder Sentry på, og af en automatisk scrubber der fjerner kendte følsomme felter inden afsendelse. Vi bruger aldrig Sentry til reklame.
+			</p>
+			<p>
+				Sentrys software i appen giver desuden hver installation et tilfældigt ID og sender det med fejlrapporter og sessioner. Det viser os, om en fejl rammer én telefon eller mange. ID'et bliver lavet af appen på din telefon og er ikke knyttet til dit navn, en e-mailadresse eller en konto. Se <a href="https://sentry.io/privacy/" rel="noopener noreferrer" target="_blank">Sentrys privatlivspolitik</a>.
+			</p>
+			<p>
+				Når appen starter, spørger den <strong>Expo</strong>s opdateringstjeneste (<code>u.expo.dev</code>), om der findes en nyere version af appens kode. Sådan kan en lille rettelse nå frem til dig uden en ny udgivelse i App Store eller Google Play. Forespørgslen fortæller, hvilken platform, appversion og opdatering appen kører, og den har et tilfældigt ID med, som appen laver til formålet (Expo kalder det EAS client ID). Hvis appen ikke kunne starte sidste gang, kommer en kort teknisk fejlbesked med. Intet fra din log, din plan, din pris eller dine triggere er en del af forespørgslen. Se <a href="https://expo.dev/privacy" rel="noopener noreferrer" target="_blank">Expos privatlivspolitik</a>.
+			</p>
+			<p>
+				Som enhver server på internettet ser Sentry og Expo den IP-adresse, en forespørgsel kommer fra. Appen lægger den ikke i en rapport, og hvad hver tjeneste gemmer, står i dens privatlivspolitik.
 			</p>
 
 			<h2>Webanalyse</h2>
