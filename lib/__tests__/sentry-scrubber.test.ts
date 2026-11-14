@@ -9,6 +9,7 @@
 import {
   anonymizeEvent,
   scrubBreadcrumb,
+  filterMetric,
   scrubExtra,
   sentryEnvironment,
   SHARED_SENTRY_USER,
@@ -213,17 +214,58 @@ describe('anonymizeEvent (#444)', () => {
   });
 });
 
-describe('sentryEnvironment (#444)', () => {
-  it('is production on a real phone', () => {
-    expect(sentryEnvironment(false, true)).toBe('production');
+describe('sentryEnvironment (#444, #448)', () => {
+  it('is production only for the production profile on a real phone', () => {
+    expect(sentryEnvironment(false, true, 'production')).toBe('production');
   });
 
-  it('is simulator for a release build in the Simulator or an emulator', () => {
-    expect(sentryEnvironment(false, false)).toBe('simulator');
+  it('is simulator for a release build in the Simulator or an emulator, whatever the profile', () => {
+    expect(sentryEnvironment(false, false, 'production')).toBe('simulator');
+    expect(sentryEnvironment(false, false, 'local')).toBe('simulator');
+  });
+
+  it('is internal for preview, capture and local builds on a phone', () => {
+    expect(sentryEnvironment(false, true, 'preview')).toBe('internal');
+    expect(sentryEnvironment(false, true, 'capture')).toBe('internal');
+    expect(sentryEnvironment(false, true, 'local')).toBe('internal');
   });
 
   it('is development in a dev build, wherever it runs', () => {
-    expect(sentryEnvironment(true, true)).toBe('development');
-    expect(sentryEnvironment(true, false)).toBe('development');
+    expect(sentryEnvironment(true, true, 'production')).toBe('development');
+    expect(sentryEnvironment(true, false, 'local')).toBe('development');
+  });
+});
+
+describe('filterMetric (#448)', () => {
+  const sdk = {
+    'sentry.release': '1.7.2',
+    'sentry.environment': 'production',
+    'sentry.sdk.name': 'sentry.javascript.react-native',
+    'sentry.sdk.version': '8.33.0',
+  };
+
+  it('keeps a listed count with its listed attribute value and the build, and drops the user', () => {
+    const metric = {
+      name: 'log_entry_saved',
+      attributes: { kind: 'pouch_used', 'user.id': 'anonymous', ...sdk },
+    };
+    expect(filterMetric(metric)?.attributes).toEqual({ kind: 'pouch_used', ...sdk });
+  });
+
+  it('drops an attribute value that is not on the list', () => {
+    const metric = { name: 'log_entry_saved', attributes: { kind: 'Stress', ...sdk } };
+    expect(filterMetric(metric)?.attributes).toEqual(sdk);
+  });
+
+  it('drops attributes a count does not list', () => {
+    const metric = {
+      name: 'edit_plan_opened',
+      attributes: { baseline: '12', trigger: 'With coffee', ...sdk },
+    };
+    expect(filterMetric(metric)?.attributes).toEqual(sdk);
+  });
+
+  it('drops any metric that is not a listed count', () => {
+    expect(filterMetric({ name: 'pouches_today', attributes: { ...sdk } })).toBeNull();
   });
 });

@@ -14,7 +14,7 @@ import { maybeRequestReview } from '@/lib/store-review';
 import { GoalReachedCard } from '@/components/GoalReachedCard';
 import { PaceNudge } from '@/components/PaceNudge';
 import { TriggerTagRow } from '@/components/TriggerTagRow';
-import { captureError } from '@/lib/sentry';
+import { captureError, countFeatureUse } from '@/lib/sentry';
 import { useHomeData } from '@/hooks/useHomeData';
 import * as Haptics from 'expo-haptics';
 
@@ -79,6 +79,7 @@ export default function HomeScreen() {
       setIsLogging(true);
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
       const entryId = await createLogEntry('pouch_used');
+      countFeatureUse('log_entry_saved', { kind: 'pouch_used' });
       incrementPouches();
       setUndo({ entryId, kind: 'pouch_used' });
       // Offer optional trigger tagging for the new entry (replaces any
@@ -99,6 +100,7 @@ export default function HomeScreen() {
       setIsLogging(true);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       const entryId = await createLogEntry('craving_resisted');
+      countFeatureUse('log_entry_saved', { kind: 'craving_resisted' });
       incrementCravings();
       setUndo({ entryId, kind: 'craving_resisted' });
       setTagTarget(null);

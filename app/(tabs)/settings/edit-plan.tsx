@@ -13,7 +13,7 @@ import { Screen } from '@/components/Screen';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { useDesignTokens } from '@/lib/design';
-import { captureError } from '@/lib/sentry';
+import { captureError, countFeatureUse } from '@/lib/sentry';
 import { getTaperSettings, saveTaperSettings } from '@/lib/db-settings';
 import { spacing, borderRadius, typography, fontWeights } from '@/lib/theme';
 import { useRouter } from 'expo-router';
@@ -51,6 +51,11 @@ export default function EditPlanScreen() {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+
+  // An anonymous count that the plan was opened, nothing from it (#448).
+  useEffect(() => {
+    countFeatureUse('edit_plan_opened');
+  }, []);
 
   useEffect(() => {
     (async () => {
