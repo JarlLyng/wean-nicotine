@@ -6,7 +6,7 @@
  * change the PII_KEYS list, add a test here.
  */
 
-import { scrubExtra, scrubBreadcrumb } from '../sentry';
+import { anonymizeEvent, scrubBreadcrumb, scrubExtra, SHARED_SENTRY_USER } from '../sentry';
 
 describe('scrubExtra', () => {
   it('returns undefined when input is undefined', () => {
@@ -174,5 +174,35 @@ describe('scrubBreadcrumb', () => {
   it('leaves breadcrumbs with no category untouched', () => {
     const b = { message: 'app.start' };
     expect(scrubBreadcrumb(b)).toEqual(b);
+  });
+});
+
+describe('anonymizeEvent (#444)', () => {
+  it('replaces the installation ID in user.id with the shared user', () => {
+    const event = anonymizeEvent({ user: { id: '3f1c0f6e-installation' } });
+    expect(event.user).toEqual(SHARED_SENTRY_USER);
+  });
+
+  it('sets the shared user when the event has none', () => {
+    expect(anonymizeEvent<{ user?: Record<string, unknown> }>({}).user).toEqual(SHARED_SENTRY_USER);
+  });
+
+  it("drops Android's device ID and keeps the rest of the device context", () => {
+    const event = anonymizeEvent({
+      contexts: { device: { id: '3f1c0f6e-installation', model: 'Pixel 8', family: 'Pixel' } },
+    });
+    expect(event.contexts?.device).toEqual({ model: 'Pixel 8', family: 'Pixel' });
+  });
+
+  it("drops iOS's device/app hash and keeps the rest of the app context", () => {
+    const event = anonymizeEvent({
+      contexts: { app: { device_app_hash: 'a1b2c3', app_version: '1.7.2', app_build: '27' } },
+    });
+    expect(event.contexts?.app).toEqual({ app_version: '1.7.2', app_build: '27' });
+  });
+
+  it('leaves events without device or app context alone apart from the user', () => {
+    const event = anonymizeEvent({ contexts: { os: { name: 'iOS' } } });
+    expect(event.contexts).toEqual({ os: { name: 'iOS' } });
   });
 });
