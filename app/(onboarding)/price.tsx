@@ -8,7 +8,18 @@ import type { CurrencyCode } from '@/lib/currency';
 import { CURRENCY_OPTIONS } from '@/lib/currency';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState, useMemo } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TextStyle,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from 'react-native';
 import * as Haptics from 'expo-haptics';
 
 export default function PriceScreen() {
@@ -24,7 +35,7 @@ export default function PriceScreen() {
   const [error, setError] = useState('');
   const s = useMemo(
     () => createStyles(getColors(colorScheme === 'dark' ? 'dark' : 'light')),
-    [colorScheme]
+    [colorScheme],
   );
 
   const handleNext = () => {
@@ -54,22 +65,24 @@ export default function PriceScreen() {
       <OnboardingProgress current={3} total={4} />
       <KeyboardAvoidingView
         style={s.flex}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={100}>
+        // Both platforms: Android draws edge to edge, so the window no longer
+        // shrinks for the keyboard and Continue would sit under it (#435).
+        behavior="padding"
+        keyboardVerticalOffset={100}
+      >
         <ScrollView
           contentContainerStyle={s.scrollContent}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
-          keyboardDismissMode="on-drag">
+          keyboardDismissMode="on-drag"
+        >
           <View style={s.content}>
             {/* Question */}
             <View style={s.questionSection}>
               <Text accessibilityRole="header" style={s.question}>
                 What do you pay per can?
               </Text>
-              <Text style={s.hint}>
-                Optional — lets us show how much money you save.
-              </Text>
+              <Text style={s.hint}>Optional — lets us show how much money you save.</Text>
             </View>
 
             {/* Currency pills */}
@@ -88,7 +101,8 @@ export default function PriceScreen() {
                     }}
                     accessibilityRole="button"
                     accessibilityLabel={`Select ${option.label}`}
-                    accessibilityState={{ selected: isSelected }}>
+                    accessibilityState={{ selected: isSelected }}
+                  >
                     <Text style={[s.currencyText, isSelected && s.currencyTextSelected]}>
                       {option.code}
                     </Text>
@@ -119,15 +133,9 @@ export default function PriceScreen() {
             {/* Spacer */}
             <View style={s.spacer} />
 
-            <Button
-              title="Continue"
-              onPress={handleNext}
-              style={s.button}
-            />
+            <Button title="Continue" onPress={handleNext} style={s.button} />
             <TouchableOpacity onPress={handleNext} style={s.skipButton}>
-              <Text style={s.skipText}>
-              {"Skip — I don't want to track money"}
-            </Text>
+              <Text style={s.skipText}>{"Skip — I don't want to track money"}</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>

@@ -97,7 +97,7 @@ The hub holds rules that this repo cannot follow unless it knows they exist. Rea
 - Not a cold-turkey/quit-date app — it's built around gradual reduction.
 - Not a cigarette / vape / general-habit tracker — it's calibrated for snus and nicotine pouches specifically.
 - No medical advice or clinical claims.
-- iOS only; no Android, no real web build (web stubs SQLite so the UI can render for design preview, but the app does not function there).
+- iOS only for users: no Android release and no real web build (web stubs SQLite so the UI can render for design preview, but the app does not function there). The app does run on Android and is being readied for Google Play in #435 (package `com.iamjarl.weannicotine`); nothing is uploaded there until the owner says so.
 
 ## Build & release
 

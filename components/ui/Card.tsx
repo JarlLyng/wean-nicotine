@@ -1,6 +1,11 @@
 import React, { useEffect, useMemo, useRef } from 'react';
 import { StyleProp, ViewStyle } from 'react-native';
-import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 import { spacing, borderRadius, shadows, animations } from '@/lib/theme';
 import { designTokens, useDesignTokens } from '@/lib/design';
 
@@ -61,21 +66,23 @@ export function Card({ children, variant = 'flat', style, padding = 'md' }: Card
     // Design-system: cards use background.card (subtle translucent surface) in both modes.
     const backgroundCard = getColorString(
       colors.background?.card,
-      designTokens.colors.modes.light.background.card
+      designTokens.colors.modes.light.background.card,
     );
     const borderSubtle = getColorString(
       colors.border?.subtle,
-      getColorString(colors.border?.default, designTokens.colors.modes.light.border.subtle)
+      getColorString(colors.border?.default, designTokens.colors.modes.light.border.subtle),
     );
 
-    // Ensure shadowColor is always a string for Reanimated compatibility
+    // Ensure shadowColor is always a string for Reanimated compatibility.
+    // No elevation: Android draws an elevation shadow under the whole card,
+    // and through the translucent card background it shows as a grey frame
+    // (#435). The shadow* props are iOS's and Android ignores them.
     const shadowColor = String(shadows.md.shadowColor || designTokens.colors.static.black);
     const shadowStyle = {
       shadowColor,
       shadowOffset: shadows.md.shadowOffset,
       shadowOpacity: shadows.md.shadowOpacity,
       shadowRadius: shadows.md.shadowRadius,
-      elevation: shadows.md.elevation,
     };
 
     // Ensure padding value is defined
@@ -108,9 +115,5 @@ export function Card({ children, variant = 'flat', style, padding = 'md' }: Card
     }
   }, [colors, variant, padding]);
 
-  return (
-    <Animated.View style={[cardStyle, animatedStyle, style]}>
-      {children}
-    </Animated.View>
-  );
+  return <Animated.View style={[cardStyle, animatedStyle, style]}>{children}</Animated.View>;
 }

@@ -2,7 +2,7 @@ import { Tabs } from 'expo-router';
 import React from 'react';
 import { Platform } from 'react-native';
 
-import { IconSymbol } from '@/components/ui/icon-symbol.ios';
+import { IconSymbol } from '@/components/ui/icon-symbol';
 import { useDesignTokens } from '@/lib/design';
 
 export default function TabLayout() {
@@ -25,7 +25,8 @@ export default function TabLayout() {
         },
         // Native haptics on iOS tab press
         ...(Platform.OS === 'ios' && { tabBarHapticFeedbackEnabled: true }),
-      }}>
+      }}
+    >
       <Tabs.Screen
         name="home"
         options={{

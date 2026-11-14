@@ -47,6 +47,9 @@ module.exports = {
       },
     },
     android: {
+      // Fixed for good at the first upload to Google Play, and public in the
+      // store URL. The owner's decision on #435; iOS stays com.iamjarl.taper.
+      package: 'com.iamjarl.weannicotine',
       adaptiveIcon: {
         backgroundColor: '#000000',
         foregroundImage: './assets/images/android-icon-foreground.png',
@@ -55,6 +58,40 @@ module.exports = {
       },
       versionCode: 17,
       predictiveBackGestureEnabled: false,
+      // Permissions the template and libraries bring along that Wean never
+      // uses (#435): shared storage (the export is written to the app's own
+      // cache), the dev-menu overlay, remote push (reminders are local), the
+      // Play install referrer, and ShortcutBadger's launcher badges (Wean sets
+      // no badge). What stays: the internet for crash reports and updates,
+      // notifications and setting them again after a restart, vibration and
+      // wake lock.
+      blockedPermissions: [
+        'android.permission.READ_EXTERNAL_STORAGE',
+        'android.permission.WRITE_EXTERNAL_STORAGE',
+        'android.permission.SYSTEM_ALERT_WINDOW',
+        'com.google.android.c2dm.permission.RECEIVE',
+        'com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE',
+        'android.permission.READ_APP_BADGE',
+        'com.android.launcher.permission.READ_SETTINGS',
+        'com.android.launcher.permission.WRITE_SETTINGS',
+        'com.android.launcher.permission.INSTALL_SHORTCUT',
+        'com.android.launcher.permission.UNINSTALL_SHORTCUT',
+        'com.sec.android.provider.badge.permission.READ',
+        'com.sec.android.provider.badge.permission.WRITE',
+        'com.htc.launcher.permission.READ_SETTINGS',
+        'com.htc.launcher.permission.UPDATE_SHORTCUT',
+        'com.sonyericsson.home.permission.BROADCAST_BADGE',
+        'com.sonymobile.home.permission.PROVIDER_INSERT_BADGE',
+        'com.anddoes.launcher.permission.UPDATE_COUNT',
+        'com.majeur.launcher.permission.UPDATE_BADGE',
+        'com.huawei.android.launcher.permission.CHANGE_BADGE',
+        'com.huawei.android.launcher.permission.READ_SETTINGS',
+        'com.huawei.android.launcher.permission.WRITE_SETTINGS',
+        'com.oppo.launcher.permission.READ_SETTINGS',
+        'com.oppo.launcher.permission.WRITE_SETTINGS',
+        'me.everything.badger.permission.BADGE_COUNT_READ',
+        'me.everything.badger.permission.BADGE_COUNT_WRITE',
+      ],
     },
     web: {
       output: 'static',
