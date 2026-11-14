@@ -16,7 +16,7 @@
  *   enforces this as defense-in-depth in case someone forgets.
  * - Performance tracing is enabled at 20% in production. Traces include
  *   screen names and timing, no usage values.
- * - Nothing tells one phone or installation apart (#445): every report carries
+ * - Nothing tells one phone or installation apart (#444): every report carries
  *   the same fixed user, the device ID and the device/app hash are dropped, and
  *   session tracking is off because sessions carry the installation ID.
  *   JavaScript can't reach events made natively (a native crash, an ANR): the
@@ -111,7 +111,7 @@ export function scrubBreadcrumb(breadcrumb: {
 }
 
 /**
- * The same Sentry user on every phone (#445). With no user set, Sentry's native
+ * The same Sentry user on every phone (#444). With no user set, Sentry's native
  * SDKs fill in a random ID per installation, so a fixed value keeps that slot
  * taken without telling anyone apart.
  */
@@ -123,7 +123,7 @@ type AnonymizableEvent = {
 };
 
 /**
- * Remove what could tell one phone or installation apart from an event (#445):
+ * Remove what could tell one phone or installation apart from an event (#444):
  * the user becomes the shared one, and the device ID (Android: the installation
  * ID) and the device/app hash (iOS: built from the vendor identifier) are
  * dropped. These ride along on JavaScript events through the device context the
@@ -196,10 +196,10 @@ export function initSentry(): void {
     dsn,
     debug: __DEV__,
     environment: __DEV__ ? 'development' : 'production',
-    // Off (#445): a session carries the installation ID as its distinct ID.
+    // Off (#444): a session carries the installation ID as its distinct ID.
     // This gives up crash-free rates; every crash is still reported.
     enableAutoSessionTracking: false,
-    // The same user on every phone (#445). initialScope covers JavaScript
+    // The same user on every phone (#444). initialScope covers JavaScript
     // events from the first one; onReady gives the native scope the same user
     // once the native SDK is up, so native events don't get the installation ID.
     initialScope: { user: { ...SHARED_SENTRY_USER } },

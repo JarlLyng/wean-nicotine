@@ -177,7 +177,7 @@ describe('scrubBreadcrumb', () => {
   });
 });
 
-describe('anonymizeEvent (#445)', () => {
+describe('anonymizeEvent (#444)', () => {
   it('replaces the installation ID in user.id with the shared user', () => {
     const event = anonymizeEvent({ user: { id: '3f1c0f6e-installation' } });
     expect(event.user).toEqual(SHARED_SENTRY_USER);

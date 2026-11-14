@@ -14,7 +14,9 @@
  * - expo-router, expo-splash-screen, expo-notifications, expo-font
  * - Config plugins the Expo SDK requires (Sentry, expo-image, expo-sqlite,
  *   expo-status-bar, expo-web-browser)
- * - Custom plugins (production push entitlements, privacy manifest)
+ * - Custom plugin: production push entitlements
+ * - The iOS privacy manifest is `ios.privacyManifests`, which Expo writes and
+ *   adds to the Xcode project (#444)
  */
 
 module.exports = {
@@ -44,6 +46,43 @@ module.exports = {
       },
       infoPlist: {
         ITSAppUsesNonExemptEncryption: false,
+      },
+      // Expo writes PrivacyInfo.xcprivacy and adds it to the Xcode project, so
+      // it ships in the app. The old plugins/withPrivacyManifest.js only wrote
+      // the file, which never reached the bundle (#444). Collected data is what
+      // Sentry sends, as Sentry's own manifest declares it: not linked (no
+      // installation or device ID, see lib/sentry.ts), no tracking. Keep this,
+      // the App Store label and docs/PRIVACY_APP_STORE.md saying the same.
+      privacyManifests: {
+        NSPrivacyTracking: false,
+        NSPrivacyAccessedAPITypes: [
+          {
+            NSPrivacyAccessedAPIType: 'NSPrivacyAccessedAPICategoryFileTimestamp',
+            NSPrivacyAccessedAPITypeReasons: ['C617.1', '0A2A.1', '3B52.1'],
+          },
+          {
+            NSPrivacyAccessedAPIType: 'NSPrivacyAccessedAPICategoryUserDefaults',
+            NSPrivacyAccessedAPITypeReasons: ['CA92.1'],
+          },
+          {
+            NSPrivacyAccessedAPIType: 'NSPrivacyAccessedAPICategoryDiskSpace',
+            NSPrivacyAccessedAPITypeReasons: ['E174.1', '85F4.1'],
+          },
+          {
+            NSPrivacyAccessedAPIType: 'NSPrivacyAccessedAPICategorySystemBootTime',
+            NSPrivacyAccessedAPITypeReasons: ['35F9.1'],
+          },
+        ],
+        NSPrivacyCollectedDataTypes: [
+          'NSPrivacyCollectedDataTypeCrashData',
+          'NSPrivacyCollectedDataTypePerformanceData',
+          'NSPrivacyCollectedDataTypeOtherDiagnosticData',
+        ].map((type) => ({
+          NSPrivacyCollectedDataType: type,
+          NSPrivacyCollectedDataTypeLinked: false,
+          NSPrivacyCollectedDataTypeTracking: false,
+          NSPrivacyCollectedDataTypePurposes: ['NSPrivacyCollectedDataTypePurposeAppFunctionality'],
+        })),
       },
     },
     android: {
@@ -127,9 +166,8 @@ module.exports = {
       'expo-sqlite',
       'expo-status-bar',
       'expo-web-browser',
-      // Custom plugins for App Store compliance
+      // Custom plugin for App Store compliance
       './plugins/withProductionPushEntitlements.js',
-      './plugins/withPrivacyManifest.js',
     ],
     experiments: {
       typedRoutes: true,
@@ -154,7 +192,7 @@ module.exports = {
       policy: 'appVersion',
     },
     updates: {
-      // Off (#445): each check sends a random per-install ID (EAS-Client-ID) to
+      // Off (#444): each check sends a random per-install ID (EAS-Client-ID) to
       // Expo, and the App Store label says no data is linked to the person.
       // Fixes ship through the stores. The URL stays so the check can come back.
       enabled: false,

@@ -20,7 +20,7 @@ Related files:
 
 - [`website/src/pages/privacy.astro`](../website/src/pages/privacy.astro) and its `da`, `no` and `sv` versions
 - [`docs/SENTRY.md`](./SENTRY.md)
-- [`plugins/withPrivacyManifest.js`](../plugins/withPrivacyManifest.js)
+- `ios.privacyManifests` in [`app.config.js`](../app.config.js), the iOS privacy manifest
 
 Update when:
 
@@ -28,10 +28,10 @@ Update when:
 - The privacy policy wording changes
 - Apple's or Google's categories change
 
-Checked on 2026-11-14 (#442, #445) against Expo SDK 58, `@sentry/react-native` 8.33, `sentry-android`
+Checked on 2026-11-14 (#442, #444) against Expo SDK 58, `@sentry/react-native` 8.33, `sentry-android`
 8.62 and `expo-updates` 58, on both platforms.
 
-**Status: the owner chose "Not Linked to You" (#445).** The sections below describe 1.7.2, the build
+**Status: the owner chose "Not Linked to You" (#444).** The sections below describe 1.7.2, the build
 in the App Store, which still sends the IDs. "From the next release" says what changes and what each
 store should say then.
 
@@ -114,7 +114,7 @@ Play's other questions:
   phone is deleted with Start Over or by deleting the app.
 - **Account creation:** none.
 
-## Linked or not linked (App Store): decided, Not Linked (#445)
+## Linked or not linked (App Store): decided, Not Linked (#444)
 
 Apple counts data as linked to a person unless direct identifiers, "such as user ID or name", are
 stripped before collection. It also counts anything that privacy law treats as personal data as
@@ -125,7 +125,7 @@ The owner chose to change the app instead, so the label can say "Data Not Linked
 
 ### From the next release
 
-The app (#445):
+The app (#444):
 
 - gives Sentry the same user on every phone, `{ id: 'anonymous' }`, so no SDK fills in the
   installation ID (`initialScope` for JavaScript events, `setUser` in `onReady` for the native scope);
@@ -152,11 +152,12 @@ crash reporting off silently.
 
 With the release live and the rule in place:
 
-| Data               | App Store privacy label                                                             | Google Play Data safety                                                                                  |
-| ------------------ | ----------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| Crash reports      | Diagnostics › **Crash Data**. App Functionality. **Not linked.** No tracking.       | App info and performance › **Crash logs**. Collected, not shared. Analytics. Required.                   |
-| Performance traces | Diagnostics › **Performance Data**. App Functionality. **Not linked.** No tracking. | App info and performance › **Diagnostics**. Collected, not shared. Analytics. Required.                  |
-| IDs                | None. Remove Identifiers › Device ID.                                               | None, as long as the scrubbing rule is in place. Otherwise "Device or other IDs", processed ephemerally. |
+| Data                   | App Store privacy label                                                                  | Google Play Data safety                                                                                  |
+| ---------------------- | ---------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| Crash reports          | Diagnostics › **Crash Data**. App Functionality. **Not linked.** No tracking.            | App info and performance › **Crash logs**. Collected, not shared. Analytics. Required.                   |
+| Performance traces     | Diagnostics › **Performance Data**. App Functionality. **Not linked.** No tracking.      | App info and performance › **Diagnostics**. Collected, not shared. Analytics. Required.                  |
+| Device and app context | Diagnostics › **Other Diagnostic Data**. App Functionality. **Not linked.** No tracking. | Part of Diagnostics above.                                                                               |
+| IDs                    | None. Remove Identifiers › Device ID.                                                    | None, as long as the scrubbing rule is in place. Otherwise "Device or other IDs", processed ephemerally. |
 
 On release day, the privacy policy (en, da, no, sv) drops the installation ID and update-check
 paragraphs, and this doc drops the 1.7.2 table.
@@ -164,7 +165,7 @@ paragraphs, and this doc drops the 1.7.2 table.
 ## Owner steps
 
 1. **App Store Connect › App Privacy:** on the day the next release is live, set Diagnostics (Crash
-   Data, Performance Data), not linked, no tracking, and no Identifiers. Until then 1.7.2 sends the
+   Data, Performance Data, Other Diagnostic Data), not linked, no tracking, and no Identifiers. Until then 1.7.2 sends the
    IDs, so the strictly correct label for it is the table above (Device ID, linked). Apple's
    definitions are on [App privacy details](https://developer.apple.com/app-store/app-privacy-details/).
 2. **Sentry › project settings › Security & Privacy › Advanced Data Scrubbing:** a rule that removes
@@ -173,9 +174,11 @@ paragraphs, and this doc drops the 1.7.2 table.
 4. **Sentry › project settings › Security & Privacy:** confirm that "Prevent Storing of IP Addresses"
    is on. The SDK doesn't send the IP (`sendDefaultPii: false`), but the server setting decides
    whether Sentry stores the address a request comes from.
-5. **The iOS privacy manifest:** `plugins/withPrivacyManifest.js` writes an empty
-   `NSPrivacyCollectedDataTypes`. It should list Crash Data and Performance Data, not linked, no
-   tracking, as the label will. That's a code change for its own issue.
+   The iOS privacy manifest is done in the app (#444): `ios.privacyManifests` in `app.config.js` declares
+   Crash Data, Performance Data and Other Diagnostic Data, not linked, no tracking, for App
+   Functionality, as Sentry's own manifest does, so Xcode's privacy report and the label agree. Expo
+   writes it and adds it to the Xcode project. The old `plugins/withPrivacyManifest.js` only wrote the
+   file, which was never in the project, so 1.7.2 and earlier shipped without the app's own manifest.
 
 ## Worth knowing
 
