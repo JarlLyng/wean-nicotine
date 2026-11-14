@@ -16,6 +16,13 @@
  *   enforces this as defense-in-depth in case someone forgets.
  * - Performance tracing is enabled at 20% in production. Traces include
  *   screen names and timing, no usage values.
+ * - Nothing tells one phone or installation apart (#445): every report carries
+ *   the same fixed user, the device ID and the device/app hash are dropped, and
+ *   session tracking is off because sessions carry the installation ID.
+ *   JavaScript can't reach events made natively (a native crash, an ANR): the
+ *   native SDKs still add Android's device ID and iOS's device/app hash there,
+ *   and a data-scrubbing rule in the Sentry project removes them on arrival.
+ *   See docs/PRIVACY_APP_STORE.md.
  */
 
 import * as Sentry from '@sentry/react-native';
@@ -103,6 +110,38 @@ export function scrubBreadcrumb(breadcrumb: {
   return breadcrumb;
 }
 
+/**
+ * The same Sentry user on every phone (#445). With no user set, Sentry's native
+ * SDKs fill in a random ID per installation, so a fixed value keeps that slot
+ * taken without telling anyone apart.
+ */
+export const SHARED_SENTRY_USER = { id: 'anonymous' } as const;
+
+type AnonymizableEvent = {
+  user?: Record<string, unknown>;
+  contexts?: Record<string, Record<string, unknown> | undefined>;
+};
+
+/**
+ * Remove what could tell one phone or installation apart from an event (#445):
+ * the user becomes the shared one, and the device ID (Android: the installation
+ * ID) and the device/app hash (iOS: built from the vendor identifier) are
+ * dropped. These ride along on JavaScript events through the device context the
+ * native SDK hands over. Exported for unit testing.
+ */
+export function anonymizeEvent<E extends AnonymizableEvent>(event: E): E {
+  event.user = { ...SHARED_SENTRY_USER };
+  const device = event.contexts?.device;
+  if (device && 'id' in device) {
+    delete device.id;
+  }
+  const app = event.contexts?.app;
+  if (app && 'device_app_hash' in app) {
+    delete app.device_app_hash;
+  }
+  return event;
+}
+
 /** True only when we had a DSN and called Sentry.init() – use to show "not configured" in Diagnostics. */
 let sentryInitialized = false;
 
@@ -157,8 +196,16 @@ export function initSentry(): void {
     dsn,
     debug: __DEV__,
     environment: __DEV__ ? 'development' : 'production',
-    enableAutoSessionTracking: true,
-    sessionTrackingIntervalMillis: 30000,
+    // Off (#445): a session carries the installation ID as its distinct ID.
+    // This gives up crash-free rates; every crash is still reported.
+    enableAutoSessionTracking: false,
+    // The same user on every phone (#445). initialScope covers JavaScript
+    // events from the first one; onReady gives the native scope the same user
+    // once the native SDK is up, so native events don't get the installation ID.
+    initialScope: { user: { ...SHARED_SENTRY_USER } },
+    onReady: () => {
+      Sentry.setUser({ ...SHARED_SENTRY_USER });
+    },
     tracesSampleRate: __DEV__ ? 1.0 : 0.2, // 20% of transactions in production
     // Privacy: do not auto-collect IP addresses, cookies, headers, etc.
     // We only want stack traces + technical context strings.
@@ -188,7 +235,10 @@ export function initSentry(): void {
         event.contexts.extra = scrubExtra(event.contexts.extra as Record<string, unknown>);
       }
 
-      return event;
+      return anonymizeEvent(event);
+    },
+    beforeSendTransaction(event) {
+      return anonymizeEvent(event);
     },
     // Sanitize breadcrumbs before they're recorded. beforeSend only scrubs
     // event.extra; touch (ui.click) and console breadcrumbs are a separate path
@@ -227,17 +277,6 @@ export function captureMessage(message: string, level: Sentry.SeverityLevel = 'i
   }
 
   Sentry.captureMessage(message, level);
-}
-
-/**
- * Set user context for error tracking
- */
-export function setUser(user: { id?: string; email?: string; username?: string } | null): void {
-  if (Platform.OS === 'web' || !sentryInitialized) {
-    return;
-  }
-
-  Sentry.setUser(user);
 }
 
 /**

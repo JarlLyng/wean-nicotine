@@ -154,6 +154,10 @@ module.exports = {
       policy: 'appVersion',
     },
     updates: {
+      // Off (#445): each check sends a random per-install ID (EAS-Client-ID) to
+      // Expo, and the App Store label says no data is linked to the person.
+      // Fixes ship through the stores. The URL stays so the check can come back.
+      enabled: false,
       url: 'https://u.expo.dev/3061ae96-5632-452f-8d9d-97054286aaac',
     },
   },

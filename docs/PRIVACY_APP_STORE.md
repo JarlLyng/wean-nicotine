@@ -28,8 +28,12 @@ Update when:
 - The privacy policy wording changes
 - Apple's or Google's categories change
 
-Checked on 2026-11-14 (#442) against Expo SDK 58, `@sentry/react-native` 8.33 and `expo-updates` 58,
-on both platforms. iOS and Android send the same things.
+Checked on 2026-11-14 (#442, #445) against Expo SDK 58, `@sentry/react-native` 8.33, `sentry-android`
+8.62 and `expo-updates` 58, on both platforms.
+
+**Status: the owner chose "Not Linked to You" (#445).** The sections below describe 1.7.2, the build
+in the App Store, which still sends the IDs. "From the next release" says what changes and what each
+store should say then.
 
 ## What leaves the phone
 
@@ -56,6 +60,12 @@ Production builds have a DSN, so they send:
   from `RNSentryModuleImpl.java`. Sessions carry the same ID as their distinct ID (`SentryHub` in
   sentry-cocoa, `AndroidOptionsInitializer` in sentry-android). The ID is a random UUID kept in the
   app's own storage.
+- **On Android, the same installation ID as `contexts.device.id`** (`DeviceInfoUtil` in
+  sentry-android), on native events.
+- **On iOS, `contexts.app.device_app_hash`**, a hash of the vendor identifier (`identifierForVendor`)
+  and the device model (`SentryScopeContextEnricher` in sentry-cocoa), on native events and on the
+  app context the bridge hands to JavaScript events. The privacy policy of 2026-11-14 doesn't name
+  this one.
 
 Not sent: anything the person enters (`PII_KEYS` and `scrubExtra` in `lib/sentry.ts`, tested in
 `lib/__tests__/sentry-scrubber.test.ts`), screenshots or replays. `sendDefaultPii` is off, so the SDK
@@ -75,15 +85,15 @@ EAS uses the client ID to place a device in an update rollout and to count insta
 treat it as stored, not processed ephemerally. The check is a feature Wean uses: updates were
 published to the `production` channel for runtime versions 1.2.0 and 1.3.0.
 
-## The answers, side by side
+## The answers for 1.7.2, side by side
 
-| Data                                           | App Store privacy label                                                                | Google Play Data safety                                                                                                                                   |
-| ---------------------------------------------- | -------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Crash reports (Sentry)                         | Diagnostics › **Crash Data**. Purpose: App Functionality. Used for tracking: No.       | App info and performance › **Crash logs**. Collected, not shared. Purpose: Analytics. Required.                                                           |
-| Performance traces and sessions (Sentry)       | Diagnostics › **Performance Data**. Purpose: App Functionality. Used for tracking: No. | App info and performance › **Diagnostics**. Collected, not shared. Purpose: Analytics. Required.                                                          |
-| Sentry's installation ID and the EAS client ID | Identifiers › **Device ID**. Purpose: App Functionality. Used for tracking: No.        | **Device or other IDs**. Collected, not shared. Purposes: App functionality (updates) and Analytics (crash reports). Required. Not processed ephemerally. |
-| Linked to the person                           | The open decision below.                                                               | Play doesn't ask.                                                                                                                                         |
-| Everything the person enters                   | Not collected.                                                                         | Not collected.                                                                                                                                            |
+| Data                                                                | App Store privacy label                                                                | Google Play Data safety                                                                                                                                   |
+| ------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Crash reports (Sentry)                                              | Diagnostics › **Crash Data**. Purpose: App Functionality. Used for tracking: No.       | App info and performance › **Crash logs**. Collected, not shared. Purpose: Analytics. Required.                                                           |
+| Performance traces and sessions (Sentry)                            | Diagnostics › **Performance Data**. Purpose: App Functionality. Used for tracking: No. | App info and performance › **Diagnostics**. Collected, not shared. Purpose: Analytics. Required.                                                          |
+| Sentry's installation ID, the device/app hash and the EAS client ID | Identifiers › **Device ID**. Purpose: App Functionality. Used for tracking: No.        | **Device or other IDs**. Collected, not shared. Purposes: App functionality (updates) and Analytics (crash reports). Required. Not processed ephemerally. |
+| Linked to the person                                                | Yes, see below.                                                                        | Play doesn't ask.                                                                                                                                         |
+| Everything the person enters                                        | Not collected.                                                                         | Not collected.                                                                                                                                            |
 
 Why these categories:
 
@@ -104,38 +114,68 @@ Play's other questions:
   phone is deleted with Start Over or by deleting the app.
 - **Account creation:** none.
 
-## The open decision: linked or not linked (App Store)
+## Linked or not linked (App Store): decided, Not Linked (#445)
 
 Apple counts data as linked to a person unless direct identifiers, "such as user ID or name", are
 stripped before collection. It also counts anything that privacy law treats as personal data as
-linked, and under the GDPR a persistent online ID can be personal data. Sentry sends the
-installation ID as `user.id`, and the update check sends the EAS client ID. So as the app is built
-today:
+linked, and under the GDPR a persistent online ID can be personal data. So 1.7.2, which sends the IDs
+above, is honestly "Linked to you" with Identifiers › Device ID, as in the table above.
 
-- **A. Keep the IDs.** Set Crash Data, Performance Data and Device ID to **Linked to you: Yes**, and
-  tracking stays No. The listing then shows "Data Linked to You" instead of "Data Not Linked to You". No
-  code change. The privacy policy (2026-11-14) describes this build.
-- **B. Keep "Not Linked to You".** The app has to stop sending both IDs. Drop `event.user` in
-  `beforeSend`. Turn off Sentry's session tracking, since sessions carry the same ID, and that loses
-  crash-free rates. Switch off `expo-updates`, which means no more over-the-air fixes. Then take the
-  Device ID row out of both stores and the two paragraphs out of the policy.
+The owner chose to change the app instead, so the label can say "Data Not Linked to You".
 
-Before #442 this doc set the label to Diagnostics only, not linked. That matches neither option, so
-the label needs changing whichever the owner picks.
+### From the next release
+
+The app (#445):
+
+- gives Sentry the same user on every phone, `{ id: 'anonymous' }`, so no SDK fills in the
+  installation ID (`initialScope` for JavaScript events, `setUser` in `onReady` for the native scope);
+- drops `contexts.device.id` and `contexts.app.device_app_hash` from every JavaScript event
+  (`anonymizeEvent` in `beforeSend` and `beforeSendTransaction`);
+- has session tracking off, so no session carries the installation ID (crash-free rates are gone,
+  and every crash is still reported);
+- has the update check off (`updates.enabled: false`), so no `EAS-Client-ID` is sent. Fixes ship
+  through the stores.
+
+Tested on Android 16 with a release build pointed at an unreachable DSN, reading the reports Sentry
+queued on the device. The JavaScript reports have the `anonymous` user and carry no installation ID,
+`device.id`, `device_app_hash` or session. `expo-updates` logs that it is disabled, and no client ID
+is stored. A native crash (`adb shell am crash`) gets the `anonymous` user, but sentry-android still
+adds the installation ID as `contexts.device.id`. iOS native events will have `device_app_hash` the
+same way.
+
+**That last gap is closed in Sentry, not in the app:** an Advanced Data Scrubbing rule (project
+settings › Security & Privacy) that removes `contexts.device.id` and `contexts.app.device_app_hash`
+at ingestion, before anything is stored. Apple's "collect" means kept beyond serving the request, and
+Play counts data that is only processed in memory as ephemeral. The alternative is a native
+`beforeSend` through native initialisation on both platforms, which takes more code and risks switching
+crash reporting off silently.
+
+With the release live and the rule in place:
+
+| Data               | App Store privacy label                                                             | Google Play Data safety                                                                                  |
+| ------------------ | ----------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| Crash reports      | Diagnostics › **Crash Data**. App Functionality. **Not linked.** No tracking.       | App info and performance › **Crash logs**. Collected, not shared. Analytics. Required.                   |
+| Performance traces | Diagnostics › **Performance Data**. App Functionality. **Not linked.** No tracking. | App info and performance › **Diagnostics**. Collected, not shared. Analytics. Required.                  |
+| IDs                | None. Remove Identifiers › Device ID.                                               | None, as long as the scrubbing rule is in place. Otherwise "Device or other IDs", processed ephemerally. |
+
+On release day, the privacy policy (en, da, no, sv) drops the installation ID and update-check
+paragraphs, and this doc drops the 1.7.2 table.
 
 ## Owner steps
 
-1. **App Store Connect › App Privacy:** add Identifiers › Device ID, and set "linked" to match the
-   decision above. Apple's definitions are on
-   [App privacy details](https://developer.apple.com/app-store/app-privacy-details/).
-2. **Play Console › Data safety:** the answers above, when the app is created there.
-3. **Sentry › project settings › Security & Privacy:** confirm that "Prevent Storing of IP Addresses"
+1. **App Store Connect › App Privacy:** on the day the next release is live, set Diagnostics (Crash
+   Data, Performance Data), not linked, no tracking, and no Identifiers. Until then 1.7.2 sends the
+   IDs, so the strictly correct label for it is the table above (Device ID, linked). Apple's
+   definitions are on [App privacy details](https://developer.apple.com/app-store/app-privacy-details/).
+2. **Sentry › project settings › Security & Privacy › Advanced Data Scrubbing:** a rule that removes
+   `contexts.device.id` and `contexts.app.device_app_hash`, before the next release goes out.
+3. **Play Console › Data safety:** the "From the next release" answers, when the app is created there.
+4. **Sentry › project settings › Security & Privacy:** confirm that "Prevent Storing of IP Addresses"
    is on. The SDK doesn't send the IP (`sendDefaultPii: false`), but the server setting decides
    whether Sentry stores the address a request comes from.
-4. **The iOS privacy manifest:** `plugins/withPrivacyManifest.js` writes an empty
-   `NSPrivacyCollectedDataTypes`. Once the decision is made, it should list Crash Data, Performance
-   Data and, under option A, Device ID, with the same answers as the label. That's a code change for
-   its own issue.
+5. **The iOS privacy manifest:** `plugins/withPrivacyManifest.js` writes an empty
+   `NSPrivacyCollectedDataTypes`. It should list Crash Data and Performance Data, not linked, no
+   tracking, as the label will. That's a code change for its own issue.
 
 ## Worth knowing
 
