@@ -133,23 +133,31 @@ export default function BreathingExercise() {
 
       // Scale animation
       if (phase.phase === 'Breathe In') {
-        scaleAnim.value = withTiming(1.15, {
-          duration: phase.duration,
-          easing: Easing.inOut(Easing.ease),
-        });
-        ringPulse.value = withTiming(STROKE_WIDTH + 6, {
-          duration: phase.duration,
-          easing: Easing.inOut(Easing.ease),
-        });
+        scaleAnim.set(
+          withTiming(1.15, {
+            duration: phase.duration,
+            easing: Easing.inOut(Easing.ease),
+          }),
+        );
+        ringPulse.set(
+          withTiming(STROKE_WIDTH + 6, {
+            duration: phase.duration,
+            easing: Easing.inOut(Easing.ease),
+          }),
+        );
       } else if (phase.phase === 'Breathe Out') {
-        scaleAnim.value = withTiming(1, {
-          duration: phase.duration,
-          easing: Easing.inOut(Easing.ease),
-        });
-        ringPulse.value = withTiming(STROKE_WIDTH, {
-          duration: phase.duration,
-          easing: Easing.inOut(Easing.ease),
-        });
+        scaleAnim.set(
+          withTiming(1, {
+            duration: phase.duration,
+            easing: Easing.inOut(Easing.ease),
+          }),
+        );
+        ringPulse.set(
+          withTiming(STROKE_WIDTH, {
+            duration: phase.duration,
+            easing: Easing.inOut(Easing.ease),
+          }),
+        );
       }
 
       // Phase-start haptic
@@ -179,15 +187,15 @@ export default function BreathingExercise() {
         setTotalElapsed(newTotal);
 
         // Update ring progress
-        ringProgress.value = Math.min(1, newTotal / (selectedDuration * 1000));
+        ringProgress.set(Math.min(1, newTotal / (selectedDuration * 1000)));
 
         // Check if session is done
         if (newTotal >= selectedDuration * 1000) {
           clearTimer();
           setIsRunning(false);
           setIsComplete(true);
-          scaleAnim.value = withTiming(1, { duration: 300 });
-          ringPulse.value = withTiming(STROKE_WIDTH, { duration: 300 });
+          scaleAnim.set(withTiming(1, { duration: 300 }));
+          ringPulse.set(withTiming(STROKE_WIDTH, { duration: 300 }));
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
           // Save session
           saveBreathingSession(selectedPattern, selectedDuration)
@@ -209,9 +217,12 @@ export default function BreathingExercise() {
     [pattern, selectedPattern, selectedDuration, scaleAnim, ringPulse, ringProgress, clearTimer],
   );
 
-  // React to cycle changes while running
+  // React to cycle changes while running. Starting a phase sets its first
+  // countdown value and starts the timer that drives the session, which is
+  // the effect's whole job, so its synchronous setState is intended.
   useEffect(() => {
     if (isRunning && !isComplete) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       startPhase(currentCycle, totalElapsed);
     }
     return clearTimer;
@@ -223,7 +234,7 @@ export default function BreathingExercise() {
     setCurrentCycle(0);
     setTotalElapsed(0);
     setIsComplete(false);
-    ringProgress.value = 0;
+    ringProgress.set(0);
     setIsRunning(true);
   };
 
@@ -233,15 +244,15 @@ export default function BreathingExercise() {
     setCurrentCycle(0);
     setTimeRemaining(0);
     setTotalElapsed(0);
-    ringProgress.value = 0;
-    scaleAnim.value = withTiming(1, { duration: 200 });
-    ringPulse.value = withTiming(STROKE_WIDTH, { duration: 200 });
+    ringProgress.set(0);
+    scaleAnim.set(withTiming(1, { duration: 200 }));
+    ringPulse.set(withTiming(STROKE_WIDTH, { duration: 200 }));
   };
 
   const handleDone = () => {
     setIsComplete(false);
     setTotalElapsed(0);
-    ringProgress.value = 0;
+    ringProgress.set(0);
   };
 
   const animatedScale = useAnimatedStyle(() => ({

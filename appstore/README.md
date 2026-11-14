@@ -47,16 +47,16 @@ npx expo prebuild --platform ios --no-install
 pod install --project-directory=ios
 xcodebuild -workspace ios/WeanNicotine.xcworkspace -scheme WeanNicotine -configuration Release \
   -sdk iphonesimulator -destination 'id=<UDID>' -derivedDataPath build/capture \
-  CODE_SIGNING_ALLOWED=NO IPHONEOS_DEPLOYMENT_TARGET=18.0 ONLY_ACTIVE_ARCH=YES build
+  CODE_SIGNING_ALLOWED=NO ONLY_ACTIVE_ARCH=YES build
 ```
 
-Two things about Xcode 27, neither of which touches the App Store build (EAS builds that with its
-own Xcode):
+Since Expo SDK 58 (#352) the build needs no workaround for Xcode 27: the app's floor is iOS 16.4,
+and it uses the UIScene lifecycle, so it also launches on iOS 27 simulators.
 
-- `IPHONEOS_DEPLOYMENT_TARGET=18.0` is for this simulator build only. At the app's own 15.1, three
-  pods are older than Xcode 27 accepts and expo-router uses an API the iOS 27 SDK marks as iOS 16.
-- **Run it on an iOS 26.5 simulator, not iOS 27.** An app built with the iOS 27 SDK has to adopt the
-  UIScene lifecycle, and on an iOS 27 simulator this build stops at launch without it.
+**Still capture on an iOS 26.5 simulator.** On the iOS 27 simulators (27.0 and 27.1, with Xcode
+27.2) the notification service never answers an app, so Settings waits on the notification status
+and anything queued behind it. A bare SwiftUI app that only asks for its notification settings
+gets no answer either, so it is the simulator, not Wean (checked 2026-11-13).
 
 Delete `ios/` and `build/` afterwards, so the next normal build starts clean.
 

@@ -1,7 +1,12 @@
-import React, { useEffect, useRef, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Svg, { Circle, Defs, LinearGradient, Stop } from 'react-native-svg';
-import Animated, { useSharedValue, useAnimatedProps, withTiming, Easing } from 'react-native-reanimated';
+import Animated, {
+  useSharedValue,
+  useAnimatedProps,
+  withTiming,
+  Easing,
+} from 'react-native-reanimated';
 import { typography, spacing, animations } from '@/lib/theme';
 import { useDesignTokens } from '@/lib/design';
 
@@ -35,11 +40,11 @@ export function ProgressRing({
   const { colors } = useDesignTokens();
   const defaultColor = color || colors.primary;
   const defaultBackgroundColor = backgroundColor || colors.background.muted;
-  
+
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const center = size / 2;
-  
+
   // Animated progress value
   const animatedProgress = useSharedValue(0);
 
@@ -68,8 +73,8 @@ export function ProgressRing({
   // Guard against NaN/Infinity in label calculation
   const safeProgress = Number.isFinite(progress) && !isNaN(progress) ? progress : 0;
   const displayLabel = label !== undefined ? label : `${Math.round(safeProgress * 100)}%`;
-  const gradientIdRef = useRef(`progressGradient_${nextGradientId++}`);
-  const gradientId = gradientIdRef.current;
+  // One id per ring for its whole life, made once.
+  const [gradientId] = useState(() => `progressGradient_${nextGradientId++}`);
   const styles = useMemo(() => createStyles(colors), [colors]);
 
   const progressPercent = Math.round(safeProgress * 100);
@@ -79,7 +84,10 @@ export function ProgressRing({
       style={styles.container}
       accessibilityRole="progressbar"
       accessibilityValue={{ min: 0, max: 100, now: progressPercent }}
-      accessibilityLabel={sublabel ? `${displayLabel} ${sublabel}` : `Progress: ${progressPercent}%`}>
+      accessibilityLabel={
+        sublabel ? `${displayLabel} ${sublabel}` : `Progress: ${progressPercent}%`
+      }
+    >
       <View style={[styles.ringContainer, { width: size, height: size }]}>
         <Svg width={size} height={size}>
           <Defs>
@@ -126,29 +134,30 @@ export function ProgressRing({
 }
 
 // Styles are created inside component to access colors from hook
-const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  ringContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'relative',
-  },
-  labelContainer: {
-    position: 'absolute',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  label: {
-    ...typography['2xl'],
-    fontWeight: '700',
-    color: colors.text.primary,
-  },
-  sublabel: {
-    ...typography.sm,
-    color: colors.text.secondary,
-    marginTop: spacing.xs,
-  },
-});
+const createStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) =>
+  StyleSheet.create({
+    container: {
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    ringContainer: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      position: 'relative',
+    },
+    labelContainer: {
+      position: 'absolute',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    label: {
+      ...typography['2xl'],
+      fontWeight: '700',
+      color: colors.text.primary,
+    },
+    sublabel: {
+      ...typography.sm,
+      color: colors.text.secondary,
+      marginTop: spacing.xs,
+    },
+  });

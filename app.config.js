@@ -12,8 +12,8 @@
  *
  * Build-time plugins:
  * - expo-router, expo-splash-screen, expo-notifications, expo-font
- * - SDK 55 required config plugins (Sentry, expo-image, expo-sqlite,
- *   expo-web-browser)
+ * - Config plugins the Expo SDK requires (Sentry, expo-image, expo-sqlite,
+ *   expo-status-bar, expo-web-browser)
  * - Custom plugins (production push entitlements, privacy manifest)
  */
 
@@ -84,10 +84,11 @@ module.exports = {
         },
       ],
       'expo-font',
-      // SDK 55 required config plugins
+      // Config plugins the Expo SDK requires
       '@sentry/react-native',
       'expo-image',
       'expo-sqlite',
+      'expo-status-bar',
       'expo-web-browser',
       // Custom plugins for App Store compliance
       './plugins/withProductionPushEntitlements.js',
