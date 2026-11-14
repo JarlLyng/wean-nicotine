@@ -60,32 +60,30 @@ const lastUpdated = '2026-11-14';
 			<p>
 				If enabled in the build, Wean Nicotine uses <strong>Sentry</strong> for crash and error reporting to help us
 				improve app stability. Sentry receives exception messages, stack traces, and basic device/app context
-				(app version, device model, OS version) plus screen-transition timing for performance monitoring. It also
-				records when each app session starts and ends, so we can see how often the app runs without crashing.
+				(app version, device model, OS version) plus screen-transition timing for performance monitoring.
 				Your pouch logs, plan settings, baseline, price, currency, and triggers are <em>never</em> sent to Sentry.
 				This is enforced both by how we call Sentry and by an automatic scrubber that strips known sensitive
 				fields before transmission. We do not use Sentry for advertising.
 			</p>
 			<p>
-				Sentry's software in the app also gives each installation a random ID and sends it with crash reports and
-				sessions. It tells us whether a problem happens on one phone or on many. The ID is created by the app on
-				your phone and isn't tied to your name, an email address or an account. On iPhone, Sentry also adds a one-way
-				hash made from the ID iOS gives each app maker for your phone and the phone's model. It can't be turned back
-				into that ID. See
+				Nothing in a report tells one phone from another. Every report carries the same user, “anonymous”, on every
+				phone. Sentry's software would add a random ID for each installation, and on iPhone a hash made from the ID
+				iOS gives each app maker for your phone. Both are removed before a report is stored, by the app or, for a
+				crash in the phone's own code, by Sentry as the report arrives. The app doesn't record sessions.
+			</p>
+			<p>
+				The app also sends a few anonymous counts of which features are used, so we can see what helps. A count says
+				only that a pouch or a resisted craving was logged, or that the plan was opened to edit. It carries the app
+				version and the time it happened, and no user at all. It never carries a number, a trigger or anything else
+				from your log. See
 				<a href="https://sentry.io/privacy/" rel="noopener noreferrer" target="_blank">Sentry's privacy policy</a>.
 			</p>
 			<p>
-				When the app starts, it asks <strong>Expo</strong>'s update service (<code>u.expo.dev</code>) whether a newer
-				version of the app's code is available. That's how a small fix can reach you without a new App Store or
-				Google Play release. The request says which platform, app version and update the app is running, and it
-				carries a random ID the app creates for this (Expo calls it the EAS client ID). If the app failed to start
-				the last time, a short technical error message goes along. Nothing from your logs, plan, price or triggers
-				is part of the request. See
-				<a href="https://expo.dev/privacy" rel="noopener noreferrer" target="_blank">Expo's privacy policy</a>.
+				The app doesn't check for updates on its own. New versions come through the App Store or Google Play.
 			</p>
 			<p>
-				Like any server on the internet, Sentry and Expo see the IP address a request comes from. The app doesn't
-				put it in a report, and what each service keeps is covered by its privacy policy.
+				Like any server on the internet, Sentry sees the IP address a request comes from. The app doesn't put it in a
+				report, and what Sentry keeps is covered by its privacy policy.
 			</p>
 
 			<h2>Website analytics</h2>

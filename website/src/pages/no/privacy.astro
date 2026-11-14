@@ -60,17 +60,20 @@ const lastUpdated = '2026-11-14';
 			<p>
 				Hvis aktivert i utgivelsen, bruker Wean Nicotine <strong>Sentry</strong> for rapportering av feil og krasj for å hjelpe
 				oss med å forbedre appstabiliteten. Sentry mottar feilhendelser og grunnleggende enhets-/appkontekst
-				som er nødvendig for diagnostikk (for eksempel: appversjon, enhetsmodell, OS-versjon og krasj-sporing) pluss tidsmåling av skjermoverganger for ytelsesovervåking. Sentry registrerer også når hver økt i appen starter og slutter, slik at vi kan se hvor ofte appen kjører uten å krasje.
+				som er nødvendig for diagnostikk (for eksempel: appversjon, enhetsmodell, OS-versjon og krasj-sporing) pluss tidsmåling av skjermoverganger for ytelsesovervåking.
 				Poseloggene dine, planinnstillinger, utgangspunkt, pris, valuta og triggere sendes <em>aldri</em> til Sentry. Dette sikres både av måten vi kaller Sentry på, og av en automatisk scrubber som fjerner kjente sensitive felter før sending. Vi bruker ikke Sentry for annonsering.
 			</p>
 			<p>
-				Sentrys programvare i appen gir dessuten hver installasjon en tilfeldig ID og sender den med feilrapporter og økter. Den viser oss om en feil rammer én telefon eller mange. ID-en lages av appen på telefonen din og er ikke knyttet til navnet ditt, en e-postadresse eller en konto. På iPhone legger Sentry dessuten til en enveis-hash laget av ID-en iOS gir hver apputvikler for telefonen din, og telefonens modell. Den kan ikke regnes tilbake til ID-en. Se <a href="https://sentry.io/privacy/" rel="noopener noreferrer" target="_blank">Sentrys personvernerklæring</a>.
+				Ingenting i en rapport skiller én telefon fra en annen. Hver rapport har den samme brukeren, “anonymous”, på alle telefoner. Sentrys programvare ville legge til en tilfeldig ID for hver installasjon, og på iPhone en hash laget av ID-en iOS gir hver apputvikler for telefonen din. Begge fjernes før en rapport lagres, av appen eller, ved et krasj i telefonens egen kode, av Sentry når rapporten kommer fram. Appen registrerer ikke økter.
 			</p>
 			<p>
-				Når appen starter, spør den oppdateringstjenesten til <strong>Expo</strong> (<code>u.expo.dev</code>) om det finnes en nyere versjon av appens kode. Slik kan en liten rettelse nå deg uten en ny utgivelse i App Store eller Google Play. Forespørselen forteller hvilken plattform, appversjon og oppdatering appen kjører, og den har med en tilfeldig ID som appen lager til dette (Expo kaller den EAS client ID). Hvis appen ikke klarte å starte forrige gang, følger en kort teknisk feilmelding med. Ingenting fra loggen din, planen, prisen eller utløserne dine er en del av forespørselen. Se <a href="https://expo.dev/privacy" rel="noopener noreferrer" target="_blank">Expos personvernerklæring</a>.
+				Appen sender også noen få anonyme tellinger av hvilke funksjoner som brukes, slik at vi kan se hva som hjelper. En telling sier bare at en pose eller et sug du sto imot ble logget, eller at planen ble åpnet for å endres. Den har med appversjonen og tidspunktet, og ingen bruker i det hele tatt. Den har aldri med et tall, en utløser eller noe annet fra loggen din. Se <a href="https://sentry.io/privacy/" rel="noopener noreferrer" target="_blank">Sentrys personvernerklæring</a>.
 			</p>
 			<p>
-				Som enhver server på internett ser Sentry og Expo IP-adressen en forespørsel kommer fra. Appen legger den ikke i en rapport, og hva hver tjeneste lagrer, står i dens personvernerklæring.
+				Appen ser ikke etter oppdateringer på egen hånd. Nye versjoner kommer gjennom App Store eller Google Play.
+			</p>
+			<p>
+				Som enhver server på internett ser Sentry IP-adressen en forespørsel kommer fra. Appen legger den ikke i en rapport, og hva Sentry lagrer, står i Sentrys personvernerklæring.
 			</p>
 
 			<h2>Webanalyse</h2>
