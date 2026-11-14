@@ -6,7 +6,13 @@
  * change the PII_KEYS list, add a test here.
  */
 
-import { anonymizeEvent, scrubBreadcrumb, scrubExtra, SHARED_SENTRY_USER } from '../sentry';
+import {
+  anonymizeEvent,
+  scrubBreadcrumb,
+  scrubExtra,
+  sentryEnvironment,
+  SHARED_SENTRY_USER,
+} from '../sentry';
 
 describe('scrubExtra', () => {
   it('returns undefined when input is undefined', () => {
@@ -204,5 +210,20 @@ describe('anonymizeEvent (#444)', () => {
   it('leaves events without device or app context alone apart from the user', () => {
     const event = anonymizeEvent({ contexts: { os: { name: 'iOS' } } });
     expect(event.contexts).toEqual({ os: { name: 'iOS' } });
+  });
+});
+
+describe('sentryEnvironment (#444)', () => {
+  it('is production on a real phone', () => {
+    expect(sentryEnvironment(false, true)).toBe('production');
+  });
+
+  it('is simulator for a release build in the Simulator or an emulator', () => {
+    expect(sentryEnvironment(false, false)).toBe('simulator');
+  });
+
+  it('is development in a dev build, wherever it runs', () => {
+    expect(sentryEnvironment(true, true)).toBe('development');
+    expect(sentryEnvironment(true, false)).toBe('development');
   });
 });

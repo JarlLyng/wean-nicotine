@@ -28,6 +28,7 @@
 import * as Sentry from '@sentry/react-native';
 import { reactNavigationIntegration } from '@sentry/react-native';
 import Constants from 'expo-constants';
+import * as Device from 'expo-device';
 import { Platform } from 'react-native';
 import { appBuildNumber } from './app-info';
 import { CAPTURE_MODE } from './capture-mode';
@@ -142,6 +143,17 @@ export function anonymizeEvent<E extends AnonymizableEvent>(event: E): E {
   return event;
 }
 
+/**
+ * Which Sentry environment a build reports to (#444). A release build in the
+ * iOS Simulator or an Android emulator is a test, not a person using the app,
+ * so it reports as `simulator` and stays out of `production`. Exported for
+ * unit testing.
+ */
+export function sentryEnvironment(isDev: boolean, isDevice: boolean): string {
+  if (isDev) return 'development';
+  return isDevice ? 'production' : 'simulator';
+}
+
 /** True only when we had a DSN and called Sentry.init() – use to show "not configured" in Diagnostics. */
 let sentryInitialized = false;
 
@@ -195,7 +207,7 @@ export function initSentry(): void {
   Sentry.init({
     dsn,
     debug: __DEV__,
-    environment: __DEV__ ? 'development' : 'production',
+    environment: sentryEnvironment(__DEV__, Device.isDevice),
     // Off (#444): a session carries the installation ID as its distinct ID.
     // This gives up crash-free rates; every crash is still reported.
     enableAutoSessionTracking: false,
