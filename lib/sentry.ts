@@ -22,6 +22,7 @@ import * as Sentry from '@sentry/react-native';
 import { reactNavigationIntegration } from '@sentry/react-native';
 import Constants from 'expo-constants';
 import { Platform } from 'react-native';
+import { appBuildNumber } from './app-info';
 import { CAPTURE_MODE } from './capture-mode';
 
 /**
@@ -151,6 +152,7 @@ export function initSentry(): void {
   }
 
   sentryInitialized = true;
+  const build = appBuildNumber();
   Sentry.init({
     dsn,
     debug: __DEV__,
@@ -163,10 +165,8 @@ export function initSentry(): void {
     sendDefaultPii: false,
     // Attach app version and build info
     release: Constants.expoConfig?.version || '1.0.0',
-    dist:
-      Constants.expoConfig?.ios?.buildNumber ||
-      Constants.expoConfig?.android?.versionCode?.toString() ||
-      undefined,
+    // Each platform numbers its builds separately, so the dist is this one's.
+    dist: build === '?' ? undefined : build,
     beforeSend(event) {
       // In development, log but don't send
       if (__DEV__) {

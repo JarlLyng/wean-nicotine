@@ -16,23 +16,28 @@ function parse(mailto: string) {
 
 describe('buildFeedbackMailto', () => {
   it('addresses support with the version in the subject', () => {
-    const { address, subject } = parse(buildFeedbackMailto('1.6.2', '24', '26.0'));
+    const { address, subject } = parse(buildFeedbackMailto('1.6.2', '24', 'iOS 26.0'));
     expect(address).toBe(SUPPORT_EMAIL);
     expect(subject).toBe('Wean Nicotine 1.6.2 feedback');
   });
 
-  it('puts the app version, build and iOS version in the body, below room to write', () => {
-    const { body } = parse(buildFeedbackMailto('1.6.2', '24', '26.0'));
+  it('puts the app version, build and system in the body, below room to write', () => {
+    const { body } = parse(buildFeedbackMailto('1.6.2', '24', 'iOS 26.0'));
     expect(body).toMatch(/^\n\n\n/);
-    expect(body).toContain('App: Wean Nicotine 1.6.2 (build 24)');
-    expect(body).toContain('iOS: 26.0');
+    expect(body).toContain('App: Wean Nicotine 1.6.2 (build 24)\niOS 26.0');
+  });
+
+  it('names Android as Android, not iOS (#435)', () => {
+    const { body } = parse(buildFeedbackMailto('1.8.0', '18', 'Android 16 (API 36)'));
+    expect(body).toContain('Android 16 (API 36)');
+    expect(body).not.toContain('iOS');
   });
 
   it('encodes characters that would break the URL', () => {
-    const mailto = buildFeedbackMailto('1.6.2&x=1', '24', '26.0 #beta');
+    const mailto = buildFeedbackMailto('1.6.2&x=1', '24', 'iOS 26.0 #beta');
     expect(mailto).not.toMatch(/[ #\n]/);
     const { subject, body } = parse(mailto);
     expect(subject).toBe('Wean Nicotine 1.6.2&x=1 feedback');
-    expect(body).toContain('iOS: 26.0 #beta');
+    expect(body).toContain('iOS 26.0 #beta');
   });
 });

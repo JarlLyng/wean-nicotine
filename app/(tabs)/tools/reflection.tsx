@@ -1,6 +1,14 @@
 import { useState, useMemo, useCallback } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
-import { useRouter , useFocusEffect } from 'expo-router';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  TextInput,
+  KeyboardAvoidingView,
+} from 'react-native';
+import { useRouter, useFocusEffect } from 'expo-router';
 import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
 import { Screen } from '@/components/Screen';
 import { Button } from '@/components/ui/Button';
@@ -89,9 +97,10 @@ export default function ReflectionScreen() {
     }, []),
   );
 
-  const filteredPrompts = selectedCategory === 'all'
-    ? REFLECTION_PROMPTS
-    : REFLECTION_PROMPTS.filter((p) => p.category === selectedCategory);
+  const filteredPrompts =
+    selectedCategory === 'all'
+      ? REFLECTION_PROMPTS
+      : REFLECTION_PROMPTS.filter((p) => p.category === selectedCategory);
 
   const currentPrompt = filteredPrompts[currentPromptIndex % filteredPrompts.length];
 
@@ -103,7 +112,12 @@ export default function ReflectionScreen() {
     if (!note.trim()) return;
     setSaving(true);
     try {
-      await saveReflection(currentPrompt.id, currentPrompt.category, currentPrompt.prompt, note.trim());
+      await saveReflection(
+        currentPrompt.id,
+        currentPrompt.category,
+        currentPrompt.prompt,
+        note.trim(),
+      );
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
       setSaved(true);
       setJournalCount((c) => c + 1);
@@ -133,9 +147,16 @@ export default function ReflectionScreen() {
     <Screen>
       <KeyboardAvoidingView
         style={s.flex}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={100}>
-        <ScrollView contentContainerStyle={s.scrollContent} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
+        // Both platforms: Android draws edge to edge, so the window no longer
+        // shrinks for the keyboard and Continue would sit under it (#435).
+        behavior="padding"
+        keyboardVerticalOffset={100}
+      >
+        <ScrollView
+          contentContainerStyle={s.scrollContent}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+        >
           <View style={s.content}>
             <Text style={s.subtitle}>
               Take a moment to reflect. No right or wrong — just honest self-awareness.
@@ -147,7 +168,8 @@ export default function ReflectionScreen() {
                 <TouchableOpacity
                   key={cat.key}
                   style={[s.pill, selectedCategory === cat.key && s.pillActive]}
-                  onPress={() => handleCategoryChange(cat.key)}>
+                  onPress={() => handleCategoryChange(cat.key)}
+                >
                   <Text style={[s.pillText, selectedCategory === cat.key && s.pillTextActive]}>
                     {cat.label}
                   </Text>
@@ -159,7 +181,8 @@ export default function ReflectionScreen() {
             <Animated.View
               key={currentPrompt.id + selectedCategory}
               entering={FadeIn.duration(200)}
-              style={s.promptContainer}>
+              style={s.promptContainer}
+            >
               <Text style={s.categoryBadge}>{currentPrompt.category}</Text>
               <Text style={s.promptText}>{currentPrompt.prompt}</Text>
             </Animated.View>
@@ -214,7 +237,8 @@ export default function ReflectionScreen() {
             {journalCount > 0 && (
               <TouchableOpacity
                 style={s.journalLink}
-                onPress={() => router.push('/(tabs)/tools/reflection-journal')}>
+                onPress={() => router.push('/(tabs)/tools/reflection-journal')}
+              >
                 <Icon name="book-open" size={18} color={colors.primary} />
                 <Text style={s.journalLinkText}>
                   View Journal ({journalCount} {journalCount === 1 ? 'entry' : 'entries'})

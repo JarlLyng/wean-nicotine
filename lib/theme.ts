@@ -13,6 +13,8 @@
  * - Use Phosphor icons with regular weight by default
  */
 
+import { Platform } from 'react-native';
+
 import { designTokens, getColors } from './design';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 
@@ -199,6 +201,15 @@ export const shadows = {
     elevation: 8,
   },
 } as const;
+
+/**
+ * The thumb of a Switch. Android draws the thumb over the track, and in the
+ * off state a surface-coloured thumb on the dark track all but disappears, so
+ * there it takes the text colour (#435). iOS keeps the surface colour.
+ */
+export function switchThumbColor(on: boolean, colors: ReturnType<typeof getColors>): string {
+  return Platform.OS === 'android' && !on ? colors.text.primary : colors.surface.default;
+}
 
 // IAMJARL motion durations in ms (--ij-duration-fast / -normal / -slow)
 export const animations = {

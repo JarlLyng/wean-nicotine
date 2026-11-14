@@ -21,7 +21,6 @@ import { useEffect, useMemo, useState } from 'react';
 import {
   Alert,
   KeyboardAvoidingView,
-  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -136,7 +135,9 @@ export default function EditPlanScreen() {
     <Screen>
       <KeyboardAvoidingView
         style={s.flex}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        // Both platforms: Android draws edge to edge, so the window no longer
+        // shrinks for the keyboard and Continue would sit under it (#435).
+        behavior="padding"
         keyboardVerticalOffset={100}
       >
         <ScrollView
@@ -174,7 +175,8 @@ export default function EditPlanScreen() {
             <Card variant="elevated" style={s.card} padding="lg">
               <Text style={s.cardTitle}>Weekly reduction</Text>
               <Text style={s.cardHint}>
-                How much to lower your allowance each week. Default is 5% — gentle enough that your body adjusts without severe withdrawal.
+                How much to lower your allowance each week. Default is 5% — gentle enough that your
+                body adjusts without severe withdrawal.
               </Text>
               <View style={s.presetRow}>
                 {REDUCTION_PRESETS.map((preset) => {
@@ -191,7 +193,9 @@ export default function EditPlanScreen() {
                       <Text style={[s.presetLabel, isSelected && s.presetLabelSelected]}>
                         {preset.label}
                       </Text>
-                      <Text style={[s.presetDescription, isSelected && s.presetDescriptionSelected]}>
+                      <Text
+                        style={[s.presetDescription, isSelected && s.presetDescriptionSelected]}
+                      >
                         {preset.description}
                       </Text>
                     </Pressable>
@@ -229,7 +233,9 @@ export default function EditPlanScreen() {
                       accessibilityRole="button"
                       accessibilityState={{ selected: currency === c }}
                     >
-                      <Text style={[s.currencyLabel, currency === c && s.currencyLabelSelected]}>{c}</Text>
+                      <Text style={[s.currencyLabel, currency === c && s.currencyLabelSelected]}>
+                        {c}
+                      </Text>
                     </Pressable>
                   ))}
                 </View>
