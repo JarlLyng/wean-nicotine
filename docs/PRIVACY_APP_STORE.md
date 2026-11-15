@@ -47,10 +47,12 @@ Only Sentry receives anything, and only from builds with a DSN:
   scrubbed by `scrubBreadcrumb`);
 - device and app context: model, OS version, app version and build, free memory and storage;
 - performance traces for 20% of screen loads and app starts;
-- **two anonymous feature counts** (`countFeatureUse`): `log_entry_saved`, with `kind` set to
-  `pouch_used` or `craving_resisted`, and `edit_plan_opened`. Each carries the app version,
-  environment and SDK, and the time it happened. `beforeSendMetric` (`filterMetric`) drops any other
-  metric, any other attribute, and the user.
+- **two anonymous feature counts** (`countFeatureUse`): `log_entry_saved`, for any log entry, and
+  `edit_plan_opened`. Each carries the app version, environment and SDK, and the time it happened.
+  `log_entry_saved` doesn't say whether a pouch or a resisted craving was logged: that would be
+  user-provided health data for Apple and health info for Google, so the label would need Health
+  (owner's decision, 2026-11-15). `beforeSendMetric` (`filterMetric`) drops any other metric, any
+  other attribute and the user.
 
 What doesn't leave the phone:
 
@@ -79,6 +81,7 @@ they report as `production`.
 | Device and app context       | Diagnostics › **Other Diagnostic Data**. App Functionality. Not linked. No tracking. | Part of Diagnostics above.                                                              |
 | Feature counts               | Usage Data › **Product Interaction**. Analytics. Not linked. No tracking.            | App activity › **App interactions**. Collected, not shared. Analytics. Required.        |
 | IDs                          | None.                                                                                | None.                                                                                   |
+| Health data                  | None. A count never says what was logged.                                            | None.                                                                                   |
 | Everything the person enters | Not collected.                                                                       | Not collected.                                                                          |
 
 Why these categories:
