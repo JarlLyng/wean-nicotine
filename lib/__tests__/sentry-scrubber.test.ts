@@ -244,16 +244,16 @@ describe('filterMetric (#448)', () => {
     'sentry.sdk.version': '8.33.0',
   };
 
-  it('keeps a listed count with its listed attribute value and the build, and drops the user', () => {
+  it('keeps a listed count with only the build and the SDK, and drops the user', () => {
     const metric = {
       name: 'log_entry_saved',
-      attributes: { kind: 'pouch_used', 'user.id': 'anonymous', ...sdk },
+      attributes: { 'user.id': 'anonymous', ...sdk },
     };
-    expect(filterMetric(metric)?.attributes).toEqual({ kind: 'pouch_used', ...sdk });
+    expect(filterMetric(metric)?.attributes).toEqual(sdk);
   });
 
-  it('drops an attribute value that is not on the list', () => {
-    const metric = { name: 'log_entry_saved', attributes: { kind: 'Stress', ...sdk } };
+  it('drops a kind, so a count never says a pouch or a craving was logged', () => {
+    const metric = { name: 'log_entry_saved', attributes: { kind: 'pouch_used', ...sdk } };
     expect(filterMetric(metric)?.attributes).toEqual(sdk);
   });
 

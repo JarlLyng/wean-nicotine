@@ -79,7 +79,7 @@ export default function HomeScreen() {
       setIsLogging(true);
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
       const entryId = await createLogEntry('pouch_used');
-      countFeatureUse('log_entry_saved', { kind: 'pouch_used' });
+      countFeatureUse('log_entry_saved');
       incrementPouches();
       setUndo({ entryId, kind: 'pouch_used' });
       // Offer optional trigger tagging for the new entry (replaces any
@@ -100,7 +100,7 @@ export default function HomeScreen() {
       setIsLogging(true);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       const entryId = await createLogEntry('craving_resisted');
-      countFeatureUse('log_entry_saved', { kind: 'craving_resisted' });
+      countFeatureUse('log_entry_saved');
       incrementCravings();
       setUndo({ entryId, kind: 'craving_resisted' });
       setTagTarget(null);

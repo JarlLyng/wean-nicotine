@@ -24,7 +24,7 @@
  *   and a data-scrubbing rule in the Sentry project removes them on arrival.
  *   See docs/PRIVACY_APP_STORE.md.
  * - Two anonymous feature counts (#448), through countFeatureUse: that a log
- *   entry was saved (pouch or resisted craving) and that Edit plan was opened.
+ *   entry was saved (not which kind) and that Edit plan was opened.
  *   Never a value from the log. beforeSendMetric keeps only the listed counts
  *   and attribute values, plus the build and SDK, and drops the user.
  */
@@ -164,11 +164,14 @@ export function sentryEnvironment(isDev: boolean, isDevice: boolean, buildProfil
 
 /**
  * The only feature counts Wean sends (#448), each with the only attribute
- * values it may carry. A count says that a feature was used, never a value
- * from the person's log: no pouch numbers, amounts, dates or triggers.
+ * values it may carry (none today). A count says that a feature was used,
+ * never a value from the person's log: no pouch numbers, amounts, dates or
+ * triggers. log_entry_saved doesn't say whether a pouch or a resisted craving
+ * was logged: that would be health data in Apple's and Google's terms (owner's
+ * decision, 2026-11-15).
  */
 const FEATURE_COUNTS: Record<string, Record<string, readonly string[]>> = {
-  log_entry_saved: { kind: ['pouch_used', 'craving_resisted'] },
+  log_entry_saved: {},
   edit_plan_opened: {},
 };
 
@@ -335,19 +338,14 @@ export function initSentry(): void {
 }
 
 /**
- * Count that a feature was used (#448). The names and attribute values are a
- * fixed list (FEATURE_COUNTS); never pass a value from the person's log.
+ * Count that a feature was used (#448). The names are a fixed list
+ * (FEATURE_COUNTS), and a count carries nothing from the person's log.
  */
-export function countFeatureUse(
-  name: 'log_entry_saved',
-  attributes: { kind: 'pouch_used' | 'craving_resisted' },
-): void;
-export function countFeatureUse(name: 'edit_plan_opened'): void;
-export function countFeatureUse(name: string, attributes?: Record<string, string>): void {
+export function countFeatureUse(name: 'log_entry_saved' | 'edit_plan_opened'): void {
   if (Platform.OS === 'web' || !sentryInitialized) {
     return;
   }
-  Sentry.metrics.count(name, 1, attributes ? { attributes } : undefined);
+  Sentry.metrics.count(name, 1);
 }
 
 /**
