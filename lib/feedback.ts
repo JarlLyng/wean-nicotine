@@ -1,7 +1,8 @@
 /**
  * "Send feedback" from Settings (#357).
  *
- * The app collects no usage data, so what people choose to write is how we
+ * The app sends only anonymous crash reports and a few anonymous feature counts
+ * (#448), never anything from the log, so what people choose to write is how we
  * learn what works. This opens the user's own mail app with the address,
  * subject, the app version and the phone's system filled in. They see all of
  * it before sending, and nothing is sent unless they press Send.

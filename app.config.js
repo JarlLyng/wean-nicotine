@@ -77,12 +77,23 @@ module.exports = {
           'NSPrivacyCollectedDataTypeCrashData',
           'NSPrivacyCollectedDataTypePerformanceData',
           'NSPrivacyCollectedDataTypeOtherDiagnosticData',
-        ].map((type) => ({
-          NSPrivacyCollectedDataType: type,
-          NSPrivacyCollectedDataTypeLinked: false,
-          NSPrivacyCollectedDataTypeTracking: false,
-          NSPrivacyCollectedDataTypePurposes: ['NSPrivacyCollectedDataTypePurposeAppFunctionality'],
-        })),
+        ]
+          .map((type) => ({
+            NSPrivacyCollectedDataType: type,
+            NSPrivacyCollectedDataTypeLinked: false,
+            NSPrivacyCollectedDataTypeTracking: false,
+            NSPrivacyCollectedDataTypePurposes: [
+              'NSPrivacyCollectedDataTypePurposeAppFunctionality',
+            ],
+          }))
+          .concat({
+            // The anonymous feature counts (#448): that a feature was used, never
+            // a value from the person's log. Not linked, no tracking.
+            NSPrivacyCollectedDataType: 'NSPrivacyCollectedDataTypeProductInteraction',
+            NSPrivacyCollectedDataTypeLinked: false,
+            NSPrivacyCollectedDataTypeTracking: false,
+            NSPrivacyCollectedDataTypePurposes: ['NSPrivacyCollectedDataTypePurposeAnalytics'],
+          }),
       },
     },
     android: {
@@ -187,6 +198,12 @@ module.exports = {
       // The sample month's currency: kroner for the site, CAPTURE_CURRENCY=USD for the
       // App Store's English set (#409). Read only in capture mode.
       captureCurrency: process.env.CAPTURE_CURRENCY ?? 'DKK',
+      // Which EAS profile made the build, for Sentry's environment (#448):
+      // only `production` reports as production. A local build is `local`.
+      buildProfile: process.env.EAS_BUILD_PROFILE ?? 'local',
+      // A local test build can send one test event to check what reaches
+      // Sentry (#444, #448): SENTRY_TEST_EVENT=1. EAS builds never set it.
+      sentryTestEvent: process.env.SENTRY_TEST_EVENT === '1',
     },
     runtimeVersion: {
       policy: 'appVersion',
