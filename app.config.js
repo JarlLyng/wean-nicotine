@@ -100,10 +100,13 @@ module.exports = {
       // Fixed for good at the first upload to Google Play, and public in the
       // store URL. The owner's decision on #435; iOS stays com.iamjarl.taper.
       package: 'com.iamjarl.weannicotine',
+      // The iOS icon's carrot on white, like the icon on Google Play (#452). The
+      // foreground and monochrome layers are the carrot alone on a transparent
+      // 1024 canvas, scaled to stay inside Android's safe zone (the inner 66 of
+      // 108 dp), since launchers mask the layers to a circle or a squircle.
       adaptiveIcon: {
-        backgroundColor: '#000000',
+        backgroundColor: '#FFFFFF',
         foregroundImage: './assets/images/android-icon-foreground.png',
-        backgroundImage: './assets/images/android-icon-background.png',
         monochromeImage: './assets/images/android-icon-monochrome.png',
       },
       versionCode: 17,
@@ -165,7 +168,10 @@ module.exports = {
       [
         'expo-notifications',
         {
-          icon: './assets/images/ios-light.png',
+          // Android only. The status bar draws a notification's small icon
+          // from its alpha alone, so it is the white carrot on transparent; the
+          // opaque iOS icon showed as a solid square.
+          icon: './assets/images/android-notification-icon.png',
           color: '#CE63FF',
           sounds: [],
         },
