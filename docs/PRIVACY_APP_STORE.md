@@ -124,7 +124,8 @@ Play's other questions:
    `contexts.app.device_app_hash`, and "Prevent Storing of IP Addresses" on. The rules for
    `user.geo` and the install path UUID are set at the organization level (2026-11-18). A test
    crash from a 1.8.0 build on an iPhone the same evening confirmed both. The events had no country
-   or city, the frame paths read `[Filtered]`, and the frames were still symbolicated.
+   or city, the frame paths and the images' `code_file` read `[Filtered]`, and every image kept its
+   `debug_id`, so symbolication is unaffected.
 
 ## History
 
