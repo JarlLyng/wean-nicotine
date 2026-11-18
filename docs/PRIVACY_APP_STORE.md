@@ -64,6 +64,15 @@ What doesn't leave the phone:
 - **No sessions** (`enableAutoSessionTracking: false`), since a session carries the installation ID.
 - **No IP address** in a report (`sendDefaultPii: false`). Sentry's "Prevent Storing of IP Addresses"
   decides what it stores from the request itself.
+- **No location.** Sentry derives a country and city (`user.geo`) from the request's IP address,
+  even when it doesn't store the address. An Advanced Data Scrubbing rule for the `iamjarl`
+  organization removes `$user.geo.**` before the event is stored, so the label needs no Location.
+- **No install path ID.** On iOS, native stack frames name the app's install folder,
+  `/var/containers/Bundle/Application/<UUID>/`, and the UUID is new for each install. A second rule
+  replaces UUIDs in `$frame.package` and `debug_meta.images.*.code_file` with `[Filtered]`.
+  `debug_id` is left alone, so symbolication works as before. Android's install path
+  (`/data/app/~~…==/`) holds no UUID and isn't covered; it gets a look at the first real Android
+  crash.
 - Nothing the person enters (`PII_KEYS` and `scrubExtra`), and no screenshots, replays or view
   hierarchy.
 
@@ -112,7 +121,9 @@ Play's other questions:
    [App privacy details](https://developer.apple.com/app-store/app-privacy-details/).
 2. **Play Console › Data safety:** the answers above, before the first Play release.
 3. **Sentry, once:** the Advanced Data Scrubbing rule for `contexts.device.id` and
-   `contexts.app.device_app_hash`, and "Prevent Storing of IP Addresses" on.
+   `contexts.app.device_app_hash`, and "Prevent Storing of IP Addresses" on. The rules for
+   `user.geo` and the install path UUID are set at the organization level (2026-11-18); they apply
+   to new events only, so the first native crash after the release is the check.
 
 ## History
 
