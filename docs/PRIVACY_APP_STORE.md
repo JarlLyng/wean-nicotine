@@ -122,8 +122,9 @@ Play's other questions:
 2. **Play Console › Data safety:** the answers above, before the first Play release.
 3. **Sentry, once:** the Advanced Data Scrubbing rule for `contexts.device.id` and
    `contexts.app.device_app_hash`, and "Prevent Storing of IP Addresses" on. The rules for
-   `user.geo` and the install path UUID are set at the organization level (2026-11-18); they apply
-   to new events only, so the first native crash after the release is the check.
+   `user.geo` and the install path UUID are set at the organization level (2026-11-18). A test
+   crash from a 1.8.0 build on an iPhone the same evening confirmed both. The events had no country
+   or city, the frame paths read `[Filtered]`, and the frames were still symbolicated.
 
 ## History
 
