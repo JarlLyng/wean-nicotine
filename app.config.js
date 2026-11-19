@@ -109,7 +109,7 @@ module.exports = {
         foregroundImage: './assets/images/android-icon-foreground.png',
         monochromeImage: './assets/images/android-icon-monochrome.png',
       },
-      versionCode: 18,
+      versionCode: 19,
       predictiveBackGestureEnabled: false,
       // Permissions the template and libraries bring along that Wean never
       // uses (#435): shared storage (the export is written to the app's own
