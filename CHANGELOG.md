@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.8.0] - 2026-11-18
+
+iOS build 28. Crash reports no longer tell one phone from another, the app counts two features anonymously, and Wean now needs iOS 16.4 or later.
+
 ### Changed
 
 - **A few anonymous feature counts.** The app counts that something was logged and that the plan was opened to edit, so I can see which features help. A count carries no user and nothing from your log, not even whether it was a pouch or a craving. (#448)
@@ -19,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Sentry gets a shared user (`initialScope`, and `setUser` in `onReady` for the native scope), `anonymizeEvent` in `beforeSend` and `beforeSendTransaction`, and no session tracking; `updates.enabled` is false (#444). Tested on Android 16 with a release build pointed at an unreachable DSN: the queued JavaScript reports carry no installation ID, device ID, device hash or session. A native crash still gets Android's device ID from sentry-android, so a Sentry data-scrubbing rule is to remove `contexts.device.id` and `contexts.app.device_app_hash` at ingestion before this release ships. The iOS privacy manifest moves to `ios.privacyManifests`, which Expo adds to the Xcode project: the old plugin wrote `PrivacyInfo.xcprivacy` but never added it, so it didn't ship. It now also declares Crash Data, Performance Data and Other Diagnostic Data, not linked, no tracking, as Sentry's own manifest does (#444).
 - Sentry's environment follows the build (#444, #448): `production` only for a `production` EAS build on a real phone, `simulator` in the iOS Simulator or an Android emulator (`expo-device`), `internal` for preview, capture and local builds. App hangs from a simulator build of 1.7.2 had landed in production. The two feature counts go through `countFeatureUse`, and `beforeSendMetric` keeps only the listed counts and attribute values and drops the user. `ios.privacyManifests` adds Product Interaction (not linked, Analytics). A local build with `SENTRY_TEST_EVENT=1` sends one test event and count. Tested on Android 16 with a release build pointed at an unreachable DSN: counts with only release, environment and SDK, the test event and a transaction with the `anonymous` user and no device ID or hash, no session, and no installation ID anywhere.
 - The app runs on Android, though it is not on Google Play yet (#435). Tested in the Android emulator on Android 16 (API 36): onboarding, logging, Progress, the tools, reminders and Start Over. What Android needed is in this release. The tab bar draws its icons with Phosphor, as the rest of the app does, where iOS keeps SF Symbols. Export Data hands the CSV file to the share sheet through `expo-sharing`, as React Native's share on Android sends only text. Settings, Send Feedback and Sentry name the Android build and system, not iOS's. Cards drop Android's elevation shadow, which showed as a grey frame through their translucent background, and an off switch keeps a visible thumb. Onboarding keeps Continue and Skip above the gesture bar, and the screens with a text field move up for the keyboard on Android too: Android now draws edge to edge, so the window no longer shrinks for it. The Android package is `com.iamjarl.weannicotine`, permissions that libraries bring along and Wean never uses are blocked, and `eas.json` builds an APK for internal builds and an app bundle for production. iOS is unchanged.
+- The Android launcher icon shows the whole carrot (#452). Its adaptive foreground was the opaque iOS icon, so launchers cropped the leaves and the tip and the dark background never showed. The foreground and the monochrome layer for themed icons are now the carrot alone on a transparent 1024 canvas, lifted from `ios-light.png` and scaled so its farthest point sits 310 px from the centre, inside Android's safe zone (313 px, the inner 66 of 108 dp). The background is white, as on the iOS icon and the icon on Google Play. The reminders' small icon in the status bar was the opaque iOS icon too, which Android draws from its alpha alone, so it showed as a solid square. It is now `android-notification-icon.png`, the white carrot on transparent.
 
 ## [1.7.2] - 2026-10-18
 
@@ -223,7 +228,8 @@ User-visible changes shipped with iOS build 18.
 
 ---
 
-[Unreleased]: https://github.com/JarlLyng/wean-nicotine/compare/v1.7.2...HEAD
+[Unreleased]: https://github.com/JarlLyng/wean-nicotine/compare/v1.8.0...HEAD
+[1.8.0]: https://github.com/JarlLyng/wean-nicotine/compare/v1.7.2...v1.8.0
 [1.7.2]: https://github.com/JarlLyng/wean-nicotine/compare/v1.7.1...v1.7.2
 [1.7.1]: https://github.com/JarlLyng/wean-nicotine/compare/v1.7.0...v1.7.1
 [1.7.0]: https://github.com/JarlLyng/wean-nicotine/compare/v1.6.2...v1.7.0
