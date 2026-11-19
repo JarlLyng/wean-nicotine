@@ -10,6 +10,8 @@ why each shot is there are in [`docs/APP_STORE_SCREENSHOT_CAPTIONS.md`](../docs/
 - `raw/`: unretouched simulator captures from the capture build, `<screen>.png`, 1320 × 2868
 - `manifest.json`: what gets composed, in upload order, with the caption for each shot
 - `1.7.2/`: the composed posters, `iphone-6.9-<n>.png`, 1320 × 2868, English
+- `android/raw/`: the same six screens from an Android emulator, for Google Play, 1080 × 2400 (see
+  [Google Play](#google-play))
 
 Superseded sets are deleted rather than kept. Git history has them.
 
@@ -115,7 +117,54 @@ Through the Asset Library in App Store Connect, on its own or with a release, on
 choice. The 6.5" set comes off in the same step, so no size keeps the old screenshots. Log the
 date of a standalone change here, since it won't show up as a release date.
 
+## Google Play
+
+The Android set is the same six screens, captured the same way on an Android emulator, in
+`android/raw/` at 1080 × 2400. Its posters are composed by the portfolio's screenshot tool too.
+The first set was taken on 2026-11-17.
+
+A local release build in capture mode. `/android` is generated and ignored by git, and the
+unreachable DSN keeps the emulator's runs out of Sentry:
+
+```bash
+export EAS_BUILD_PROFILE=capture CAPTURE_CURRENCY=USD SENTRY_DISABLE_AUTO_UPLOAD=true LANG=en_US.UTF-8
+export EXPO_PUBLIC_SENTRY_DSN='https://0123456789abcdef0123456789abcdef@127.0.0.1:9/1'
+export JAVA_HOME=/opt/homebrew/opt/openjdk@17 ANDROID_HOME=$HOME/Library/Android/sdk
+npx expo prebuild --platform android --clean --no-install
+(cd android && ./gradlew assembleRelease)
+```
+
+Delete `android/` afterwards, so the next normal build starts clean.
+
+The emulator is a new Pixel 8 (1080 × 2400) on Android 16, in English with a 12-hour clock and
+light mode. Demo mode clears the status bar, as Google asks. The mobile signal is hidden, since the
+emulator labels it "3G" whatever you set:
+
+```bash
+avdmanager create avd -n Wean_Posters -k "system-images;android-36;google_apis;arm64-v8a" -d pixel_8
+emulator -avd Wean_Posters -port 5580 -no-snapshot -no-audio -no-boot-anim
+adb -s emulator-5580 shell cmd uimode night no
+adb -s emulator-5580 shell settings put system time_12_24 12
+adb -s emulator-5580 shell settings put global sysui_demo_allowed 1
+adb -s emulator-5580 shell am broadcast -a com.android.systemui.demo -e command enter
+adb -s emulator-5580 shell am broadcast -a com.android.systemui.demo -e command clock -e hhmm 0941
+adb -s emulator-5580 shell am broadcast -a com.android.systemui.demo -e command battery -e level 100 -e plugged false
+adb -s emulator-5580 shell am broadcast -a com.android.systemui.demo -e command network -e wifi show -e level 4 -e fully true
+adb -s emulator-5580 shell am broadcast -a com.android.systemui.demo -e command network -e mobile hide
+adb -s emulator-5580 shell am broadcast -a com.android.systemui.demo -e command notifications -e visible false
+adb -s emulator-5580 install android/app/build/outputs/apk/release/app-release.apk
+```
+
+The captures, their order and Light Mode are as in step 2. On Android the Progress title stays put
+as the page scrolls, so Patterns sits right under it. Export opens Android's share sheet; close it
+with Back. Give each screen a second or two to settle after a tap, then:
+
+```bash
+adb -s emulator-5580 exec-out screencap -p > appstore/android/raw/<screen>.png
+```
+
 ## Recapture when the app's copy changes
 
 The raws are screenshots of real screens, so they carry the app's copy at the moment they were
-taken. Any release that changes a string or a screen shown on a poster should retake that raw.
+taken. Any release that changes a string or a screen shown on a poster should retake that raw, in
+both sets.
