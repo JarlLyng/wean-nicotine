@@ -9,7 +9,6 @@ import { useRouter } from 'expo-router';
 import { useState, useMemo } from 'react';
 import {
   KeyboardAvoidingView,
-  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -49,7 +48,9 @@ export default function BaselineScreen() {
       <OnboardingProgress current={1} total={4} />
       <KeyboardAvoidingView
         style={s.flex}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        // Both platforms: Android draws edge to edge, so the window no longer
+        // shrinks for the keyboard and Continue would sit under it (#435).
+        behavior="padding"
         keyboardVerticalOffset={100}
       >
         <ScrollView

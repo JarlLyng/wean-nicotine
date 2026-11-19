@@ -6,7 +6,14 @@
  * change the PII_KEYS list, add a test here.
  */
 
-import { scrubExtra, scrubBreadcrumb } from '../sentry';
+import {
+  anonymizeEvent,
+  scrubBreadcrumb,
+  filterMetric,
+  scrubExtra,
+  sentryEnvironment,
+  SHARED_SENTRY_USER,
+} from '../sentry';
 
 describe('scrubExtra', () => {
   it('returns undefined when input is undefined', () => {
@@ -174,5 +181,91 @@ describe('scrubBreadcrumb', () => {
   it('leaves breadcrumbs with no category untouched', () => {
     const b = { message: 'app.start' };
     expect(scrubBreadcrumb(b)).toEqual(b);
+  });
+});
+
+describe('anonymizeEvent (#444)', () => {
+  it('replaces the installation ID in user.id with the shared user', () => {
+    const event = anonymizeEvent({ user: { id: '3f1c0f6e-installation' } });
+    expect(event.user).toEqual(SHARED_SENTRY_USER);
+  });
+
+  it('sets the shared user when the event has none', () => {
+    expect(anonymizeEvent<{ user?: Record<string, unknown> }>({}).user).toEqual(SHARED_SENTRY_USER);
+  });
+
+  it("drops Android's device ID and keeps the rest of the device context", () => {
+    const event = anonymizeEvent({
+      contexts: { device: { id: '3f1c0f6e-installation', model: 'Pixel 8', family: 'Pixel' } },
+    });
+    expect(event.contexts?.device).toEqual({ model: 'Pixel 8', family: 'Pixel' });
+  });
+
+  it("drops iOS's device/app hash and keeps the rest of the app context", () => {
+    const event = anonymizeEvent({
+      contexts: { app: { device_app_hash: 'a1b2c3', app_version: '1.7.2', app_build: '27' } },
+    });
+    expect(event.contexts?.app).toEqual({ app_version: '1.7.2', app_build: '27' });
+  });
+
+  it('leaves events without device or app context alone apart from the user', () => {
+    const event = anonymizeEvent({ contexts: { os: { name: 'iOS' } } });
+    expect(event.contexts).toEqual({ os: { name: 'iOS' } });
+  });
+});
+
+describe('sentryEnvironment (#444, #448)', () => {
+  it('is production only for the production profile on a real phone', () => {
+    expect(sentryEnvironment(false, true, 'production')).toBe('production');
+  });
+
+  it('is simulator for a release build in the Simulator or an emulator, whatever the profile', () => {
+    expect(sentryEnvironment(false, false, 'production')).toBe('simulator');
+    expect(sentryEnvironment(false, false, 'local')).toBe('simulator');
+  });
+
+  it('is internal for preview, capture and local builds on a phone', () => {
+    expect(sentryEnvironment(false, true, 'preview')).toBe('internal');
+    expect(sentryEnvironment(false, true, 'capture')).toBe('internal');
+    expect(sentryEnvironment(false, true, 'local')).toBe('internal');
+  });
+
+  it('is development in a dev build, wherever it runs', () => {
+    expect(sentryEnvironment(true, true, 'production')).toBe('development');
+    expect(sentryEnvironment(true, false, 'local')).toBe('development');
+  });
+});
+
+describe('filterMetric (#448)', () => {
+  const sdk = {
+    'sentry.release': '1.7.2',
+    'sentry.environment': 'production',
+    'sentry.sdk.name': 'sentry.javascript.react-native',
+    'sentry.sdk.version': '8.33.0',
+  };
+
+  it('keeps a listed count with only the build and the SDK, and drops the user', () => {
+    const metric = {
+      name: 'log_entry_saved',
+      attributes: { 'user.id': 'anonymous', ...sdk },
+    };
+    expect(filterMetric(metric)?.attributes).toEqual(sdk);
+  });
+
+  it('drops a kind, so a count never says a pouch or a craving was logged', () => {
+    const metric = { name: 'log_entry_saved', attributes: { kind: 'pouch_used', ...sdk } };
+    expect(filterMetric(metric)?.attributes).toEqual(sdk);
+  });
+
+  it('drops attributes a count does not list', () => {
+    const metric = {
+      name: 'edit_plan_opened',
+      attributes: { baseline: '12', trigger: 'With coffee', ...sdk },
+    };
+    expect(filterMetric(metric)?.attributes).toEqual(sdk);
+  });
+
+  it('drops any metric that is not a listed count', () => {
+    expect(filterMetric({ name: 'pouches_today', attributes: { ...sdk } })).toBeNull();
   });
 });

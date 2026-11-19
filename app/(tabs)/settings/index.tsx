@@ -7,6 +7,7 @@ import { setPreferredColorScheme } from '@/lib/color-scheme';
 import { DEFAULT_CHECK_IN_HOUR } from '@/lib/constants';
 import { formatMoney } from '@/lib/currency';
 import { formatTimeOfDay } from '@/lib/date-format';
+import { appBuildNumber, appVersion, systemLabel } from '@/lib/app-info';
 import { buildFeedbackMailto, SUPPORT_EMAIL } from '@/lib/feedback';
 import { buildLogCsv, exportFileName } from '@/lib/export-csv';
 import { getLogEntries } from '@/lib/db-log-entries';
@@ -14,15 +15,15 @@ import { getTaperSettings } from '@/lib/db-settings';
 import { useDesignTokens, typography } from '@/lib/design';
 import { captureError } from '@/lib/sentry';
 import type { TaperSettings } from '@/lib/models';
-import Constants from 'expo-constants';
 import { File, Paths } from 'expo-file-system';
+import { shareAsync } from 'expo-sharing';
 import {
   cancelDailyCheckIn,
   getAllScheduledNotifications,
   requestNotificationPermissions,
   scheduleDailyCheckIn,
 } from '@/lib/notifications';
-import { borderRadius, spacing } from '@/lib/theme';
+import { borderRadius, spacing, switchThumbColor } from '@/lib/theme';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import {
@@ -59,8 +60,17 @@ export default function SettingsScreen() {
       const entries = await getLogEntries();
       const file = new File(Paths.cache, exportFileName(new Date()));
       file.create({ overwrite: true });
-      file.write(buildLogCsv(entries));
-      await Share.share({ url: file.uri });
+      // writeSync, as write() was before SDK 58 made it asynchronous: the log is
+      // small, and the file is whole before the share sheet opens.
+      file.writeSync(buildLogCsv(entries));
+      if (Platform.OS === 'android') {
+        // React Native's Share sends only text on Android and drops the url,
+        // so the file goes through expo-sharing, which hands it to the chosen
+        // app with a content:// URI (#435).
+        await shareAsync(file.uri, { mimeType: 'text/csv', dialogTitle: 'Export Data' });
+      } else {
+        await Share.share({ url: file.uri });
+      }
     } catch (error) {
       if (error instanceof Error) captureError(error, { context: 'settings_export_csv' });
       Alert.alert('Export failed', 'The file could not be created. Please try again.');
@@ -160,7 +170,7 @@ export default function SettingsScreen() {
                 onValueChange={handleToggleDailyCheckIn}
                 disabled={isLoadingNotifications}
                 trackColor={{ false: colors.border.default, true: colors.primary }}
-                thumbColor={colors.surface.default}
+                thumbColor={switchThumbColor(dailyCheckInEnabled && hasPermission, colors)}
                 accessibilityRole="switch"
                 accessibilityLabel="Daily check-in notification"
               />
@@ -187,7 +197,7 @@ export default function SettingsScreen() {
                 value={colorScheme === 'light'}
                 onValueChange={(isLight) => setPreferredColorScheme(isLight ? 'light' : 'dark')}
                 trackColor={{ false: colors.border.default, true: colors.primary }}
-                thumbColor={colors.surface.default}
+                thumbColor={switchThumbColor(colorScheme === 'light', colors)}
                 accessibilityRole="switch"
                 accessibilityLabel="Light mode"
               />
@@ -298,11 +308,7 @@ export default function SettingsScreen() {
               title="Send Feedback"
               onPress={() =>
                 Linking.openURL(
-                  buildFeedbackMailto(
-                    Constants.expoConfig?.version ?? '?',
-                    Constants.expoConfig?.ios?.buildNumber ?? '?',
-                    String(Platform.Version),
-                  ),
+                  buildFeedbackMailto(appVersion(), appBuildNumber(), systemLabel()),
                 ).catch(() =>
                   Alert.alert(
                     'No mail app found',
@@ -317,8 +323,7 @@ export default function SettingsScreen() {
 
           {/* ── Version ── */}
           <Text style={s.version}>
-            Wean Nicotine v{Constants.expoConfig?.version ?? '1.0.0'} (Build{' '}
-            {Constants.expoConfig?.ios?.buildNumber ?? '?'})
+            Wean Nicotine v{appVersion()} (Build {appBuildNumber()})
           </Text>
         </View>
       </ScrollView>

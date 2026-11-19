@@ -1,4 +1,4 @@
-import { DarkTheme, DefaultTheme, ThemeProvider, type Theme } from '@react-navigation/native';
+import { DarkTheme, DefaultTheme, ThemeProvider, type Theme } from 'expo-router/react-navigation';
 import { Stack, useNavigationContainerRef } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { Platform, View, Text, StyleSheet } from 'react-native';
@@ -52,7 +52,14 @@ function RootLayout() {
   // Note: On web, database won't work but UI can still be viewed for design purposes
 
   // Error boundary fallback component
-  const ErrorFallback = ({ error }: { error: unknown; componentStack: string; eventId: string; resetError(): void }) => {
+  const ErrorFallback = ({
+    error,
+  }: {
+    error: unknown;
+    componentStack: string;
+    eventId: string;
+    resetError(): void;
+  }) => {
     const { colors } = useDesignTokens();
     const errorStyles = createErrorStyles(colors);
     const message = error instanceof Error ? error.toString() : String(error);
@@ -62,9 +69,7 @@ function RootLayout() {
         <Text style={errorStyles.errorText}>
           The app encountered an unexpected error. Please restart the app.
         </Text>
-        {__DEV__ && Boolean(error) && (
-          <Text style={errorStyles.errorDetails}>{message}</Text>
-        )}
+        {__DEV__ && Boolean(error) && <Text style={errorStyles.errorDetails}>{message}</Text>}
       </View>
     );
   };
@@ -101,31 +106,32 @@ function RootLayout() {
 // automatic breadcrumbs. On web (where Sentry RN is not supported) we skip it.
 export default Platform.OS === 'web' ? RootLayout : Sentry.wrap(RootLayout);
 
-const createErrorStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) => StyleSheet.create({
-  errorContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: spacing.xl,
-    backgroundColor: colors.surface.default,
-  },
-  errorTitle: {
-    ...typography.title,
-    color: colors.text.primary,
-    marginBottom: spacing.md,
-    textAlign: 'center',
-  },
-  errorText: {
-    ...typography.body,
-    color: colors.text.secondary,
-    textAlign: 'center',
-    marginBottom: spacing.md,
-  },
-  errorDetails: {
-    ...typography.sm,
-    color: colors.error,
-    textAlign: 'center',
-    marginTop: spacing.lg,
-    fontFamily: 'monospace',
-  },
-});
+const createErrorStyles = (colors: ReturnType<typeof useDesignTokens>['colors']) =>
+  StyleSheet.create({
+    errorContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: spacing.xl,
+      backgroundColor: colors.surface.default,
+    },
+    errorTitle: {
+      ...typography.title,
+      color: colors.text.primary,
+      marginBottom: spacing.md,
+      textAlign: 'center',
+    },
+    errorText: {
+      ...typography.body,
+      color: colors.text.secondary,
+      textAlign: 'center',
+      marginBottom: spacing.md,
+    },
+    errorDetails: {
+      ...typography.sm,
+      color: colors.error,
+      textAlign: 'center',
+      marginTop: spacing.lg,
+      fontFamily: 'monospace',
+    },
+  });

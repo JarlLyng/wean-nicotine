@@ -1,30 +1,23 @@
-// Fallback for using MaterialIcons on Android and web.
+// Android and web. iOS takes icon-symbol.ios.tsx, with SF Symbols.
 
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import { SymbolWeight } from 'expo-symbols';
-import { ComponentProps } from 'react';
-import { OpaqueColorValue, type StyleProp, type TextStyle } from 'react-native';
+import { ColorValue, StyleProp, ViewStyle } from 'react-native';
 
-type IconMapping = Record<string, ComponentProps<typeof MaterialIcons>['name']>;
-type IconSymbolName = keyof typeof MAPPING;
+import { Icon, IconName } from '@/components/ui/Icon';
 
 /**
- * Add your SF Symbols to Material Icons mappings here.
- * - see Material Icons in the [Icons Directory](https://icons.expo.fyi).
- * - see SF Symbols in the [SF Symbols](https://developer.apple.com/sf-symbols/) app.
+ * The SF Symbols the app names, and the Phosphor icon that stands in for each
+ * where SF Symbols don't exist. Phosphor is what the rest of the app draws
+ * with, so the tab bar matches the screens above it.
  */
 const MAPPING = {
-  'house.fill': 'home',
-  'paperplane.fill': 'send',
-  'chevron.left.forwardslash.chevron.right': 'code',
-  'chevron.right': 'chevron-right',
-} as IconMapping;
+  'house.fill': 'house',
+  'chart.line.uptrend.xyaxis': 'chart-line-up',
+  'heart.fill': 'heart',
+  'gearshape.fill': 'gear',
+} satisfies Record<string, IconName>;
 
-/**
- * An icon component that uses native SF Symbols on iOS, and Material Icons on Android and web.
- * This ensures a consistent look across platforms, and optimal resource usage.
- * Icon `name`s are based on SF Symbols and require manual mapping to Material Icons.
- */
+export type IconSymbolName = keyof typeof MAPPING;
+
 export function IconSymbol({
   name,
   size = 24,
@@ -33,9 +26,10 @@ export function IconSymbol({
 }: {
   name: IconSymbolName;
   size?: number;
-  color: string | OpaqueColorValue;
-  style?: StyleProp<TextStyle>;
-  weight?: SymbolWeight;
+  color: ColorValue;
+  style?: StyleProp<ViewStyle>;
 }) {
-  return <MaterialIcons color={color} size={size} name={MAPPING[name]} style={style} />;
+  return (
+    <Icon name={MAPPING[name]} size={size} color={String(color)} weight="fill" style={style} />
+  );
 }

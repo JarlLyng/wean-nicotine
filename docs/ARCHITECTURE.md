@@ -35,7 +35,7 @@ Update when:
 - `Wean Nicotine` is a mobile app that helps users reduce snus and nicotine pouch usage gradually.
 - The repo is **public** under MIT, also contains the marketing site in `website/`.
 - The app is local-first by design. No backend, no account system, no cloud sync.
-- The mobile app uses Expo SDK 55, Expo Router, SQLite, Expo Notifications, Sentry, and React Compiler.
+- The mobile app uses Expo SDK 58 (React Native 0.88, iOS 16.4 or later), Expo Router, SQLite, Expo Notifications, Sentry, and React Compiler.
 - The website uses Astro and contains SEO landing pages in EN/DA/SV/NO.
 - Latest live App Store version: **1.6.2** (iOS build 24, approved September 2026), a single fix: days with no log entries no longer count as days with zero pouches, which had been inflating money saved, pouches avoided and the milestone thresholds (#320). It also carried the corrected store descriptions and the App Privacy URL fix (#312, #296). See [CHANGELOG.md](../CHANGELOG.md) for the full history (incl. the 1.4.0/build 18 TestFlight-only regression).
 

@@ -14,7 +14,7 @@ import {
 import { Screen } from '@/components/Screen';
 import { Card } from '@/components/ui/Card';
 import { Icon } from '@/components/ui/Icon';
-import { spacing } from '@/lib/theme';
+import { spacing, switchThumbColor } from '@/lib/theme';
 import { useDesignTokens, typography } from '@/lib/design';
 import { captureError } from '@/lib/sentry';
 import { DEFAULT_CHECK_IN_HOUR } from '@/lib/constants';
@@ -295,7 +295,7 @@ export default function NotificationsScreen() {
                 value={dailyCheckInEnabled && hasPermission}
                 onValueChange={handleToggleDailyCheckIn}
                 trackColor={{ false: colors.border.default, true: colors.primary }}
-                thumbColor={colors.surface.default}
+                thumbColor={switchThumbColor(dailyCheckInEnabled && hasPermission, colors)}
                 accessibilityRole="switch"
                 accessibilityLabel="Daily check-in"
               />
@@ -319,7 +319,7 @@ export default function NotificationsScreen() {
                 value={triggerRemindersEnabled && hasPermission}
                 onValueChange={handleToggleTriggerReminders}
                 trackColor={{ false: colors.border.default, true: colors.primary }}
-                thumbColor={colors.surface.default}
+                thumbColor={switchThumbColor(triggerRemindersEnabled && hasPermission, colors)}
                 accessibilityRole="switch"
                 accessibilityLabel="Trigger reminders"
               />

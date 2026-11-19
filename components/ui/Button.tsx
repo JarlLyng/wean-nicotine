@@ -124,21 +124,25 @@ export function Button({
 
   const handlePressIn = () => {
     if (!isDisabled) {
-      scale.value = withSpring(0.96, {
-        damping: 15,
-        stiffness: 300,
-      });
-      opacity.value = withTiming(0.8, { duration: animations.fast });
+      scale.set(
+        withSpring(0.96, {
+          damping: 15,
+          stiffness: 300,
+        }),
+      );
+      opacity.set(withTiming(0.8, { duration: animations.fast }));
     }
   };
 
   const handlePressOut = () => {
     if (!isDisabled) {
-      scale.value = withSpring(1, {
-        damping: 15,
-        stiffness: 300,
-      });
-      opacity.value = withTiming(1, { duration: animations.fast });
+      scale.set(
+        withSpring(1, {
+          damping: 15,
+          stiffness: 300,
+        }),
+      );
+      opacity.set(withTiming(1, { duration: animations.fast }));
     }
   };
 

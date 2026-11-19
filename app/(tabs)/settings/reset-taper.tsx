@@ -1,5 +1,17 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
-import { Animated, Easing, Platform, Pressable, View, Text, StyleSheet, ScrollView, Alert, TextStyle, ViewStyle } from 'react-native';
+import {
+  Animated,
+  Easing,
+  Platform,
+  Pressable,
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Alert,
+  TextStyle,
+  ViewStyle,
+} from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
 import { Screen } from '@/components/Screen';
@@ -32,7 +44,7 @@ export default function ResetTaperScreen() {
   const [isHolding, setIsHolding] = useState(false);
 
   // Drives the visual fill inside the delete button.
-  const holdProgress = useRef(new Animated.Value(0)).current;
+  const [holdProgress] = useState(() => new Animated.Value(0));
   const holdAnimationRef = useRef<Animated.CompositeAnimation | null>(null);
   const holdTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 

@@ -97,14 +97,14 @@ The hub holds rules that this repo cannot follow unless it knows they exist. Rea
 - Not a cold-turkey/quit-date app — it's built around gradual reduction.
 - Not a cigarette / vape / general-habit tracker — it's calibrated for snus and nicotine pouches specifically.
 - No medical advice or clinical claims.
-- iOS only; no Android, no real web build (web stubs SQLite so the UI can render for design preview, but the app does not function there).
+- iOS only for users: no Android release and no real web build (web stubs SQLite so the UI can render for design preview, but the app does not function there). The app does run on Android and is being readied for Google Play in #435 (package `com.iamjarl.weannicotine`); nothing is uploaded there until the owner says so.
 
 ## Build & release
 
 - Expo / React Native. Bump `ios.buildNumber` (and `version` for a marketing release) in `app.config.js`, then either: **(a) EAS cloud build + auto-submit** — `eas build --profile production --platform ios --auto-submit` — which builds and uploads straight to App Store Connect via the stored ASC API key + `eas.json` `submit` config (this is what shipped 1.6.2, build 24); or **(b) local build → IPA → Transporter** upload.
 - `eas` is the globally installed eas-cli (`npm install -g eas-cli`); `npx eas` does not work in this repo. On Expo's free plan the submission step can sit queued for a while after the build finishes, so a build missing from App Store Connect right away is not a failure.
 - After the build is submitted, tag the release commit with an annotated tag and push it: `git tag -a vX.Y.Z -m "vX.Y.Z (iOS build N) — summary"` then `git push origin vX.Y.Z`. The Release workflow (`.github/workflows/release.yml`) publishes the GitHub Release with that version's `CHANGELOG.md` section as notes, and fails if the section is missing.
-- Telemetry: anonymous crash reporting (Sentry) only — disclosed in the privacy policy.
+- Telemetry: Sentry only, with no identifier (one shared user, `anonymous`; no installation or device ID, no sessions, no update check; #444). It sends crash reports, performance traces and two anonymous feature counts (`countFeatureUse`: a log entry saved, Edit plan opened; #448), never a value from the log. The privacy policy, `ios.privacyManifests` and the store labels name all of it as not linked; `docs/PRIVACY_APP_STORE.md` has the answers.
 
 ## Conventions
 

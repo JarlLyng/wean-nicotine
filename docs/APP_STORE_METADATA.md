@@ -1029,4 +1029,4 @@ Denne appen er til skadereduksjon og personlig sporing. Den erstatter ikke medis
 
 ## App Privacy
 
-Se [`docs/PRIVACY_APP_STORE.md`](./PRIVACY_APP_STORE.md) for trin-for-trin opsætning af Sentry crash data i App Store Connect.
+Se [`docs/PRIVACY_APP_STORE.md`](./PRIVACY_APP_STORE.md) for hvad App Store-mærkaten og Google Plays Data safety skal svare, side om side (#442).
