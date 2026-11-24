@@ -27,7 +27,7 @@ module.exports = {
     // breaks EAS project linking. Like bundleIdentifier, this is a
     // legacy technical identifier that users never see.
     slug: 'Taper',
-    version: '1.7.2',
+    version: '1.8.0',
     orientation: 'portrait',
     icon: './assets/images/ios-light.png',
     scheme: ['wean', 'taper'],
@@ -38,7 +38,7 @@ module.exports = {
       // identifier after an app is published. Changing it would orphan
       // the App Store listing and break updates for existing users.
       bundleIdentifier: 'com.iamjarl.taper',
-      buildNumber: '27',
+      buildNumber: '28',
       icon: {
         light: './assets/images/ios-light.png',
         dark: './assets/images/ios-dark.png',
@@ -77,25 +77,39 @@ module.exports = {
           'NSPrivacyCollectedDataTypeCrashData',
           'NSPrivacyCollectedDataTypePerformanceData',
           'NSPrivacyCollectedDataTypeOtherDiagnosticData',
-        ].map((type) => ({
-          NSPrivacyCollectedDataType: type,
-          NSPrivacyCollectedDataTypeLinked: false,
-          NSPrivacyCollectedDataTypeTracking: false,
-          NSPrivacyCollectedDataTypePurposes: ['NSPrivacyCollectedDataTypePurposeAppFunctionality'],
-        })),
+        ]
+          .map((type) => ({
+            NSPrivacyCollectedDataType: type,
+            NSPrivacyCollectedDataTypeLinked: false,
+            NSPrivacyCollectedDataTypeTracking: false,
+            NSPrivacyCollectedDataTypePurposes: [
+              'NSPrivacyCollectedDataTypePurposeAppFunctionality',
+            ],
+          }))
+          .concat({
+            // The anonymous feature counts (#448): that a feature was used, never
+            // a value from the person's log. Not linked, no tracking.
+            NSPrivacyCollectedDataType: 'NSPrivacyCollectedDataTypeProductInteraction',
+            NSPrivacyCollectedDataTypeLinked: false,
+            NSPrivacyCollectedDataTypeTracking: false,
+            NSPrivacyCollectedDataTypePurposes: ['NSPrivacyCollectedDataTypePurposeAnalytics'],
+          }),
       },
     },
     android: {
       // Fixed for good at the first upload to Google Play, and public in the
       // store URL. The owner's decision on #435; iOS stays com.iamjarl.taper.
       package: 'com.iamjarl.weannicotine',
+      // The iOS icon's carrot on white, like the icon on Google Play (#452). The
+      // foreground and monochrome layers are the carrot alone on a transparent
+      // 1024 canvas, scaled to stay inside Android's safe zone (the inner 66 of
+      // 108 dp), since launchers mask the layers to a circle or a squircle.
       adaptiveIcon: {
-        backgroundColor: '#000000',
+        backgroundColor: '#FFFFFF',
         foregroundImage: './assets/images/android-icon-foreground.png',
-        backgroundImage: './assets/images/android-icon-background.png',
         monochromeImage: './assets/images/android-icon-monochrome.png',
       },
-      versionCode: 17,
+      versionCode: 19,
       predictiveBackGestureEnabled: false,
       // Permissions the template and libraries bring along that Wean never
       // uses (#435): shared storage (the export is written to the app's own
@@ -154,7 +168,10 @@ module.exports = {
       [
         'expo-notifications',
         {
-          icon: './assets/images/ios-light.png',
+          // Android only. The status bar draws a notification's small icon
+          // from its alpha alone, so it is the white carrot on transparent; the
+          // opaque iOS icon showed as a solid square.
+          icon: './assets/images/android-notification-icon.png',
           color: '#CE63FF',
           sounds: [],
         },
@@ -187,6 +204,12 @@ module.exports = {
       // The sample month's currency: kroner for the site, CAPTURE_CURRENCY=USD for the
       // App Store's English set (#409). Read only in capture mode.
       captureCurrency: process.env.CAPTURE_CURRENCY ?? 'DKK',
+      // Which EAS profile made the build, for Sentry's environment (#448):
+      // only `production` reports as production. A local build is `local`.
+      buildProfile: process.env.EAS_BUILD_PROFILE ?? 'local',
+      // A local test build can send one test event to check what reaches
+      // Sentry (#444, #448): SENTRY_TEST_EVENT=1. EAS builds never set it.
+      sentryTestEvent: process.env.SENTRY_TEST_EVENT === '1',
     },
     runtimeVersion: {
       policy: 'appVersion',

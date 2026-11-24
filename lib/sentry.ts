@@ -23,11 +23,16 @@
  *   native SDKs still add Android's device ID and iOS's device/app hash there,
  *   and a data-scrubbing rule in the Sentry project removes them on arrival.
  *   See docs/PRIVACY_APP_STORE.md.
+ * - Two anonymous feature counts (#448), through countFeatureUse: that a log
+ *   entry was saved (not which kind) and that Edit plan was opened.
+ *   Never a value from the log. beforeSendMetric keeps only the listed counts
+ *   and attribute values, plus the build and SDK, and drops the user.
  */
 
 import * as Sentry from '@sentry/react-native';
 import { reactNavigationIntegration } from '@sentry/react-native';
 import Constants from 'expo-constants';
+import * as Device from 'expo-device';
 import { Platform } from 'react-native';
 import { appBuildNumber } from './app-info';
 import { CAPTURE_MODE } from './capture-mode';
@@ -142,6 +147,64 @@ export function anonymizeEvent<E extends AnonymizableEvent>(event: E): E {
   return event;
 }
 
+/**
+ * Which Sentry environment a build reports to (#444, #448). Only a build from
+ * the `production` EAS profile, on a real phone, is `production`. A release
+ * build in the iOS Simulator or an Android emulator is `simulator`, and a
+ * preview, capture or local build on a phone is `internal`, so test runs never
+ * look like real crashes. The store binary is the same one TestFlight and
+ * Play's internal track install, so those report as `production`. Exported for
+ * unit testing.
+ */
+export function sentryEnvironment(isDev: boolean, isDevice: boolean, buildProfile: string): string {
+  if (isDev) return 'development';
+  if (!isDevice) return 'simulator';
+  return buildProfile === 'production' ? 'production' : 'internal';
+}
+
+/**
+ * The only feature counts Wean sends (#448), each with the only attribute
+ * values it may carry (none today). A count says that a feature was used,
+ * never a value from the person's log: no pouch numbers, amounts, dates or
+ * triggers. log_entry_saved doesn't say whether a pouch or a resisted craving
+ * was logged: that would be health data in Apple's and Google's terms (owner's
+ * decision, 2026-11-15).
+ */
+const FEATURE_COUNTS: Record<string, Record<string, readonly string[]>> = {
+  log_entry_saved: {},
+  edit_plan_opened: {},
+};
+
+/** What the SDK adds to a metric that may stay: the build and the SDK. */
+const SDK_METRIC_ATTRIBUTES = new Set([
+  'sentry.release',
+  'sentry.environment',
+  'sentry.sdk.name',
+  'sentry.sdk.version',
+]);
+
+/**
+ * beforeSendMetric (#448): drop any metric that isn't a listed count, and any
+ * attribute that isn't the build, the SDK or a listed value. That removes the
+ * user the SDK copies onto every metric, even the shared one. Exported for
+ * unit testing.
+ */
+export function filterMetric<M extends { name: string; attributes?: Record<string, unknown> }>(
+  metric: M,
+): M | null {
+  const allowed = FEATURE_COUNTS[metric.name];
+  if (!allowed) return null;
+  const attributes: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(metric.attributes ?? {})) {
+    if (SDK_METRIC_ATTRIBUTES.has(key)) {
+      attributes[key] = value;
+    } else if (typeof value === 'string' && allowed[key]?.includes(value)) {
+      attributes[key] = value;
+    }
+  }
+  return { ...metric, attributes };
+}
+
 /** True only when we had a DSN and called Sentry.init() – use to show "not configured" in Diagnostics. */
 let sentryInitialized = false;
 
@@ -195,7 +258,18 @@ export function initSentry(): void {
   Sentry.init({
     dsn,
     debug: __DEV__,
-    environment: __DEV__ ? 'development' : 'production',
+    environment: sentryEnvironment(
+      __DEV__,
+      Device.isDevice,
+      (Constants.expoConfig?.extra as { buildProfile?: string } | undefined)?.buildProfile ??
+        'local',
+    ),
+    // Anonymous feature counts (#448). beforeSendMetric keeps only the listed
+    // ones; in development nothing is sent, as with events.
+    enableMetrics: true,
+    beforeSendMetric(metric) {
+      return __DEV__ ? null : filterMetric(metric);
+    },
     // Off (#444): a session carries the installation ID as its distinct ID.
     // This gives up crash-free rates; every crash is still reported.
     enableAutoSessionTracking: false,
@@ -205,6 +279,14 @@ export function initSentry(): void {
     initialScope: { user: { ...SHARED_SENTRY_USER } },
     onReady: () => {
       Sentry.setUser({ ...SHARED_SENTRY_USER });
+      // Local test builds only (SENTRY_TEST_EVENT=1, #444/#448): one event and
+      // one count, to read what reaches Sentry. EAS builds never set it.
+      if (
+        (Constants.expoConfig?.extra as { sentryTestEvent?: boolean } | undefined)?.sentryTestEvent
+      ) {
+        Sentry.captureMessage('Sentry test event (#444, #448)', 'info');
+        countFeatureUse('edit_plan_opened');
+      }
     },
     tracesSampleRate: __DEV__ ? 1.0 : 0.2, // 20% of transactions in production
     // Privacy: do not auto-collect IP addresses, cookies, headers, etc.
@@ -253,6 +335,17 @@ export function initSentry(): void {
     // deliberate for a health app. We add React Navigation tracking on top.
     integrations: navigationIntegration ? [navigationIntegration] : [],
   });
+}
+
+/**
+ * Count that a feature was used (#448). The names are a fixed list
+ * (FEATURE_COUNTS), and a count carries nothing from the person's log.
+ */
+export function countFeatureUse(name: 'log_entry_saved' | 'edit_plan_opened'): void {
+  if (Platform.OS === 'web' || !sentryInitialized) {
+    return;
+  }
+  Sentry.metrics.count(name, 1);
 }
 
 /**
