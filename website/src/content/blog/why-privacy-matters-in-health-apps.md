@@ -52,7 +52,7 @@ This piece is the case for local-first health apps in general, and what to actua
 		<rect x="540" y="155" width="120" height="50" rx="10" fill="var(--primary-subtle)" stroke="var(--primary)" stroke-width="1.5" />
 		<text x="600" y="180" text-anchor="middle" font-family="var(--font-body)" font-size="12" fill="var(--text-primary)" font-weight="600">SQLite on device</text>
 		<text x="600" y="196" text-anchor="middle" font-family="var(--font-body)" font-size="11" fill="var(--text-secondary)">encrypted with your phone</text>
-		<text x="600" y="245" text-anchor="middle" font-family="var(--font-body)" font-size="12" fill="var(--primary)" font-weight="600">No network. No account.</text>
+		<text x="600" y="245" text-anchor="middle" font-family="var(--font-body)" font-size="12" fill="var(--primary)" font-weight="600">No cloud. No account.</text>
 		<text x="600" y="264" text-anchor="middle" font-family="var(--font-body)" font-size="12" fill="var(--primary)" font-weight="600">No copy elsewhere.</text>
 	</g>
 	<defs>
@@ -124,8 +124,8 @@ To be useful, an example is worth more than a checklist. Here's what Wean does a
 
 - **Account?** No. No sign-up flow exists.
 - **Cloud sync?** No. The SQLite database lives on your phone. If you delete the app, the data is deleted.
-- **Network calls during normal use?** None. The app works fully offline.
-- **Analytics SDK?** None. The app has a local analytics table for its own UX improvements (which screens you visit, which tools you use), that table never leaves your phone.
+- **Network calls during normal use?** Only to Sentry, which gets anonymous crash reports, a sample of performance traces and an anonymous count when two of the features are used. Everything else works fully offline.
+- **Analytics SDK?** None beyond Sentry's anonymous counts of two features (a log entry saved, Edit plan opened), which never carry a value from your log. The app also keeps a local analytics table for its own UX improvements (which screens you visit, which tools you use), and that table never leaves your phone.
 - **Crash reporting?** Sentry is used to capture technical crashes. The Sentry integration is configured with an automatic PII scrubber that strips known user-data fields (baseline, price, currency, triggers, pouch counts) before any event leaves the device. Crash data also doesn't get sent in development builds. The full scrubber rules live in [the Sentry integration code](https://github.com/JarlLyng/wean-nicotine/blob/main/lib/sentry.ts).
 - **Subscription?** None. One-time purchase in the App Store or on Google Play.
 - **Marketing site analytics?** The marketing website uses Umami, a cookieless, privacy-friendly analytics tool that doesn't track users across sites or collect personal data. It's self-hosted on EU infrastructure. Full details are on the [privacy page](/privacy/).
