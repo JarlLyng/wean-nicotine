@@ -16,7 +16,7 @@ non-judgmental. It serves _reducers_, not _quitters_.
   subscription, IAP or ads. Never write a converted price, and never hand-write a price or store
   link next to a call to action (`docs/development.md`).
 - **Platform:** iPhone, built with Expo / React Native (the portfolio's one non-SwiftUI app, by choice).
-- **Status:** 1.7.2 (iOS build 27) live on the App Store since 2026-10-19, app ID 6758867485.
+- **Status:** 1.8.0 (iOS build 28) live on the App Store since 2026-11-24, app ID 6758867485.
   `app.config.js` holds the build numbers; release history is in `CHANGELOG.md`.
 
 ## Boundaries: work only in this repo
