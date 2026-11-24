@@ -5,9 +5,9 @@ Quick-start context for developers and AI assistants. Detailed specs in `docs/`,
 
 ## What is Wean Nicotine?
 
-A calm, private iPhone app for **gradually reducing** snus and nicotine pouches, not quitting cold
-turkey. Local-first: no accounts, no cloud, no internet required. The tone is deliberately
-non-judgmental. It serves _reducers_, not _quitters_.
+A calm, private app for iPhone and Android for **gradually reducing** snus and nicotine pouches,
+not quitting cold turkey. Local-first: no accounts, no cloud, no internet required. The tone is
+deliberately non-judgmental. It serves _reducers_, not _quitters_.
 
 - **Developer:** [IAMJARL](https://iamjarl.com) (Jarl). The full personal name is never used in copy or docs; see `BRAND_LEGAL.md` in the hub.
 - **Website:** [weannicotine.iamjarl.com](https://weannicotine.iamjarl.com)
@@ -15,8 +15,10 @@ non-judgmental. It serves _reducers_, not _quitters_.
 - **Price:** one-time, set per storefront: 29 DKK, 39 SEK, 39 NOK, $2.99 / £2.99 / €2.99. No
   subscription, IAP or ads. Never write a converted price, and never hand-write a price or store
   link next to a call to action (`docs/development.md`).
-- **Platform:** iPhone, built with Expo / React Native (the portfolio's one non-SwiftUI app, by choice).
+- **Platform:** iPhone and Android, built with Expo / React Native (the portfolio's one non-SwiftUI
+  app, by choice). Android package `com.iamjarl.weannicotine`.
 - **Status:** 1.8.0 (iOS build 28) live on the App Store since 2026-11-24, app ID 6758867485.
+  1.7.2 (versionCode 18) live on Google Play since 2026-11-23.
   `app.config.js` holds the build numbers; release history is in `CHANGELOG.md`.
 
 ## Boundaries: work only in this repo
@@ -134,9 +136,9 @@ AGENTS.md is worse than none, because an assistant will build on what it says.
 - **Reset / Start Over:** hold to confirm (a 2-second press with an animated fill); wipes all local
   SQLite data and returns to onboarding.
 - **Export (from 1.7.0):** Settings, Export Data writes the log as CSV
-  (`date,time,event,trigger,timestamp_utc`, oldest first) and opens the iOS share sheet. Nothing
+  (`date,time,event,trigger,timestamp_utc`, oldest first) and opens the system share sheet. Nothing
   leaves the phone unless the user picks a destination. There is no import yet (#224).
-- **Send feedback (from 1.7.0):** a `mailto:` to support@iamjarl.com with the app and iOS version
+- **Send feedback (from 1.7.0):** a `mailto:` to support@iamjarl.com with the app and OS version
   filled in; the user sees it all before sending.
 - **Theme:** light, dark or system, IAMJARL tokens via `lib/design.ts`. Phosphor icons.
 
@@ -149,12 +151,13 @@ AGENTS.md is worse than none, because an assistant will build on what it says.
 - Not a cold-turkey or quit-date app. It is built around gradual reduction.
 - Not a cigarette, vape or general habit tracker. It is calibrated for snus and nicotine pouches.
 - No medical advice or clinical claims.
-- Not on sale for Android yet, and no real web build (web stubs SQLite so the UI renders for design
-  preview, but the app doesn't work there). The Android package is `com.iamjarl.weannicotine`.
+- No real web build. Web stubs SQLite so the UI renders for design preview, but the app doesn't
+  work there.
 
 ## Requirements
 
-- iOS 16.4 or later from 1.8.0 (Expo SDK 58). Node 22.12 or later for development.
+- iOS 16.4 or later from 1.8.0 (Expo SDK 58); Android 7.0 (API 24) or later. Node 22.12 or later
+  for development.
 
 ## Build & run
 
