@@ -6,7 +6,7 @@
  * streaks or "days clean", no medical claims. Prices are never written here:
  * the store fragment's facts line carries them, from the design system's
  * registry. The App Privacy label is quoted exactly as the App Store shows it
- * in each language (read from the live listings on 2026-10-12).
+ * in each language (read from the live listings on 2026-11-24, after 1.8.0).
  *
  * Owner-approved, kept word for word: the English headline, the English line
  * under it and the English maker note. The Danish maker note needs the
@@ -61,7 +61,7 @@ export interface HomeCopy {
     logs: { title: string; text: string };
     paid: { title: string; text: string };
     /** The App Store's own wording for Wean's label, in this language. */
-    label: { heading: string; type: string; explanation: string; category: string; note: string };
+    label: { heading: string; type: string; explanation: string; categories: string[]; note: string };
   };
   maker: { note: string; signature: string };
   faq: { title: string; items: { question: string; answer: string }[] };
@@ -101,7 +101,7 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
     },
     hero: {
       headline: 'A gentler way to quit nicotine.',
-      lede: 'Cut down on snus and nicotine pouches a little at a time, at a pace you choose. Your logs stay on your iPhone, and a day over the limit is met with calm.',
+      lede: 'Cut down on snus and nicotine pouches a little at a time, at a pace you choose. Your logs stay on your phone, and a day over the limit is met with calm.',
       loopLabel:
         "Wean's Today screen. One tap on Used a pouch, the count goes up, and the day's allowance stays in view.",
     },
@@ -181,7 +181,7 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
     },
     assurances: {
       logs: {
-        title: 'Your logs stay on your iPhone',
+        title: 'Your logs stay on your phone',
         text: withExport(
           'There is no account to make and nothing to sync. Your pouches, your plan and your settings live on the phone',
           ', and you can export your log yourself as a file.',
@@ -195,12 +195,12 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
         heading: 'App Privacy',
         type: 'Data Not Linked to You',
         explanation: 'The following data may be collected but it is not linked to your identity:',
-        category: 'Diagnostics',
-        note: 'In Wean that is anonymous crash and performance data, which never includes your logs or your plan.',
+        categories: ['Usage Data', 'Diagnostics'],
+        note: 'In Wean that is anonymous crash and performance data, and an anonymous count when two of the features are used. None of it includes your logs or your plan.',
       },
     },
     maker: {
-      note: "I built Wean because I wanted to cut down myself, and stopping from one day to the next wasn't the way for me. What worked was a little less each week, with nobody keeping score. Wean does that on your iPhone and nothing more. It sets a plan that steps down, logs a pouch in one tap, and stays calm on the days you go over.",
+      note: "I built Wean because I wanted to cut down myself, and stopping from one day to the next wasn't the way for me. What worked was a little less each week, with nobody keeping score. Wean does that on your phone and nothing more. It sets a plan that steps down, logs a pouch in one tap, and stays calm on the days you go over.",
       signature: 'Jarl',
     },
     faq: {
@@ -224,7 +224,7 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
         {
           question: 'Where are my logs stored?',
           answer:
-            'On your iPhone. There is no account and nothing syncs to a server. The app sends anonymous crash reports, and your logs and plan are never part of them. The privacy policy has the detail.',
+            'On your phone. There is no account and nothing syncs to a server. The app sends anonymous crash reports and an anonymous count when two of the features are used, and your logs and plan are never part of them. The privacy policy has the detail.',
         },
         ...exportItem({
           question: 'Can I take my log with me?',
@@ -248,7 +248,7 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
         {
           question: 'What does it cost?',
           answer:
-            'Wean is paid for once, with no subscription, no in-app purchases and no ads. The App Store sets the price for each country and shows it in your currency, and it is also under each App Store button on this page.',
+            'Wean is paid for once, with no subscription, no in-app purchases and no ads. The App Store and Google Play set the price for each country and show it in your currency. The App Store price is also under each App Store button on this page.',
         },
         {
           question: 'Is this medical advice?',
@@ -274,7 +274,7 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
     },
     hero: {
       headline: 'En blidere måde at stoppe med nikotin på.',
-      lede: 'Skær ned på snus og nikotinposer lidt ad gangen, i et tempo du selv vælger. Din log bliver på din iPhone, og en dag over grænsen bliver mødt med ro.',
+      lede: 'Skær ned på snus og nikotinposer lidt ad gangen, i et tempo du selv vælger. Din log bliver på din telefon, og en dag over grænsen bliver mødt med ro.',
       loopLabel:
         'Weans Today-skærm. Ét tryk på Used a pouch, tallet går op, og dagens kvote står stadig på skærmen.',
     },
@@ -352,7 +352,7 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
     },
     assurances: {
       logs: {
-        title: 'Din log bliver på din iPhone',
+        title: 'Din log bliver på din telefon',
         text: withExport(
           'Der er ingen konto at oprette og intet at synkronisere. Dine poser, din plan og dine indstillinger ligger på telefonen',
           ', og du kan selv eksportere din log som en fil.',
@@ -367,12 +367,12 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
         type: 'Data, der ikke er tilknyttet dig',
         explanation:
           'Følgende data vil muligvis blive indsamlet, men de er ikke tilknyttet din identitet:',
-        category: 'Diagnostik',
-        note: 'I Wean er det anonyme nedbruds- og ydelsesdata, som aldrig indeholder din log eller din plan.',
+        categories: ['Brugsdata', 'Diagnostik'],
+        note: 'I Wean er det anonyme nedbruds- og ydelsesdata og en anonym tælling, når to af funktionerne bliver brugt. Intet af det indeholder din log eller din plan.',
       },
     },
     maker: {
-      note: 'Jeg byggede Wean, fordi jeg selv ville skære ned, og at stoppe fra den ene dag til den anden var ikke vejen for mig. Det, der virkede, var lidt mindre hver uge, uden at nogen førte regnskab. Det gør Wean på din iPhone, og ikke mere end det. Den lægger en plan, der trapper ned, registrerer en pose med ét tryk og er rolig de dage, du går over.',
+      note: 'Jeg byggede Wean, fordi jeg selv ville skære ned, og at stoppe fra den ene dag til den anden var ikke vejen for mig. Det, der virkede, var lidt mindre hver uge, uden at nogen førte regnskab. Det gør Wean på din telefon, og ikke mere end det. Den lægger en plan, der trapper ned, registrerer en pose med ét tryk og er rolig de dage, du går over.',
       signature: 'Jarl',
     },
     faq: {
@@ -396,7 +396,7 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
         {
           question: 'Hvor bliver min log gemt?',
           answer:
-            'På din iPhone. Der er ingen konto, og intet bliver synkroniseret til en server. Appen sender anonyme fejlrapporter, og din log og din plan er aldrig en del af dem. Privatlivspolitikken har detaljerne.',
+            'På din telefon. Der er ingen konto, og intet bliver synkroniseret til en server. Appen sender anonyme fejlrapporter og en anonym tælling, når to af funktionerne bliver brugt, og din log og din plan er aldrig en del af dem. Privatlivspolitikken har detaljerne.',
         },
         ...exportItem({
           question: 'Kan jeg tage min log med mig?',
@@ -420,12 +420,12 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
         {
           question: 'Er appen på dansk?',
           answer:
-            'Nej. Appens skærme er på engelsk. Denne side og teksten i App Store er på dansk, men selve appen er ikke oversat endnu.',
+            'Nej. Appens skærme er på engelsk. Denne side og teksten i App Store og på Google Play er på dansk, men selve appen er ikke oversat endnu.',
         },
         {
           question: 'Hvad koster det?',
           answer:
-            'Wean er betalt én gang, uden abonnement, køb i appen eller reklamer. App Store sætter prisen for hvert land og viser den i din valuta, og den står også under hver App Store-knap på denne side.',
+            'Wean er betalt én gang, uden abonnement, køb i appen eller reklamer. App Store og Google Play sætter prisen for hvert land og viser den i din valuta. App Store-prisen står også under hver App Store-knap på denne side.',
         },
         {
           question: 'Er det medicinsk rådgivning?',
@@ -451,7 +451,7 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
     },
     hero: {
       headline: 'Ett mildare sätt att sluta med nikotin.',
-      lede: 'Minska snus och nikotinpåsar lite i taget, i en takt du själv väljer. Din logg stannar på din iPhone, och en dag över gränsen möts med lugn.',
+      lede: 'Minska snus och nikotinpåsar lite i taget, i en takt du själv väljer. Din logg stannar på din telefon, och en dag över gränsen möts med lugn.',
       loopLabel:
         'Weans Today-skärm. Ett tryck på Used a pouch, siffran går upp, och dagens ranson syns hela tiden.',
     },
@@ -529,7 +529,7 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
     },
     assurances: {
       logs: {
-        title: 'Din logg stannar på din iPhone',
+        title: 'Din logg stannar på din telefon',
         text: withExport(
           'Det finns inget konto att skapa och inget att synka. Dina prillor, din plan och dina inställningar finns på telefonen',
           ', och du kan själv exportera din logg som en fil.',
@@ -543,12 +543,12 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
         heading: 'Appintegritet',
         type: 'Data som inte kopplas till dig',
         explanation: 'Följande data kan samlas in men den kopplas inte till din identitet:',
-        category: 'Diagnostik',
-        note: 'I Wean är det anonyma krasch- och prestandadata, som aldrig innehåller din logg eller din plan.',
+        categories: ['Användningsdata', 'Diagnostik'],
+        note: 'I Wean är det anonyma krasch- och prestandadata och en anonym räkning när två av funktionerna används. Inget av det innehåller din logg eller din plan.',
       },
     },
     maker: {
-      note: 'Jag byggde Wean för att jag själv ville dra ner, och att sluta från en dag till nästa var inte vägen för mig. Det som fungerade var lite mindre varje vecka, utan att någon förde protokoll. Det gör Wean på din iPhone, och inget mer. Den lägger upp en plan som trappar ner, loggar en prilla med ett tryck och håller sig lugn de dagar du går över.',
+      note: 'Jag byggde Wean för att jag själv ville dra ner, och att sluta från en dag till nästa var inte vägen för mig. Det som fungerade var lite mindre varje vecka, utan att någon förde protokoll. Det gör Wean på din telefon, och inget mer. Den lägger upp en plan som trappar ner, loggar en prilla med ett tryck och håller sig lugn de dagar du går över.',
       signature: 'Jarl',
     },
     faq: {
@@ -572,7 +572,7 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
         {
           question: 'Var sparas min logg?',
           answer:
-            'På din iPhone. Det finns inget konto, och inget synkas till en server. Appen skickar anonyma felrapporter, och din logg och din plan ingår aldrig i dem. Integritetspolicyn har detaljerna.',
+            'På din telefon. Det finns inget konto, och inget synkas till en server. Appen skickar anonyma felrapporter och en anonym räkning när två av funktionerna används, och din logg och din plan ingår aldrig i dem. Integritetspolicyn har detaljerna.',
         },
         ...exportItem({
           question: 'Kan jag ta med mig min logg?',
@@ -597,12 +597,12 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
         {
           question: 'Finns appen på svenska?',
           answer:
-            'Nej. Appens skärmar är på engelska. Den här sidan och texten i App Store är på svenska, men själva appen är inte översatt än.',
+            'Nej. Appens skärmar är på engelska. Den här sidan och texten i App Store och på Google Play är på svenska, men själva appen är inte översatt än.',
         },
         {
           question: 'Vad kostar det?',
           answer:
-            'Wean betalas en gång, utan prenumeration, köp i appen eller reklam. App Store sätter priset för varje land och visar det i din valuta, och det står också under varje App Store-knapp på den här sidan.',
+            'Wean betalas en gång, utan prenumeration, köp i appen eller reklam. App Store och Google Play sätter priset för varje land och visar det i din valuta. App Store-priset står också under varje App Store-knapp på den här sidan.',
         },
         {
           question: 'Är det medicinsk rådgivning?',
@@ -628,7 +628,7 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
     },
     hero: {
       headline: 'En mildere måte å slutte med nikotin på.',
-      lede: 'Kutt ned på snus og nikotinposer litt om gangen, i et tempo du velger selv. Loggen din blir på iPhonen din, og en dag over grensen blir møtt med ro.',
+      lede: 'Kutt ned på snus og nikotinposer litt om gangen, i et tempo du velger selv. Loggen din blir på telefonen din, og en dag over grensen blir møtt med ro.',
       loopLabel:
         'Weans Today-skjerm. Ett trykk på Used a pouch, tallet går opp, og dagens kvote står fortsatt på skjermen.',
     },
@@ -706,7 +706,7 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
     },
     assurances: {
       logs: {
-        title: 'Loggen din blir på iPhonen',
+        title: 'Loggen din blir på telefonen',
         text: withExport(
           'Det er ingen konto å opprette og ingenting å synkronisere. Posene dine, planen og innstillingene ligger på telefonen',
           ', og du kan selv eksportere loggen din som en fil.',
@@ -721,12 +721,12 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
         type: 'Data som ikke knyttes til deg',
         explanation:
           'Følgende data kan bli samlet inn, men vil ikke bli knyttet til identiteten din:',
-        category: 'Diagnostikk',
-        note: 'I Wean er det anonyme krasj- og ytelsesdata, som aldri inneholder loggen eller planen din.',
+        categories: ['Bruksdata', 'Diagnostikk'],
+        note: 'I Wean er det anonyme krasj- og ytelsesdata og en anonym telling når to av funksjonene brukes. Ingenting av det inneholder loggen eller planen din.',
       },
     },
     maker: {
-      note: 'Jeg laget Wean fordi jeg selv ville kutte ned, og å slutte fra den ene dagen til den andre var ikke veien for meg. Det som fungerte, var litt mindre hver uke, uten at noen førte regnskap. Det gjør Wean på iPhonen din, og ikke noe mer. Den legger en plan som trapper ned, registrerer en pose med ett trykk og holder seg rolig de dagene du går over.',
+      note: 'Jeg laget Wean fordi jeg selv ville kutte ned, og å slutte fra den ene dagen til den andre var ikke veien for meg. Det som fungerte, var litt mindre hver uke, uten at noen førte regnskap. Det gjør Wean på telefonen din, og ikke noe mer. Den legger en plan som trapper ned, registrerer en pose med ett trykk og holder seg rolig de dagene du går over.',
       signature: 'Jarl',
     },
     faq: {
@@ -750,7 +750,7 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
         {
           question: 'Hvor lagres loggen min?',
           answer:
-            'På iPhonen din. Det er ingen konto, og ingenting synkroniseres til en server. Appen sender anonyme feilrapporter, og loggen og planen din er aldri en del av dem. Personvernerklæringen har detaljene.',
+            'På telefonen din. Det er ingen konto, og ingenting synkroniseres til en server. Appen sender anonyme feilrapporter og en anonym telling når to av funksjonene brukes, og loggen og planen din er aldri en del av dem. Personvernerklæringen har detaljene.',
         },
         ...exportItem({
           question: 'Kan jeg ta med meg loggen min?',
@@ -774,12 +774,12 @@ export const HOME_COPY: Record<Locale, HomeCopy> = {
         {
           question: 'Er appen på norsk?',
           answer:
-            'Nei. Appens skjermer er på engelsk. Denne siden og teksten i App Store er på norsk, men selve appen er ikke oversatt ennå.',
+            'Nei. Appens skjermer er på engelsk. Denne siden og teksten i App Store og på Google Play er på norsk, men selve appen er ikke oversatt ennå.',
         },
         {
           question: 'Hva koster det?',
           answer:
-            'Wean betales én gang, uten abonnement, kjøp i appen eller reklame. App Store setter prisen for hvert land og viser den i din valuta, og den står også under hver App Store-knapp på denne siden.',
+            'Wean betales én gang, uten abonnement, kjøp i appen eller reklame. App Store og Google Play setter prisen for hvert land og viser den i din valuta. App Store-prisen står også under hver App Store-knapp på denne siden.',
         },
         {
           question: 'Er dette medisinske råd?',

@@ -52,7 +52,7 @@ This piece is the case for local-first health apps in general, and what to actua
 		<rect x="540" y="155" width="120" height="50" rx="10" fill="var(--primary-subtle)" stroke="var(--primary)" stroke-width="1.5" />
 		<text x="600" y="180" text-anchor="middle" font-family="var(--font-body)" font-size="12" fill="var(--text-primary)" font-weight="600">SQLite on device</text>
 		<text x="600" y="196" text-anchor="middle" font-family="var(--font-body)" font-size="11" fill="var(--text-secondary)">encrypted with your phone</text>
-		<text x="600" y="245" text-anchor="middle" font-family="var(--font-body)" font-size="12" fill="var(--primary)" font-weight="600">No network. No account.</text>
+		<text x="600" y="245" text-anchor="middle" font-family="var(--font-body)" font-size="12" fill="var(--primary)" font-weight="600">No cloud. No account.</text>
 		<text x="600" y="264" text-anchor="middle" font-family="var(--font-body)" font-size="12" fill="var(--primary)" font-weight="600">No copy elsewhere.</text>
 	</g>
 	<defs>
@@ -77,7 +77,7 @@ That benefit looks abstract until you list the concrete failure modes it elimina
 
 - **Insurance underwriting.** Health and life insurers don't (yet) read your apps. They could. The boundary holds because of regulation, not technology. A local-first app is invisible to that boundary regardless of how it shifts.
 - **Account breaches.** Every cloud service eventually leaks. A breach of a "quit smoking" app's user database is the kind of dataset that makes the news. A local-first app has nothing for an attacker to target server-side.
-- **Subpoenas and government requests.** In some jurisdictions, the legality of substances you might be tracking is ambiguous or hostile. A server holding "user X used N pouches on date Y" is a record that can be requested by a court. A local DB on an iPhone in your pocket cannot.
+- **Subpoenas and government requests.** In some jurisdictions, the legality of substances you might be tracking is ambiguous or hostile. A server holding "user X used N pouches on date Y" is a record that can be requested by a court. A local DB on a phone in your pocket cannot.
 - **Employer / family visibility.** Shared computers, family iCloud, work-managed devices. There are many ways someone else can stumble into your data when it syncs. Local-first cuts those paths at the source.
 - **Future-you regret.** You quit, you delete the app, the chapter is closed. With a cloud service, that "closed" status depends on the company's data-retention policy, the policy's actual implementation, and the company's continued existence.
 
@@ -123,11 +123,11 @@ If you're shopping for any health-tracking app (not just a nicotine one), here's
 To be useful, an example is worth more than a checklist. Here's what Wean does and doesn't do, item by item:
 
 - **Account?** No. No sign-up flow exists.
-- **Cloud sync?** No. The SQLite database lives on your iPhone. If you delete the app, the data is deleted.
-- **Network calls during normal use?** None. The app works fully offline.
-- **Analytics SDK?** None. The app has a local analytics table for its own UX improvements (which screens you visit, which tools you use), that table never leaves your phone.
+- **Cloud sync?** No. The SQLite database lives on your phone. If you delete the app, the data is deleted.
+- **Network calls during normal use?** Only to Sentry, which gets anonymous crash reports, a sample of performance traces and an anonymous count when two of the features are used. Everything else works fully offline.
+- **Analytics SDK?** None beyond Sentry's anonymous counts of two features (a log entry saved, Edit plan opened), which never carry a value from your log. The app also keeps a local analytics table for its own UX improvements (which screens you visit, which tools you use), and that table never leaves your phone.
 - **Crash reporting?** Sentry is used to capture technical crashes. The Sentry integration is configured with an automatic PII scrubber that strips known user-data fields (baseline, price, currency, triggers, pouch counts) before any event leaves the device. Crash data also doesn't get sent in development builds. The full scrubber rules live in [the Sentry integration code](https://github.com/JarlLyng/wean-nicotine/blob/main/lib/sentry.ts).
-- **Subscription?** None. One-time App Store purchase.
+- **Subscription?** None. One-time purchase in the App Store or on Google Play.
 - **Marketing site analytics?** The marketing website uses Umami, a cookieless, privacy-friendly analytics tool that doesn't track users across sites or collect personal data. It's self-hosted on EU infrastructure. Full details are on the [privacy page](/privacy/).
 - **Source code?** Open at [github.com/JarlLyng/wean-nicotine](https://github.com/JarlLyng/wean-nicotine). MIT licensed. You can verify any of the claims above by reading the code.
 
@@ -147,4 +147,4 @@ For data you wouldn't want leaving your pocket, that's the only design that hold
 
 ---
 
-_If you're looking for a nicotine reduction app that fits the description above: <a href="https://apps.apple.com/app/id6758867485?pt=128512007&amp;ct=site&amp;mt=8" target="_blank" rel="noopener noreferrer" data-umami-event="store-click" data-umami-event-store="app-store" data-umami-event-placement="in-article" data-umami-event-locale="en">Wean Nicotine</a> is on the App Store. One-time purchase, no accounts, no cloud. The [privacy policy](/privacy/) is the short version; the [source code](https://github.com/JarlLyng/wean-nicotine) is the long one._
+_If you're looking for a nicotine reduction app that fits the description above: <a href="https://apps.apple.com/app/id6758867485?pt=128512007&amp;ct=site&amp;mt=8" target="_blank" rel="noopener noreferrer" data-umami-event="store-click" data-umami-event-store="app-store" data-umami-event-placement="in-article" data-umami-event-locale="en">Wean Nicotine</a> is on the App Store and Google Play. One-time purchase, no accounts, no cloud. The [privacy policy](/privacy/) is the short version; the [source code](https://github.com/JarlLyng/wean-nicotine) is the long one._
