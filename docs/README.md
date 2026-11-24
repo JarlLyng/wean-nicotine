@@ -89,6 +89,7 @@ This makes the docs easier for LLMs to classify correctly and reduces accidental
 ### In this directory (`docs/`)
 
 - [`ARCHITECTURE.md`](./ARCHITECTURE.md): Canonical repo overview for fast machine and human orientation.
+- [`development.md`](./development.md): Versions, release details beyond the README, the Android build, and where the site's store facts come from.
 - [`design.md`](./design.md): Design-system principles and token usage.
 - [`SENTRY.md`](./SENTRY.md): Sentry setup, privacy hardening, and troubleshooting.
 - [`APP_STORE_METADATA.md`](./APP_STORE_METADATA.md): App Store listing copy and metadata for all storefronts.
